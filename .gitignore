@@ -4,9 +4,6 @@ Thumbs.db
 *.local.php
 *.local.phtml
 
-!.gitkeep
-!*.dist
-
 /app/cache/*/*
 /app/log/*/*
 
@@ -18,3 +15,6 @@ Thumbs.db
 /composer
 /composer.phar
 /composer.lock
+
+!.gitkeep
+!*.dist
