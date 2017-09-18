@@ -10,7 +10,8 @@ Thumbs.db
 /propel/*/config/config.php
 /public/*/upload/*/**
 
-/vendor/*
+/vendor/*/**
+/vendor/autoload.php
 
 /composer
 /composer.phar

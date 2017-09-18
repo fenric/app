@@ -1,0 +1,49 @@
+<?php
+
+$connections = fenric('config::database')->get('propel.connections', []);
+
+reset($connections);
+
+return
+[
+	'propel' =>
+	[
+		'paths' =>
+		[
+			// The directory where Propel should output generated object model classes.
+			'phpDir' => realpath(sprintf('%s/../../app/classes.share', __DIR__)),
+
+			// The directory where Propel should output the compiled runtime configuration.
+			'phpConfDir' => realpath(sprintf('%s/../../propel/%s/config', __DIR__, fenric()->getApplicationId())),
+
+			// The directory where Propel should output the generated migrations.
+			'migrationDir' => realpath(sprintf('%s/../../propel/%s/migrations', __DIR__, fenric()->getApplicationId())),
+
+			// The directory where Propel expects to find your `*.schema.xml` file.
+			'schemaDir' => realpath(sprintf('%s/../../propel/%s/scheme', __DIR__, fenric()->getApplicationId())),
+
+			// The directory where Propel should output the generated DDL (or data insert statements, etc.)
+			'sqlDir' => realpath(sprintf('%s/../../propel/%s/sql', __DIR__, fenric()->getApplicationId())),
+
+			// Directory in which your composer.json resides
+			'composerDir' => realpath(sprintf('%s/../..', __DIR__)),
+		],
+
+		'database' =>
+		[
+			'connections' => $connections,
+		],
+
+		'runtime' =>
+		[
+			'connections' => (fenric('config::database')->get('propel.runtime.connections') ?: array_keys($connections)),
+			'defaultConnection' => (fenric('config::database')->get('propel.runtime.default.connection') ?: key($connections)),
+		],
+
+		'generator' =>
+		[
+			'connections' => (fenric('config::database')->get('propel.generator.connections') ?: array_keys($connections)),
+			'defaultConnection' => (fenric('config::database')->get('propel.generator.default.connection') ?: key($connections)),
+		],
+	],
+];
