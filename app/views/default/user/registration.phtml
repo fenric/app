@@ -1,0 +1,59 @@
+<?php $this->layout('layout') ?>
+
+<h2 class="mb-4">Регистрация</h2>
+
+<form action="/user/registration/process/" method="post">
+	<?php if (isset($registrationErrors)) : ?>
+		<div class="form-group">
+			<div class="alert alert-danger">
+				<?php foreach ($registrationErrors as $field => $value) : ?>
+					<?php foreach ($registrationErrors[$field] as $error) : ?>
+						<p><?= $error ?></p>
+					<?php endforeach; ?>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	<?php endif; ?>
+	<div class="form-group <?php if (isset($registrationErrors['email'])) {echo 'has-danger';} ?>">
+		<label for="registration-field-email">E-mail</label>
+		<input id="registration-field-email" class="form-control" type="email" name="email" value="<?= e($registrationEmail) ?>" maxlength="128" required="true" placeholder="demo@example.com" />
+		<?php if (isset($registrationErrors['email'])) : ?>
+			<small class="form-control-feedback"><?= implode('<br>', $registrationErrors['email']) ?></small>
+		<?php endif; ?>
+		<small class="form-text text-muted">На указанный вами электронный адрес придет письмо содержащее ссылку для&nbsp;подтверждения регистрации.</small>
+	</div>
+	<div class="form-group <?php if (isset($registrationErrors['username'])) {echo 'has-danger';} ?>">
+		<label for="registration-field-username">Логин</label>
+		<input id="registration-field-username" class="form-control" type="text" name="username" value="<?= e($registrationUsername) ?>" maxlength="48" required="true" placeholder="username" />
+		<?php if (isset($registrationErrors['username'])) : ?>
+			<small class="form-control-feedback"><?= implode('<br>', $registrationErrors['username']) ?></small>
+		<?php endif; ?>
+		<small class="form-text text-muted">Логин должен содержать только <strong>буквы английского алфавита</strong> любого регистра и&nbsp;<strong>арабские цифры</strong>, а&nbsp;также быть длинной <strong>от&nbsp;2-х до&nbsp;48-и символов</strong>.</small>
+	</div>
+	<div class="form-group <?php if (isset($registrationErrors['password'])) {echo 'has-danger';} ?>">
+		<label for="registration-field-password">Пароль</label>
+		<input id="registration-field-password" class="form-control" type="password" name="password" maxlength="256" required="true" placeholder="password" />
+		<?php if (isset($registrationErrors['password'])) : ?>
+			<small class="form-control-feedback"><?= implode('<br>', $registrationErrors['password']) ?></small>
+		<?php endif; ?>
+		<small class="form-text text-muted">Пароль должен быть длинной <strong>от 6-и до 256-и символов</strong>, а также не содержать в себе логин или логин электронной почты.</small>
+	</div>
+	<div class="form-group">
+		<label for="registration-field-password-confirmation">Повторите пароль</label>
+		<input id="registration-field-password-confirmation" class="form-control" type="password" name="password_confirmation" maxlength="256" required="true" placeholder="password" />
+		<small class="form-text text-muted">Повторите в точности вышеуказанный пароль, чтобы быть уверенным в том, что вы его запомнили.</small>
+	</div>
+	<div class="form-group <?php if (isset($registrationErrors['agreement'])) {echo 'has-danger';} ?>">
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" name="agreement" value="yes" required="true" /> Я согласен с <a href="/rules/" target="_blank">правилами сайта</a>.
+			</label>
+		</div>
+		<?php if (isset($registrationErrors['agreement'])) : ?>
+			<small class="form-control-feedback"><?= implode('<br>', $registrationErrors['agreement']) ?></small>
+		<?php endif; ?>
+	</div>
+	<div class="form-group">
+		<button class="btn btn-primary" type="submit">Продолжить</button> &nbsp;<span class="text-muted">|</span>&nbsp; <a href="/user/login/">Я уже зарегистрирован</a>
+	</div>
+</form>

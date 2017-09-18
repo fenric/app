@@ -1,0 +1,60 @@
+<?php $this->layout('layout') ?>
+
+<?php $this->start('metadata') ?>
+<title>Поиск</title>
+<?php $this->stop() ?>
+
+<?php $this->start('stylesheets') ?>
+<?php $this->stop() ?>
+
+<?php $this->start('javascripts') ?>
+<script id="dsq-count-scr" src="//fenric-cms-demo-local.disqus.com/count.js?v2" async></script>
+<?php $this->stop() ?>
+
+<div class="container mt-3">
+	<nav class="breadcrumb">
+		<a class="breadcrumb-item" href="/">Главная</a>
+		<span class="breadcrumb-item active">Поиск</span>
+	</nav>
+</div>
+
+<div class="container mt-4">
+	<h1 class="display-1">Поиск</h1>
+</div>
+
+<div class="container mt-4">
+	<form method="get" action="/search/">
+		<div class="input-group">
+			<input class="form-control" name="q" type="text" value="<?= e(fenric('request')->query->get('q')) ?>" />
+			<span class="input-group-btn">
+				<button class="btn btn-secondary" type="submit">
+					<i class="fa fa-search" aria-hidden="true"></i>
+				</button>
+			</span>
+		</div>
+	</form>
+</div>
+
+<?php if (fenric('request')->query->exists('q')) : ?>
+	<div class="container mt-4">
+		<?php if ($publications->count() > 0) : ?>
+			<div class="row">
+				<?php foreach ($publications as $publication) : ?>
+					<?= $this->partial('publication.card', [
+						'publication' => $publication,
+					]) ?>
+				<?php endforeach; ?>
+			</div>
+
+			<nav>
+				<?= $this->partial('publications.paginate', [
+					'publications' => $publications,
+				]) ?>
+			</nav>
+		<?php else : ?>
+			<div class="alert alert-info">
+				<p>По вашему запросу, ничего не найдено.</p>
+			</div>
+		<?php endif; ?>
+	</div>
+<?php endif; ?>

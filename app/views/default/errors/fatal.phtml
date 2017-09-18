@@ -1,0 +1,142 @@
+<?php
+
+$size = function(int $size) : string
+{
+	$units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+	for ($i = 0; $size >= 1024 && $i < 9; $i++)
+	{
+		$size /= 1024;
+	}
+
+	return round($size, 2) . $units[$i];
+};
+
+$source = function(string $file, int $line, int $padding = 10, string $append = '') : string
+{
+	$lines = file($file);
+
+	$lines = array_map(function($value)
+	{
+		return e(rtrim($value));
+
+	}, $lines);
+
+	$lines = array_filter($lines, function($key) use($line, $padding)
+	{
+		return ! ($key < ($line - 1) - $padding || $key >= $line + $padding);
+
+	}, ARRAY_FILTER_USE_KEY);
+
+	$lines[$line - 1] .= $append;
+
+	return implode(PHP_EOL, $lines);
+};
+
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link href="<?= asset('/assets/vendor/bootstrap-4.0.0/css/bootstrap.min.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/assets/vendor/font-awesome-4.7.0/css/font-awesome.min.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/assets/vendor/highlight-9.12.0/styles/github.css') ?>" rel="stylesheet" />
+	</head>
+	<body class="bg-danger">
+		<div class="m-3">
+			<div class="card mb-3">
+				<div class="card-block">
+					<div class="card-title text-danger">
+						<h4><?= get_class($exception) ?>: <?= $exception->getMessage() ?></h4>
+					</div>
+					<div class="card-subtitle mb-3">
+						<a href="#collapse-error-file-source" data-toggle="collapse" aria-expanded="false">
+							<span><?= $exception->getFile() ?> :<?= $exception->getLine() ?></span>
+						</a>
+					</div>
+					<div id="collapse-error-file-source" class="collapse card-text">
+						<pre class="mb-0"><code class="language-php" style="font-size: 0.9em; tab-size: 4;"><?=
+							$source($exception->getFile(), $exception->getLine(), 8, ' <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>')
+						?></code></pre>
+					</div>
+				</div>
+			</div>
+
+			<?php if ($tracing = $exception->getTrace()) : ?>
+				<div class="card mb-3">
+					<div class="card-header">
+						<span>Trace</span>
+					</div>
+					<div class="card-block">
+						<div class="card-text">
+							<?php foreach ($tracing as $i => $trace) : ?>
+								<?php if (isset($trace['file'], $trace['line'])) : ?>
+									<div class="mb-2">
+										<a href="#collapse-trace-file-source-<?= $i ?>" data-toggle="collapse" aria-expanded="false">
+											<span><?= $trace['file'] ?> :<?= $trace['line'] ?></span>
+										</a>
+									</div>
+									<div id="collapse-trace-file-source-<?= $i ?>" class="collapse mb-2">
+										<pre class="mb-0"><code class="language-php" style="font-size: 0.9em; tab-size: 4;"><?=
+											$source($trace['file'], $trace['line'], 8, ' <i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i>')
+										?></code></pre>
+									</div>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<div class="card mb-3">
+				<div class="card-header">
+					<span>Debug</span>
+				</div>
+				<div class="card-block">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td class="border-top-0" width="20%">Software</td>
+								<td class="border-top-0"><?= $_SERVER['SERVER_SOFTWARE'] ?></td>
+							</tr>
+
+							<tr>
+								<td>Speed of execution</td>
+								<td><?= round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 2) ?>s.</td>
+							</tr>
+
+							<?php if (function_exists('get_current_user')) : ?>
+								<tr>
+									<td>Process owner</td>
+									<td><?= get_current_user() ?></td>
+								</tr>
+							<?php endif; ?>
+
+							<?php if (function_exists('sys_getloadavg')) : ?>
+								<tr>
+									<td>Load on system</td>
+									<td><?= round(sys_getloadavg()[0] * 100, 2) ?>%</td>
+								</tr>
+							<?php endif; ?>
+
+							<?php if (function_exists('disk_free_space') && function_exists('disk_total_space')) : ?>
+								<tr>
+									<td>Hard drive space</td>
+									<td><?= $size(disk_free_space('/')) ?> / <?= $size(disk_total_space('/')) ?></td>
+								</tr>
+							<?php endif; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<script src="<?= asset('/assets/vendor/jquery-3.2.1.min.js') ?>"></script>
+		<script src="<?= asset('/assets/vendor/bootstrap-4.0.0/js/bootstrap.min.js') ?>"></script>
+		<script src="<?= asset('/assets/vendor/highlight-9.12.0/highlight.pack.js') ?>"></script>
+
+		<script>
+			hljs.initHighlightingOnLoad();
+		</script>
+	</body>
+</html>

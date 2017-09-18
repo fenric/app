@@ -1,0 +1,16 @@
+{
+	"require": {
+		"fenric/framework": "dev-master",
+		"propel/propel": "dev-master",
+		"phpmailer/phpmailer": "^5.2"
+	},
+	"autoload": {
+		"files": [
+			"bootstrap.php",
+			"propel/config.php.dist"
+		],
+		"psr-4" : {
+			"Propel\\Models\\" : "app/classes.share/Propel/Models"
+		}
+	}
+}

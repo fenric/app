@@ -1,0 +1,14 @@
+<?php
+
+$connections = [];
+
+$connections['default']['dsn'] = 'mysql:host=127.0.0.1;dbname=cms;charset=utf8';
+$connections['default']['user'] = 'root';
+$connections['default']['password'] = '0123456789';
+
+$connections['propel.connections']['default'] = $connections['default'];
+$connections['propel.connections']['default']['adapter'] = 'mysql';
+$connections['propel.connections']['default']['classname'] = 'Propel\\Runtime\\Connection\\ConnectionWrapper';
+$connections['propel.connections']['default']['settings']['charset'] = 'utf8';
+
+return $connections;

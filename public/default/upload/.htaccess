@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^([\d\w]{2})([\d\w]{2})([\d\w]{2})(?:[\d\w]{26})\.(?:jpe?g|png|gif|pdf)$ $1/$2/$3/$0 [L]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(0|\d{2,4}+)x(0|\d{2,4}+)/(([\d\w]{2})([\d\w]{2})([\d\w]{2})([\d\w]{26}))\.(jpe?g|png|gif)$ $4/$5/$6/$3.$1x$2.$8 [L]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ resize.php [L]
+</IfModule>

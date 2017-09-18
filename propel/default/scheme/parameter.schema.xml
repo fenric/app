@@ -1,0 +1,26 @@
+<database name="default" namespace="Propel\Models">
+	<behavior name="auto_add_pk" />
+
+	<table name="parameter">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="code" type="varchar" required="true" />
+		<column name="value" type="longvarchar" />
+
+		<unique>
+			<unique-column name="code" />
+		</unique>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="validate">
+			<parameter name="4a2047ea-be11-4c03-84a9-07021b067553" value="{column: code, validator: NotBlank}" />
+			<parameter name="de986117-f647-419e-ba21-c306b030b93d" value="{column: code, validator: Length, options: {max: 255}}" />
+			<parameter name="430c3797-5c66-4fd7-aa47-5e2d70fb4bbe" value="{column: code, validator: Regex, options: {pattern: '/^[_a-zA-Z0-9-]+$/'}}" />
+			<parameter name="9b759ea4-4393-4de5-aa2d-09d70c5826fb" value="{column: code, validator: Unique}" />
+		</behavior>
+	</table>
+</database>

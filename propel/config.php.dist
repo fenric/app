@@ -1,0 +1,8 @@
+<?php
+
+$config = __DIR__ . '/' . fenric()->getApplicationId() . '/config/config.php';
+
+if (file_exists($config))
+{
+	require_once $config;
+}

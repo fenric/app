@@ -1,0 +1,108 @@
+<database name="default" namespace="Propel\Models">
+	<behavior name="auto_add_pk" />
+
+	<table name="user">
+		<column name="id" type="integer" size="11" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="role" type="varchar" size="64" required="true" defaultValue="user" />
+		<column name="email" type="varchar" size="128" required="true" />
+		<column name="username" type="varchar" size="48" required="true" primaryString="true" />
+		<column name="password" type="varchar" size="60" required="true" lazyLoad="true" />
+
+		<column name="photo" type="varchar" />
+		<column name="firstname" type="varchar" size="64" />
+		<column name="lastname" type="varchar" size="64" />
+		<column name="gender" type="varchar" size="16" />
+		<column name="birthday" type="timestamp" />
+
+		<column name="about" type="longvarchar" lazyLoad="true" />
+		<column name="params" type="longvarchar" lazyLoad="true" />
+
+		<column name="registration_at" type="timestamp" />
+		<column name="registration_ip" type="varchar" size="45" />
+		<column name="registration_confirmed" type="boolean" defaultValue="0" />
+		<column name="registration_confirmed_at" type="timestamp" />
+		<column name="registration_confirmed_ip" type="varchar" size="45" />
+		<column name="registration_confirmation_code" type="varchar" size="40" lazyLoad="true" />
+
+		<column name="authentication_at" type="timestamp" />
+		<column name="authentication_ip" type="varchar" size="45" />
+		<column name="authentication_key" type="varchar" lazyLoad="true" />
+		<column name="authentication_token" type="varchar" size="40" lazyLoad="true" />
+		<column name="authentication_token_at" type="timestamp" />
+		<column name="authentication_token_ip" type="varchar" size="45" />
+		<column name="authentication_attempt_count" type="numeric" defaultValue="0" />
+
+		<column name="track_at" type="timestamp" />
+		<column name="track_ip" type="varchar" size="45" />
+		<column name="track_url" type="varchar" />
+
+		<column name="ban_from" type="timestamp" />
+		<column name="ban_until" type="timestamp" />
+		<column name="ban_reason" type="varchar" />
+
+		<unique>
+			<unique-column name="email" />
+			<unique-column name="username" />
+		</unique>
+
+		<index name="c8de93f2-5233-48b2-8893-57e10219493b">
+			<index-column name="role" />
+			<index-column name="firstname" />
+			<index-column name="lastname" />
+			<index-column name="gender" />
+			<index-column name="birthday" />
+		</index>
+
+		<index name="c2df32b4-3037-4b95-890c-dd59ced7b952">
+			<index-column name="registration_at" />
+			<index-column name="registration_ip" />
+
+			<index-column name="authentication_at" />
+			<index-column name="authentication_ip" />
+
+			<index-column name="track_at" />
+			<index-column name="track_ip" />
+		</index>
+
+		<index name="c4bbdbb3-d143-4ef0-bf40-9b658e45f0db">
+			<index-column name="ban_from" />
+			<index-column name="ban_until" />
+		</index>
+
+		<index name="fc83f193-745a-4c48-bc46-271594e101a5">
+			<index-column name="registration_confirmation_code" />
+		</index>
+
+		<index name="f6de10b6-8374-4a34-a7c0-00b46b26c58a">
+			<index-column name="authentication_key" />
+		</index>
+
+		<index name="f3e2d4cc-c454-4eff-9b74-2176d525c591">
+			<index-column name="authentication_token" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="validate">
+			<parameter name="4905c5f6-35b7-4e44-bff7-640642d90f6e" value="{column: role, validator: NotBlank, options: {message: 'Роль не может быть пустой.'}}" />
+			<parameter name="39397f77-119a-4c88-8600-31d303e5208d" value="{column: role, validator: Length, options: {max: 64, maxMessage: 'Максимально допустимая длина роли 64 символа.'}}" />
+
+			<parameter name="af2a0485-1686-4495-9753-51eda53b9dde" value="{column: email, validator: NotBlank, options: {message: 'Электронный адрес не может быть пустым.'}}" />
+			<parameter name="d6144f7d-3f88-4c29-867a-0223ce4b5941" value="{column: email, validator: Length, options: {max: 128, maxMessage: 'Максимально допустимая длина электронного адреса 128 символов.'}}" />
+			<parameter name="effd5adc-be53-4ff5-a2ae-991715fe0e25" value="{column: email, validator: Email, options: {message: 'Некорректный электронный адрес.'}}" />
+			<parameter name="dff955bc-b724-4db5-8345-4a0afe52c446" value="{column: email, validator: Unique, options: {message: 'Электронный адрес привязан к другой учетной записи.'}}" />
+
+			<parameter name="0f1d8b9e-586e-475f-846d-5642d7889bf3" value="{column: username, validator: NotBlank, options: {message: 'Имя учетной записи не может быть пустым.'}}" />
+			<parameter name="66de4cd0-e428-4ff2-939a-9d7e499604eb" value="{column: username, validator: Length, options: {min: 2, max: 48, minMessage: 'Минимально возможная длина имени учетной записи 2 символа.', maxMessage: 'Максимально допустимая длина имени учетной записи 48 символов.'}}" />
+			<parameter name="a391d8b6-7b27-4f7a-a4c3-9c23dd1c4b43" value="{column: username, validator: Regex, options: {pattern: '/^[a-zA-Z0-9]+$/', message: 'Имя учетной записи должно состоять только из букв английского алфавита и арабских цифр.'}}" />
+			<parameter name="bd1544af-f1b3-4be0-b1c9-53c39da12763" value="{column: username, validator: Unique, options: {message: 'Имя учетной записи закреплено за другой учетной записью.'}}" />
+
+			<parameter name="6340bbf4-4754-47b8-bb7d-14e569f6ef77" value="{column: password, validator: NotBlank, options: {message: 'Пароль не может быть пустым.'}}" />
+			<parameter name="bc8f3a10-55a1-4081-8112-300abdd78a1d" value="{column: password, validator: Length, options: {min: 6, max: 256, minMessage: 'Минимально возможная длина пароля 6 символов.', maxMessage: 'Максимально допустимая длина пароля 256 символов.'}}" />
+		</behavior>
+	</table>
+</database>

@@ -1,0 +1,520 @@
+* {
+	/* fucked Bootstrap */
+	outline: none !important;
+}
+
+img {
+	max-width: 100%;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+.table > thead > tr > td.checked,
+.table > tbody > tr > td.checked,
+.table > tfoot > tr > td.checked,
+.table > thead > tr > th.checked,
+.table > tbody > tr > th.checked,
+.table > tfoot > tr > th.checked,
+.table > thead > tr.checked > td,
+.table > tbody > tr.checked > td,
+.table > tfoot > tr.checked > td,
+.table > thead > tr.checked > th,
+.table > tbody > tr.checked > th,
+.table > tfoot > tr.checked > th {
+	background-color: #fff59d !important;
+}
+
+.table > thead > tr:hover > td.checked,
+.table > tbody > tr:hover > td.checked,
+.table > tfoot > tr:hover > td.checked,
+.table > thead > tr:hover > th.checked,
+.table > tbody > tr:hover > th.checked,
+.table > tfoot > tr:hover > th.checked,
+.table > thead > tr.checked:hover > td,
+.table > tbody > tr.checked:hover > td,
+.table > tfoot > tr.checked:hover > td,
+.table > thead > tr.checked:hover > th,
+.table > tbody > tr.checked:hover > th,
+.table > tfoot > tr.checked:hover > th {
+	background-color: #fff176 !important;
+}
+
+.popover.confirmation {
+	min-width: 150px;
+}
+.popover.confirmation .popover-title {
+	text-align: center;
+}
+
+.label {
+	font-size: 1em !important;
+	font-weight: 100 !important;
+	display: inline-block !important;
+}
+
+#desktop {
+	cursor: default;
+	overflow: hidden;
+	position: absolute;
+
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	background-color: #4395d1;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	color: black;
+	font-size: 8pt;
+	font-family: Tahoma;
+}
+
+#desktop.loading:after {
+	/* Перекрытие иконок и боковой панели */
+	z-index: 3;
+
+	cursor: wait;
+	content: "";
+	display: block;
+	position: absolute;
+
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	background-color: #4395d1;
+	background-image: url("./i/loading.gif?v3");
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+/**
+ * Icons
+ *
+ * Grid size 72x72
+ *
+ * Recommended icon package:
+ * https://www.iconfinder.com/iconsets/fatcow
+ */
+#desktop div.desktop-icon {
+	overflow: hidden;
+	position: absolute;
+	width: 72px;
+	height: 72px;
+	min-height: 72px;
+	border: 1px solid transparent;
+}
+#desktop div.desktop-icon:hover {
+	z-index: 1;
+	height: auto;
+	border-color: #4395d1;
+	background-color: rgba(67,149,209,.50);
+}
+#desktop div.desktop-icon.draggable {
+	z-index: 1;
+	height: 72px;
+	border-color: #ff9800;
+	background-color: rgba(255,152,0,.50);
+}
+#desktop div.desktop-icon div.desktop-icon-image {
+	width: 32px;
+	height: 32px;
+	margin: 2px auto;
+}
+#desktop div.desktop-icon div.desktop-icon-image img {
+	max-width: 32px;
+	max-height: 32px;
+}
+#desktop div.desktop-icon div.desktop-icon-label {
+	text-align: center;
+	line-height: 12pt;
+}
+#desktop div.desktop-icon div.desktop-icon-label span {
+	color: #ffffff;
+	word-wrap: break-word;
+	text-shadow: 0px 1px 0 rgba(0,0,0,0.25);
+}
+
+/**
+ * Modals
+ */
+#desktop div.desktop-modal {
+	position: absolute;
+
+	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+	-moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+}
+#desktop div.desktop-modal div.desktop-modal-wrap {
+	height: 100%;
+	padding: 1px;
+
+	background-position: center center;
+	background-repeat: no-repeat;
+
+	/* @see http://loading.io/ */
+}
+#desktop div.desktop-modal div.desktop-modal-wrap {
+	background-color: #9c27b0;
+	background-color: rgba(156, 39, 176, 0.95);
+}
+#desktop div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-purple.gif");
+}
+#desktop.blue div.desktop-modal div.desktop-modal-wrap {
+	background-color: #3f51b5;
+	background-color: rgba(63, 81, 181, 0.95);
+}
+#desktop.blue div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-blue.gif");
+}
+#desktop.red div.desktop-modal div.desktop-modal-wrap {
+	background-color: #d32f2f;
+	background-color: rgba(211, 47, 47, 0.95);
+}
+#desktop.red div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-red.gif");
+}
+#desktop.pink div.desktop-modal div.desktop-modal-wrap {
+	background-color: #d81b60;
+	background-color: rgba(216, 27, 96, 0.95);
+}
+#desktop.pink div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-pink.gif");
+}
+#desktop.purple div.desktop-modal div.desktop-modal-wrap {
+	background-color: #9c27b0;
+	background-color: rgba(156, 39, 176, 0.95);
+}
+#desktop.purple div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-purple.gif");
+}
+#desktop.violet div.desktop-modal div.desktop-modal-wrap {
+	background-color: #673ab7;
+	background-color: rgba(103, 58, 183, 0.95);
+}
+#desktop.violet div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-violet.gif");
+}
+#desktop.cyan div.desktop-modal div.desktop-modal-wrap {
+	background-color: #2196f3;
+	background-color: rgba(33, 150, 243, 0.95);
+}
+#desktop.cyan div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-cyan.gif");
+}
+#desktop.green div.desktop-modal div.desktop-modal-wrap {
+	background-color: #4caf50;
+	background-color: rgba(76, 175, 80, 0.95);
+}
+#desktop.green div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-green.gif");
+}
+#desktop.lime div.desktop-modal div.desktop-modal-wrap {
+	background-color: #8bc34a;
+	background-color: rgba(139, 195, 74, 0.95);
+}
+#desktop.lime div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-lime.gif");
+}
+#desktop.orange div.desktop-modal div.desktop-modal-wrap {
+	background-color: #ff9800;
+	background-color: rgba(255, 152, 0, 0.95);
+}
+#desktop.orange div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-orange.gif");
+}
+#desktop.brown div.desktop-modal div.desktop-modal-wrap {
+	background-color: #795548;
+	background-color: rgba(121, 85, 72, 0.95);
+}
+#desktop.brown div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-brown.gif");
+}
+#desktop.jeans div.desktop-modal div.desktop-modal-wrap {
+	background-color: #607d8b;
+	background-color: rgba(96, 125, 139, 0.95);
+}
+#desktop.jeans div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-jeans.gif");
+}
+#desktop.black div.desktop-modal div.desktop-modal-wrap {
+	background-color: #000000;
+	background-color: rgba(0, 0, 0, 0.95);
+}
+#desktop.black div.desktop-modal.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-black.gif");
+}
+#desktop div.desktop-modal.state-background div.desktop-modal-wrap {
+	background-color: #5a5a5a;
+	background-color: rgba(90, 90, 90, 0.95);
+}
+#desktop div.desktop-modal.state-background.blocked div.desktop-modal-wrap {
+	background-image: url("./i/loading-background.gif");
+}
+#desktop div.desktop-modal.state-draggable div.desktop-modal-wrap {
+	/* opacity: 0.9; */
+}
+#desktop div.desktop-modal.state-resizable div.desktop-modal-wrap {
+	/* opacity: 0.9; */
+}
+#desktop div.desktop-modal.state-foreground div.desktop-modal-wrap {
+
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head {
+	cursor: move;
+	overflow: hidden;
+	position: relative;
+
+	height: 44px;
+	line-height: 44px;
+
+	padding-left: 10px;
+	padding-right: 96px;
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head i {
+	margin-right: 8px;
+	color: #ffffff;
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head span {
+	color: #ffffff;
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head button {
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	width: 42px;
+	height: 43px;
+	border: 0 none;
+
+	/* https://www.iconfinder.com/iconsets/mayssam */
+	background-color: transparent;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head button:hover {
+	background-color: rgba(255,255,255,0.25);
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head button.desktop-modal-on-close {
+	right: 0;
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAIlJREFUeNqUktEKgCAMAFe/0fr/h0B6iOqpPm1toGG2qRMOMrkDV0BEK4MMOJmZkB5OZ0ScnZnyF72RV5Z9edCKfOQyAFE+jMhP1gJWRJWtQBkx5VogRW7msmRhBHsNDEFrdUwbvVfQ7oy9Q6wNDFufsTrtiJxt2o/UI6sRr/yLyCY45TyyPAIMAPR/6XiNFDhHAAAAAElFTkSuQmCC");
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head button.desktop-modal-on-maximize {
+	right: 43px;
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADhJREFUeNpi/P///x0GBoYzDOQBIwagASuAmIFMvIKJgUIwasCoAaMGQAAjMEfdBdLnydSvDxBgAOeQOuz1EFKPAAAAAElFTkSuQmCC");
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	overflow: auto;
+	position: relative;
+	height: 100%;
+	height: calc(100% - 44px);
+	padding: 10px;
+	background-color: #ffffff;
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+#desktop div.desktop-modal.blocked div.desktop-modal-wrap div.desktop-modal-body {
+	display: none;
+}
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body nav.top {
+	margin-top: -10px;
+	margin-left: -10px;
+	margin-right: -10px;
+	margin-bottom: 10px;
+
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+
+	border-bottom: 1px solid #cccccc;
+	background-color: #eeeeee;
+}
+#desktop div.desktop-modal div.desktop-modal-size {
+	cursor: se-resize;
+	position: absolute;
+
+	right: -8px;
+	bottom: -8px;
+
+	width: 10px;
+	height: 10px;
+}
+
+/**
+ * Notify
+ */
+#desktop div.desktop-notify {
+	z-index: 2000000;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 300px;
+	border: 1px solid #ffffff;
+	color: #ffffff;
+}
+#desktop div.desktop-notify.desktop-notify-info {
+	background-color: #3f51b5;
+}
+#desktop div.desktop-notify.desktop-notify-success {
+	background-color: #4caf50;
+}
+#desktop div.desktop-notify.desktop-notify-warning {
+	background-color: #ff9800;
+}
+#desktop div.desktop-notify.desktop-notify-error {
+	background-color: #d32f2f;
+}
+#desktop div.desktop-notify.desktop-notify-plain {
+	background-color: #4c4a48;
+}
+#desktop div.desktop-notify div.desktop-notify-head,
+#desktop div.desktop-notify div.desktop-notify-body {
+	padding: 5px;
+	word-wrap: break-word;
+}
+#desktop div.desktop-notify div.desktop-notify-head {
+	font-weight: bold;
+}
+#desktop div.desktop-notify div.desktop-notify-body {
+	white-space: pre-wrap;
+}
+
+/**
+ * Desktop pallets
+ */
+div.desktop-pallets:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+div.desktop-pallets div.desktop-pallet {
+	cursor: pointer;
+	float: left;
+	width: 50px;
+	height: 50px;
+	margin: 2px;
+	background-color: #e5e5e5;
+}
+div.desktop-pallets div.desktop-pallet:hover {
+	opacity: 0.75;
+}
+div.desktop-pallets div.desktop-pallet.blue {
+	background-color: #3f51b5;
+}
+div.desktop-pallets div.desktop-pallet.red {
+	background-color: #d32f2f;
+}
+div.desktop-pallets div.desktop-pallet.pink {
+	background-color: #d81b60;
+}
+div.desktop-pallets div.desktop-pallet.purple {
+	background-color: #9c27b0;
+}
+div.desktop-pallets div.desktop-pallet.violet {
+	background-color: #673ab7;
+}
+div.desktop-pallets div.desktop-pallet.cyan {
+	background-color: #2196f3;
+}
+div.desktop-pallets div.desktop-pallet.green {
+	background-color: #4caf50;
+}
+div.desktop-pallets div.desktop-pallet.lime {
+	background-color: #8bc34a;
+}
+div.desktop-pallets div.desktop-pallet.orange {
+	background-color: #ff9800;
+}
+div.desktop-pallets div.desktop-pallet.brown {
+	background-color: #795548;
+}
+div.desktop-pallets div.desktop-pallet.jeans {
+	background-color: #607d8b;
+}
+div.desktop-pallets div.desktop-pallet.black {
+	background-color: #000000;
+}
+
+/**
+ * Login form
+ */
+#desktop div.desktop-admin-login-overlay {
+	/* должно быть меньше чем у уведомлений */
+	z-index: 1000000;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.75);
+}
+#desktop div.desktop-admin-login-overlay form.desktop-admin-login-form {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 250px;
+	height: 450px;
+	margin: auto;
+}
+#desktop div.desktop-admin-login-overlay form.desktop-admin-login-form div.desktop-admin-login-form-admin-photo {
+	text-align: center;
+	margin-bottom: 15px;
+}
+#desktop div.desktop-admin-login-overlay form.desktop-admin-login-form div.desktop-admin-login-form-admin-fullname {
+	color: #ffffff;
+	font-size: 1.8em;
+	text-align: center;
+	margin-bottom: 15px;
+}
+#desktop div.desktop-admin-login-overlay form.desktop-admin-login-form div.desktop-admin-login-form-response {
+	color: #f44336;
+	text-align: center;
+	margin-top: 5px;
+}
+#desktop div.desktop-admin-login-overlay form.desktop-admin-login-form div.desktop-admin-login-form-note {
+	color: #ffffff;
+	text-align: center;
+}
+
+/**
+ * CKeditor
+ */
+#desktop.blue .cke_chrome {border-color: #3f51b5;}
+#desktop.blue .cke_bottom {background-color: #3f51b5;}
+#desktop.red .cke_chrome {border-color: #d32f2f;}
+#desktop.red .cke_bottom {background-color: #d32f2f;}
+#desktop.pink .cke_chrome {border-color: #d81b60;}
+#desktop.pink .cke_bottom {background-color: #d81b60;}
+#desktop.purple .cke_chrome {border-color: #9c27b0;}
+#desktop.purple .cke_bottom {background-color: #9c27b0;}
+#desktop.violet .cke_chrome {border-color: #673ab7;}
+#desktop.violet .cke_bottom {background-color: #673ab7;}
+#desktop.cyan .cke_chrome {border-color: #2196f3;}
+#desktop.cyan .cke_bottom {background-color: #2196f3;}
+#desktop.green .cke_chrome {border-color: #4caf50;}
+#desktop.green .cke_bottom {background-color: #4caf50;}
+#desktop.lime .cke_chrome {border-color: #8bc34a;}
+#desktop.lime .cke_bottom {background-color: #8bc34a;}
+#desktop.orange .cke_chrome {border-color: #ff9800;}
+#desktop.orange .cke_bottom {background-color: #ff9800;}
+#desktop.brown .cke_chrome {border-color: #795548;}
+#desktop.brown .cke_bottom {background-color: #795548;}
+#desktop.jeans .cke_chrome {border-color: #607d8b;}
+#desktop.jeans .cke_bottom {background-color: #607d8b;}
+#desktop.black .cke_chrome {border-color: #000000;}
+#desktop.black .cke_bottom {background-color: #000000;}
+#desktop .has-error .cke_chrome {border-color: #a94442 !important;}
+#desktop .has-error .cke_bottom {background-color: #a94442 !important;}

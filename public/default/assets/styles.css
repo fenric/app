@@ -1,0 +1,27 @@
+p:last-child {
+	margin-bottom: 0;
+}
+
+img {
+	max-width: 100%;
+}
+
+.text-reset {
+	color: inherit !important;
+}
+
+.navbar-main {
+	padding-left: 0;
+}
+
+.breadcrumb {
+	padding: 0;
+	background-color: transparent;
+}
+.breadcrumb-item +
+.breadcrumb-item::before {
+	content: "\25B8";
+}
+.breadcrumb-item {
+	font-size: 0.8em;
+}

@@ -1,0 +1,195 @@
+<?php $this->layout('layout') ?>
+
+<?php $this->start('metadata') ?>
+<title><?= e($publication->getMetaTitle() ?: $publication->getHeader()) ?></title>
+
+<?php if ($publication->getMetaAuthor()) : ?>
+	<meta name="author" content="<?= e($publication->getMetaAuthor()) ?>" />
+<?php endif; ?>
+
+<?php if ($publication->getMetaKeywords()) : ?>
+	<meta name="keywords" content="<?= e($publication->getMetaKeywords()) ?>" />
+<?php endif; ?>
+
+<?php if ($publication->getMetaDescription()) : ?>
+	<meta name="description" content="<?= e($publication->getMetaDescription()) ?>" />
+<?php endif; ?>
+
+<?php if ($publication->getMetaRobots()) : ?>
+	<meta name="robots" content="<?= e($publication->getMetaRobots()) ?>" />
+<?php endif; ?>
+
+<?php if ($publication->getMetaCanonical()) : ?>
+	<link rel="canonical" href="<?= e($publication->getMetaCanonical()) ?>" />
+<?php endif; ?>
+
+<script>
+var disqus_config = function() {
+	this.page.identifier = <?= $publication->getId() ?>;
+};
+</script>
+<?php $this->stop() ?>
+
+<?php $this->start('stylesheets') ?>
+<?php $this->stop() ?>
+
+<?php $this->start('javascripts') ?>
+<script>$('.carousel').carousel({keyboard: false});</script>
+<script id="dsq-count-scr" src="//fenric-cms-demo-local.disqus.com/count.js?v2" async></script>
+<?php $this->stop() ?>
+
+<div class="container mt-3">
+	<nav class="breadcrumb">
+		<a class="breadcrumb-item" href="/">Главная</a>
+		<a class="breadcrumb-item" href="<?= $publication->getSection()->getUri() ?>"><?= $publication->getSection()->getHeader() ?></a>
+		<span class="breadcrumb-item active"><?= $publication->getHeader() ?></span>
+	</nav>
+</div>
+
+<div class="container mt-4">
+	<h1 class="display-3"><?= $publication->getHeader() ?></h1>
+</div>
+
+<div class="container mt-4">
+	<div class="text-muted">
+		<small class="mr-3"><i class="fa fa-calendar-o" aria-hidden="true"></i> <?= $publication->getCreatedAt()->format('d.m.Y H:i') ?></small>
+		<small class="mr-3"><i class="fa fa-user-o" aria-hidden="true"></i> <a class="text-reset" href="/user/<?= $publication->getUserRelatedByCreatedBy()->getId() ?>/"><?= $publication->getUserRelatedByCreatedBy()->getName() ?></a></small>
+		<small class="mr-3"><i class="fa fa-folder-o" aria-hidden="true"></i> <a class="text-reset" href="<?= $publication->getSection()->getUri() ?>"><?= $publication->getSection()->getHeader() ?></a></small>
+		<small class="mr-3"><i class="fa fa-camera-retro" aria-hidden="true"></i> <a class="text-reset" href="<?= $publication->getUri() ?>#publication_gallery"><?= $publication->getCountPhotos() ?></a></small>
+		<small class="mr-3"><i class="fa fa-comments-o" aria-hidden="true"></i> <a class="text-reset disqus-comment-count" data-disqus-identifier="<?= $publication->getId() ?>" href="<?= $publication->getUri() ?>#disqus_thread"><i class="fa fa-spinner fa-spin"></i></a></small>
+		<small class="mr-3"><i class="fa fa-eye" aria-hidden="true"></i> <?= $publication->getHits() ?></small>
+	</div>
+</div>
+
+<?php if ($publication->getPicture() || $publication->getCover()) : ?>
+	<div class="container mt-4">
+		<div id="publication_gallery" class="carousel slide" data-interval="false">
+
+			<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture()->count() > 0) : ?>
+				<ol class="carousel-indicators">
+					<li data-target="#publication_gallery" data-slide-to="0" class="active"></li>
+
+					<?php for ($i = 1; $i <= $publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture()->count(); $i++) : ?>
+						<li data-target="#publication_gallery" data-slide-to="<?= $i ?>"></li>
+					<?php endfor; ?>
+				</ol>
+			<?php endif; ?>
+
+			<div class="carousel-inner" role="listbox">
+				<div class="carousel-item active">
+					<a href="/upload/<?= $publication->getPicture() ?: $publication->getCover() ?>" target="_blank" data-fancybox="publication_gallery">
+						<img class="d-block img-fluid" src="/upload/1200x675/<?= $publication->getPicture() ?: $publication->getCover() ?>" alt="" />
+					</a>
+
+					<?php if ($publication->getPicture()) : ?>
+						<?php if ($publication->getPictureSignature()) : ?>
+							<div class="carousel-caption d-none d-md-block">
+								<p><?= $publication->getPictureSignature() ?></p>
+							</div>
+						<?php endif; ?>
+					<?php endif; ?>
+				</div>
+
+				<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture()->count() > 0) : ?>
+					<?php foreach ($publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture() as $photo) : ?>
+						<div class="carousel-item">
+							<a href="/upload/<?= $photo->getFile() ?>" target="_blank" data-fancybox="publication_gallery">
+								<img class="d-block img-fluid" src="/upload/1200x675/<?= $photo->getFile() ?>" alt="" />
+							</a>
+						</div>
+					<?php endforeach; ?>
+				<?php endif; ?>
+			</div>
+
+			<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture()->count() > 0) : ?>
+				<a class="carousel-control-prev" href="#publication_gallery" role="button" data-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="sr-only">Назад</span>
+				</a>
+				<a class="carousel-control-next" href="#publication_gallery" role="button" data-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="sr-only">Вперёд</span>
+				</a>
+			<?php endif; ?>
+		</div>
+	</div>
+<?php endif; ?>
+
+<?php if ($publication->getContent()) : ?>
+	<div class="container mt-4">
+		<div class="clearfix">
+			<?= $publication->getSnippetableContent() ?>
+		</div>
+	</div>
+<?php endif; ?>
+
+<div class="container mt-4">
+	<div class="mb-2 text-muted">
+		<small><i class="fa fa-bullhorn" aria-hidden="true"></i> Поделиться</small>
+	</div>
+	<div class="clearfix">
+		<?= fenric('snippet::yandex-share') ?>
+	</div>
+</div>
+
+<?php if ($publication->getPublicationTags()->count() > 0) : ?>
+	<div class="container mt-4">
+		<div class="mb-1 text-muted">
+			<small><i class="fa fa-tags" aria-hidden="true"></i> Похожие темы</small>
+		</div>
+		<?php foreach ($publication->getPublicationTags() as $publicationTag) : ?>
+			<a href="<?= $publicationTag->getTag()->getUri() ?>">
+				<small>#<?= $publicationTag->getTag()->getHeader() ?></small>
+			</a>
+		<?php endforeach; ?>
+	</div>
+<?php endif; ?>
+
+<?php if ($publication->existsPreviousOrNextPublication()) : ?>
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col-6">
+				<?php if ($publication->getPreviousPublication()) : ?>
+					<div class="text-left">
+						<div class="mb-1 text-muted">
+							<small><i class="fa fa-arrow-left" aria-hidden="true"></i> Предыдущая публикация</small>
+						</div>
+						<div class="mb-1">
+							<a href="<?= $publication->getPreviousPublication()->getUri() ?>">
+								<small><?= $publication->getPreviousPublication()->getHeader() ?></small>
+							</a>
+						</div>
+						<div class="text-muted">
+							<small><?= $publication->getPreviousPublication()->getCreatedAt()->format('d.m.Y H:i') ?></small>
+						</div>
+					</div>
+				<?php endif; ?>
+			</div>
+			<div class="col-6">
+				<?php if ($publication->getNextPublication()) : ?>
+					<div class="text-right">
+						<div class="mb-1 text-muted">
+							<small>Следующая публикация <i class="fa fa-arrow-right" aria-hidden="true"></i></small>
+						</div>
+						<div class="mb-1">
+							<a href="<?= $publication->getNextPublication()->getUri() ?>">
+								<small><?= $publication->getNextPublication()->getHeader() ?></small>
+							</a>
+						</div>
+						<div class="text-muted">
+							<small><?= $publication->getNextPublication()->getCreatedAt()->format('d.m.Y H:i') ?></small>
+						</div>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
+
+<hr class="mt-5 mb-5">
+
+<div class="container">
+	<div class="clearfix">
+		<?= fenric('snippet::disqus') ?>
+	</div>
+</div>

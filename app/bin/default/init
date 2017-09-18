@@ -1,0 +1,91 @@
+#!/usr/bin/env php
+<?php
+
+chdir(__DIR__);
+set_time_limit(0);
+
+putenv('ENVIRONMENT=development');
+
+require_once '../../../vendor/autoload.php';
+
+fenric('app')->setTimezone();
+
+$admin = new \Propel\Models\User();
+$admin->setRole('administrator');
+
+while(true) {
+	fenric('console')->write('email:    ', '');
+	if ($value = fenric('console')->read()) {
+		fenric('console')->set('email', $value);
+		$admin->setEmail($value);
+		break;
+	}
+	fenric('console')->write(
+		fenric('console')->red('Empty value!')
+	);
+}
+
+while(true) {
+	fenric('console')->write('username: ', '');
+	if ($value = fenric('console')->read()) {
+		fenric('console')->set('username', $value);
+		$admin->setUsername($value);
+		break;
+	}
+	fenric('console')->write(
+		fenric('console')->red('Empty value!')
+	);
+}
+
+while(true) {
+	fenric('console')->write('password: ', '');
+	if ($value = fenric('console')->read()) {
+		fenric('console')->set('password', $value);
+		$admin->setPassword($value);
+		break;
+	}
+	fenric('console')->write(
+		fenric('console')->red('Empty value!')
+	);
+}
+
+$admin->setRegistrationConfirmed(true);
+$admin->setRegistrationConfirmedAt(new DateTime('now'));
+$admin->setRegistrationConfirmedIp('127.0.0.1');
+
+if ($admin->validate()) {
+	try {
+		if ($admin->save()) {
+			fenric('console')->write(
+				fenric('console')->green('Successful!')
+			);
+		} else {
+			fenric('console')->write(
+				fenric('console')->red('Error on save!')
+			);
+		}
+	}
+	catch (Exception $e) {
+		fenric('console')->write(
+			fenric('console')->red(
+				$e->getMessage()
+			)
+		);
+
+		while ($e = $e->getPrevious()) {
+			fenric('console')->write(
+				fenric('console')->red(
+					$e->getMessage()
+				)
+			);
+		}
+	}
+} else {
+	foreach ($admin->getValidationFailures() as $e) {
+		fenric('console')->write(
+			fenric('console')->red(
+				sprintf('[%s] %s', $e->getPropertyPath(), $e->getMessage())
+			)
+		);
+	}
+}

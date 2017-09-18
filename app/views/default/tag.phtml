@@ -1,0 +1,70 @@
+<?php $this->layout('layout') ?>
+
+<?php $this->start('metadata') ?>
+<title><?= e($tag->getMetaTitle() ?: $tag->getHeader()) ?></title>
+
+<?php if ($tag->getMetaAuthor()) : ?>
+	<meta name="author" content="<?= e($tag->getMetaAuthor()) ?>" />
+<?php endif; ?>
+
+<?php if ($tag->getMetaKeywords()) : ?>
+	<meta name="keywords" content="<?= e($tag->getMetaKeywords()) ?>" />
+<?php endif; ?>
+
+<?php if ($tag->getMetaDescription()) : ?>
+	<meta name="description" content="<?= e($tag->getMetaDescription()) ?>" />
+<?php endif; ?>
+
+<?php if ($tag->getMetaRobots()) : ?>
+	<meta name="robots" content="<?= e($tag->getMetaRobots()) ?>" />
+<?php endif; ?>
+
+<?php if ($tag->getMetaCanonical()) : ?>
+	<link rel="canonical" href="<?= e($tag->getMetaCanonical()) ?>" />
+<?php endif; ?>
+<?php $this->stop() ?>
+
+<?php $this->start('stylesheets') ?>
+<?php $this->stop() ?>
+
+<?php $this->start('javascripts') ?>
+<script id="dsq-count-scr" src="//fenric-cms-demo-local.disqus.com/count.js?v2" async></script>
+<?php $this->stop() ?>
+
+<div class="container mt-3">
+	<nav class="breadcrumb">
+		<a class="breadcrumb-item" href="/">Главная</a>
+		<a class="breadcrumb-item" href="/tags/">Теги</a>
+		<span class="breadcrumb-item active"><?= $tag->getHeader() ?></span>
+	</nav>
+</div>
+
+<div class="container mt-4">
+	<h1 class="display-1"><?= $tag->getHeader() ?></h1>
+</div>
+
+<?php if ($tag->getContent()) : ?>
+	<div class="container mt-4">
+		<div class="clearfix">
+			<?= $tag->getSnippetableContent() ?>
+		</div>
+	</div>
+<?php endif; ?>
+
+<?php if ($publications->count() > 0) : ?>
+	<div class="container mt-4">
+		<div class="row">
+			<?php foreach ($publications as $publication) : ?>
+				<?= $this->partial('publication.card', [
+					'publication' => $publication,
+				]) ?>
+			<?php endforeach; ?>
+		</div>
+
+		<nav>
+			<?= $this->partial('publications.paginate', [
+				'publications' => $publications,
+			]) ?>
+		</nav>
+	</div>
+<?php endif; ?>

@@ -1,0 +1,15 @@
+<?php if ($publications->haveToPaginate()) : ?>
+	<ul class="pagination">
+		<?php foreach ($publications->getLinks() as $page) : ?>
+			<?php if (! ($publications->getPage() === $page)) : ?>
+				<li class="page-item">
+					<a class="page-link" href="<?= url(['page' => $page]) ?>"><?= $page ?></a>
+				</li>
+			<?php else : ?>
+				<li class="page-item active">
+					<span class="page-link"><?= $page ?></span>
+				</li>
+			<?php endif; ?>
+		<?php endforeach; ?>
+	</ul>
+<?php endif; ?>

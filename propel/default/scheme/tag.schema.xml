@@ -1,0 +1,80 @@
+<database name="default" namespace="Propel\Models">
+	<behavior name="auto_add_pk" />
+
+	<table name="tag">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="code" type="varchar" required="true" />
+		<column name="header" type="varchar" required="true" primaryString="true" />
+		<column name="content" type="longvarchar" lazyLoad="true" />
+
+		<column name="meta_title" type="varchar" />
+		<column name="meta_author" type="varchar" />
+		<column name="meta_keywords" type="varchar" />
+		<column name="meta_description" type="varchar" />
+		<column name="meta_canonical" type="varchar" />
+		<column name="meta_robots" type="varchar" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="92dc5de6-e1b1-4a8b-944f-b91bf9d8d3bc"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="8008be1f-c948-4b0a-bf7e-ad3820536276"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<unique>
+			<unique-column name="code" />
+		</unique>
+
+		<index name="1635b4a5-fb36-420e-8b5d-83d2ad8c0eca">
+			<index-column name="header" />
+		</index>
+
+		<index name="2e967b41-f254-4c59-8022-a0033bc12fd3">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="269881de-eb0a-4c8a-aae9-f842cbb64f27" value="{column: code, validator: NotBlank}" />
+			<parameter name="bab9e053-b39e-40f1-9d3e-0f61c95f48b5" value="{column: code, validator: Length, options: {max: 255}}" />
+			<parameter name="d24970a2-4e2e-4335-91f0-e84dbec8e782" value="{column: code, validator: Regex, options: {pattern: '/^[a-z0-9-]+$/'}}" />
+			<parameter name="56334d18-e8be-4eb1-8a49-36e3471e5d2e" value="{column: code, validator: Unique}" />
+
+			<parameter name="5dd01197-843e-48c9-a637-67703bd4c230" value="{column: header, validator: NotBlank}" />
+			<parameter name="a8224fe8-8e25-445d-8af4-0d00e361c89f" value="{column: header, validator: Length, options: {max: 255}}" />
+		</behavior>
+	</table>
+</database>

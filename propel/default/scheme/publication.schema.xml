@@ -1,0 +1,340 @@
+<database name="default" namespace="Propel\Models">
+	<behavior name="auto_add_pk" />
+
+	<table name="section">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="parent_id" type="integer" />
+
+		<column name="code" type="varchar" required="true" />
+		<column name="header" type="varchar" required="true" primaryString="true" />
+		<column name="picture" type="varchar" />
+		<column name="content" type="longvarchar" lazyLoad="true" />
+
+		<column name="meta_title" type="varchar" />
+		<column name="meta_author" type="varchar" />
+		<column name="meta_keywords" type="varchar" />
+		<column name="meta_description" type="varchar" />
+		<column name="meta_canonical" type="varchar" />
+		<column name="meta_robots" type="varchar" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="bbf67a39-999a-4624-86f0-ede675b26d97"
+			foreignTable="section"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="parent_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="ae3af8a9-dacd-4b52-a60a-e13fb80e7342"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="3aaa7a88-b516-4f37-a575-84aea282b1ed"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<unique>
+			<unique-column name="code" />
+		</unique>
+
+		<index name="13b1aca8-173e-477e-9437-cf57d593e5f7">
+			<index-column name="header" />
+		</index>
+
+		<index name="8572f35e-590b-49d6-b224-c3a99e0fce00">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="676a1cf1-6709-4a19-b9f6-d01d0fd08754" value="{column: code, validator: NotBlank}" />
+			<parameter name="49017c8c-c622-487d-b07f-de57a123ee57" value="{column: code, validator: Length, options: {max: 255}}" />
+			<parameter name="66306ec4-3d80-418d-96a8-21a8b23a2ec6" value="{column: code, validator: Regex, options: {pattern: '/^[a-z0-9-]+$/'}}" />
+			<parameter name="f682b300-404a-4360-ab9b-f95319e88778" value="{column: code, validator: Unique}" />
+
+			<parameter name="e181d836-1742-42ec-9017-ee98b44da1f4" value="{column: header, validator: NotBlank}" />
+			<parameter name="f271845e-ee03-4fe4-9442-9b695c0470ac" value="{column: header, validator: Length, options: {max: 255}}" />
+		</behavior>
+	</table>
+
+	<table name="publication">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="section_id" type="integer" />
+
+		<column name="code" type="varchar" required="true" />
+		<column name="header" type="varchar" required="true" primaryString="true" />
+
+		<column name="picture" type="varchar" />
+		<column name="picture_signature" type="varchar" />
+
+		<column name="anons" type="longvarchar" required="true" />
+		<column name="content" type="longvarchar" lazyLoad="true" />
+
+		<column name="meta_title" type="varchar" />
+		<column name="meta_author" type="varchar" />
+		<column name="meta_keywords" type="varchar" />
+		<column name="meta_description" type="varchar" />
+		<column name="meta_canonical" type="varchar" />
+		<column name="meta_robots" type="varchar" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<column name="show_at" type="timestamp" />
+		<column name="hide_at" type="timestamp" />
+
+		<column name="hits" type="numeric" defaultValue="0" />
+
+		<foreign-key
+			name="6ee6d124-043c-4286-abd8-b2c1d71c4667"
+			foreignTable="section"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="section_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="e15643e9-5fd8-4ea8-a247-6c2537382ecd"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="5de60282-9ecc-4beb-b2b8-8f7340cb359a"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<unique>
+			<unique-column name="code" />
+		</unique>
+
+		<index name="3ad20d0e-ffb1-4a40-a1ca-08c50aab5310">
+			<index-column name="header" />
+		</index>
+
+		<index name="4e574eb5-d10a-496c-bfed-912e788ea908">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<index name="5c0359c2-c605-40f4-a0af-1e6169aec259">
+			<index-column name="show_at" />
+			<index-column name="hide_at" />
+		</index>
+
+		<index name="610d07e6-0a39-4389-9ba7-2d4e2395f37c">
+			<index-column name="hits" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="afc9cd67-3404-433d-a31c-64f70667e860" value="{column: section_id, validator: NotBlank}" />
+
+			<parameter name="6551e8ac-ba0e-437d-8119-383d1416b2be" value="{column: code, validator: NotBlank}" />
+			<parameter name="f77ae358-102a-4463-ac6d-6c272fbf1436" value="{column: code, validator: Length, options: {max: 255}}" />
+			<parameter name="ee29298c-b48b-439f-9092-bee3a5413621" value="{column: code, validator: Regex, options: {pattern: '/^[a-z0-9-]+$/'}}" />
+			<parameter name="bf904dba-1e43-4acb-b264-65780e592451" value="{column: code, validator: Unique}" />
+
+			<parameter name="b0f5c375-4f19-46e8-ac86-6ff4155ea81b" value="{column: header, validator: NotBlank}" />
+			<parameter name="9402ba43-e119-42bb-b8ca-2a0222cdbabd" value="{column: header, validator: Length, options: {max: 255}}" />
+
+			<parameter name="23b4a998-69ea-4678-894d-709f8b90b9d3" value="{column: anons, validator: NotBlank}" />
+
+			<parameter name="5d9cda19-883c-42a0-a755-8bfe9b72e34b" value="{column: show_at, validator: NotBlank}" />
+			<parameter name="24158573-10ca-4ff3-8dee-588f2ade0cec" value="{column: show_at, validator: Date}" />
+
+			<parameter name="4c2760cf-8773-4747-a3e6-52f9fd5d9e60" value="{column: hide_at, validator: Date}" />
+		</behavior>
+	</table>
+
+	<table name="publication_photo">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="publication_id" type="integer" />
+
+		<column name="file" type="varchar" required="true" primaryString="true" />
+		<column name="display" type="boolean" required="true" defaultValue="1" />
+		<column name="sequence" type="numeric" required="true" defaultValue="0" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="6b3df94b-0ba8-41ce-b69f-26ed76e0c2c9"
+			foreignTable="publication"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="publication_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="4a98dd55-562d-4156-8f45-974be136fe79"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="70daf54c-b6a6-437d-87a9-4eee28f9a1f1"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<index name="51f4b0ac-01f3-4278-9370-4b872fe8010c">
+			<index-column name="display" />
+			<index-column name="sequence" />
+		</index>
+
+		<index name="666f85a9-0451-4b4d-a2d1-00874de229d9">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+	</table>
+
+	<table name="publication_tag">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="publication_id" type="integer" />
+		<column name="tag_id" type="integer" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="9be06349-8b35-4620-b8db-75d284af1940"
+			foreignTable="publication"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="publication_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="d28b04f8-5f70-4c73-9c6a-179cb17df43f"
+			foreignTable="tag"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="tag_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="7aa32bdc-2fcb-40f3-b4cb-4e5abe63b6f5"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="c3377e91-04d6-48b0-9412-4305f2140629"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+	</table>
+</database>

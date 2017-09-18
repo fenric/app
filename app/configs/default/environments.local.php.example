@@ -1,0 +1,11 @@
+<?php
+
+$environments = [];
+
+$environments['git'] = '/usr/bin/git';
+
+$environments['php'] = '/usr/bin/php';
+
+$environments['composer'] = '/usr/local/bin/composer';
+
+return $environments;

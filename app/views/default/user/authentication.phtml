@@ -1,0 +1,33 @@
+<?php $this->layout('layout') ?>
+
+<h2 class="mb-4">Аутентификация</h2>
+
+<form action="/user/login/process/" method="post">
+	<?php if (isset($authenticationError)) : ?>
+		<div class="form-group">
+			<div class="alert alert-danger">
+				<p><?= $authenticationError ?></p>
+			</div>
+		</div>
+	<?php endif; ?>
+
+	<?php if (isset($registrationConfirm)) : ?>
+		<div class="form-group">
+			<div class="alert alert-success">
+				<p><?= fenric()->t('user', 'registration.confirm.success') ?></p>
+			</div>
+		</div>
+	<?php endif; ?>
+
+	<div class="form-group <?php if (isset($authenticationError)) {echo 'has-danger';} ?>">
+		<label for="authentication-field-username">Логин</label>
+		<input id="authentication-field-username" class="form-control" type="text" name="username" value="<?= e($authenticationUsername) ?>" maxlength="48" required="true" placeholder="username" />
+	</div>
+	<div class="form-group <?php if (isset($authenticationError)) {echo 'has-danger';} ?>">
+		<label for="authentication-field-password">Пароль</label>
+		<input id="authentication-field-password" class="form-control" type="password" name="password" maxlength="256" required="true" placeholder="password" />
+	</div>
+	<div class="form-group">
+		<button class="btn btn-primary" type="submit">Войти</button> &nbsp;<span class="text-muted">|</span>&nbsp; <a href="/user/login/token/create/">Я забыл пароль</a>
+	</div>
+</form>

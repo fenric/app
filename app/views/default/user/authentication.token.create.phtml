@@ -1,0 +1,22 @@
+<?php $this->layout('layout') ?>
+
+<h2 class="mb-4">Создание аутентификационного токена</h2>
+
+<form action="/user/login/token/create/process/" method="post">
+	<?php if (isset($error)) : ?>
+		<div class="form-group">
+			<div class="alert alert-danger">
+				<p><?= $error ?></p>
+			</div>
+		</div>
+	<?php endif; ?>
+
+	<div class="form-group">
+		<label for="authentication-token-create-field-email">E-mail</label>
+		<input id="authentication-token-create-field-email" class="form-control" type="text" name="email" maxlength="128" required="true" placeholder="demo@example.com" />
+		<small class="form-text text-muted">Для идентификации вашей учетной записи необходимо указать привязанный к ней электронный адрес.</small>
+	</div>
+	<div class="form-group">
+		<button class="btn btn-primary" type="submit">Продолжить</button> &nbsp;<span class="text-muted">|</span>&nbsp; <a href="/user/registration/">Регистрация</a>
+	</div>
+</form>
