@@ -27,10 +27,10 @@ class Update extends Abstractable
 
 		$content = '';
 
-		$content .= $this->execute(fenric()->path('.'), fenric('config::environments')->get('git') . ' pull ' . fenric('config::app')->get('repository') . ' master');
+		$content .= $this->execute(fenric()->path('.'), fenric('config::environments')->get('composer') . ' update');
 		$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 
-		$content .= $this->execute(fenric()->path('.'), fenric('config::environments')->get('composer') . ' update');
+		$content .= $this->execute(fenric()->path('.'), fenric('config::environments')->get('git') . ' pull ' . fenric('config::app')->get('repository') . ' master');
 		$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 
 		$content .= $this->execute(fenric()->path('bin'), fenric('config::environments')->get('php') . ' propel migrate');
