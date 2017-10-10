@@ -77,15 +77,15 @@
 
 						$desktop.app.style.backgroundImage = 'url(/upload/' + response.file + ')';
 
-						self.xhr.get('/upload/{file}', {file: response.file}).complete(function(response)
+						self.xhr.get('/upload/{file}', {file: response.file}).complete(function()
 						{
-							self.xhr.patch(self.routes.saveDesktopWallpaper, {'wallpaper': response.file}, {repeat: true}).complete(function(response)
+							self.xhr.patch(self.routes.saveDesktopWallpaper, {'wallpaper': response.file}, {repeat: true}).complete(function()
 							{
 								$desktop.show();
 							});
 						});
 
-					}).complete(function(response)
+					}).complete(function()
 					{
 						element.value = null;
 						element.disabled = false;
