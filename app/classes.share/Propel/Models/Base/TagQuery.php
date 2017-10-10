@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'tag' table.
+ * Base class that represents a query for the 'fenric_tag' table.
  *
  *
  *
@@ -239,7 +239,7 @@ abstract class TagQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, code, header, meta_title, meta_author, meta_keywords, meta_description, meta_canonical, meta_robots, created_at, created_by, updated_at, updated_by FROM tag WHERE id = :p0';
+        $sql = 'SELECT id, code, header, meta_title, meta_author, meta_keywords, meta_description, meta_canonical, meta_robots, created_at, created_by, updated_at, updated_by FROM fenric_tag WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1011,7 +1011,7 @@ abstract class TagQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the tag table.
+     * Deletes all rows from the fenric_tag table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

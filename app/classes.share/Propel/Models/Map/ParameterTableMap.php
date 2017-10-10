@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'parameter' table.
+ * This class defines the structure of the 'fenric_parameter' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class ParameterTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'parameter';
+    const TABLE_NAME = 'fenric_parameter';
 
     /**
      * The related Propel class for this table
@@ -74,17 +74,17 @@ class ParameterTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    const COL_ID = 'parameter.id';
+    const COL_ID = 'fenric_parameter.id';
 
     /**
      * the column name for the code field
      */
-    const COL_CODE = 'parameter.code';
+    const COL_CODE = 'fenric_parameter.code';
 
     /**
      * the column name for the value field
      */
-    const COL_VALUE = 'parameter.value';
+    const COL_VALUE = 'fenric_parameter.value';
 
     /**
      * The default string format for model objects of the related table
@@ -129,7 +129,7 @@ class ParameterTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('parameter');
+        $this->setName('fenric_parameter');
         $this->setPhpName('Parameter');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Propel\\Models\\Parameter');
@@ -377,7 +377,7 @@ class ParameterTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the parameter table.
+     * Deletes all rows from the fenric_parameter table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

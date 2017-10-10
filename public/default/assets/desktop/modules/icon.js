@@ -49,7 +49,7 @@
 
 		if (! (state.top == top && state.left == left))
 		{
-			$desktop.module('request').patch('/admin/api/save-desktop-icon/', {id: id, top: top, left: left});
+			$desktop.module('request').patch('{root}/api/save-desktop-icon/', {id: id, top: top, left: left});
 		}
 	};
 

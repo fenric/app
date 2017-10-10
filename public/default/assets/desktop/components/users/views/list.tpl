@@ -163,23 +163,23 @@
 						</td>
 						<td>
 							{{when registration_ip is not empty}}
-								<p><strong>IP при регистрации</strong>
-								<br><span>{{registration_ip}}</span></p>
+								<p><strong>Регистрация</strong>
+								<br><a href="javascript:void(0)">{{registration_ip}}</a></p>
 							{{endwhen registration_ip}}
 
 							{{when registration_confirmed_ip is not empty}}
-								<p><strong>IP при подтверждении регистрации</strong>
-								<br><span>{{registration_confirmed_ip}}</span></p>
+								<p><strong>Подтверждение регистрации</strong>
+								<br><a href="javascript:void(0)">{{registration_confirmed_ip}}</a></p>
 							{{endwhen registration_confirmed_ip}}
 
 							{{when authentication_ip is not empty}}
-								<p><strong>IP при последней аутентификации</strong>
-								<br><span>{{authentication_ip}}</span></p>
+								<p><strong>Последняя аутентификация</strong>
+								<br><a href="javascript:void(0)">{{authentication_ip}}</a></p>
 							{{endwhen authentication_ip}}
 
 							{{when track_ip is not empty}}
-								<p><strong>IP при последней активности</strong>
-								<br><span>{{track_ip}}</span></p>
+								<p><strong>Последняя активность</strong>
+								<br><a href="javascript:void(0)">{{track_ip}}</a></p>
 							{{endwhen track_ip}}
 						</td>
 						<td>

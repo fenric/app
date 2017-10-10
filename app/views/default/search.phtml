@@ -8,7 +8,6 @@
 <?php $this->stop() ?>
 
 <?php $this->start('javascripts') ?>
-<script id="dsq-count-scr" src="//fenric-cms-demo-local.disqus.com/count.js?v2" async></script>
 <?php $this->stop() ?>
 
 <div class="container mt-3">
@@ -47,8 +46,8 @@
 			</div>
 
 			<nav>
-				<?= $this->partial('publications.paginate', [
-					'publications' => $publications,
+				<?= $this->partial('paginate', [
+					'criteria' => $publications,
 				]) ?>
 			</nav>
 		<?php else : ?>

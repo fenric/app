@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'snippet' table.
+ * This class defines the structure of the 'fenric_snippet' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class SnippetTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'snippet';
+    const TABLE_NAME = 'fenric_snippet';
 
     /**
      * The related Propel class for this table
@@ -74,42 +74,42 @@ class SnippetTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    const COL_ID = 'snippet.id';
+    const COL_ID = 'fenric_snippet.id';
 
     /**
      * the column name for the code field
      */
-    const COL_CODE = 'snippet.code';
+    const COL_CODE = 'fenric_snippet.code';
 
     /**
      * the column name for the title field
      */
-    const COL_TITLE = 'snippet.title';
+    const COL_TITLE = 'fenric_snippet.title';
 
     /**
      * the column name for the value field
      */
-    const COL_VALUE = 'snippet.value';
+    const COL_VALUE = 'fenric_snippet.value';
 
     /**
      * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'snippet.created_at';
+    const COL_CREATED_AT = 'fenric_snippet.created_at';
 
     /**
      * the column name for the created_by field
      */
-    const COL_CREATED_BY = 'snippet.created_by';
+    const COL_CREATED_BY = 'fenric_snippet.created_by';
 
     /**
      * the column name for the updated_at field
      */
-    const COL_UPDATED_AT = 'snippet.updated_at';
+    const COL_UPDATED_AT = 'fenric_snippet.updated_at';
 
     /**
      * the column name for the updated_by field
      */
-    const COL_UPDATED_BY = 'snippet.updated_by';
+    const COL_UPDATED_BY = 'fenric_snippet.updated_by';
 
     /**
      * The default string format for model objects of the related table
@@ -154,7 +154,7 @@ class SnippetTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('snippet');
+        $this->setName('fenric_snippet');
         $this->setPhpName('Snippet');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Propel\\Models\\Snippet');
@@ -167,9 +167,9 @@ class SnippetTableMap extends TableMap
         $this->getColumn('title')->setPrimaryString(true);
         $this->addColumn('value', 'Value', 'LONGVARCHAR', true, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
     } // initialize()
 
     /**
@@ -432,7 +432,7 @@ class SnippetTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the snippet table.
+     * Deletes all rows from the fenric_snippet table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

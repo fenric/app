@@ -5,9 +5,16 @@ namespace Fenric\Controllers\Admin;
 /**
  * Import classes
  */
+use DateTime;
+
 use Propel\Models\Section;
 use Propel\Models\SectionQuery;
 use Propel\Models\Map\SectionTableMap;
+
+use Propel\Models\SectionField;
+use Propel\Models\SectionFieldQuery;
+use Propel\Models\Map\SectionFieldTableMap;
+
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Fenric\Controllers\Abstractable\CRUD;
@@ -82,6 +89,42 @@ class ApiSection extends CRUD
 	 */
 	protected function actionReadViaGET() : void
 	{
+		fenric()->callSharedService('event', [self::EVENT_PREPARE_ITEM])->subscribe(function(Section $section, array & $json)
+		{
+			$json['fields'] = [];
+
+			if ($section->getSortableSectionFields()->count() > 0)
+			{
+				foreach ($section->getSortableSectionFields() as $i => $sectionField)
+				{
+					$json['fields'][$i]['id'] = $sectionField->getId();
+					$json['fields'][$i]['parent']['id'] = $sectionField->getField()->getId();
+
+					$json['fields'][$i]['parent']['type'] = $sectionField->getField()->getType();
+					$json['fields'][$i]['parent']['name'] = $sectionField->getField()->getName();
+
+					$json['fields'][$i]['parent']['label'] = $sectionField->getField()->getLabel();
+					$json['fields'][$i]['parent']['tooltip'] = $sectionField->getField()->getTooltip();
+
+					$json['fields'][$i]['parent']['default_value'] = $sectionField->getField()->getDefaultValue();
+
+					$json['fields'][$i]['parent']['is_unique'] = $sectionField->getField()->isUnique();
+					$json['fields'][$i]['parent']['is_required'] = $sectionField->getField()->isRequired();
+
+					if ($sectionField->getUser() instanceof ActiveRecordInterface)
+					{
+						$json['fields'][$i]['attached_by']['id'] = $sectionField->getUser()->getId();
+						$json['fields'][$i]['attached_by']['username'] = $sectionField->getUser()->getUsername();
+					}
+
+					if ($sectionField->getCreatedAt() instanceof DateTime)
+					{
+						$json['fields'][$i]['attached_at'] = $sectionField->getCreatedAt()->format(DateTime::W3C);
+					}
+				}
+			}
+		});
+
 		parent::read(SectionQuery::create(), [
 			SectionTableMap::COL_ID,
 			SectionTableMap::COL_CODE,
@@ -105,13 +148,14 @@ class ApiSection extends CRUD
 		fenric()->callSharedService('event', [self::EVENT_PREPARE_ITEM])->subscribe(function(Section $section, array & $json)
 		{
 			$json['uri'] = $section->getUri();
+			$json['fields'] = $section->getCountFields();
 			$json['publications'] = $section->getCountPublications();
 
-			if ($section->getSectionRelatedByParentId() instanceof ActiveRecordInterface)
+			if ($section->getParent() instanceof ActiveRecordInterface)
 			{
 				$json['parent'] = [];
-				$json['creator']['id'] = $section->getSectionRelatedByParentId()->getId();
-				$json['creator']['username'] = $section->getSectionRelatedByParentId()->getHeader();
+				$json['creator']['id'] = $section->getParent()->getId();
+				$json['creator']['username'] = $section->getParent()->getHeader();
 			}
 
 			if ($section->getUserRelatedByCreatedBy() instanceof ActiveRecordInterface)
@@ -151,14 +195,52 @@ class ApiSection extends CRUD
 	/**
 	 * Простая выгрузка объектов
 	 */
-	protected function actionUnloadViaGet()
+	protected function actionUnloadViaGET() : void
 	{
 		$this->response->setJsonContent(
 			fenric('query')
 				->select(SectionTableMap::COL_ID)
 				->select(SectionTableMap::COL_HEADER)
 				->from(SectionTableMap::TABLE_NAME)
-				->toArray()
+			->toArray()
 		);
+	}
+
+	/**
+	 * Прикрепление дополнительного поля к объекту
+	 */
+	protected function actionAttachFieldViaPOST() : void
+	{
+		parent::create(new SectionField(), [
+			SectionFieldTableMap::COL_SECTION_ID => $this->request->parameters->get('id'),
+			SectionFieldTableMap::COL_FIELD_ID => $this->request->getBody(),
+		]);
+	}
+
+	/**
+	 * Открепление дополнительного поля от объекта
+	 */
+	protected function actionDetachFieldViaDELETE() : void
+	{
+		parent::delete(SectionFieldQuery::create());
+	}
+
+	/**
+	 * Сортировка дополнительных полей объекта
+	 */
+	protected function actionSortFieldsViaPATCH() : void
+	{
+		$sequence = 0;
+
+		foreach ($this->request->post->all() as $id)
+		{
+			$update[SectionFieldTableMap::COL_SEQUENCE] = ++$sequence;
+
+			fenric('query')
+				->update(SectionFieldTableMap::TABLE_NAME, $update)
+				->where(SectionFieldTableMap::COL_ID, '=', $id)
+				->limit(1)
+			->shutdown();
+		}
 	}
 }

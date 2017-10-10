@@ -174,7 +174,7 @@ class ApiUser extends CRUD
 	/**
 	 * Простая выгрузка объектов
 	 */
-	protected function actionUnloadViaGet()
+	protected function actionUnloadViaGET() : void
 	{
 		$this->response->setJsonContent(
 			fenric('query')

@@ -25,7 +25,7 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'publication_photo' table.
+ * Base class that represents a row from the 'fenric_publication_photo' table.
  *
  *
  *
@@ -1096,7 +1096,7 @@ abstract class PublicationPhoto implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO publication_photo (%s) VALUES (%s)',
+            'INSERT INTO fenric_publication_photo (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1282,7 +1282,7 @@ abstract class PublicationPhoto implements ActiveRecordInterface
                         $key = 'publication';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'publication';
+                        $key = 'fenric_publication';
                         break;
                     default:
                         $key = 'Publication';
@@ -1297,7 +1297,7 @@ abstract class PublicationPhoto implements ActiveRecordInterface
                         $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'user';
+                        $key = 'fenric_user';
                         break;
                     default:
                         $key = 'User';
@@ -1312,7 +1312,7 @@ abstract class PublicationPhoto implements ActiveRecordInterface
                         $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'user';
+                        $key = 'fenric_user';
                         break;
                     default:
                         $key = 'User';

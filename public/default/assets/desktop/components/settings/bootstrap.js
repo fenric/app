@@ -17,8 +17,8 @@
 		this.template = this.root + '/views/form.tpl';
 
 		this.routes = {};
-		this.routes.saveDesktopPalette = '/admin/api/save-desktop-palette/';
-		this.routes.saveDesktopWallpaper = '/admin/api/save-desktop-wallpaper/';
+		this.routes.saveDesktopPalette = '{root}/api/save-desktop-palette/';
+		this.routes.saveDesktopWallpaper = '{root}/api/save-desktop-wallpaper/';
 	};
 
 	/**
@@ -49,36 +49,48 @@
 					tpl.format()
 				).unblock();
 
-				modal.listenClick('.sort-desktop-icons', function(event)
+				modal.click('.sort-desktop-icons', function(event)
 				{
 					event.preventDefault();
 
 					$desktop.module('icon').sort();
 				});
 
-				modal.listenClick('.desktop-pallet', function(event)
+				modal.click('.desktop-pallet', function(event)
 				{
 					$desktop.decorate(this.getAttribute('data-value'), function(pallet)
 					{
-						self.httpRequest.patch(self.routes.saveDesktopPalette, {'palette': pallet}, {repeat: true});
+						self.xhr.patch(self.routes.saveDesktopPalette, {'palette': pallet}, {repeat: true});
 					});
 				});
 
-				modal.listenChange('.desktop-wallpaper', function(event)
+				modal.change('.desktop-wallpaper', function(event, element)
 				{
-					event.preventDefault();
-					event.target.disabled = true;
+					$desktop.hide();
 
-					$desktop.component('uploader').image(this.files[0], function(response)
+					event.preventDefault();
+					element.disabled = true;
+
+					$desktop.component('uploader').image(element.files[0], function(response)
 					{
+						$desktop.hide();
+
 						$desktop.app.style.backgroundImage = 'url(/upload/' + response.file + ')';
 
-						self.httpRequest.patch(self.routes.saveDesktopWallpaper, {'wallpaper': response.file}, {repeat: true});
+						self.xhr.get('/upload/{file}', {file: response.file}).complete(function(response)
+						{
+							self.xhr.patch(self.routes.saveDesktopWallpaper, {'wallpaper': response.file}, {repeat: true}).complete(function(response)
+							{
+								$desktop.show();
+							});
+						});
 
 					}).complete(function(response)
 					{
-						event.target.value = null;
-						event.target.disabled = false;
+						element.value = null;
+						element.disabled = false;
+
+						$desktop.show();
 					});
 				});
 			});

@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Base class that represents a row from the 'snippet' table.
+ * Base class that represents a row from the 'fenric_snippet' table.
  *
  *
  *
@@ -1066,7 +1066,7 @@ abstract class Snippet implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO snippet (%s) VALUES (%s)',
+            'INSERT INTO fenric_snippet (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1245,7 +1245,7 @@ abstract class Snippet implements ActiveRecordInterface
                         $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'user';
+                        $key = 'fenric_user';
                         break;
                     default:
                         $key = 'User';
@@ -1260,7 +1260,7 @@ abstract class Snippet implements ActiveRecordInterface
                         $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'user';
+                        $key = 'fenric_user';
                         break;
                     default:
                         $key = 'User';

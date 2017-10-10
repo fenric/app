@@ -1,9 +1,16 @@
 <form class="form">
 	<nav class="top">
-		<div class="btn-group">
-			<button type="submit" class="btn btn-sm btn-success">
-				<i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить
-			</button>
+		<div class="clearfix">
+			<div class="btn-group pull-left">
+				<button type="submit" class="btn btn-sm btn-success">
+					<i class="fa fa-floppy-o" aria-hidden="true"></i> Сохранить
+				</button>
+			</div>
+			<div class="btn-group pull-right">
+				<button type="button" class="btn btn-sm btn-info" onclick="$desktop.component('sections').help()">
+					<i class="fa fa-life-ring" aria-hidden="true"></i> Помощь
+				</button>
+			</div>
 		</div>
 	</nav>
 

@@ -15,7 +15,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'parameter' table.
+ * Base class that represents a query for the 'fenric_parameter' table.
  *
  *
  *
@@ -151,7 +151,7 @@ abstract class ParameterQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, code, value FROM parameter WHERE id = :p0';
+        $sql = 'SELECT id, code, value FROM fenric_parameter WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -349,7 +349,7 @@ abstract class ParameterQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the parameter table.
+     * Deletes all rows from the fenric_parameter table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

@@ -1,6 +1,8 @@
 <?php
 
-$config = __DIR__ . '/' . fenric()->getApplicationId() . '/config/config.php';
+$appId = fenric()->getApplicationId();
+
+$config = __DIR__ . '/' . $appId . '/config/config.php';
 
 if (file_exists($config))
 {

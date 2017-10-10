@@ -19,16 +19,16 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<td width="10%">
+					<td width="10%" align="center">
 						<span class="text-muted">Изображение</span>
 					</td>
-					<td width="26%">
+					<td width="30%">
 						<span class="text-muted">Основное</span>
 					</td>
-					<td width="26%">
+					<td width="30%">
 						<span class="text-muted">Метаданные</span>
 					</td>
-					<td width="26%">
+					<td width="20%">
 						<span class="text-muted">История изменений</span>
 					</td>
 					<td width="10%" align="center">
@@ -39,9 +39,9 @@
 			<tbody>
 				{{repeat items.items}}
 					<tr data-id="{{id}}">
-						<td>
+						<td align="center">
 							{{when picture is empty}}
-								<p><span class="text-muted">Отсутствует</span></p>
+								<p><span class="label label-default">Отсутствует</span></p>
 							{{endwhen picture}}
 
 							{{when picture is not empty}}
@@ -54,6 +54,9 @@
 
 							<p><strong>Заголовок</strong>
 							<br><span>{{header}}</span></p>
+
+							<p><strong>Количество дополнительных полей</strong>
+							<br><span>{{fields|0}}</span></p>
 
 							<p><strong>Количество публикаций</strong>
 							<br><span>{{publications|0}}</span></p>
@@ -108,6 +111,9 @@
 								<a class="btn btn-block btn-sm btn-default" href="{{uri}}" target="_blank">
 									<small>На сайте</small>
 								</a>
+								<button class="btn btn-block btn-sm btn-primary" type="button" onclick="$desktop.component('sections').fields({{id}})">
+									<small>Дополнительные поля</small>
+								</button>
 								<button class="btn btn-block btn-sm btn-warning" type="button" onclick="$desktop.component('sections').edit({{id}})">
 									<small>Редактировать</small>
 								</button>

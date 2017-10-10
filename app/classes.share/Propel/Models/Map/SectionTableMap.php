@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'section' table.
+ * This class defines the structure of the 'fenric_section' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class SectionTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'section';
+    const TABLE_NAME = 'fenric_section';
 
     /**
      * The related Propel class for this table
@@ -74,82 +74,82 @@ class SectionTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    const COL_ID = 'section.id';
+    const COL_ID = 'fenric_section.id';
 
     /**
      * the column name for the parent_id field
      */
-    const COL_PARENT_ID = 'section.parent_id';
+    const COL_PARENT_ID = 'fenric_section.parent_id';
 
     /**
      * the column name for the code field
      */
-    const COL_CODE = 'section.code';
+    const COL_CODE = 'fenric_section.code';
 
     /**
      * the column name for the header field
      */
-    const COL_HEADER = 'section.header';
+    const COL_HEADER = 'fenric_section.header';
 
     /**
      * the column name for the picture field
      */
-    const COL_PICTURE = 'section.picture';
+    const COL_PICTURE = 'fenric_section.picture';
 
     /**
      * the column name for the content field
      */
-    const COL_CONTENT = 'section.content';
+    const COL_CONTENT = 'fenric_section.content';
 
     /**
      * the column name for the meta_title field
      */
-    const COL_META_TITLE = 'section.meta_title';
+    const COL_META_TITLE = 'fenric_section.meta_title';
 
     /**
      * the column name for the meta_author field
      */
-    const COL_META_AUTHOR = 'section.meta_author';
+    const COL_META_AUTHOR = 'fenric_section.meta_author';
 
     /**
      * the column name for the meta_keywords field
      */
-    const COL_META_KEYWORDS = 'section.meta_keywords';
+    const COL_META_KEYWORDS = 'fenric_section.meta_keywords';
 
     /**
      * the column name for the meta_description field
      */
-    const COL_META_DESCRIPTION = 'section.meta_description';
+    const COL_META_DESCRIPTION = 'fenric_section.meta_description';
 
     /**
      * the column name for the meta_canonical field
      */
-    const COL_META_CANONICAL = 'section.meta_canonical';
+    const COL_META_CANONICAL = 'fenric_section.meta_canonical';
 
     /**
      * the column name for the meta_robots field
      */
-    const COL_META_ROBOTS = 'section.meta_robots';
+    const COL_META_ROBOTS = 'fenric_section.meta_robots';
 
     /**
      * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'section.created_at';
+    const COL_CREATED_AT = 'fenric_section.created_at';
 
     /**
      * the column name for the created_by field
      */
-    const COL_CREATED_BY = 'section.created_by';
+    const COL_CREATED_BY = 'fenric_section.created_by';
 
     /**
      * the column name for the updated_at field
      */
-    const COL_UPDATED_AT = 'section.updated_at';
+    const COL_UPDATED_AT = 'fenric_section.updated_at';
 
     /**
      * the column name for the updated_by field
      */
-    const COL_UPDATED_BY = 'section.updated_by';
+    const COL_UPDATED_BY = 'fenric_section.updated_by';
 
     /**
      * The default string format for model objects of the related table
@@ -194,7 +194,7 @@ class SectionTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('section');
+        $this->setName('fenric_section');
         $this->setPhpName('Section');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Propel\\Models\\Section');
@@ -202,7 +202,7 @@ class SectionTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('parent_id', 'ParentId', 'INTEGER', 'section', 'id', false, null, null);
+        $this->addForeignKey('parent_id', 'ParentId', 'INTEGER', 'fenric_section', 'id', false, null, null);
         $this->addColumn('code', 'Code', 'VARCHAR', true, 255, null);
         $this->addColumn('header', 'Header', 'VARCHAR', true, 255, null);
         $this->getColumn('header')->setPrimaryString(true);
@@ -215,9 +215,9 @@ class SectionTableMap extends TableMap
         $this->addColumn('meta_canonical', 'MetaCanonical', 'VARCHAR', false, 255, null);
         $this->addColumn('meta_robots', 'MetaRobots', 'VARCHAR', false, 255, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
     } // initialize()
 
     /**
@@ -225,7 +225,7 @@ class SectionTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('SectionRelatedByParentId', '\\Propel\\Models\\Section', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Parent', '\\Propel\\Models\\Section', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':parent_id',
@@ -253,6 +253,13 @@ class SectionTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', 'SectionsRelatedById', false);
+        $this->addRelation('SectionField', '\\Propel\\Models\\SectionField', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':section_id',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'SectionFields', false);
         $this->addRelation('Publication', '\\Propel\\Models\\Publication', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -277,13 +284,14 @@ class SectionTableMap extends TableMap
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to section     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to fenric_section     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         SectionTableMap::clearInstancePool();
+        SectionFieldTableMap::clearInstancePool();
         PublicationTableMap::clearInstancePool();
     }
 
@@ -527,7 +535,7 @@ class SectionTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the section table.
+     * Deletes all rows from the fenric_section table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

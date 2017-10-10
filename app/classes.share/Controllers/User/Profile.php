@@ -19,17 +19,18 @@ class Profile extends Abstractable
 	 */
 	public function preInit() : bool
 	{
-		if (fenric('user')->isGuest()) {
-			$this->redirect('/user/login/');
-		}
-
-		if ($this->request->parameters->exists('id')) {
-			if (! UserQuery::existsById(
-				$this->request->parameters->get('id')
-			)) {
+		if ($this->request->parameters->exists('id'))
+		{
+			if (! UserQuery::existsById($this->request->parameters->get('id')))
+			{
 				$this->response->setStatus(404);
+
 				return false;
 			}
+		}
+		else if (fenric('user')->isGuest())
+		{
+			$this->redirect('/user/login/');
 		}
 
 		return parent::preInit();
@@ -41,17 +42,17 @@ class Profile extends Abstractable
 	public function render() : void
 	{
 		$user = fenric('user');
+		$view = fenric('view::user/profile');
 
-		if ($this->request->parameters->exists('id')) {
-			$user = UserQuery::create()->findOneById(
+		if ($this->request->parameters->exists('id'))
+		{
+			$user = UserQuery::create()->findPk(
 				$this->request->parameters->get('id')
 			);
 		}
 
-		$this->response->setContent(
-			fenric('view::user/profile', [
-				'user' => $user,
-			])->render()
-		);
+		$this->response->setContent($view->render([
+			'user' => $user,
+		]));
 	}
 }

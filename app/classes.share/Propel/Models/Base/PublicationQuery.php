@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'publication' table.
+ * Base class that represents a query for the 'fenric_publication' table.
  *
  *
  *
@@ -102,6 +102,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationQuery rightJoinWithUserRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
  * @method     ChildPublicationQuery innerJoinWithUserRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
  *
+ * @method     ChildPublicationQuery leftJoinPublicationField($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationField relation
+ * @method     ChildPublicationQuery rightJoinPublicationField($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationField relation
+ * @method     ChildPublicationQuery innerJoinPublicationField($relationAlias = null) Adds a INNER JOIN clause to the query using the PublicationField relation
+ *
+ * @method     ChildPublicationQuery joinWithPublicationField($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PublicationField relation
+ *
+ * @method     ChildPublicationQuery leftJoinWithPublicationField() Adds a LEFT JOIN clause and with to the query using the PublicationField relation
+ * @method     ChildPublicationQuery rightJoinWithPublicationField() Adds a RIGHT JOIN clause and with to the query using the PublicationField relation
+ * @method     ChildPublicationQuery innerJoinWithPublicationField() Adds a INNER JOIN clause and with to the query using the PublicationField relation
+ *
  * @method     ChildPublicationQuery leftJoinPublicationPhoto($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationPhoto relation
  * @method     ChildPublicationQuery rightJoinPublicationPhoto($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationPhoto relation
  * @method     ChildPublicationQuery innerJoinPublicationPhoto($relationAlias = null) Adds a INNER JOIN clause to the query using the PublicationPhoto relation
@@ -111,6 +121,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationQuery leftJoinWithPublicationPhoto() Adds a LEFT JOIN clause and with to the query using the PublicationPhoto relation
  * @method     ChildPublicationQuery rightJoinWithPublicationPhoto() Adds a RIGHT JOIN clause and with to the query using the PublicationPhoto relation
  * @method     ChildPublicationQuery innerJoinWithPublicationPhoto() Adds a INNER JOIN clause and with to the query using the PublicationPhoto relation
+ *
+ * @method     ChildPublicationQuery leftJoinPublicationRelation($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationRelation relation
+ * @method     ChildPublicationQuery rightJoinPublicationRelation($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationRelation relation
+ * @method     ChildPublicationQuery innerJoinPublicationRelation($relationAlias = null) Adds a INNER JOIN clause to the query using the PublicationRelation relation
+ *
+ * @method     ChildPublicationQuery joinWithPublicationRelation($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PublicationRelation relation
+ *
+ * @method     ChildPublicationQuery leftJoinWithPublicationRelation() Adds a LEFT JOIN clause and with to the query using the PublicationRelation relation
+ * @method     ChildPublicationQuery rightJoinWithPublicationRelation() Adds a RIGHT JOIN clause and with to the query using the PublicationRelation relation
+ * @method     ChildPublicationQuery innerJoinWithPublicationRelation() Adds a INNER JOIN clause and with to the query using the PublicationRelation relation
  *
  * @method     ChildPublicationQuery leftJoinPublicationTag($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationTag relation
  * @method     ChildPublicationQuery rightJoinPublicationTag($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationTag relation
@@ -122,7 +142,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationQuery rightJoinWithPublicationTag() Adds a RIGHT JOIN clause and with to the query using the PublicationTag relation
  * @method     ChildPublicationQuery innerJoinWithPublicationTag() Adds a INNER JOIN clause and with to the query using the PublicationTag relation
  *
- * @method     \Propel\Models\SectionQuery|\Propel\Models\UserQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\PublicationTagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\SectionQuery|\Propel\Models\UserQuery|\Propel\Models\PublicationFieldQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\PublicationRelationQuery|\Propel\Models\PublicationTagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPublication findOne(ConnectionInterface $con = null) Return the first ChildPublication matching the query
  * @method     ChildPublication findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPublication matching the query, or a new ChildPublication object populated from the query conditions when no match is found
@@ -294,7 +314,7 @@ abstract class PublicationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, section_id, code, header, picture, picture_signature, anons, meta_title, meta_author, meta_keywords, meta_description, meta_canonical, meta_robots, created_at, created_by, updated_at, updated_by, show_at, hide_at, hits FROM publication WHERE id = :p0';
+        $sql = 'SELECT id, section_id, code, header, picture, picture_signature, anons, meta_title, meta_author, meta_keywords, meta_description, meta_canonical, meta_robots, created_at, created_by, updated_at, updated_by, show_at, hide_at, hits FROM fenric_publication WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1299,6 +1319,79 @@ abstract class PublicationQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \Propel\Models\PublicationField object
+     *
+     * @param \Propel\Models\PublicationField|ObjectCollection $publicationField the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPublicationQuery The current query, for fluid interface
+     */
+    public function filterByPublicationField($publicationField, $comparison = null)
+    {
+        if ($publicationField instanceof \Propel\Models\PublicationField) {
+            return $this
+                ->addUsingAlias(PublicationTableMap::COL_ID, $publicationField->getPublicationId(), $comparison);
+        } elseif ($publicationField instanceof ObjectCollection) {
+            return $this
+                ->usePublicationFieldQuery()
+                ->filterByPrimaryKeys($publicationField->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPublicationField() only accepts arguments of type \Propel\Models\PublicationField or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PublicationField relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPublicationQuery The current query, for fluid interface
+     */
+    public function joinPublicationField($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PublicationField');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PublicationField');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PublicationField relation PublicationField object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\PublicationFieldQuery A secondary query class using the current class as primary query
+     */
+    public function usePublicationFieldQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinPublicationField($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PublicationField', '\Propel\Models\PublicationFieldQuery');
+    }
+
+    /**
      * Filter the query by a related \Propel\Models\PublicationPhoto object
      *
      * @param \Propel\Models\PublicationPhoto|ObjectCollection $publicationPhoto the related object to use as filter
@@ -1369,6 +1462,79 @@ abstract class PublicationQuery extends ModelCriteria
         return $this
             ->joinPublicationPhoto($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'PublicationPhoto', '\Propel\Models\PublicationPhotoQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\PublicationRelation object
+     *
+     * @param \Propel\Models\PublicationRelation|ObjectCollection $publicationRelation the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPublicationQuery The current query, for fluid interface
+     */
+    public function filterByPublicationRelation($publicationRelation, $comparison = null)
+    {
+        if ($publicationRelation instanceof \Propel\Models\PublicationRelation) {
+            return $this
+                ->addUsingAlias(PublicationTableMap::COL_ID, $publicationRelation->getPublicationId(), $comparison);
+        } elseif ($publicationRelation instanceof ObjectCollection) {
+            return $this
+                ->usePublicationRelationQuery()
+                ->filterByPrimaryKeys($publicationRelation->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPublicationRelation() only accepts arguments of type \Propel\Models\PublicationRelation or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PublicationRelation relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPublicationQuery The current query, for fluid interface
+     */
+    public function joinPublicationRelation($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PublicationRelation');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PublicationRelation');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PublicationRelation relation PublicationRelation object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\PublicationRelationQuery A secondary query class using the current class as primary query
+     */
+    public function usePublicationRelationQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinPublicationRelation($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PublicationRelation', '\Propel\Models\PublicationRelationQuery');
     }
 
     /**
@@ -1461,7 +1627,7 @@ abstract class PublicationQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the publication table.
+     * Deletes all rows from the fenric_publication table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

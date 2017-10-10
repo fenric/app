@@ -6,16 +6,22 @@ use \DateTime;
 use \Exception;
 use \PDO;
 use Propel\Models\Publication as ChildPublication;
+use Propel\Models\PublicationField as ChildPublicationField;
+use Propel\Models\PublicationFieldQuery as ChildPublicationFieldQuery;
 use Propel\Models\PublicationPhoto as ChildPublicationPhoto;
 use Propel\Models\PublicationPhotoQuery as ChildPublicationPhotoQuery;
 use Propel\Models\PublicationQuery as ChildPublicationQuery;
+use Propel\Models\PublicationRelation as ChildPublicationRelation;
+use Propel\Models\PublicationRelationQuery as ChildPublicationRelationQuery;
 use Propel\Models\PublicationTag as ChildPublicationTag;
 use Propel\Models\PublicationTagQuery as ChildPublicationTagQuery;
 use Propel\Models\Section as ChildSection;
 use Propel\Models\SectionQuery as ChildSectionQuery;
 use Propel\Models\User as ChildUser;
 use Propel\Models\UserQuery as ChildUserQuery;
+use Propel\Models\Map\PublicationFieldTableMap;
 use Propel\Models\Map\PublicationPhotoTableMap;
+use Propel\Models\Map\PublicationRelationTableMap;
 use Propel\Models\Map\PublicationTableMap;
 use Propel\Models\Map\PublicationTagTableMap;
 use Propel\Runtime\Propel;
@@ -47,7 +53,7 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Base class that represents a row from the 'publication' table.
+ * Base class that represents a row from the 'fenric_publication' table.
  *
  *
  *
@@ -258,10 +264,22 @@ abstract class Publication implements ActiveRecordInterface
     protected $aUserRelatedByUpdatedBy;
 
     /**
+     * @var        ObjectCollection|ChildPublicationField[] Collection to store aggregation of ChildPublicationField objects.
+     */
+    protected $collPublicationFields;
+    protected $collPublicationFieldsPartial;
+
+    /**
      * @var        ObjectCollection|ChildPublicationPhoto[] Collection to store aggregation of ChildPublicationPhoto objects.
      */
     protected $collPublicationPhotos;
     protected $collPublicationPhotosPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPublicationRelation[] Collection to store aggregation of ChildPublicationRelation objects.
+     */
+    protected $collPublicationRelations;
+    protected $collPublicationRelationsPartial;
 
     /**
      * @var        ObjectCollection|ChildPublicationTag[] Collection to store aggregation of ChildPublicationTag objects.
@@ -296,9 +314,21 @@ abstract class Publication implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPublicationField[]
+     */
+    protected $publicationFieldsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildPublicationPhoto[]
      */
     protected $publicationPhotosScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPublicationRelation[]
+     */
+    protected $publicationRelationsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -1461,7 +1491,11 @@ abstract class Publication implements ActiveRecordInterface
             $this->aSection = null;
             $this->aUserRelatedByCreatedBy = null;
             $this->aUserRelatedByUpdatedBy = null;
+            $this->collPublicationFields = null;
+
             $this->collPublicationPhotos = null;
+
+            $this->collPublicationRelations = null;
 
             $this->collPublicationTags = null;
 
@@ -1637,6 +1671,23 @@ abstract class Publication implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->publicationFieldsScheduledForDeletion !== null) {
+                if (!$this->publicationFieldsScheduledForDeletion->isEmpty()) {
+                    \Propel\Models\PublicationFieldQuery::create()
+                        ->filterByPrimaryKeys($this->publicationFieldsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->publicationFieldsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPublicationFields !== null) {
+                foreach ($this->collPublicationFields as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->publicationPhotosScheduledForDeletion !== null) {
                 if (!$this->publicationPhotosScheduledForDeletion->isEmpty()) {
                     \Propel\Models\PublicationPhotoQuery::create()
@@ -1648,6 +1699,23 @@ abstract class Publication implements ActiveRecordInterface
 
             if ($this->collPublicationPhotos !== null) {
                 foreach ($this->collPublicationPhotos as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->publicationRelationsScheduledForDeletion !== null) {
+                if (!$this->publicationRelationsScheduledForDeletion->isEmpty()) {
+                    \Propel\Models\PublicationRelationQuery::create()
+                        ->filterByPrimaryKeys($this->publicationRelationsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->publicationRelationsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPublicationRelations !== null) {
+                foreach ($this->collPublicationRelations as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1762,7 +1830,7 @@ abstract class Publication implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO publication (%s) VALUES (%s)',
+            'INSERT INTO fenric_publication (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -2040,7 +2108,7 @@ abstract class Publication implements ActiveRecordInterface
                         $key = 'section';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'section';
+                        $key = 'fenric_section';
                         break;
                     default:
                         $key = 'Section';
@@ -2055,7 +2123,7 @@ abstract class Publication implements ActiveRecordInterface
                         $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'user';
+                        $key = 'fenric_user';
                         break;
                     default:
                         $key = 'User';
@@ -2070,13 +2138,28 @@ abstract class Publication implements ActiveRecordInterface
                         $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'user';
+                        $key = 'fenric_user';
                         break;
                     default:
                         $key = 'User';
                 }
 
                 $result[$key] = $this->aUserRelatedByUpdatedBy->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collPublicationFields) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'publicationFields';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_publication_fields';
+                        break;
+                    default:
+                        $key = 'PublicationFields';
+                }
+
+                $result[$key] = $this->collPublicationFields->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collPublicationPhotos) {
 
@@ -2085,13 +2168,28 @@ abstract class Publication implements ActiveRecordInterface
                         $key = 'publicationPhotos';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'publication_photos';
+                        $key = 'fenric_publication_photos';
                         break;
                     default:
                         $key = 'PublicationPhotos';
                 }
 
                 $result[$key] = $this->collPublicationPhotos->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPublicationRelations) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'publicationRelations';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_publication_relations';
+                        break;
+                    default:
+                        $key = 'PublicationRelations';
+                }
+
+                $result[$key] = $this->collPublicationRelations->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collPublicationTags) {
 
@@ -2100,7 +2198,7 @@ abstract class Publication implements ActiveRecordInterface
                         $key = 'publicationTags';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'publication_tags';
+                        $key = 'fenric_publication_tags';
                         break;
                     default:
                         $key = 'PublicationTags';
@@ -2510,9 +2608,21 @@ abstract class Publication implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getPublicationFields() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPublicationField($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getPublicationPhotos() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPublicationPhoto($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPublicationRelations() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPublicationRelation($relObj->copy($deepCopy));
                 }
             }
 
@@ -2716,14 +2826,272 @@ abstract class Publication implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('PublicationField' == $relationName) {
+            $this->initPublicationFields();
+            return;
+        }
         if ('PublicationPhoto' == $relationName) {
             $this->initPublicationPhotos();
+            return;
+        }
+        if ('PublicationRelation' == $relationName) {
+            $this->initPublicationRelations();
             return;
         }
         if ('PublicationTag' == $relationName) {
             $this->initPublicationTags();
             return;
         }
+    }
+
+    /**
+     * Clears out the collPublicationFields collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPublicationFields()
+     */
+    public function clearPublicationFields()
+    {
+        $this->collPublicationFields = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPublicationFields collection loaded partially.
+     */
+    public function resetPartialPublicationFields($v = true)
+    {
+        $this->collPublicationFieldsPartial = $v;
+    }
+
+    /**
+     * Initializes the collPublicationFields collection.
+     *
+     * By default this just sets the collPublicationFields collection to an empty array (like clearcollPublicationFields());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPublicationFields($overrideExisting = true)
+    {
+        if (null !== $this->collPublicationFields && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = PublicationFieldTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collPublicationFields = new $collectionClassName;
+        $this->collPublicationFields->setModel('\Propel\Models\PublicationField');
+    }
+
+    /**
+     * Gets an array of ChildPublicationField objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildPublication is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPublicationField[] List of ChildPublicationField objects
+     * @throws PropelException
+     */
+    public function getPublicationFields(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPublicationFieldsPartial && !$this->isNew();
+        if (null === $this->collPublicationFields || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPublicationFields) {
+                // return empty collection
+                $this->initPublicationFields();
+            } else {
+                $collPublicationFields = ChildPublicationFieldQuery::create(null, $criteria)
+                    ->filterByPublication($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPublicationFieldsPartial && count($collPublicationFields)) {
+                        $this->initPublicationFields(false);
+
+                        foreach ($collPublicationFields as $obj) {
+                            if (false == $this->collPublicationFields->contains($obj)) {
+                                $this->collPublicationFields->append($obj);
+                            }
+                        }
+
+                        $this->collPublicationFieldsPartial = true;
+                    }
+
+                    return $collPublicationFields;
+                }
+
+                if ($partial && $this->collPublicationFields) {
+                    foreach ($this->collPublicationFields as $obj) {
+                        if ($obj->isNew()) {
+                            $collPublicationFields[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPublicationFields = $collPublicationFields;
+                $this->collPublicationFieldsPartial = false;
+            }
+        }
+
+        return $this->collPublicationFields;
+    }
+
+    /**
+     * Sets a collection of ChildPublicationField objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $publicationFields A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildPublication The current object (for fluent API support)
+     */
+    public function setPublicationFields(Collection $publicationFields, ConnectionInterface $con = null)
+    {
+        /** @var ChildPublicationField[] $publicationFieldsToDelete */
+        $publicationFieldsToDelete = $this->getPublicationFields(new Criteria(), $con)->diff($publicationFields);
+
+
+        $this->publicationFieldsScheduledForDeletion = $publicationFieldsToDelete;
+
+        foreach ($publicationFieldsToDelete as $publicationFieldRemoved) {
+            $publicationFieldRemoved->setPublication(null);
+        }
+
+        $this->collPublicationFields = null;
+        foreach ($publicationFields as $publicationField) {
+            $this->addPublicationField($publicationField);
+        }
+
+        $this->collPublicationFields = $publicationFields;
+        $this->collPublicationFieldsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PublicationField objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related PublicationField objects.
+     * @throws PropelException
+     */
+    public function countPublicationFields(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPublicationFieldsPartial && !$this->isNew();
+        if (null === $this->collPublicationFields || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPublicationFields) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPublicationFields());
+            }
+
+            $query = ChildPublicationFieldQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPublication($this)
+                ->count($con);
+        }
+
+        return count($this->collPublicationFields);
+    }
+
+    /**
+     * Method called to associate a ChildPublicationField object to this object
+     * through the ChildPublicationField foreign key attribute.
+     *
+     * @param  ChildPublicationField $l ChildPublicationField
+     * @return $this|\Propel\Models\Publication The current object (for fluent API support)
+     */
+    public function addPublicationField(ChildPublicationField $l)
+    {
+        if ($this->collPublicationFields === null) {
+            $this->initPublicationFields();
+            $this->collPublicationFieldsPartial = true;
+        }
+
+        if (!$this->collPublicationFields->contains($l)) {
+            $this->doAddPublicationField($l);
+
+            if ($this->publicationFieldsScheduledForDeletion and $this->publicationFieldsScheduledForDeletion->contains($l)) {
+                $this->publicationFieldsScheduledForDeletion->remove($this->publicationFieldsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPublicationField $publicationField The ChildPublicationField object to add.
+     */
+    protected function doAddPublicationField(ChildPublicationField $publicationField)
+    {
+        $this->collPublicationFields[]= $publicationField;
+        $publicationField->setPublication($this);
+    }
+
+    /**
+     * @param  ChildPublicationField $publicationField The ChildPublicationField object to remove.
+     * @return $this|ChildPublication The current object (for fluent API support)
+     */
+    public function removePublicationField(ChildPublicationField $publicationField)
+    {
+        if ($this->getPublicationFields()->contains($publicationField)) {
+            $pos = $this->collPublicationFields->search($publicationField);
+            $this->collPublicationFields->remove($pos);
+            if (null === $this->publicationFieldsScheduledForDeletion) {
+                $this->publicationFieldsScheduledForDeletion = clone $this->collPublicationFields;
+                $this->publicationFieldsScheduledForDeletion->clear();
+            }
+            $this->publicationFieldsScheduledForDeletion[]= $publicationField;
+            $publicationField->setPublication(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Publication is new, it will return
+     * an empty collection; or if this Publication has previously
+     * been saved, it will retrieve related PublicationFields from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Publication.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPublicationField[] List of ChildPublicationField objects
+     */
+    public function getPublicationFieldsJoinSectionField(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPublicationFieldQuery::create(null, $criteria);
+        $query->joinWith('SectionField', $joinBehavior);
+
+        return $this->getPublicationFields($query, $con);
     }
 
     /**
@@ -3002,6 +3370,231 @@ abstract class Publication implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collPublicationRelations collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPublicationRelations()
+     */
+    public function clearPublicationRelations()
+    {
+        $this->collPublicationRelations = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPublicationRelations collection loaded partially.
+     */
+    public function resetPartialPublicationRelations($v = true)
+    {
+        $this->collPublicationRelationsPartial = $v;
+    }
+
+    /**
+     * Initializes the collPublicationRelations collection.
+     *
+     * By default this just sets the collPublicationRelations collection to an empty array (like clearcollPublicationRelations());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPublicationRelations($overrideExisting = true)
+    {
+        if (null !== $this->collPublicationRelations && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = PublicationRelationTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collPublicationRelations = new $collectionClassName;
+        $this->collPublicationRelations->setModel('\Propel\Models\PublicationRelation');
+    }
+
+    /**
+     * Gets an array of ChildPublicationRelation objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildPublication is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPublicationRelation[] List of ChildPublicationRelation objects
+     * @throws PropelException
+     */
+    public function getPublicationRelations(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPublicationRelationsPartial && !$this->isNew();
+        if (null === $this->collPublicationRelations || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPublicationRelations) {
+                // return empty collection
+                $this->initPublicationRelations();
+            } else {
+                $collPublicationRelations = ChildPublicationRelationQuery::create(null, $criteria)
+                    ->filterByPublication($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPublicationRelationsPartial && count($collPublicationRelations)) {
+                        $this->initPublicationRelations(false);
+
+                        foreach ($collPublicationRelations as $obj) {
+                            if (false == $this->collPublicationRelations->contains($obj)) {
+                                $this->collPublicationRelations->append($obj);
+                            }
+                        }
+
+                        $this->collPublicationRelationsPartial = true;
+                    }
+
+                    return $collPublicationRelations;
+                }
+
+                if ($partial && $this->collPublicationRelations) {
+                    foreach ($this->collPublicationRelations as $obj) {
+                        if ($obj->isNew()) {
+                            $collPublicationRelations[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPublicationRelations = $collPublicationRelations;
+                $this->collPublicationRelationsPartial = false;
+            }
+        }
+
+        return $this->collPublicationRelations;
+    }
+
+    /**
+     * Sets a collection of ChildPublicationRelation objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $publicationRelations A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildPublication The current object (for fluent API support)
+     */
+    public function setPublicationRelations(Collection $publicationRelations, ConnectionInterface $con = null)
+    {
+        /** @var ChildPublicationRelation[] $publicationRelationsToDelete */
+        $publicationRelationsToDelete = $this->getPublicationRelations(new Criteria(), $con)->diff($publicationRelations);
+
+
+        $this->publicationRelationsScheduledForDeletion = $publicationRelationsToDelete;
+
+        foreach ($publicationRelationsToDelete as $publicationRelationRemoved) {
+            $publicationRelationRemoved->setPublication(null);
+        }
+
+        $this->collPublicationRelations = null;
+        foreach ($publicationRelations as $publicationRelation) {
+            $this->addPublicationRelation($publicationRelation);
+        }
+
+        $this->collPublicationRelations = $publicationRelations;
+        $this->collPublicationRelationsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PublicationRelation objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related PublicationRelation objects.
+     * @throws PropelException
+     */
+    public function countPublicationRelations(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPublicationRelationsPartial && !$this->isNew();
+        if (null === $this->collPublicationRelations || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPublicationRelations) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPublicationRelations());
+            }
+
+            $query = ChildPublicationRelationQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPublication($this)
+                ->count($con);
+        }
+
+        return count($this->collPublicationRelations);
+    }
+
+    /**
+     * Method called to associate a ChildPublicationRelation object to this object
+     * through the ChildPublicationRelation foreign key attribute.
+     *
+     * @param  ChildPublicationRelation $l ChildPublicationRelation
+     * @return $this|\Propel\Models\Publication The current object (for fluent API support)
+     */
+    public function addPublicationRelation(ChildPublicationRelation $l)
+    {
+        if ($this->collPublicationRelations === null) {
+            $this->initPublicationRelations();
+            $this->collPublicationRelationsPartial = true;
+        }
+
+        if (!$this->collPublicationRelations->contains($l)) {
+            $this->doAddPublicationRelation($l);
+
+            if ($this->publicationRelationsScheduledForDeletion and $this->publicationRelationsScheduledForDeletion->contains($l)) {
+                $this->publicationRelationsScheduledForDeletion->remove($this->publicationRelationsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPublicationRelation $publicationRelation The ChildPublicationRelation object to add.
+     */
+    protected function doAddPublicationRelation(ChildPublicationRelation $publicationRelation)
+    {
+        $this->collPublicationRelations[]= $publicationRelation;
+        $publicationRelation->setPublication($this);
+    }
+
+    /**
+     * @param  ChildPublicationRelation $publicationRelation The ChildPublicationRelation object to remove.
+     * @return $this|ChildPublication The current object (for fluent API support)
+     */
+    public function removePublicationRelation(ChildPublicationRelation $publicationRelation)
+    {
+        if ($this->getPublicationRelations()->contains($publicationRelation)) {
+            $pos = $this->collPublicationRelations->search($publicationRelation);
+            $this->collPublicationRelations->remove($pos);
+            if (null === $this->publicationRelationsScheduledForDeletion) {
+                $this->publicationRelationsScheduledForDeletion = clone $this->collPublicationRelations;
+                $this->publicationRelationsScheduledForDeletion->clear();
+            }
+            $this->publicationRelationsScheduledForDeletion[]= $publicationRelation;
+            $publicationRelation->setPublication(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears out the collPublicationTags collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -3251,56 +3844,6 @@ abstract class Publication implements ActiveRecordInterface
         return $this->getPublicationTags($query, $con);
     }
 
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Publication is new, it will return
-     * an empty collection; or if this Publication has previously
-     * been saved, it will retrieve related PublicationTags from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Publication.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     */
-    public function getPublicationTagsJoinUserRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPublicationTagQuery::create(null, $criteria);
-        $query->joinWith('UserRelatedByCreatedBy', $joinBehavior);
-
-        return $this->getPublicationTags($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Publication is new, it will return
-     * an empty collection; or if this Publication has previously
-     * been saved, it will retrieve related PublicationTags from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Publication.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     */
-    public function getPublicationTagsJoinUserRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPublicationTagQuery::create(null, $criteria);
-        $query->joinWith('UserRelatedByUpdatedBy', $joinBehavior);
-
-        return $this->getPublicationTags($query, $con);
-    }
-
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -3358,8 +3901,18 @@ abstract class Publication implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collPublicationFields) {
+                foreach ($this->collPublicationFields as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collPublicationPhotos) {
                 foreach ($this->collPublicationPhotos as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPublicationRelations) {
+                foreach ($this->collPublicationRelations as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -3370,7 +3923,9 @@ abstract class Publication implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collPublicationFields = null;
         $this->collPublicationPhotos = null;
+        $this->collPublicationRelations = null;
         $this->collPublicationTags = null;
         $this->aSection = null;
         $this->aUserRelatedByCreatedBy = null;
@@ -3470,8 +4025,26 @@ abstract class Publication implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
+            if (null !== $this->collPublicationFields) {
+                foreach ($this->collPublicationFields as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
             if (null !== $this->collPublicationPhotos) {
                 foreach ($this->collPublicationPhotos as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collPublicationRelations) {
+                foreach ($this->collPublicationRelations as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());

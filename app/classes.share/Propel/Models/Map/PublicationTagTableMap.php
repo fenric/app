@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'publication_tag' table.
+ * This class defines the structure of the 'fenric_publication_tag' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class PublicationTagTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'publication_tag';
+    const TABLE_NAME = 'fenric_publication_tag';
 
     /**
      * The related Propel class for this table
@@ -59,7 +59,7 @@ class PublicationTagTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 3;
 
     /**
      * The number of lazy-loaded columns
@@ -69,42 +69,22 @@ class PublicationTagTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 3;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'publication_tag.id';
+    const COL_ID = 'fenric_publication_tag.id';
 
     /**
      * the column name for the publication_id field
      */
-    const COL_PUBLICATION_ID = 'publication_tag.publication_id';
+    const COL_PUBLICATION_ID = 'fenric_publication_tag.publication_id';
 
     /**
      * the column name for the tag_id field
      */
-    const COL_TAG_ID = 'publication_tag.tag_id';
-
-    /**
-     * the column name for the created_at field
-     */
-    const COL_CREATED_AT = 'publication_tag.created_at';
-
-    /**
-     * the column name for the created_by field
-     */
-    const COL_CREATED_BY = 'publication_tag.created_by';
-
-    /**
-     * the column name for the updated_at field
-     */
-    const COL_UPDATED_AT = 'publication_tag.updated_at';
-
-    /**
-     * the column name for the updated_by field
-     */
-    const COL_UPDATED_BY = 'publication_tag.updated_by';
+    const COL_TAG_ID = 'fenric_publication_tag.tag_id';
 
     /**
      * The default string format for model objects of the related table
@@ -118,11 +98,11 @@ class PublicationTagTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PublicationId', 'TagId', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', ),
-        self::TYPE_CAMELNAME     => array('id', 'publicationId', 'tagId', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', ),
-        self::TYPE_COLNAME       => array(PublicationTagTableMap::COL_ID, PublicationTagTableMap::COL_PUBLICATION_ID, PublicationTagTableMap::COL_TAG_ID, PublicationTagTableMap::COL_CREATED_AT, PublicationTagTableMap::COL_CREATED_BY, PublicationTagTableMap::COL_UPDATED_AT, PublicationTagTableMap::COL_UPDATED_BY, ),
-        self::TYPE_FIELDNAME     => array('id', 'publication_id', 'tag_id', 'created_at', 'created_by', 'updated_at', 'updated_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id', 'PublicationId', 'TagId', ),
+        self::TYPE_CAMELNAME     => array('id', 'publicationId', 'tagId', ),
+        self::TYPE_COLNAME       => array(PublicationTagTableMap::COL_ID, PublicationTagTableMap::COL_PUBLICATION_ID, PublicationTagTableMap::COL_TAG_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'publication_id', 'tag_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, )
     );
 
     /**
@@ -132,11 +112,11 @@ class PublicationTagTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PublicationId' => 1, 'TagId' => 2, 'CreatedAt' => 3, 'CreatedBy' => 4, 'UpdatedAt' => 5, 'UpdatedBy' => 6, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'publicationId' => 1, 'tagId' => 2, 'createdAt' => 3, 'createdBy' => 4, 'updatedAt' => 5, 'updatedBy' => 6, ),
-        self::TYPE_COLNAME       => array(PublicationTagTableMap::COL_ID => 0, PublicationTagTableMap::COL_PUBLICATION_ID => 1, PublicationTagTableMap::COL_TAG_ID => 2, PublicationTagTableMap::COL_CREATED_AT => 3, PublicationTagTableMap::COL_CREATED_BY => 4, PublicationTagTableMap::COL_UPDATED_AT => 5, PublicationTagTableMap::COL_UPDATED_BY => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'publication_id' => 1, 'tag_id' => 2, 'created_at' => 3, 'created_by' => 4, 'updated_at' => 5, 'updated_by' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'PublicationId' => 1, 'TagId' => 2, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'publicationId' => 1, 'tagId' => 2, ),
+        self::TYPE_COLNAME       => array(PublicationTagTableMap::COL_ID => 0, PublicationTagTableMap::COL_PUBLICATION_ID => 1, PublicationTagTableMap::COL_TAG_ID => 2, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'publication_id' => 1, 'tag_id' => 2, ),
+        self::TYPE_NUM           => array(0, 1, 2, )
     );
 
     /**
@@ -149,7 +129,7 @@ class PublicationTagTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('publication_tag');
+        $this->setName('fenric_publication_tag');
         $this->setPhpName('PublicationTag');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Propel\\Models\\PublicationTag');
@@ -157,12 +137,8 @@ class PublicationTagTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('publication_id', 'PublicationId', 'INTEGER', 'publication', 'id', false, null, null);
-        $this->addForeignKey('tag_id', 'TagId', 'INTEGER', 'tag', 'id', false, null, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'user', 'id', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('publication_id', 'PublicationId', 'INTEGER', 'fenric_publication', 'id', false, null, null);
+        $this->addForeignKey('tag_id', 'TagId', 'INTEGER', 'fenric_tag', 'id', false, null, null);
     } // initialize()
 
     /**
@@ -184,35 +160,7 @@ class PublicationTagTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', null, false);
-        $this->addRelation('UserRelatedByCreatedBy', '\\Propel\\Models\\User', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':created_by',
-    1 => ':id',
-  ),
-), 'SET NULL', 'CASCADE', null, false);
-        $this->addRelation('UserRelatedByUpdatedBy', '\\Propel\\Models\\User', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':updated_by',
-    1 => ':id',
-  ),
-), 'SET NULL', 'CASCADE', null, false);
     } // buildRelations()
-
-    /**
-     *
-     * Gets the list of behaviors registered for this table
-     *
-     * @return array Associative array (name => parameters) of behaviors
-     */
-    public function getBehaviors()
-    {
-        return array(
-            'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
-            'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
-        );
-    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -358,18 +306,10 @@ class PublicationTagTableMap extends TableMap
             $criteria->addSelectColumn(PublicationTagTableMap::COL_ID);
             $criteria->addSelectColumn(PublicationTagTableMap::COL_PUBLICATION_ID);
             $criteria->addSelectColumn(PublicationTagTableMap::COL_TAG_ID);
-            $criteria->addSelectColumn(PublicationTagTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(PublicationTagTableMap::COL_CREATED_BY);
-            $criteria->addSelectColumn(PublicationTagTableMap::COL_UPDATED_AT);
-            $criteria->addSelectColumn(PublicationTagTableMap::COL_UPDATED_BY);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.publication_id');
             $criteria->addSelectColumn($alias . '.tag_id');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.created_by');
-            $criteria->addSelectColumn($alias . '.updated_at');
-            $criteria->addSelectColumn($alias . '.updated_by');
         }
     }
 
@@ -438,7 +378,7 @@ class PublicationTagTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the publication_tag table.
+     * Deletes all rows from the fenric_publication_tag table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

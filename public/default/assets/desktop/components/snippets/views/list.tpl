@@ -19,13 +19,13 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<td width="30%">
+					<td width="35%">
 						<span class="text-muted">Основное</span>
 					</td>
-					<td width="30%">
+					<td width="35%">
 						<span class="text-muted">Интегрирование</span>
 					</td>
-					<td width="30%">
+					<td width="20%">
 						<span class="text-muted">История изменений</span>
 					</td>
 					<td width="10%" align="center">

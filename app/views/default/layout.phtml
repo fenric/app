@@ -4,10 +4,10 @@
 		<meta charset="utf-8" />
 		<?= $this->section('metadata') ?>
 		<?= $this->section('stylesheets') ?>
-		<link type="text/css" href="<?= asset('/assets/vendor/bootstrap-4.0.0/css/bootstrap.min.css') ?>" rel="stylesheet" />
-		<link type="text/css" href="<?= asset('/assets/vendor/fancybox-3.1.24/jquery.fancybox.min.css') ?>" rel="stylesheet" />
-		<link type="text/css" href="<?= asset('/assets/vendor/font-awesome-4.7.0/css/font-awesome.min.css') ?>" rel="stylesheet" />
-		<link type="text/css" href="<?= asset('/assets/styles.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/assets/vendor/bootstrap-4.0.0/css/bootstrap.min.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/assets/vendor/fancybox-3.1.24/jquery.fancybox.min.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/assets/vendor/font-awesome-4.7.0/css/font-awesome.min.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/assets/styles.css') ?>" rel="stylesheet" />
 	</head>
 	<body>
 		<div class="bg-faded">
@@ -17,54 +17,22 @@
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="navbar-collapse collapse" id="navbar-main-toggle-content">
-						<ul class="navbar-nav m-auto">
-							<li class="nav-item <?= here('/') ? 'active' : '' ?>">
-								<a class="nav-link" href="/">Главная</a>
-							</li>
-							<li class="nav-item <?= here('/services/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/services/">Услуги</a>
-							</li>
-							<li class="nav-item <?= here('/portfolio/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/portfolio/">Портфолио</a>
-							</li>
-							<li class="nav-item <?= here('/prices/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/prices/">Цены</a>
-							</li>
-							<li class="nav-item <?= here('/reviews/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/reviews/">Отзывы</a>
-							</li>
-							<li class="nav-item <?= here('/guarantees/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/guarantees/">Гарантии</a>
-							</li>
-							<li class="nav-item <?= here('/about-us/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/about-us/">О нас</a>
-							</li>
-							<li class="nav-item <?= here('/contacts/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/contacts/">Контакты</a>
-							</li>
-							<li class="nav-item <?= here('/vacancies/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/vacancies/">Вакансии</a>
-							</li>
-							<li class="nav-item <?= here('/articles/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/articles/">Статьи</a>
-							</li>
-							<li class="nav-item <?= here('/tags/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/tags/">Теги</a>
-							</li>
-							<li class="nav-item <?= here('/search/(*/)') ? 'active' : '' ?>">
-								<a class="nav-link" href="/search/">Поиск</a>
-							</li>
-						</ul>
+						<?= fenric('snippet::menu.main') ?>
 					</div>
 				</nav>
 			</div>
 		</div>
+
 		<div class="clearfix">
 			<?= $this->section('content') ?>
 		</div>
-		<script type="text/javascript" src="<?= asset('/assets/vendor/jquery-3.2.1.min.js') ?>"></script>
-		<script type="text/javascript" src="<?= asset('/assets/vendor/bootstrap-4.0.0/js/bootstrap.min.js') ?>"></script>
-		<script type="text/javascript" src="<?= asset('/assets/vendor/fancybox-3.1.24/jquery.fancybox.min.js') ?>"></script>
+
+		<script src="<?= asset('/assets/vendor/fenric/request/src/request.js') ?>"></script>
+		<script src="<?= asset('/assets/vendor/fenric/bugaboo/src/bugaboo.js') ?>"></script>
+		<script src="<?= asset('/assets/vendor/jquery-3.2.1.min.js') ?>"></script>
+		<script src="<?= asset('/assets/vendor/bootstrap-4.0.0/js/bootstrap.min.js') ?>"></script>
+		<script src="<?= asset('/assets/vendor/fancybox-3.1.24/jquery.fancybox.min.js') ?>"></script>
+		<script id="dsq-count-scr" src="//fenric-cms-demo-local.disqus.com/count.js?v2" async></script>
 		<?= $this->section('javascripts') ?>
 	</body>
 </html>

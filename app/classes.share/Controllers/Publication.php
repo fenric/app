@@ -6,6 +6,7 @@ namespace Fenric\Controllers;
  * Import classes
  */
 use Propel\Models\PublicationQuery;
+use Propel\Models\Map\PublicationTableMap;
 use Fenric\Controllers\Abstractable\Abstractable;
 
 /**
@@ -60,6 +61,29 @@ class Publication extends Abstractable
 			'publication' => $publication,
 		]));
 
-		$publication->registerHit();
+		$this->hit($publication);
+	}
+
+	/**
+	 * Регистрация уникального «хита»
+	 */
+	protected function hit($publication) : void
+	{
+		$hits = fenric('session')->get('publication.hits');
+
+		if (empty($hits[$publication->getId()]))
+		{
+			$hits[$publication->getId()] = time();
+
+			fenric('session')->set('publication.hits', $hits);
+
+			$update[PublicationTableMap::COL_HITS] = $publication->getHits() + 1;
+
+			fenric('query')
+				->update(PublicationTableMap::TABLE_NAME, $update)
+				->where(PublicationTableMap::COL_ID, '=', $publication->getId())
+				->limit(1)
+			->shutdown();
+		}
 	}
 }

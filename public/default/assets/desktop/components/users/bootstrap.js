@@ -24,12 +24,12 @@
 		this.params.load(this.params.default);
 
 		this.routes = {};
-		this.routes.all = '/admin/api/user/all/?&{params}';
-		this.routes.create = '/admin/api/user/create/';
-		this.routes.update = '/admin/api/user/update/{id}/';
-		this.routes.delete = '/admin/api/user/delete/{id}/';
-		this.routes.unload = '/admin/api/user/unload/';
-		this.routes.read = '/admin/api/user/read/{id}/';
+		this.routes.all = '{root}/api/user/all/?&{params}';
+		this.routes.create = '{root}/api/user/create/';
+		this.routes.update = '{root}/api/user/update/{id}/';
+		this.routes.delete = '{root}/api/user/delete/{id}/';
+		this.routes.unload = '{root}/api/user/unload/';
+		this.routes.read = '{root}/api/user/read/{id}/';
 
 		this.templates = {};
 		this.templates.list = this.root + '/views/list.tpl';
@@ -81,7 +81,7 @@
 
 			self.modal().title('{title} / Список учетных записей', {title: self.title}).open().block();
 
-			self.httpRequest.get(self.routes.all, {repeat: true, params: self.params.toSerialize(), success: function(items)
+			self.xhr.get(self.routes.all, {repeat: true, params: self.params.toSerialize(), success: function(items)
 			{
 				self.modal().title('{title} / Список учетных записей ({count})', {title: self.title, count: items.count});
 
@@ -136,7 +136,7 @@
 					{
 						modal.block();
 
-						request = self.httpRequest.post(self.routes.create, form, {
+						request = self.xhr.post(self.routes.create, form, {
 							repeat: true,
 						});
 
@@ -190,7 +190,7 @@
 					{
 						modal.block();
 
-						self.httpRequest.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
+						self.xhr.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
 						{
 							$desktop.component('formhandle').handle(form, response);
 
@@ -222,13 +222,10 @@
 	 */
 	$component.prototype.read = function(id, complete)
 	{
-		this.with(function(self)
+		this.xhr.get(this.routes.read, {repeat: true, id: id, success: function(response)
 		{
-			self.httpRequest.get(self.routes.read, {repeat: true, id: id, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -242,13 +239,10 @@
 	 */
 	$component.prototype.delete = function(id, complete)
 	{
-		this.with(function(self)
+		this.xhr.delete(this.routes.delete, {repeat: true, id: id, success: function(response)
 		{
-			self.httpRequest.delete(self.routes.delete, {repeat: true, id: id, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -261,13 +255,10 @@
 	 */
 	$component.prototype.unload = function(complete)
 	{
-		this.with(function(self)
+		this.xhr.get(this.routes.unload, {repeat: true, success: function(response)
 		{
-			self.httpRequest.get(self.routes.unload, {repeat: true, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -303,20 +294,20 @@
 					jQuery(element).datetimepicker({format: 'Y-m-d H:i:s'});
 				});
 
-				modal.listenClick('button.photo-reset', function(event)
+				modal.click('button.photo-reset', function(event)
 				{
 					modal.clear('.photo-container');
 				});
 
-				modal.listenChange('input.photo-upload', function(event)
+				modal.change('input.photo-upload', function(event, element)
 				{
 					var container;
 
 					modal.block();
 
-					$desktop.component('uploader').image(event.target.files[0], function(response)
+					$desktop.component('uploader').image(element.files[0], function(response)
 					{
-						event.target.value = null;
+						element.value = null;
 
 						container = document.createDocumentFragment();
 
@@ -341,6 +332,15 @@
 			});
 		});
 	};
+
+	/**
+	 * Помощь в работе с компонентом
+	 *
+	 * @access  public
+	 * @return  void
+	 */
+	$component.prototype.help = function()
+	{};
 
 	/**
 	 * Инициализация компонента

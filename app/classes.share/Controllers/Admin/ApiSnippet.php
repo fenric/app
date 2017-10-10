@@ -68,6 +68,11 @@ class ApiSnippet extends CRUD
 	 */
 	protected function actionReadViaGET() : void
 	{
+		fenric()->callSharedService('event', [self::EVENT_PREPARE_ITEM])->subscribe(function(Snippet $snippet, array & $json)
+		{
+			$json['parsed_value'] = $snippet->getParsedValue();
+		});
+
 		parent::read(SnippetQuery::create(), [
 			SnippetTableMap::COL_ID,
 			SnippetTableMap::COL_CODE,

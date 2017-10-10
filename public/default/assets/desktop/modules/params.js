@@ -229,6 +229,13 @@
 						this.set(form.elements[i].dump.name, form.elements[i].dump.value);
 					}
 
+					else if (form.elements[i].hasAttribute('data-unchecked-value'))
+					{
+						form.elements[i].dump.value.push(form.elements[i].getAttribute('data-unchecked-value').trim());
+
+						this.set(form.elements[i].dump.name, form.elements[i].dump.value);
+					}
+
 					else if (this.exists(form.elements[i].dump.name) && (form.elements[i].type === 'checkbox'))
 					{
 						var index;
@@ -245,6 +252,11 @@
 				else if (form.elements[i].checked)
 				{
 					this.set(form.elements[i].dump.name, form.elements[i].value.trim());
+				}
+
+				else if (form.elements[i].hasAttribute('data-unchecked-value'))
+				{
+					this.set(form.elements[i].dump.name, form.elements[i].getAttribute('data-unchecked-value').trim());
 				}
 
 				else if (this.exists(form.elements[i].dump.name) && (form.elements[i].type === 'checkbox'))

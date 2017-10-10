@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'user' table.
+ * Base class that represents a query for the 'fenric_user' table.
  *
  *
  *
@@ -92,6 +92,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildUserQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
+ * @method     ChildUserQuery leftJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the FieldRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FieldRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the FieldRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery joinWithFieldRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the FieldRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithFieldRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the FieldRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinWithFieldRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the FieldRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinWithFieldRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the FieldRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinFieldRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the FieldRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinFieldRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FieldRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinFieldRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the FieldRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery joinWithFieldRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the FieldRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithFieldRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the FieldRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinWithFieldRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the FieldRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinWithFieldRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the FieldRelatedByUpdatedBy relation
+ *
  * @method     ChildUserQuery leftJoinSectionRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the SectionRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinSectionRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SectionRelatedByCreatedBy relation
  * @method     ChildUserQuery innerJoinSectionRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the SectionRelatedByCreatedBy relation
@@ -111,6 +131,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery leftJoinWithSectionRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the SectionRelatedByUpdatedBy relation
  * @method     ChildUserQuery rightJoinWithSectionRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the SectionRelatedByUpdatedBy relation
  * @method     ChildUserQuery innerJoinWithSectionRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the SectionRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinSectionField($relationAlias = null) Adds a LEFT JOIN clause to the query using the SectionField relation
+ * @method     ChildUserQuery rightJoinSectionField($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SectionField relation
+ * @method     ChildUserQuery innerJoinSectionField($relationAlias = null) Adds a INNER JOIN clause to the query using the SectionField relation
+ *
+ * @method     ChildUserQuery joinWithSectionField($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SectionField relation
+ *
+ * @method     ChildUserQuery leftJoinWithSectionField() Adds a LEFT JOIN clause and with to the query using the SectionField relation
+ * @method     ChildUserQuery rightJoinWithSectionField() Adds a RIGHT JOIN clause and with to the query using the SectionField relation
+ * @method     ChildUserQuery innerJoinWithSectionField() Adds a INNER JOIN clause and with to the query using the SectionField relation
  *
  * @method     ChildUserQuery leftJoinPublicationRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinPublicationRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationRelatedByCreatedBy relation
@@ -152,26 +182,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithPublicationPhotoRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the PublicationPhotoRelatedByUpdatedBy relation
  * @method     ChildUserQuery innerJoinWithPublicationPhotoRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the PublicationPhotoRelatedByUpdatedBy relation
  *
- * @method     ChildUserQuery leftJoinPublicationTagRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationTagRelatedByCreatedBy relation
- * @method     ChildUserQuery rightJoinPublicationTagRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationTagRelatedByCreatedBy relation
- * @method     ChildUserQuery innerJoinPublicationTagRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PublicationTagRelatedByCreatedBy relation
- *
- * @method     ChildUserQuery joinWithPublicationTagRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PublicationTagRelatedByCreatedBy relation
- *
- * @method     ChildUserQuery leftJoinWithPublicationTagRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the PublicationTagRelatedByCreatedBy relation
- * @method     ChildUserQuery rightJoinWithPublicationTagRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the PublicationTagRelatedByCreatedBy relation
- * @method     ChildUserQuery innerJoinWithPublicationTagRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the PublicationTagRelatedByCreatedBy relation
- *
- * @method     ChildUserQuery leftJoinPublicationTagRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationTagRelatedByUpdatedBy relation
- * @method     ChildUserQuery rightJoinPublicationTagRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationTagRelatedByUpdatedBy relation
- * @method     ChildUserQuery innerJoinPublicationTagRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PublicationTagRelatedByUpdatedBy relation
- *
- * @method     ChildUserQuery joinWithPublicationTagRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PublicationTagRelatedByUpdatedBy relation
- *
- * @method     ChildUserQuery leftJoinWithPublicationTagRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the PublicationTagRelatedByUpdatedBy relation
- * @method     ChildUserQuery rightJoinWithPublicationTagRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the PublicationTagRelatedByUpdatedBy relation
- * @method     ChildUserQuery innerJoinWithPublicationTagRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the PublicationTagRelatedByUpdatedBy relation
- *
  * @method     ChildUserQuery leftJoinSnippetRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the SnippetRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinSnippetRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SnippetRelatedByCreatedBy relation
  * @method     ChildUserQuery innerJoinSnippetRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the SnippetRelatedByCreatedBy relation
@@ -212,7 +222,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithTagRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the TagRelatedByUpdatedBy relation
  * @method     ChildUserQuery innerJoinWithTagRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the TagRelatedByUpdatedBy relation
  *
- * @method     \Propel\Models\SectionQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\PublicationTagQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\FieldQuery|\Propel\Models\SectionQuery|\Propel\Models\SectionFieldQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -414,7 +424,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, role, email, username, photo, firstname, lastname, gender, birthday, registration_at, registration_ip, registration_confirmed, registration_confirmed_at, registration_confirmed_ip, authentication_at, authentication_ip, authentication_token_at, authentication_token_ip, authentication_attempt_count, track_at, track_ip, track_url, ban_from, ban_until, ban_reason FROM user WHERE id = :p0';
+        $sql = 'SELECT id, role, email, username, photo, firstname, lastname, gender, birthday, registration_at, registration_ip, registration_confirmed, registration_confirmed_at, registration_confirmed_ip, authentication_at, authentication_ip, authentication_token_at, authentication_token_ip, authentication_attempt_count, track_at, track_ip, track_url, ban_from, ban_until, ban_reason FROM fenric_user WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1458,6 +1468,152 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \Propel\Models\Field object
+     *
+     * @param \Propel\Models\Field|ObjectCollection $field the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByFieldRelatedByCreatedBy($field, $comparison = null)
+    {
+        if ($field instanceof \Propel\Models\Field) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $field->getCreatedBy(), $comparison);
+        } elseif ($field instanceof ObjectCollection) {
+            return $this
+                ->useFieldRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($field->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByFieldRelatedByCreatedBy() only accepts arguments of type \Propel\Models\Field or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the FieldRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinFieldRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('FieldRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'FieldRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the FieldRelatedByCreatedBy relation Field object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\FieldQuery A secondary query class using the current class as primary query
+     */
+    public function useFieldRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinFieldRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'FieldRelatedByCreatedBy', '\Propel\Models\FieldQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Field object
+     *
+     * @param \Propel\Models\Field|ObjectCollection $field the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByFieldRelatedByUpdatedBy($field, $comparison = null)
+    {
+        if ($field instanceof \Propel\Models\Field) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $field->getUpdatedBy(), $comparison);
+        } elseif ($field instanceof ObjectCollection) {
+            return $this
+                ->useFieldRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($field->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByFieldRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\Field or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the FieldRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinFieldRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('FieldRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'FieldRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the FieldRelatedByUpdatedBy relation Field object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\FieldQuery A secondary query class using the current class as primary query
+     */
+    public function useFieldRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinFieldRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'FieldRelatedByUpdatedBy', '\Propel\Models\FieldQuery');
+    }
+
+    /**
      * Filter the query by a related \Propel\Models\Section object
      *
      * @param \Propel\Models\Section|ObjectCollection $section the related object to use as filter
@@ -1601,6 +1757,79 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinSectionRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'SectionRelatedByUpdatedBy', '\Propel\Models\SectionQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\SectionField object
+     *
+     * @param \Propel\Models\SectionField|ObjectCollection $sectionField the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterBySectionField($sectionField, $comparison = null)
+    {
+        if ($sectionField instanceof \Propel\Models\SectionField) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $sectionField->getCreatedBy(), $comparison);
+        } elseif ($sectionField instanceof ObjectCollection) {
+            return $this
+                ->useSectionFieldQuery()
+                ->filterByPrimaryKeys($sectionField->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySectionField() only accepts arguments of type \Propel\Models\SectionField or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the SectionField relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinSectionField($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('SectionField');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'SectionField');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the SectionField relation SectionField object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\SectionFieldQuery A secondary query class using the current class as primary query
+     */
+    public function useSectionFieldQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinSectionField($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SectionField', '\Propel\Models\SectionFieldQuery');
     }
 
     /**
@@ -1893,152 +2122,6 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinPublicationPhotoRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'PublicationPhotoRelatedByUpdatedBy', '\Propel\Models\PublicationPhotoQuery');
-    }
-
-    /**
-     * Filter the query by a related \Propel\Models\PublicationTag object
-     *
-     * @param \Propel\Models\PublicationTag|ObjectCollection $publicationTag the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByPublicationTagRelatedByCreatedBy($publicationTag, $comparison = null)
-    {
-        if ($publicationTag instanceof \Propel\Models\PublicationTag) {
-            return $this
-                ->addUsingAlias(UserTableMap::COL_ID, $publicationTag->getCreatedBy(), $comparison);
-        } elseif ($publicationTag instanceof ObjectCollection) {
-            return $this
-                ->usePublicationTagRelatedByCreatedByQuery()
-                ->filterByPrimaryKeys($publicationTag->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByPublicationTagRelatedByCreatedBy() only accepts arguments of type \Propel\Models\PublicationTag or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the PublicationTagRelatedByCreatedBy relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function joinPublicationTagRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('PublicationTagRelatedByCreatedBy');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'PublicationTagRelatedByCreatedBy');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the PublicationTagRelatedByCreatedBy relation PublicationTag object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Propel\Models\PublicationTagQuery A secondary query class using the current class as primary query
-     */
-    public function usePublicationTagRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        return $this
-            ->joinPublicationTagRelatedByCreatedBy($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'PublicationTagRelatedByCreatedBy', '\Propel\Models\PublicationTagQuery');
-    }
-
-    /**
-     * Filter the query by a related \Propel\Models\PublicationTag object
-     *
-     * @param \Propel\Models\PublicationTag|ObjectCollection $publicationTag the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByPublicationTagRelatedByUpdatedBy($publicationTag, $comparison = null)
-    {
-        if ($publicationTag instanceof \Propel\Models\PublicationTag) {
-            return $this
-                ->addUsingAlias(UserTableMap::COL_ID, $publicationTag->getUpdatedBy(), $comparison);
-        } elseif ($publicationTag instanceof ObjectCollection) {
-            return $this
-                ->usePublicationTagRelatedByUpdatedByQuery()
-                ->filterByPrimaryKeys($publicationTag->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByPublicationTagRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\PublicationTag or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the PublicationTagRelatedByUpdatedBy relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function joinPublicationTagRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('PublicationTagRelatedByUpdatedBy');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'PublicationTagRelatedByUpdatedBy');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the PublicationTagRelatedByUpdatedBy relation PublicationTag object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Propel\Models\PublicationTagQuery A secondary query class using the current class as primary query
-     */
-    public function usePublicationTagRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        return $this
-            ->joinPublicationTagRelatedByUpdatedBy($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'PublicationTagRelatedByUpdatedBy', '\Propel\Models\PublicationTagQuery');
     }
 
     /**
@@ -2350,7 +2433,7 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the user table.
+     * Deletes all rows from the fenric_user table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

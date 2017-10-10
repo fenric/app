@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'user' table.
+ * This class defines the structure of the 'fenric_user' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class UserTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'user';
+    const TABLE_NAME = 'fenric_user';
 
     /**
      * The related Propel class for this table
@@ -74,157 +74,157 @@ class UserTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    const COL_ID = 'user.id';
+    const COL_ID = 'fenric_user.id';
 
     /**
      * the column name for the role field
      */
-    const COL_ROLE = 'user.role';
+    const COL_ROLE = 'fenric_user.role';
 
     /**
      * the column name for the email field
      */
-    const COL_EMAIL = 'user.email';
+    const COL_EMAIL = 'fenric_user.email';
 
     /**
      * the column name for the username field
      */
-    const COL_USERNAME = 'user.username';
+    const COL_USERNAME = 'fenric_user.username';
 
     /**
      * the column name for the password field
      */
-    const COL_PASSWORD = 'user.password';
+    const COL_PASSWORD = 'fenric_user.password';
 
     /**
      * the column name for the photo field
      */
-    const COL_PHOTO = 'user.photo';
+    const COL_PHOTO = 'fenric_user.photo';
 
     /**
      * the column name for the firstname field
      */
-    const COL_FIRSTNAME = 'user.firstname';
+    const COL_FIRSTNAME = 'fenric_user.firstname';
 
     /**
      * the column name for the lastname field
      */
-    const COL_LASTNAME = 'user.lastname';
+    const COL_LASTNAME = 'fenric_user.lastname';
 
     /**
      * the column name for the gender field
      */
-    const COL_GENDER = 'user.gender';
+    const COL_GENDER = 'fenric_user.gender';
 
     /**
      * the column name for the birthday field
      */
-    const COL_BIRTHDAY = 'user.birthday';
+    const COL_BIRTHDAY = 'fenric_user.birthday';
 
     /**
      * the column name for the about field
      */
-    const COL_ABOUT = 'user.about';
+    const COL_ABOUT = 'fenric_user.about';
 
     /**
      * the column name for the params field
      */
-    const COL_PARAMS = 'user.params';
+    const COL_PARAMS = 'fenric_user.params';
 
     /**
      * the column name for the registration_at field
      */
-    const COL_REGISTRATION_AT = 'user.registration_at';
+    const COL_REGISTRATION_AT = 'fenric_user.registration_at';
 
     /**
      * the column name for the registration_ip field
      */
-    const COL_REGISTRATION_IP = 'user.registration_ip';
+    const COL_REGISTRATION_IP = 'fenric_user.registration_ip';
 
     /**
      * the column name for the registration_confirmed field
      */
-    const COL_REGISTRATION_CONFIRMED = 'user.registration_confirmed';
+    const COL_REGISTRATION_CONFIRMED = 'fenric_user.registration_confirmed';
 
     /**
      * the column name for the registration_confirmed_at field
      */
-    const COL_REGISTRATION_CONFIRMED_AT = 'user.registration_confirmed_at';
+    const COL_REGISTRATION_CONFIRMED_AT = 'fenric_user.registration_confirmed_at';
 
     /**
      * the column name for the registration_confirmed_ip field
      */
-    const COL_REGISTRATION_CONFIRMED_IP = 'user.registration_confirmed_ip';
+    const COL_REGISTRATION_CONFIRMED_IP = 'fenric_user.registration_confirmed_ip';
 
     /**
      * the column name for the registration_confirmation_code field
      */
-    const COL_REGISTRATION_CONFIRMATION_CODE = 'user.registration_confirmation_code';
+    const COL_REGISTRATION_CONFIRMATION_CODE = 'fenric_user.registration_confirmation_code';
 
     /**
      * the column name for the authentication_at field
      */
-    const COL_AUTHENTICATION_AT = 'user.authentication_at';
+    const COL_AUTHENTICATION_AT = 'fenric_user.authentication_at';
 
     /**
      * the column name for the authentication_ip field
      */
-    const COL_AUTHENTICATION_IP = 'user.authentication_ip';
+    const COL_AUTHENTICATION_IP = 'fenric_user.authentication_ip';
 
     /**
      * the column name for the authentication_key field
      */
-    const COL_AUTHENTICATION_KEY = 'user.authentication_key';
+    const COL_AUTHENTICATION_KEY = 'fenric_user.authentication_key';
 
     /**
      * the column name for the authentication_token field
      */
-    const COL_AUTHENTICATION_TOKEN = 'user.authentication_token';
+    const COL_AUTHENTICATION_TOKEN = 'fenric_user.authentication_token';
 
     /**
      * the column name for the authentication_token_at field
      */
-    const COL_AUTHENTICATION_TOKEN_AT = 'user.authentication_token_at';
+    const COL_AUTHENTICATION_TOKEN_AT = 'fenric_user.authentication_token_at';
 
     /**
      * the column name for the authentication_token_ip field
      */
-    const COL_AUTHENTICATION_TOKEN_IP = 'user.authentication_token_ip';
+    const COL_AUTHENTICATION_TOKEN_IP = 'fenric_user.authentication_token_ip';
 
     /**
      * the column name for the authentication_attempt_count field
      */
-    const COL_AUTHENTICATION_ATTEMPT_COUNT = 'user.authentication_attempt_count';
+    const COL_AUTHENTICATION_ATTEMPT_COUNT = 'fenric_user.authentication_attempt_count';
 
     /**
      * the column name for the track_at field
      */
-    const COL_TRACK_AT = 'user.track_at';
+    const COL_TRACK_AT = 'fenric_user.track_at';
 
     /**
      * the column name for the track_ip field
      */
-    const COL_TRACK_IP = 'user.track_ip';
+    const COL_TRACK_IP = 'fenric_user.track_ip';
 
     /**
      * the column name for the track_url field
      */
-    const COL_TRACK_URL = 'user.track_url';
+    const COL_TRACK_URL = 'fenric_user.track_url';
 
     /**
      * the column name for the ban_from field
      */
-    const COL_BAN_FROM = 'user.ban_from';
+    const COL_BAN_FROM = 'fenric_user.ban_from';
 
     /**
      * the column name for the ban_until field
      */
-    const COL_BAN_UNTIL = 'user.ban_until';
+    const COL_BAN_UNTIL = 'fenric_user.ban_until';
 
     /**
      * the column name for the ban_reason field
      */
-    const COL_BAN_REASON = 'user.ban_reason';
+    const COL_BAN_REASON = 'fenric_user.ban_reason';
 
     /**
      * The default string format for model objects of the related table
@@ -269,14 +269,14 @@ class UserTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('user');
+        $this->setName('fenric_user');
         $this->setPhpName('User');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Propel\\Models\\User');
         $this->setPackage('Propel.Models');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, 11, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('role', 'Role', 'VARCHAR', true, 64, 'user');
         $this->addColumn('email', 'Email', 'VARCHAR', true, 128, null);
         $this->addColumn('username', 'Username', 'VARCHAR', true, 48, null);
@@ -315,6 +315,20 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('FieldRelatedByCreatedBy', '\\Propel\\Models\\Field', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'FieldsRelatedByCreatedBy', false);
+        $this->addRelation('FieldRelatedByUpdatedBy', '\\Propel\\Models\\Field', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':updated_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'FieldsRelatedByUpdatedBy', false);
         $this->addRelation('SectionRelatedByCreatedBy', '\\Propel\\Models\\Section', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -329,6 +343,13 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', 'SectionsRelatedByUpdatedBy', false);
+        $this->addRelation('SectionField', '\\Propel\\Models\\SectionField', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'SectionFields', false);
         $this->addRelation('PublicationRelatedByCreatedBy', '\\Propel\\Models\\Publication', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -357,20 +378,6 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', 'PublicationPhotosRelatedByUpdatedBy', false);
-        $this->addRelation('PublicationTagRelatedByCreatedBy', '\\Propel\\Models\\PublicationTag', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':created_by',
-    1 => ':id',
-  ),
-), 'SET NULL', 'CASCADE', 'PublicationTagsRelatedByCreatedBy', false);
-        $this->addRelation('PublicationTagRelatedByUpdatedBy', '\\Propel\\Models\\PublicationTag', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':updated_by',
-    1 => ':id',
-  ),
-), 'SET NULL', 'CASCADE', 'PublicationTagsRelatedByUpdatedBy', false);
         $this->addRelation('SnippetRelatedByCreatedBy', '\\Propel\\Models\\Snippet', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -414,16 +421,17 @@ class UserTableMap extends TableMap
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to user     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to fenric_user     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        FieldTableMap::clearInstancePool();
         SectionTableMap::clearInstancePool();
+        SectionFieldTableMap::clearInstancePool();
         PublicationTableMap::clearInstancePool();
         PublicationPhotoTableMap::clearInstancePool();
-        PublicationTagTableMap::clearInstancePool();
         SnippetTableMap::clearInstancePool();
         TagTableMap::clearInstancePool();
     }
@@ -688,7 +696,7 @@ class UserTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the user table.
+     * Deletes all rows from the fenric_user table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

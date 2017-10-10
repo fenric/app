@@ -27,7 +27,7 @@ final class App
 	/**
 	 * Версия приложения
 	 */
-	const VERSION = '0.9.1-dev';
+	const VERSION = '0.9.2-dev';
 
 	/**
 	 * Запуск приложения
@@ -35,28 +35,23 @@ final class App
 	public function run(Closure $middleware)
 	{
 		$this->setTimezone();
-
 		$this->tuneSession();
 
 		fenric('event::session.before.start')->run();
-
 		fenric('session')->start(new SessionHandler());
-
 		fenric('event::session.after.start')->run();
 
 		$middleware();
 
 		fenric('router')->run(fenric('request'), fenric('response'), function(Router $router, Request $request, Response $response) : void
 		{
-			$view = sprintf('view::errors/http/%d', $response->getStatus());
-
-			$request->isAjax() or $response->setContent(fenric($view)->render());
+			$request->isAjax() or $response->setContent(
+				fenric(sprintf('view::errors/http/%d', $response->getStatus()))->render()
+			);
 		});
 
 		fenric('event::response.before.send')->run();
-
 		fenric('response')->send();
-
 		fenric('event::response.after.send')->run();
 	}
 
@@ -72,7 +67,8 @@ final class App
 		fenric('router')->scope('/admin', function(Router $router)
 		{
 			// Главная страница панели управления сайтом
-			$router->get('(/)', \Fenric\Controllers\Admin\Index::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->get('(/)', \Fenric\Controllers\Admin\Index::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
 
@@ -91,6 +87,9 @@ final class App
 				// Управление публикациями
 				$router->any('/publication/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiPublication::class);
 
+				// Управление дополнительными полями
+				$router->any('/field/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiField::class);
+
 				// Управления тегами
 				$router->any('/tag/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiTag::class);
 
@@ -108,88 +107,129 @@ final class App
 		// Интерфейс пользователя
 		fenric('router')->scope('/user', function(Router $router)
 		{
-			// Общее API пользователя
-			$router->any('/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\User\Api::class);
+			// Страница учетной записи
+			$router->get('(/)', \Fenric\Controllers\User\Profile::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
+				$controller->trailingSlashes();
+			});
 
 			// Регистрация учетной записи
-			$router->get('/registration(/)', \Fenric\Controllers\User\Registration::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->get('/registration(/)', \Fenric\Controllers\User\Registration::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
-			$router->post('/registration/process(/)', \Fenric\Controllers\User\RegistrationProcess::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->post('/registration/process(/)', \Fenric\Controllers\User\RegistrationProcess::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
-			$router->get('/registration/<code:[a-z0-9]{40}>(/)', \Fenric\Controllers\User\RegistrationConfirm::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->get('/registration/<code:[a-z0-9]{40}>(/)', \Fenric\Controllers\User\RegistrationConfirm::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
 
 			// Аутентификация учетной записи
-			$router->get('/login(/)', \Fenric\Controllers\User\Authentication::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->get('/login(/)', \Fenric\Controllers\User\Authentication::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
-			$router->post('/login/process(/)', \Fenric\Controllers\User\AuthenticationProcess::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->post('/login/process(/)', \Fenric\Controllers\User\AuthenticationProcess::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
-			$router->get('/login/<code:[a-z0-9]{40}>(/)', \Fenric\Controllers\User\AuthenticationByToken::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->get('/login/<code:[a-z0-9]{40}>(/)', \Fenric\Controllers\User\AuthenticationByToken::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
 
 			// Создание аутентификационного токена для учетной записи
-			$router->get('/login/token/create(/)', \Fenric\Controllers\User\AuthenticationTokenCreate::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->get('/login/token/create(/)', \Fenric\Controllers\User\AuthenticationTokenCreate::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
-			$router->post('/login/token/create/process(/)', \Fenric\Controllers\User\AuthenticationTokenCreateProcess::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->post('/login/token/create/process(/)', \Fenric\Controllers\User\AuthenticationTokenCreateProcess::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
 
 			// Разавторизация учетной записи
-			$router->get('/logout(/)', \Fenric\Controllers\User\SignOut::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->get('/logout(/)', \Fenric\Controllers\User\SignOut::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
 
 			// Страница с настройками учетной записи
-			$router->get('/settings(/)', \Fenric\Controllers\User\ProfileSettings::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->get('/settings(/)', \Fenric\Controllers\User\ProfileSettings::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
-			$router->post('/settings/save(/)', \Fenric\Controllers\User\ProfileSettingsSave::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+			$router->post('/settings/save(/)', \Fenric\Controllers\User\ProfileSettingsSave::class, function(Router $router, Request $request, Response $response, Controller $controller)
+			{
 				$controller->trailingSlashes();
 			});
 
-			// Страница учетной записи
-			$router->get('(/<id:[1-9][0-9]*>)(/)', \Fenric\Controllers\User\Profile::class, function(Router $router, Request $request, Response $response, Controller $controller) {
-				$controller->trailingSlashes();
-			});
+			// Общее API пользователя
+			$router->any('/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\User\Api::class);
 		});
 
-		// Поиск по сайту
-		fenric('router')->get('/search(/)', \Fenric\Controllers\Search::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+		// Список пользователей
+		fenric('router')->get('/users(/)', \Fenric\Controllers\User\Profiles::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			$controller->trailingSlashes();
+		});
+
+		// Страница пользователя
+		fenric('router')->get('/users/<id:[1-9][0-9]{0,10}>(/)', \Fenric\Controllers\User\Profile::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
 			$controller->trailingSlashes();
 		});
 
 		// Список тегов
-		fenric('router')->get('/tags(/)', \Fenric\Controllers\Tags::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+		fenric('router')->get('/tags(/)', \Fenric\Controllers\Tags::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
 			$controller->trailingSlashes();
 		});
 
 		// Список публикаций по тегу
-		fenric('router')->get('/tags/<code:[a-z0-9-]+>(/)', \Fenric\Controllers\Tag::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+		fenric('router')->get('/tags/<code:[a-z0-9-]{1,255}>(/)', \Fenric\Controllers\Tag::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			$controller->trailingSlashes();
+		});
+
+		// Поиск по сайту
+		fenric('router')->get('/search(/)', \Fenric\Controllers\Search::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
 			$controller->trailingSlashes();
 		});
 
 		// Страница раздела
-		fenric('router')->get('/<code:[a-z0-9-]+>(/)', \Fenric\Controllers\Section::class, function(Router $router, Request $request, Response $response, Controller $controller) {
+		fenric('router')->get('<code:(/[a-z0-9-]{1,255}){1,10}>(/)', \Fenric\Controllers\Section::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
 			$controller->trailingSlashes();
+
+			$request->parameters->set('code', ltrim($request->parameters->get(2), '/'));
+
+			$request->parameters->set('codes', explode('/', ltrim($request->parameters->get(1), '/')));
 		});
 
 		// Страница публикации
-		fenric('router')->get('/<section:[a-z0-9-]+>/<publication:[a-z0-9-]+>(/)', \Fenric\Controllers\Publication::class, function(Router $router, Request $request, Response $response, Controller $controller) {
-			$controller->trailingSlashes();
+		fenric('router')->get('<section:(/[a-z0-9-]{1,255}){1,10}>/<publication:[a-z0-9-]{1,255}>.html', \Fenric\Controllers\Publication::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			$request->parameters->set('section', ltrim($request->parameters->get(2), '/'));
+
+			$request->parameters->set('sections', explode('/', ltrim($request->parameters->get(1), '/')));
 		});
 
 		// Robots.txt
-		fenric('router')->get('/robots.txt', \Fenric\Controllers\Services\RobotsTxt::class);
+		fenric('router')->get('/robots.txt', \Fenric\Controllers\Services\RobotsTxt::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			// @continue
+		});
 
 		// Карта сайта
-		fenric('router')->get('/sitemap.xml', \Fenric\Controllers\Services\SitemapXml::class);
+		fenric('router')->get('/sitemap.xml', \Fenric\Controllers\Services\SitemapXml::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			// @continue
+		});
 	}
 
 	/**

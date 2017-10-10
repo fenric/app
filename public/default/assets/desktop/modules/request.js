@@ -327,6 +327,10 @@
 
 	$module.prototype.prepareURI = function(uri, params)
 	{
+		params = params || {};
+
+		params.root = window.location.pathname.replace(/\/$/, '') || '';
+
 		uri = $desktop.interpolate(uri, params);
 
 		uri += (uri.indexOf('?') < 0 ? '?' : '&') + Math.random();

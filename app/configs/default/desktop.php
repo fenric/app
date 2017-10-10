@@ -15,6 +15,7 @@ $options['components'] = [
 	'users',
 	'sections',
 	'publications',
+	'fields',
 	'tags',
 	'snippets',
 	'parameters',

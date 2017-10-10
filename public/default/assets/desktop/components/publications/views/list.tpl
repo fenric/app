@@ -19,7 +19,7 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<td width="10%">
+					<td width="10%" align="center">
 						<span class="text-muted">Изображение</span>
 					</td>
 					<td width="20%">
@@ -41,10 +41,10 @@
 			</thead>
 			<tbody>
 				{{repeat items.items}}
-					<tr data-id="{{id}}">
-						<td>
+					<tr class="{{when disabled is true}}danger{{endwhen disabled}}" data-id="{{id}}">
+						<td align="center">
 							{{when picture is empty}}
-								<p><span class="text-muted">Отсутствует</span></p>
+								<p><span class="label label-default">Отсутствует</span></p>
 							{{endwhen picture}}
 
 							{{when picture is not empty}}
@@ -66,14 +66,6 @@
 
 							<p><strong>Количество хитов</strong>
 							<br><span>{{hits|0}}</span></p>
-
-							{{when enabled is true}}
-								<p><span class="label label-success">Отображается</span></p>
-							{{endwhen enabled}}
-
-							{{when disabled is true}}
-								<p><span class="label label-danger">Не&nbsp;отображается</span></p>
-							{{endwhen disabled}}
 						</td>
 						<td>
 							{{when meta_title is empty}}

@@ -51,4 +51,5 @@
 	 * Регистрация компонента на рабочем столе
 	 */
 	$desktop.regcom('uploader', $component);
+
 })();

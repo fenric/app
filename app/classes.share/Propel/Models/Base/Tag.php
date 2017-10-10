@@ -41,7 +41,7 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Base class that represents a row from the 'tag' table.
+ * Base class that represents a row from the 'fenric_tag' table.
  *
  *
  *
@@ -1360,7 +1360,7 @@ abstract class Tag implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO tag (%s) VALUES (%s)',
+            'INSERT INTO fenric_tag (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1581,7 +1581,7 @@ abstract class Tag implements ActiveRecordInterface
                         $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'user';
+                        $key = 'fenric_user';
                         break;
                     default:
                         $key = 'User';
@@ -1596,7 +1596,7 @@ abstract class Tag implements ActiveRecordInterface
                         $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'user';
+                        $key = 'fenric_user';
                         break;
                     default:
                         $key = 'User';
@@ -1611,7 +1611,7 @@ abstract class Tag implements ActiveRecordInterface
                         $key = 'publicationTags';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'publication_tags';
+                        $key = 'fenric_publication_tags';
                         break;
                     default:
                         $key = 'PublicationTags';
@@ -2352,56 +2352,6 @@ abstract class Tag implements ActiveRecordInterface
     {
         $query = ChildPublicationTagQuery::create(null, $criteria);
         $query->joinWith('Publication', $joinBehavior);
-
-        return $this->getPublicationTags($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Tag is new, it will return
-     * an empty collection; or if this Tag has previously
-     * been saved, it will retrieve related PublicationTags from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Tag.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     */
-    public function getPublicationTagsJoinUserRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPublicationTagQuery::create(null, $criteria);
-        $query->joinWith('UserRelatedByCreatedBy', $joinBehavior);
-
-        return $this->getPublicationTags($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Tag is new, it will return
-     * an empty collection; or if this Tag has previously
-     * been saved, it will retrieve related PublicationTags from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Tag.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     */
-    public function getPublicationTagsJoinUserRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPublicationTagQuery::create(null, $criteria);
-        $query->joinWith('UserRelatedByUpdatedBy', $joinBehavior);
 
         return $this->getPublicationTags($query, $con);
     }

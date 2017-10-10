@@ -28,7 +28,6 @@
 <?php $this->stop() ?>
 
 <?php $this->start('javascripts') ?>
-<script id="dsq-count-scr" src="//fenric-cms-demo-local.disqus.com/count.js?v2" async></script>
 <?php $this->stop() ?>
 
 <div class="container mt-3">
@@ -40,7 +39,7 @@
 </div>
 
 <div class="container mt-4">
-	<h1 class="display-1"><?= $tag->getHeader() ?></h1>
+	<h1 class="display-1">#<?= $tag->getHeader() ?></h1>
 </div>
 
 <?php if ($tag->getContent()) : ?>

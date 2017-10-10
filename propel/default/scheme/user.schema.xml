@@ -1,8 +1,8 @@
-<database name="default" namespace="Propel\Models">
+<database name="default" namespace="Propel\Models" tablePrefix="fenric_">
 	<behavior name="auto_add_pk" />
 
 	<table name="user">
-		<column name="id" type="integer" size="11" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
 		<column name="role" type="varchar" size="64" required="true" defaultValue="user" />
 		<column name="email" type="varchar" size="128" required="true" />
 		<column name="username" type="varchar" size="48" required="true" primaryString="true" />

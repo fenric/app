@@ -37,9 +37,11 @@ fenric()->registerUncaughtExceptionHandler(function($exception) : void
 			fenric('request')->isAjax()
 
 			? fenric('response')->setJsonContent([
+
 				// Inner rules API.
 				'success' => false,
 				'message' => $exception->getMessage(),
+
 				// Debug information, only for developers.
 				'file'    => $exception->getFile(),
 				'line'    => $exception->getLine(),
@@ -91,7 +93,7 @@ fenric()->registerResolvableSharedService('snippet', function(string $resolver, 
 
 	if ($model instanceof \Propel\Models\Snippet)
 	{
-		return $model->getValue();
+		return $model->getParsedValue();
 	}
 
 	return $default;
@@ -110,7 +112,7 @@ fenric()->registerResolvableSharedService('parameter', function(string $resolver
 
 	if ($model instanceof \Propel\Models\Parameter)
 	{
-		return $model->getValue();
+		return snippetable($model->getValue());
 	}
 
 	return $default;
@@ -188,21 +190,7 @@ fenric('event::user.authentication.token.created')->subscribe(function(\Propel\M
 });
 
 /**
- * Событие наступающее после загрузки фотографии для учетной записи
- */
-fenric('event::user.change.photo.after.upload.image')->subscribe(function(array $file)
-{
-	$filename = basename($file['location']);
-
-	fenric('user')->setPhoto($filename);
-
-	fenric('user')->save();
-});
-
-/**
  * Короткий способ локализации сообщения
- *
- * @see \Fenric::t()
  */
 function __(string $section, string $message, array $context = []) : string
 {
@@ -303,13 +291,13 @@ function asset(string $location) : string
 /**
  * Форматирование строки для использования ее в URL
  */
-function sluggable(string $value) : string
+function sluggable(string $value, string $separator = '-') : string
 {
 	$value = transliterator_transliterate('Any-Latin; Latin-ASCII; Lower()', $value);
 
-	$value = preg_replace(['/[^a-z0-9-]/', '/-+/'], '-', $value);
+	$value = preg_replace(['/[^a-z0-9-]/', '/-+/'], $separator, $value);
 
-	$value = trim($value, '-');
+	$value = trim($value, $separator);
 
 	return $value;
 }
@@ -339,7 +327,7 @@ function searchable(string $value, int $maxLength = 64, string $wordSeparator = 
  */
 function snippetable(string $value = null) : string
 {
-	$expression = '/{#snippet:([a-zA-Z0-9-]{1,255})(?:\050({[^\050\051]+})\051)?#}/';
+	$expression = '/{#snippet:([a-zA-Z0-9-\.]{1,255})(?:\050({[^\050\051]+})\051)?#}/';
 
 	return preg_replace_callback($expression, function($matches)
 	{

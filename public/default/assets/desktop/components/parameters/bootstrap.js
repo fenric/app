@@ -16,8 +16,8 @@
 		this.favicon = 'cogs';
 
 		this.routes = {};
-		this.routes.all = '/admin/api/parameter/all/';
-		this.routes.save = '/admin/api/parameter/save/';
+		this.routes.all = '{root}/api/parameter/all/';
+		this.routes.save = '{root}/api/parameter/save/';
 
 		this.templates = {};
 		this.templates.form = this.root + '/views/form.tpl';
@@ -48,7 +48,7 @@
 					{
 						modal.block();
 
-						self.httpRequest.post(self.routes.save, form, {repeat: true, success: function(response)
+						self.xhr.post(self.routes.save, form, {repeat: true, success: function(response)
 						{
 							$desktop.component('formhandle').handle(form, response);
 
@@ -60,7 +60,7 @@
 
 			modal.title(self.title).open().block();
 
-			self.httpRequest.get(self.routes.all, {repeat: true, success: function(response)
+			self.xhr.get(self.routes.all, {repeat: true, success: function(response)
 			{
 				$bugaboo.load(self.templates.form, function(tpl)
 				{

@@ -290,6 +290,8 @@ $request.prototype.prepareURI = function(uri, params)
 {
 	var key, expression;
 
+	params['root'] = window.location.pathname.replace(/\/$/, '') || '';
+
 	for (key in params)
 	{
 		expression = new RegExp('{' + key + '}', 'g');

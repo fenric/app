@@ -24,9 +24,9 @@
 <?php endif; ?>
 
 <script>
-var disqus_config = function() {
-	this.page.identifier = <?= $publication->getId() ?>;
-};
+	var disqus_config = function() {
+		this.page.identifier = <?= $publication->getId() ?>;
+	};
 </script>
 <?php $this->stop() ?>
 
@@ -34,8 +34,11 @@ var disqus_config = function() {
 <?php $this->stop() ?>
 
 <?php $this->start('javascripts') ?>
-<script>$('.carousel').carousel({keyboard: false});</script>
-<script id="dsq-count-scr" src="//fenric-cms-demo-local.disqus.com/count.js?v2" async></script>
+<script>
+	jQuery('.carousel').carousel({
+		keyboard: false,
+	});
+</script>
 <?php $this->stop() ?>
 
 <div class="container mt-3">
@@ -51,13 +54,39 @@ var disqus_config = function() {
 </div>
 
 <div class="container mt-4">
-	<div class="text-muted">
-		<small class="mr-3"><i class="fa fa-calendar-o" aria-hidden="true"></i> <?= $publication->getCreatedAt()->format('d.m.Y H:i') ?></small>
-		<small class="mr-3"><i class="fa fa-user-o" aria-hidden="true"></i> <a class="text-reset" href="/user/<?= $publication->getUserRelatedByCreatedBy()->getId() ?>/"><?= $publication->getUserRelatedByCreatedBy()->getName() ?></a></small>
-		<small class="mr-3"><i class="fa fa-folder-o" aria-hidden="true"></i> <a class="text-reset" href="<?= $publication->getSection()->getUri() ?>"><?= $publication->getSection()->getHeader() ?></a></small>
-		<small class="mr-3"><i class="fa fa-camera-retro" aria-hidden="true"></i> <a class="text-reset" href="<?= $publication->getUri() ?>#publication_gallery"><?= $publication->getCountPhotos() ?></a></small>
-		<small class="mr-3"><i class="fa fa-comments-o" aria-hidden="true"></i> <a class="text-reset disqus-comment-count" data-disqus-identifier="<?= $publication->getId() ?>" href="<?= $publication->getUri() ?>#disqus_thread"><i class="fa fa-spinner fa-spin"></i></a></small>
-		<small class="mr-3"><i class="fa fa-eye" aria-hidden="true"></i> <?= $publication->getHits() ?></small>
+	<div class="clearfix text-muted small">
+		<div class="float-left mr-3">
+			<i class="fa fa-calendar-o" aria-hidden="true"></i>
+			<span><?= $publication->getCreatedAt()->format('d.m.Y H:i') ?></span>
+		</div>
+		<div class="float-left mr-3">
+			<i class="fa fa-folder-o" aria-hidden="true"></i>
+			<a class="text-reset" href="<?= $publication->getSection()->getUri() ?>">
+				<span><?= $publication->getSection()->getHeader() ?></span>
+			</a>
+		</div>
+		<div class="float-left mr-3">
+			<i class="fa fa-user-o" aria-hidden="true"></i>
+			<a class="text-reset" href="<?= $publication->getUserRelatedByCreatedBy()->getUri() ?>">
+				<span><?= $publication->getUserRelatedByCreatedBy()->getName() ?></span>
+			</a>
+		</div>
+		<div class="float-left mr-3">
+			<i class="fa fa-camera-retro" aria-hidden="true"></i>
+			<a class="text-reset" href="<?= $publication->getUri() ?>#publication_gallery">
+				<span><?= $publication->getCountPhotos() ?></span>
+			</a>
+		</div>
+		<div class="float-left mr-3">
+			<i class="fa fa-comments-o" aria-hidden="true"></i>
+			<a class="text-reset disqus-comment-count" data-disqus-identifier="<?= $publication->getId() ?>" href="<?= $publication->getUri() ?>#disqus_thread">
+				<i class="fa fa-spinner fa-spin"></i>
+			</a>
+		</div>
+		<div class="float-left mr-3">
+			<i class="fa fa-eye" aria-hidden="true"></i>
+			<span><?= $publication->getHits() ?></span>
+		</div>
 	</div>
 </div>
 
@@ -65,11 +94,11 @@ var disqus_config = function() {
 	<div class="container mt-4">
 		<div id="publication_gallery" class="carousel slide" data-interval="false">
 
-			<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture()->count() > 0) : ?>
+			<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
 				<ol class="carousel-indicators">
 					<li data-target="#publication_gallery" data-slide-to="0" class="active"></li>
 
-					<?php for ($i = 1; $i <= $publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture()->count(); $i++) : ?>
+					<?php for ($i = 1; $i <= $publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist()->count(); $i++) : ?>
 						<li data-target="#publication_gallery" data-slide-to="<?= $i ?>"></li>
 					<?php endfor; ?>
 				</ol>
@@ -83,15 +112,15 @@ var disqus_config = function() {
 
 					<?php if ($publication->getPicture()) : ?>
 						<?php if ($publication->getPictureSignature()) : ?>
-							<div class="carousel-caption d-none d-md-block">
+							<div class="carousel-caption d-block">
 								<p><?= $publication->getPictureSignature() ?></p>
 							</div>
 						<?php endif; ?>
 					<?php endif; ?>
 				</div>
 
-				<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture()->count() > 0) : ?>
-					<?php foreach ($publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture() as $photo) : ?>
+				<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
+					<?php foreach ($publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist() as $photo) : ?>
 						<div class="carousel-item">
 							<a href="/upload/<?= $photo->getFile() ?>" target="_blank" data-fancybox="publication_gallery">
 								<img class="d-block img-fluid" src="/upload/1200x675/<?= $photo->getFile() ?>" alt="" />
@@ -101,7 +130,7 @@ var disqus_config = function() {
 				<?php endif; ?>
 			</div>
 
-			<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenIsNotExistsPicture()->count() > 0) : ?>
+			<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
 				<a class="carousel-control-prev" href="#publication_gallery" role="button" data-slide="prev">
 					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 					<span class="sr-only">Назад</span>
@@ -124,8 +153,9 @@ var disqus_config = function() {
 <?php endif; ?>
 
 <div class="container mt-4">
-	<div class="mb-2 text-muted">
-		<small><i class="fa fa-bullhorn" aria-hidden="true"></i> Поделиться</small>
+	<div class="mb-2 text-muted small">
+		<i class="fa fa-bullhorn" aria-hidden="true"></i>
+		<span>Поделиться</span>
 	</div>
 	<div class="clearfix">
 		<?= fenric('snippet::yandex-share') ?>
@@ -134,8 +164,9 @@ var disqus_config = function() {
 
 <?php if ($publication->getPublicationTags()->count() > 0) : ?>
 	<div class="container mt-4">
-		<div class="mb-1 text-muted">
-			<small><i class="fa fa-tags" aria-hidden="true"></i> Похожие темы</small>
+		<div class="mb-1 text-muted small">
+			<i class="fa fa-tags" aria-hidden="true"></i>
+			<span>Похожие темы</span>
 		</div>
 		<?php foreach ($publication->getPublicationTags() as $publicationTag) : ?>
 			<a href="<?= $publicationTag->getTag()->getUri() ?>">
@@ -145,22 +176,20 @@ var disqus_config = function() {
 	</div>
 <?php endif; ?>
 
-<?php if ($publication->existsPreviousOrNextPublication()) : ?>
+<?php if ($publication->existsNearestPublication()) : ?>
 	<div class="container mt-4">
 		<div class="row">
 			<div class="col-6">
-				<?php if ($publication->getPreviousPublication()) : ?>
+				<?php if ($publication->getPrevPublication()) : ?>
 					<div class="text-left">
-						<div class="mb-1 text-muted">
-							<small><i class="fa fa-arrow-left" aria-hidden="true"></i> Предыдущая публикация</small>
+						<div class="mb-1 text-muted small">
+							<i class="fa fa-arrow-left" aria-hidden="true"></i>
+							<span>Предыдущая публикация</span>
 						</div>
 						<div class="mb-1">
-							<a href="<?= $publication->getPreviousPublication()->getUri() ?>">
-								<small><?= $publication->getPreviousPublication()->getHeader() ?></small>
+							<a href="<?= $publication->getPrevPublication()->getUri() ?>">
+								<small><?= $publication->getPrevPublication()->getHeader() ?></small>
 							</a>
-						</div>
-						<div class="text-muted">
-							<small><?= $publication->getPreviousPublication()->getCreatedAt()->format('d.m.Y H:i') ?></small>
 						</div>
 					</div>
 				<?php endif; ?>
@@ -168,16 +197,14 @@ var disqus_config = function() {
 			<div class="col-6">
 				<?php if ($publication->getNextPublication()) : ?>
 					<div class="text-right">
-						<div class="mb-1 text-muted">
-							<small>Следующая публикация <i class="fa fa-arrow-right" aria-hidden="true"></i></small>
+						<div class="mb-1 text-muted small">
+							<span>Следующая публикация</span>
+							<i class="fa fa-arrow-right" aria-hidden="true"></i>
 						</div>
 						<div class="mb-1">
 							<a href="<?= $publication->getNextPublication()->getUri() ?>">
 								<small><?= $publication->getNextPublication()->getHeader() ?></small>
 							</a>
-						</div>
-						<div class="text-muted">
-							<small><?= $publication->getNextPublication()->getCreatedAt()->format('d.m.Y H:i') ?></small>
 						</div>
 					</div>
 				<?php endif; ?>

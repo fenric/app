@@ -1,272 +1,221 @@
 <?php $this->layout('layout') ?>
 
-<?php $this->start('javascripts') ?>
-	<script>
-		(function(d)
-		{
-			var images;
-
-			var initiator = d.querySelector('input#user-upload-photo');
-
-			if (initiator instanceof Node)
-			{
-				initiator.addEventListener('change', function(event)
-				{
-					if (event.target.files instanceof FileList)
-					{
-						if (event.target.files.length > 0)
-						{
-							$request.put('/user/api/upload-image/?trigger=user.change.photo.after.upload.image', event.target.files[0], {success: function(response)
-							{
-								images = d.querySelectorAll('img.user-photo');
-
-								if (images instanceof NodeList)
-								{
-									for (var i = 0; i < images.length; i++)
-									{
-										images[i].src = '/upload/' + (images[i].width || 128) + 'x' + (images[i].height || 128) + '/' + response.file;
-									}
-								}
-							}});
-						}
-					}
-				});
-			}
-
-		})(document);
-
-		(function(d)
-		{
-			var images;
-
-			var initiator = d.querySelector('.user-detach-photo');
-
-			if (initiator instanceof Node)
-			{
-				initiator.addEventListener('click', function(event)
-				{
-					event.preventDefault();
-
-					$request.patch('/user/api/detach-photo/', null, {success: function(response)
-					{
-						images = d.querySelectorAll('img.user-photo');
-
-						if (images instanceof NodeList)
-						{
-							for (var i = 0; i < images.length; i++)
-							{
-								images[i].src = '/assets/images/user.photo.default.png';
-							}
-						}
-					}});
-				});
-			}
-		})(document);
-	</script>
+<?php $this->start('metadata') ?>
+<title><?= e($user->getName()) ?></title>
 <?php $this->stop() ?>
 
-<div class="row">
-	<div class="col-3">
-		<div class="mb-3">
-			<?php if ($user->getPhoto()) : ?>
-				<img class="img-thumbnail user-photo" src="/upload/300x300/<?= $user->getPhoto() ?>" width="300" height="300" />
-			<?php else : ?>
-				<img class="img-thumbnail user-photo" src="<?= asset('/assets/images/user.photo.default.png') ?>" width="300" height="300" />
-			<?php endif; ?>
-		</div>
-		<?php if ($user->isMe()) : ?>
-			<div class="mb-4">
-				<div class="btn-group-vertical btn-block">
-					<label class="btn btn-secondary mb-0">
-						<span>Загрузить фото</span>
-						<input class="d-none" id="user-upload-photo" type="file" />
-					</label>
+<?php $this->start('stylesheets') ?>
+<?php $this->stop() ?>
 
+<?php $this->start('javascripts') ?>
+<script>
+	(function(d)
+	{
+		var images;
+
+		var initiator = d.querySelector('input.user-upload-photo');
+
+		if (initiator instanceof Node)
+		{
+			initiator.addEventListener('change', function(event)
+			{
+				if (event.target.files instanceof FileList)
+				{
+					if (event.target.files.length > 0)
+					{
+						$request.put('/user/api/upload-user-photo/', event.target.files[0], {success: function(response)
+						{
+							images = d.querySelectorAll('img.user-photo');
+
+							if (images instanceof NodeList)
+							{
+								for (var i = 0; i < images.length; i++)
+								{
+									images[i].src = '/upload/' + (images[i].width || 128) + 'x' + (images[i].height || 128) + '/' + response.file;
+								}
+							}
+						}});
+					}
+				}
+			});
+		}
+
+	})(document);
+
+	(function(d)
+	{
+		var images;
+
+		var initiator = d.querySelector('.user-detach-photo');
+
+		if (initiator instanceof Node)
+		{
+			initiator.addEventListener('click', function(event)
+			{
+				event.preventDefault();
+
+				$request.patch('/user/api/detach-photo/', null, {success: function(response)
+				{
+					images = d.querySelectorAll('img.user-photo');
+
+					if (images instanceof NodeList)
+					{
+						for (var i = 0; i < images.length; i++)
+						{
+							images[i].src = '/assets/i/user.photo.default.png';
+						}
+					}
+				}});
+			});
+		}
+	})(document);
+</script>
+<?php $this->stop() ?>
+
+<div class="container mt-3">
+	<nav class="breadcrumb">
+		<a class="breadcrumb-item" href="/">Главная</a>
+		<a class="breadcrumb-item" href="/users/">Пользователи</a>
+		<span class="breadcrumb-item active"><?= $user->getName() ?></span>
+	</nav>
+</div>
+
+<div class="container mt-4">
+	<h1 class="display-1"><?= $user->getName() ?></h1>
+</div>
+
+<div class="container mt-4">
+	<div class="row">
+		<div class="col-3">
+
+			<div class="mb-3">
+				<label>
 					<?php if ($user->getPhoto()) : ?>
-						<button class="btn btn-secondary user-detach-photo" type="button">
-							<span>Удалить фото</span>
-						</button>
+						<img class="img-thumbnail user-photo" src="/upload/300x300/<?= $user->getPhoto() ?>" width="300" height="300" />
+					<?php else : ?>
+						<img class="img-thumbnail user-photo" src="<?= asset('/assets/i/user.photo.default.png') ?>" width="300" height="300" />
 					<?php endif; ?>
-
-					<?php if ($user->haveAccessToDesktop()) : ?>
-						<a href="/admin/" class="btn btn-secondary">
-							<span>Рабочий стол</span>
-						</a>
-					<?php endif; ?>
-
-					<a href="/user/settings/" class="btn btn-secondary">
-						<span>Настройки</span>
-					</a>
-					<a href="/user/logout/" class="btn btn-danger">
-						<span>Выйти</span>
-					</a>
-				</div>
+					<input class="user-upload-photo d-none" type="file" />
+				</label>
 			</div>
-		<?php endif; ?>
-	</div>
-	<div class="col-9">
-		<div class="mb-4">
-			<div class="h2">
-				<span>#<?= $user->getUsername() ?></span>
-			</div>
-
-			<span class="badge badge-primary"><?= $user->getRoleName() ?></span>
 
 			<?php if ($user->isMe()) : ?>
-				<span class="badge badge-primary">Это вы</span>
-			<?php elseif ($user->isBlocked()) : ?>
-				<span class="badge badge-danger">Заблокирован</span>
-			<?php elseif ($user->isOnline()) : ?>
-				<span class="badge badge-success">В сети</span>
+				<div class="mb-0">
+					<div class="btn-group-vertical btn-block">
+						<?php if ($user->getPhoto()) : ?>
+							<button class="btn btn-secondary user-detach-photo" type="button">
+								<span>Удалить фото</span>
+							</button>
+						<?php endif; ?>
+
+						<?php if ($user->haveAccessToDesktop()) : ?>
+							<a href="/admin/" class="btn btn-secondary">
+								<span>Рабочий стол</span>
+							</a>
+						<?php endif; ?>
+
+						<a href="/user/settings/" class="btn btn-secondary">
+							<span>Настройки</span>
+						</a>
+						<a href="/user/logout/" class="btn btn-danger">
+							<span>Выйти</span>
+						</a>
+					</div>
+				</div>
+			<?php endif; ?>
+
+		</div>
+		<div class="col-9">
+			<div class="mb-4">
+				<span class="badge badge-primary"><?= $user->getRoleName() ?></span>
+
+				<?php if ($user->isMe()) : ?>
+					<span class="badge badge-primary">Это вы</span>
+				<?php elseif ($user->isBlocked()) : ?>
+					<span class="badge badge-danger">Заблокирован</span>
+				<?php elseif ($user->isOnline()) : ?>
+					<span class="badge badge-success">В сети</span>
+				<?php endif; ?>
+			</div>
+
+			<?php if ($user->getName()) : ?>
+				<div class="mb-3">
+					<div>
+						<strong>Имя</strong>
+					</div>
+					<div>
+						<span><?= $user->getName() ?></span>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if ($user->getGender()) : ?>
+				<div class="mb-3">
+					<div>
+						<strong>Пол</strong>
+					</div>
+					<div>
+						<?php if ($user->isMale()) : ?>
+							<span>Мужской</span> <span class="text-muted"><i class="fa fa-mars" aria-hidden="true"></i></span>
+						<?php endif; ?>
+
+						<?php if ($user->isFemale()) : ?>
+							<span>Женский</span> <span class="text-muted"><i class="fa fa-venus" aria-hidden="true"></i></span>
+						<?php endif; ?>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if ($user->getBirthday() instanceof DateTime) : ?>
+				<div class="mb-3">
+					<div>
+						<strong>День рождения</strong>
+					</div>
+					<div>
+						<span><?= $user->getBirthday()->format('d.m.Y') ?></span>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if ($user->getAge() instanceof DateInterval) : ?>
+				<div class="mb-3">
+					<div>
+						<strong>Возраст</strong>
+					</div>
+					<div>
+						<span><?= msgfmt_format_message('ru_RU', '{n, plural, one{# год} few{# года} many{# лет} other{# лет}}', ['n' => $user->getAge()->y]) ?></span>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if ($user->getRegistrationAt() instanceof DateTime) : ?>
+				<div class="mb-3">
+					<div>
+						<strong>Регистрация</strong>
+					</div>
+					<div>
+						<span><?= $user->getRegistrationAt()->format('d.m.Y H:i:s P') ?></span>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if ($user->getAuthenticationAt() instanceof DateTime) : ?>
+				<div class="mb-3">
+					<div>
+						<strong>Последний вход</strong>
+					</div>
+					<div>
+						<span><?= $user->getAuthenticationAt()->format('d.m.Y H:i:s P') ?></span>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if ($user->getAbout()) : ?>
+				<h4 class="pt-3 pb-2">Обо мне</h4>
+				<div class="clearfix">
+					<?= $user->getAbout() ?>
+				</div>
 			<?php endif; ?>
 		</div>
-
-		<?php if (fenric('user')->isAdministrator() || $user->isMe()) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>E-mail</strong>
-				</div>
-				<div>
-					<span><?= $user->getEmail() ?></span>
-					<br><small class="text-muted"><i class="fa fa-lock" aria-hidden="true"></i> Видите только вы.</small>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($user->getName()) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>Имя</strong>
-				</div>
-				<div>
-					<span><?= $user->getName() ?></span>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($user->getGender()) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>Пол</strong>
-				</div>
-				<div>
-					<?php if ($user->isMale()) : ?>
-						<span>Мужской</span> <span class="text-muted"><i class="fa fa-mars" aria-hidden="true"></i></span>
-					<?php endif; ?>
-
-					<?php if ($user->isFemale()) : ?>
-						<span>Женский</span> <span class="text-muted"><i class="fa fa-venus" aria-hidden="true"></i></span>
-					<?php endif; ?>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($user->getBirthday() instanceof DateTime) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>День рождения</strong>
-				</div>
-				<div>
-					<span><?= $user->getBirthday()->format('d.m.Y') ?></span>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($user->getAge() instanceof DateInterval) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>Возраст</strong>
-				</div>
-				<div>
-					<span><?= msgfmt_format_message('ru_RU', '{n, plural, one{# год} few{# года} many{# лет} other{# лет}}', ['n' => $user->getAge()->y]) ?></span>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($user->getRegistrationAt() instanceof DateTime) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>Регистрация</strong>
-				</div>
-				<div>
-					<span><?= $user->getRegistrationAt()->format('d.m.Y H:i:s P') ?></span>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if (fenric('user')->isAdministrator() || $user->isMe()) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>IP адрес при регистрации</strong>
-				</div>
-				<div>
-					<span><?= $user->getRegistrationIp() ?: 'неизвестно' ?></span>
-					<br><small class="text-muted"><i class="fa fa-lock" aria-hidden="true"></i> Видите только вы.</small>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($user->getAuthenticationAt() instanceof DateTime) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>Последняя аутентификация</strong>
-				</div>
-				<div>
-					<span><?= $user->getAuthenticationAt()->format('d.m.Y H:i:s P') ?></span>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if (fenric('user')->isAdministrator() || $user->isMe()) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>IP адрес при последней аутентификации</strong>
-				</div>
-				<div>
-					<span><?= $user->getAuthenticationIp() ?: 'неизвестно' ?></span>
-					<br><small class="text-muted"><i class="fa fa-lock" aria-hidden="true"></i> Видите только вы.</small>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($user->getTrackAt() instanceof DateTime) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>Последняя активность</strong>
-				</div>
-				<div>
-					<span><?= $user->getTrackAt()->format('d.m.Y H:i:s P') ?></span>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if (fenric('user')->isAdministrator() || $user->isMe()) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>IP адрес при последней активности</strong>
-				</div>
-				<div>
-					<span><?= $user->getTrackIp() ?: 'неизвестно' ?></span>
-					<br><small class="text-muted"><i class="fa fa-lock" aria-hidden="true"></i> Видите только вы.</small>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if (fenric('user')->isAdministrator()) : ?>
-			<div class="mb-3">
-				<div>
-					<strong>URL адрес при последней активности</strong>
-				</div>
-				<div>
-					<span><?= $user->getTrackUrl() ?: 'неизвестно' ?></span>
-					<br><small class="text-muted"><i class="fa fa-lock" aria-hidden="true"></i> Видите только вы.</small>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($user->getAbout()) : ?>
-			<h4 class="pt-3 pb-2">Обо мне</h4>
-			<div><?= $user->getAbout() ?></div>
-		<?php endif; ?>
 	</div>
 </div>

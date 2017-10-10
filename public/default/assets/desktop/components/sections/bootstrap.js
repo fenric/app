@@ -24,15 +24,21 @@
 		this.params.load(this.params.default);
 
 		this.routes = {};
-		this.routes.all = '/admin/api/section/all/?&{params}';
-		this.routes.create = '/admin/api/section/create/';
-		this.routes.update = '/admin/api/section/update/{id}/';
-		this.routes.delete = '/admin/api/section/delete/{id}/';
-		this.routes.unload = '/admin/api/section/unload/';
-		this.routes.read = '/admin/api/section/read/{id}/';
+		this.routes.all = '{root}/api/section/all/?&{params}';
+		this.routes.create = '{root}/api/section/create/';
+		this.routes.update = '{root}/api/section/update/{id}/';
+		this.routes.delete = '{root}/api/section/delete/{id}/';
+		this.routes.unload = '{root}/api/section/unload/';
+		this.routes.read = '{root}/api/section/read/{id}/';
+
+		this.routes.fields = {};
+		this.routes.fields.attach = '{root}/api/section/attach-field/{sectionId}/';
+		this.routes.fields.detach = '{root}/api/section/detach-field/{fieldId}/';
+		this.routes.fields.sort = '{root}/api/section/sort-fields/{sectionId}/';
 
 		this.templates = {};
 		this.templates.list = this.root + '/views/list.tpl';
+		this.templates.fields = this.root + '/views/fields.tpl';
 		this.templates.form = this.root + '/views/form.tpl';
 	};
 
@@ -81,7 +87,7 @@
 
 			self.modal().title('{title} / Список разделов', {title: self.title}).open().block();
 
-			self.httpRequest.get(self.routes.all, {repeat: true, params: self.params.toSerialize(), success: function(items)
+			self.xhr.get(self.routes.all, {repeat: true, params: self.params.toSerialize(), success: function(items)
 			{
 				self.modal().title('{title} / Список разделов ({count})', {title: self.title, count: items.count});
 
@@ -138,10 +144,12 @@
 
 						modal.search('textarea.ckeditor', function(area)
 						{
-							area.value = area.ckeditor.getData();
+							if (area.ckeditor) {
+								area.value = area.ckeditor.getData();
+							}
 						});
 
-						request = self.httpRequest.post(self.routes.create, form, {
+						request = self.xhr.post(self.routes.create, form, {
 							repeat: true,
 						});
 
@@ -197,10 +205,12 @@
 
 						modal.search('textarea.ckeditor', function(area)
 						{
-							area.value = area.ckeditor.getData();
+							if (area.ckeditor) {
+								area.value = area.ckeditor.getData();
+							}
 						});
 
-						self.httpRequest.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
+						self.xhr.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
 						{
 							$desktop.component('formhandle').handle(form, response);
 
@@ -232,13 +242,10 @@
 	 */
 	$component.prototype.read = function(id, complete)
 	{
-		this.with(function(self)
+		this.xhr.get(this.routes.read, {repeat: true, id: id, success: function(response)
 		{
-			self.httpRequest.get(self.routes.read, {repeat: true, id: id, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -252,13 +259,10 @@
 	 */
 	$component.prototype.delete = function(id, complete)
 	{
-		this.with(function(self)
+		this.xhr.delete(this.routes.delete, {repeat: true, id: id, success: function(response)
 		{
-			self.httpRequest.delete(self.routes.delete, {repeat: true, id: id, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -271,12 +275,98 @@
 	 */
 	$component.prototype.unload = function(complete)
 	{
+		this.xhr.get(this.routes.unload, {repeat: true, success: function(response)
+		{
+			complete.call(this, response);
+		}});
+	};
+
+	/**
+	 * Управление дополнительными полями объекта
+	 *
+	 * @param   integer   sectionId
+	 *
+	 * @access  public
+	 * @return  void
+	 */
+	$component.prototype.fields = function(sectionId)
+	{
+		var modal;
+
 		this.with(function(self)
 		{
-			self.httpRequest.get(self.routes.unload, {repeat: true, success: function(response)
+			modal = self.modal(sectionId * 1000000, {created: function(modal)
 			{
-				complete.call(this, response);
+				modal.on('modal.content.reload', function()
+				{
+					self.fields(sectionId);
+				});
 			}});
+
+			modal.title('{title} / Дополнительные поля раздела / ...', {title: self.title}).open().block();
+
+			self.read(sectionId, function(section)
+			{
+				modal.title('{title} / Дополнительные поля раздела / {header}', {title: self.title, header: section.header});
+
+				$desktop.component('fields').unload(function(fields)
+				{
+					$bugaboo.load(self.templates.fields, function(tpl)
+					{
+
+						$desktop.iterate(fields, function(parentKey, parent)
+						{
+							$desktop.iterate(section.fields, function(fieldKey, field)
+							{
+								if (parent.id == field.parent.id)
+								{
+									delete fields[parentKey];
+								}
+							});
+						});
+
+						modal.content(tpl.format({
+							section: section,
+							fields: fields,
+						})).unblock();
+
+						modal.click('.attach', function(event)
+						{
+							self.xhr.post(self.routes.fields.attach, this.getAttribute('data-id'), {sectionId: section.id}).complete(function(response)
+							{
+								self.fields(section.id);
+							});
+						});
+
+						modal.search('.detach[data-toggle=confirmation]', function(element)
+						{
+							jQuery(element).confirmation({onConfirm: function()
+							{
+								self.xhr.delete(self.routes.fields.detach, {fieldId: element.getAttribute('data-id')}).complete(function(response)
+								{
+									self.fields(section.id);
+								});
+							}});
+						});
+
+						modal.find('div.sortable', function(container)
+						{
+							jQuery(container).sortable({axis: 'y', update: function(event, ui)
+							{
+								var sortedIds = new Array();
+
+								modal.search('div.sortable-item', function(element)
+								{
+									sortedIds.push(element.getAttribute('data-id'));
+								});
+
+								self.xhr.patch(self.routes.fields.sort, {fieldIds: sortedIds}, {sectionId: section.id});
+							}});
+						});
+
+					});
+				});
+			});
 		});
 	};
 
@@ -308,20 +398,20 @@
 					$desktop.component('ckeditor').init(element);
 				});
 
-				modal.listenClick('button.picture-reset', function(event)
+				modal.click('button.picture-reset', function(event)
 				{
 					modal.clear('.picture-container');
 				});
 
-				modal.listenChange('input.picture-upload', function(event)
+				modal.change('input.picture-upload', function(event, element)
 				{
 					var container;
 
 					modal.block();
 
-					$desktop.component('uploader').image(event.target.files[0], function(response)
+					$desktop.component('uploader').image(element.files[0], function(response)
 					{
-						event.target.value = null;
+						element.value = null;
 
 						container = document.createDocumentFragment();
 
@@ -346,6 +436,15 @@
 			});
 		});
 	};
+
+	/**
+	 * Помощь в работе с компонентом
+	 *
+	 * @access  public
+	 * @return  void
+	 */
+	$component.prototype.help = function()
+	{};
 
 	/**
 	 * Инициализация компонента

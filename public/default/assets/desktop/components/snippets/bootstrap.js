@@ -13,7 +13,7 @@
 	$component = function()
 	{
 		this.title = 'Сниппеты';
-		this.favicon = 'code';
+		this.favicon = null;
 
 		this.params = $desktop.module('params').create();
 
@@ -24,11 +24,11 @@
 		this.params.load(this.params.default);
 
 		this.routes = {};
-		this.routes.all = '/admin/api/snippet/all/?&{params}';
-		this.routes.create = '/admin/api/snippet/create/';
-		this.routes.update = '/admin/api/snippet/update/{id}/';
-		this.routes.delete = '/admin/api/snippet/delete/{id}/';
-		this.routes.read = '/admin/api/snippet/read/{id}/';
+		this.routes.all = '{root}/api/snippet/all/?&{params}';
+		this.routes.create = '{root}/api/snippet/create/';
+		this.routes.update = '{root}/api/snippet/update/{id}/';
+		this.routes.delete = '{root}/api/snippet/delete/{id}/';
+		this.routes.read = '{root}/api/snippet/read/{id}/';
 
 		this.templates = {};
 		this.templates.list = this.root + '/views/list.tpl';
@@ -80,7 +80,7 @@
 
 			self.modal().title('{title} / Список сниппетов', {title: self.title}).open().block();
 
-			self.httpRequest.get(self.routes.all, {repeat: true, params: self.params.toSerialize(), success: function(items)
+			self.xhr.get(self.routes.all, {repeat: true, params: self.params.toSerialize(), success: function(items)
 			{
 				self.modal().title('{title} / Список сниппетов ({count})', {title: self.title, count: items.count});
 
@@ -135,12 +135,14 @@
 					{
 						modal.block();
 
-						modal.search('textarea.ckeditor', function(area)
+						modal.search('textarea.codemirror', function(area)
 						{
-							area.value = area.ckeditor.getData();
+							if (area.codemirror) {
+								area.value = area.codemirror.getValue();
+							}
 						});
 
-						request = self.httpRequest.post(self.routes.create, form, {
+						request = self.xhr.post(self.routes.create, form, {
 							repeat: true,
 						});
 
@@ -194,12 +196,14 @@
 					{
 						modal.block();
 
-						modal.search('textarea.ckeditor', function(area)
+						modal.search('textarea.codemirror', function(area)
 						{
-							area.value = area.ckeditor.getData();
+							if (area.codemirror) {
+								area.value = area.codemirror.getValue();
+							}
 						});
 
-						self.httpRequest.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
+						self.xhr.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
 						{
 							$desktop.component('formhandle').handle(form, response);
 
@@ -231,13 +235,10 @@
 	 */
 	$component.prototype.read = function(id, complete)
 	{
-		this.with(function(self)
+		this.xhr.get(this.routes.read, {repeat: true, id: id, success: function(response)
 		{
-			self.httpRequest.get(self.routes.read, {repeat: true, id: id, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -251,13 +252,10 @@
 	 */
 	$component.prototype.delete = function(id, complete)
 	{
-		this.with(function(self)
+		this.xhr.delete(this.routes.delete, {repeat: true, id: id, success: function(response)
 		{
-			self.httpRequest.delete(self.routes.delete, {repeat: true, id: id, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -290,16 +288,20 @@
 
 				iframe = document.createElement('iframe');
 
-				iframe.src = 'data:text/html;charset=utf-8,' + encodeURI('<!DOCTYPE html><html><head></head><body>' + snippet.value + '</body></html>');
+				iframe.src = 'data:text/html;charset=utf-8,' + encodeURI('<!DOCTYPE html><html><head></head><body>' + snippet.parsed_value + '</body></html>');
 
 				iframe.style.position = 'absolute';
-				iframe.style.top = '5%';
-				iframe.style.left = '5%';
-				iframe.style.right = '5%';
-				iframe.style.bottom = '5%';
-				iframe.style.width = '90%';
-				iframe.style.height = '90%';
-				iframe.style.border = 0;
+
+				iframe.style.top = '2%';
+				iframe.style.bottom = '2%';
+
+				iframe.style.left = '1%';
+				iframe.style.right = '1%';
+
+				iframe.style.width = '98%';
+				iframe.style.height = '96%';
+
+				iframe.style.border = '1px solid #eee';
 
 				modal.content(iframe).unblock();
 			});
@@ -329,6 +331,22 @@
 					tpl.format(params)
 				).unblock();
 
+				modal.search('textarea.codemirror', function(element)
+				{
+					element.codemirror = CodeMirror.fromTextArea(element, {
+						mode: 'php',
+						theme: 'eclipse',
+						viewportMargin: Infinity,
+						lineNumbers: true,
+						indentUnit: 4,
+						indentWithTabs: true,
+						styleActiveLine: true,
+						matchBrackets: true,
+						matchTags: true,
+						autoCloseTags: true,
+					});
+				});
+
 				modal.submit(function(event)
 				{
 					modal.triggerEventListeners('modal.content.save');
@@ -336,6 +354,15 @@
 			});
 		});
 	};
+
+	/**
+	 * Помощь в работе с компонентом
+	 *
+	 * @access  public
+	 * @return  void
+	 */
+	$component.prototype.help = function()
+	{};
 
 	/**
 	 * Инициализация компонента

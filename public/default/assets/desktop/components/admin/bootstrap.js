@@ -15,7 +15,7 @@
 		this.account = null;
 
 		this.routes = {};
-		this.routes.read = '/admin/api/account/';
+		this.routes.read = '{root}/api/account/';
 		this.routes.signIn = '/user/login/process/';
 		this.routes.signOut = '/user/logout/';
 	};
@@ -32,7 +32,7 @@
 	{
 		this.with(function(self)
 		{
-			self.httpRequest.get(self.routes.read, {repeat: true, success: function(response)
+			self.xhr.get(self.routes.read, {repeat: true, success: function(response)
 			{
 				self.account = response;
 
@@ -76,7 +76,7 @@
 					formSubmitButton.disabled = true;
 					formResponseContainer.classList.add('hidden');
 
-					event.request = self.httpRequest.post(self.routes.signIn, this);
+					event.request = self.xhr.post(self.routes.signIn, this);
 
 					event.request.complete(function(response)
 					{
@@ -116,7 +116,7 @@
 		{
 			$desktop.hide();
 
-			self.httpRequest.get(self.routes.signOut, {success: function()
+			self.xhr.get(self.routes.signOut, {success: function()
 			{
 				$desktop.show();
 

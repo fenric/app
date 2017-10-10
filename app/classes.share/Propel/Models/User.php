@@ -25,7 +25,7 @@ class User extends BaseUser
 	 */
 	public function getUri() : string
 	{
-		return sprintf('/user/%d/', $this->getId());
+		return sprintf('/users/%d/', $this->getId());
 	}
 
 	/**

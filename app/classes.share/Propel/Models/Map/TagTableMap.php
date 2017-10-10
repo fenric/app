@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'tag' table.
+ * This class defines the structure of the 'fenric_tag' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class TagTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'tag';
+    const TABLE_NAME = 'fenric_tag';
 
     /**
      * The related Propel class for this table
@@ -74,72 +74,72 @@ class TagTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    const COL_ID = 'tag.id';
+    const COL_ID = 'fenric_tag.id';
 
     /**
      * the column name for the code field
      */
-    const COL_CODE = 'tag.code';
+    const COL_CODE = 'fenric_tag.code';
 
     /**
      * the column name for the header field
      */
-    const COL_HEADER = 'tag.header';
+    const COL_HEADER = 'fenric_tag.header';
 
     /**
      * the column name for the content field
      */
-    const COL_CONTENT = 'tag.content';
+    const COL_CONTENT = 'fenric_tag.content';
 
     /**
      * the column name for the meta_title field
      */
-    const COL_META_TITLE = 'tag.meta_title';
+    const COL_META_TITLE = 'fenric_tag.meta_title';
 
     /**
      * the column name for the meta_author field
      */
-    const COL_META_AUTHOR = 'tag.meta_author';
+    const COL_META_AUTHOR = 'fenric_tag.meta_author';
 
     /**
      * the column name for the meta_keywords field
      */
-    const COL_META_KEYWORDS = 'tag.meta_keywords';
+    const COL_META_KEYWORDS = 'fenric_tag.meta_keywords';
 
     /**
      * the column name for the meta_description field
      */
-    const COL_META_DESCRIPTION = 'tag.meta_description';
+    const COL_META_DESCRIPTION = 'fenric_tag.meta_description';
 
     /**
      * the column name for the meta_canonical field
      */
-    const COL_META_CANONICAL = 'tag.meta_canonical';
+    const COL_META_CANONICAL = 'fenric_tag.meta_canonical';
 
     /**
      * the column name for the meta_robots field
      */
-    const COL_META_ROBOTS = 'tag.meta_robots';
+    const COL_META_ROBOTS = 'fenric_tag.meta_robots';
 
     /**
      * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'tag.created_at';
+    const COL_CREATED_AT = 'fenric_tag.created_at';
 
     /**
      * the column name for the created_by field
      */
-    const COL_CREATED_BY = 'tag.created_by';
+    const COL_CREATED_BY = 'fenric_tag.created_by';
 
     /**
      * the column name for the updated_at field
      */
-    const COL_UPDATED_AT = 'tag.updated_at';
+    const COL_UPDATED_AT = 'fenric_tag.updated_at';
 
     /**
      * the column name for the updated_by field
      */
-    const COL_UPDATED_BY = 'tag.updated_by';
+    const COL_UPDATED_BY = 'fenric_tag.updated_by';
 
     /**
      * The default string format for model objects of the related table
@@ -184,7 +184,7 @@ class TagTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('tag');
+        $this->setName('fenric_tag');
         $this->setPhpName('Tag');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Propel\\Models\\Tag');
@@ -203,9 +203,9 @@ class TagTableMap extends TableMap
         $this->addColumn('meta_canonical', 'MetaCanonical', 'VARCHAR', false, 255, null);
         $this->addColumn('meta_robots', 'MetaRobots', 'VARCHAR', false, 255, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
     } // initialize()
 
     /**
@@ -251,7 +251,7 @@ class TagTableMap extends TableMap
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to tag     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to fenric_tag     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
@@ -496,7 +496,7 @@ class TagTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the tag table.
+     * Deletes all rows from the fenric_tag table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

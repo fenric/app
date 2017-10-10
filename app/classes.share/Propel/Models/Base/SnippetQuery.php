@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'snippet' table.
+ * Base class that represents a query for the 'fenric_snippet' table.
  *
  *
  *
@@ -199,7 +199,7 @@ abstract class SnippetQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, code, title, created_at, created_by, updated_at, updated_by FROM snippet WHERE id = :p0';
+        $sql = 'SELECT id, code, title, created_at, created_by, updated_at, updated_by FROM fenric_snippet WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -748,7 +748,7 @@ abstract class SnippetQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the snippet table.
+     * Deletes all rows from the fenric_snippet table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

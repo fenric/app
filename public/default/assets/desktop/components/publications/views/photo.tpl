@@ -1,7 +1,7 @@
 <div class="photo pull-left" data-id="{{photo.id}}" style="position: relative; margin: 0 5px 5px 0;">
 
 	<a href="/upload/{{photo.file}}" target="_blank" data-fancybox="5f2723c5-6da8-4eab-b760-8d351d70b147-{{publication.id}}">
-		<img class="img-thumbnail" src="/upload/160x90/{{photo.file}}" {{when photo.display is not true}}style="opacity: 0.25;"{{endwhen photo.display}} />
+		<img class="img-thumbnail" src="/upload/160x90/{{photo.file}}" width="160" height="90" {{when photo.display is not true}}style="opacity: 0.25;"{{endwhen photo.display}} />
 	</a>
 
 	<div style="position: absolute; bottom: 10px; right: 10px;">

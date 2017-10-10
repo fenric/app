@@ -16,7 +16,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'publication_photo' table.
+ * Base class that represents a query for the 'fenric_publication_photo' table.
  *
  *
  *
@@ -214,7 +214,7 @@ abstract class PublicationPhotoQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, publication_id, file, display, sequence, created_at, created_by, updated_at, updated_by FROM publication_photo WHERE id = :p0';
+        $sql = 'SELECT id, publication_id, file, display, sequence, created_at, created_by, updated_at, updated_by FROM fenric_publication_photo WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -901,7 +901,7 @@ abstract class PublicationPhotoQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the publication_photo table.
+     * Deletes all rows from the fenric_publication_photo table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

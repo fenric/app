@@ -13,7 +13,6 @@
 	$component = function()
 	{
 		this.title = 'Обновление системы';
-
 		this.favicon = 'refresh';
 	};
 
@@ -31,7 +30,7 @@
 		{
 			self.modal(null).title(self.title).open(800, 480).block();
 
-			$desktop.module('request').get('/admin/update/', {repeat: true, success: function(response)
+			$desktop.module('request').get('{root}/update/', {repeat: true, success: function(response)
 			{
 				container = document.createElement('pre');
 

@@ -16,25 +16,17 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'publication_tag' table.
+ * Base class that represents a query for the 'fenric_publication_tag' table.
  *
  *
  *
  * @method     ChildPublicationTagQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildPublicationTagQuery orderByPublicationId($order = Criteria::ASC) Order by the publication_id column
  * @method     ChildPublicationTagQuery orderByTagId($order = Criteria::ASC) Order by the tag_id column
- * @method     ChildPublicationTagQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method     ChildPublicationTagQuery orderByCreatedBy($order = Criteria::ASC) Order by the created_by column
- * @method     ChildPublicationTagQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
- * @method     ChildPublicationTagQuery orderByUpdatedBy($order = Criteria::ASC) Order by the updated_by column
  *
  * @method     ChildPublicationTagQuery groupById() Group by the id column
  * @method     ChildPublicationTagQuery groupByPublicationId() Group by the publication_id column
  * @method     ChildPublicationTagQuery groupByTagId() Group by the tag_id column
- * @method     ChildPublicationTagQuery groupByCreatedAt() Group by the created_at column
- * @method     ChildPublicationTagQuery groupByCreatedBy() Group by the created_by column
- * @method     ChildPublicationTagQuery groupByUpdatedAt() Group by the updated_at column
- * @method     ChildPublicationTagQuery groupByUpdatedBy() Group by the updated_by column
  *
  * @method     ChildPublicationTagQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPublicationTagQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -64,38 +56,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationTagQuery rightJoinWithTag() Adds a RIGHT JOIN clause and with to the query using the Tag relation
  * @method     ChildPublicationTagQuery innerJoinWithTag() Adds a INNER JOIN clause and with to the query using the Tag relation
  *
- * @method     ChildPublicationTagQuery leftJoinUserRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByCreatedBy relation
- * @method     ChildPublicationTagQuery rightJoinUserRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByCreatedBy relation
- * @method     ChildPublicationTagQuery innerJoinUserRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByCreatedBy relation
- *
- * @method     ChildPublicationTagQuery joinWithUserRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the UserRelatedByCreatedBy relation
- *
- * @method     ChildPublicationTagQuery leftJoinWithUserRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the UserRelatedByCreatedBy relation
- * @method     ChildPublicationTagQuery rightJoinWithUserRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the UserRelatedByCreatedBy relation
- * @method     ChildPublicationTagQuery innerJoinWithUserRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the UserRelatedByCreatedBy relation
- *
- * @method     ChildPublicationTagQuery leftJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByUpdatedBy relation
- * @method     ChildPublicationTagQuery rightJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByUpdatedBy relation
- * @method     ChildPublicationTagQuery innerJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByUpdatedBy relation
- *
- * @method     ChildPublicationTagQuery joinWithUserRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the UserRelatedByUpdatedBy relation
- *
- * @method     ChildPublicationTagQuery leftJoinWithUserRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
- * @method     ChildPublicationTagQuery rightJoinWithUserRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
- * @method     ChildPublicationTagQuery innerJoinWithUserRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
- *
- * @method     \Propel\Models\PublicationQuery|\Propel\Models\TagQuery|\Propel\Models\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\PublicationQuery|\Propel\Models\TagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPublicationTag findOne(ConnectionInterface $con = null) Return the first ChildPublicationTag matching the query
  * @method     ChildPublicationTag findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPublicationTag matching the query, or a new ChildPublicationTag object populated from the query conditions when no match is found
  *
  * @method     ChildPublicationTag findOneById(int $id) Return the first ChildPublicationTag filtered by the id column
  * @method     ChildPublicationTag findOneByPublicationId(int $publication_id) Return the first ChildPublicationTag filtered by the publication_id column
- * @method     ChildPublicationTag findOneByTagId(int $tag_id) Return the first ChildPublicationTag filtered by the tag_id column
- * @method     ChildPublicationTag findOneByCreatedAt(string $created_at) Return the first ChildPublicationTag filtered by the created_at column
- * @method     ChildPublicationTag findOneByCreatedBy(int $created_by) Return the first ChildPublicationTag filtered by the created_by column
- * @method     ChildPublicationTag findOneByUpdatedAt(string $updated_at) Return the first ChildPublicationTag filtered by the updated_at column
- * @method     ChildPublicationTag findOneByUpdatedBy(int $updated_by) Return the first ChildPublicationTag filtered by the updated_by column *
+ * @method     ChildPublicationTag findOneByTagId(int $tag_id) Return the first ChildPublicationTag filtered by the tag_id column *
 
  * @method     ChildPublicationTag requirePk($key, ConnectionInterface $con = null) Return the ChildPublicationTag by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublicationTag requireOne(ConnectionInterface $con = null) Return the first ChildPublicationTag matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -103,19 +71,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationTag requireOneById(int $id) Return the first ChildPublicationTag filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublicationTag requireOneByPublicationId(int $publication_id) Return the first ChildPublicationTag filtered by the publication_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublicationTag requireOneByTagId(int $tag_id) Return the first ChildPublicationTag filtered by the tag_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildPublicationTag requireOneByCreatedAt(string $created_at) Return the first ChildPublicationTag filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildPublicationTag requireOneByCreatedBy(int $created_by) Return the first ChildPublicationTag filtered by the created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildPublicationTag requireOneByUpdatedAt(string $updated_at) Return the first ChildPublicationTag filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildPublicationTag requireOneByUpdatedBy(int $updated_by) Return the first ChildPublicationTag filtered by the updated_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPublicationTag[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPublicationTag objects based on current ModelCriteria
  * @method     ChildPublicationTag[]|ObjectCollection findById(int $id) Return ChildPublicationTag objects filtered by the id column
  * @method     ChildPublicationTag[]|ObjectCollection findByPublicationId(int $publication_id) Return ChildPublicationTag objects filtered by the publication_id column
  * @method     ChildPublicationTag[]|ObjectCollection findByTagId(int $tag_id) Return ChildPublicationTag objects filtered by the tag_id column
- * @method     ChildPublicationTag[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildPublicationTag objects filtered by the created_at column
- * @method     ChildPublicationTag[]|ObjectCollection findByCreatedBy(int $created_by) Return ChildPublicationTag objects filtered by the created_by column
- * @method     ChildPublicationTag[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildPublicationTag objects filtered by the updated_at column
- * @method     ChildPublicationTag[]|ObjectCollection findByUpdatedBy(int $updated_by) Return ChildPublicationTag objects filtered by the updated_by column
  * @method     ChildPublicationTag[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -214,7 +174,7 @@ abstract class PublicationTagQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, publication_id, tag_id, created_at, created_by, updated_at, updated_by FROM publication_tag WHERE id = :p0';
+        $sql = 'SELECT id, publication_id, tag_id FROM fenric_publication_tag WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -432,178 +392,6 @@ abstract class PublicationTagQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the created_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildPublicationTagQuery The current query, for fluid interface
-     */
-    public function filterByCreatedAt($createdAt = null, $comparison = null)
-    {
-        if (is_array($createdAt)) {
-            $useMinMax = false;
-            if (isset($createdAt['min'])) {
-                $this->addUsingAlias(PublicationTagTableMap::COL_CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdAt['max'])) {
-                $this->addUsingAlias(PublicationTagTableMap::COL_CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(PublicationTagTableMap::COL_CREATED_AT, $createdAt, $comparison);
-    }
-
-    /**
-     * Filter the query on the created_by column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedBy(1234); // WHERE created_by = 1234
-     * $query->filterByCreatedBy(array(12, 34)); // WHERE created_by IN (12, 34)
-     * $query->filterByCreatedBy(array('min' => 12)); // WHERE created_by > 12
-     * </code>
-     *
-     * @see       filterByUserRelatedByCreatedBy()
-     *
-     * @param     mixed $createdBy The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildPublicationTagQuery The current query, for fluid interface
-     */
-    public function filterByCreatedBy($createdBy = null, $comparison = null)
-    {
-        if (is_array($createdBy)) {
-            $useMinMax = false;
-            if (isset($createdBy['min'])) {
-                $this->addUsingAlias(PublicationTagTableMap::COL_CREATED_BY, $createdBy['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdBy['max'])) {
-                $this->addUsingAlias(PublicationTagTableMap::COL_CREATED_BY, $createdBy['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(PublicationTagTableMap::COL_CREATED_BY, $createdBy, $comparison);
-    }
-
-    /**
-     * Filter the query on the updated_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
-     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $updatedAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildPublicationTagQuery The current query, for fluid interface
-     */
-    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
-    {
-        if (is_array($updatedAt)) {
-            $useMinMax = false;
-            if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(PublicationTagTableMap::COL_UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(PublicationTagTableMap::COL_UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(PublicationTagTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
-    }
-
-    /**
-     * Filter the query on the updated_by column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUpdatedBy(1234); // WHERE updated_by = 1234
-     * $query->filterByUpdatedBy(array(12, 34)); // WHERE updated_by IN (12, 34)
-     * $query->filterByUpdatedBy(array('min' => 12)); // WHERE updated_by > 12
-     * </code>
-     *
-     * @see       filterByUserRelatedByUpdatedBy()
-     *
-     * @param     mixed $updatedBy The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildPublicationTagQuery The current query, for fluid interface
-     */
-    public function filterByUpdatedBy($updatedBy = null, $comparison = null)
-    {
-        if (is_array($updatedBy)) {
-            $useMinMax = false;
-            if (isset($updatedBy['min'])) {
-                $this->addUsingAlias(PublicationTagTableMap::COL_UPDATED_BY, $updatedBy['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($updatedBy['max'])) {
-                $this->addUsingAlias(PublicationTagTableMap::COL_UPDATED_BY, $updatedBy['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(PublicationTagTableMap::COL_UPDATED_BY, $updatedBy, $comparison);
-    }
-
-    /**
      * Filter the query by a related \Propel\Models\Publication object
      *
      * @param \Propel\Models\Publication|ObjectCollection $publication The related object(s) to use as filter
@@ -758,160 +546,6 @@ abstract class PublicationTagQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Propel\Models\User object
-     *
-     * @param \Propel\Models\User|ObjectCollection $user The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
-     *
-     * @return ChildPublicationTagQuery The current query, for fluid interface
-     */
-    public function filterByUserRelatedByCreatedBy($user, $comparison = null)
-    {
-        if ($user instanceof \Propel\Models\User) {
-            return $this
-                ->addUsingAlias(PublicationTagTableMap::COL_CREATED_BY, $user->getId(), $comparison);
-        } elseif ($user instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(PublicationTagTableMap::COL_CREATED_BY, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByUserRelatedByCreatedBy() only accepts arguments of type \Propel\Models\User or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the UserRelatedByCreatedBy relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildPublicationTagQuery The current query, for fluid interface
-     */
-    public function joinUserRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('UserRelatedByCreatedBy');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'UserRelatedByCreatedBy');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the UserRelatedByCreatedBy relation User object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Propel\Models\UserQuery A secondary query class using the current class as primary query
-     */
-    public function useUserRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        return $this
-            ->joinUserRelatedByCreatedBy($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByCreatedBy', '\Propel\Models\UserQuery');
-    }
-
-    /**
-     * Filter the query by a related \Propel\Models\User object
-     *
-     * @param \Propel\Models\User|ObjectCollection $user The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
-     *
-     * @return ChildPublicationTagQuery The current query, for fluid interface
-     */
-    public function filterByUserRelatedByUpdatedBy($user, $comparison = null)
-    {
-        if ($user instanceof \Propel\Models\User) {
-            return $this
-                ->addUsingAlias(PublicationTagTableMap::COL_UPDATED_BY, $user->getId(), $comparison);
-        } elseif ($user instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(PublicationTagTableMap::COL_UPDATED_BY, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByUserRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\User or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the UserRelatedByUpdatedBy relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildPublicationTagQuery The current query, for fluid interface
-     */
-    public function joinUserRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('UserRelatedByUpdatedBy');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'UserRelatedByUpdatedBy');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the UserRelatedByUpdatedBy relation User object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Propel\Models\UserQuery A secondary query class using the current class as primary query
-     */
-    public function useUserRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        return $this
-            ->joinUserRelatedByUpdatedBy($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByUpdatedBy', '\Propel\Models\UserQuery');
-    }
-
-    /**
      * Exclude object from result
      *
      * @param   ChildPublicationTag $publicationTag Object to remove from the list of results
@@ -928,7 +562,7 @@ abstract class PublicationTagQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the publication_tag table.
+     * Deletes all rows from the fenric_publication_tag table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

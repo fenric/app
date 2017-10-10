@@ -1,4 +1,4 @@
-<database name="default" namespace="Propel\Models">
+<database name="default" namespace="Propel\Models" tablePrefix="fenric_">
 	<behavior name="auto_add_pk" />
 
 	<table name="section">
@@ -25,6 +25,7 @@
 
 		<foreign-key
 			name="bbf67a39-999a-4624-86f0-ede675b26d97"
+			phpName="Parent"
 			foreignTable="section"
 			onDelete="cascade"
 			onUpdate="cascade"
@@ -87,6 +88,70 @@
 
 			<parameter name="e181d836-1742-42ec-9017-ee98b44da1f4" value="{column: header, validator: NotBlank}" />
 			<parameter name="f271845e-ee03-4fe4-9442-9b695c0470ac" value="{column: header, validator: Length, options: {max: 255}}" />
+		</behavior>
+	</table>
+
+	<table name="section_field">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+
+		<column name="section_id" type="integer" />
+		<column name="field_id" type="integer" />
+
+		<column name="sequence" type="numeric" required="true" defaultValue="0" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<index name="0690bf57-4850-46df-820e-f4dad8737aba">
+			<index-column name="sequence" />
+		</index>
+
+		<foreign-key
+			name="c292993a-a319-4f99-81db-f77c686d8d96"
+			foreignTable="section"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="section_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="d07d6703-acbc-4873-9954-8b7616ab0f4d"
+			foreignTable="field"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="field_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="ec6149c7-f7fc-40c3-93b4-8873976aae67"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_enable" value="false" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_enable" value="false" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="f671f3e6-f2db-4e01-85a3-59f171eb4b80" value="{column: section_id, validator: NotBlank}" />
+			<parameter name="f7449a7e-c61d-4cb6-a27b-637a5e7552bd" value="{column: field_id, validator: NotBlank}" />
 		</behavior>
 	</table>
 
@@ -206,6 +271,69 @@
 		</behavior>
 	</table>
 
+	<table name="publication_field">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+
+		<column name="publication_id" type="integer" />
+		<column name="section_field_id" type="integer" />
+
+		<column name="int_value" type="integer" />
+		<column name="bool_value" type="boolean" />
+		<column name="number_value" type="numeric" size="65" scale="30" />
+		<column name="datetime_value" type="timestamp" />
+		<column name="string_value" type="varchar" />
+		<column name="text_value" type="longvarchar" />
+
+		<foreign-key
+			name="a196f3c5-c38e-4dd5-a5d1-a9ff670a0ab8"
+			foreignTable="publication"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="publication_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="b1a3858d-cf21-4166-98d0-933a0a3066a0"
+			foreignTable="section_field"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="section_field_id" foreign="id" />
+		</foreign-key>
+
+		<index name="a29db22d-7b7b-49e8-89ef-702af85a7480">
+			<index-column name="int_value" />
+		</index>
+
+		<index name="b4545016-42bf-4ea3-b4cc-43d5e3441324">
+			<index-column name="bool_value" />
+		</index>
+
+		<index name="c47bc148-4607-452d-a76f-f61301744ec0">
+			<index-column name="number_value" />
+		</index>
+
+		<index name="d301e673-6589-4821-9dab-d27684645364">
+			<index-column name="datetime_value" />
+		</index>
+
+		<index name="e9457770-6155-4c71-966e-d4cac884e9d3">
+			<index-column name="string_value" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="validate">
+			<parameter name="1d842519-e5cd-4eb1-bba5-92dac0f8a837" value="{column: publication_id, validator: NotBlank}" />
+			<parameter name="2a94a5a9-a00f-4c44-8b21-75c0f7fd9aa5" value="{column: section_field_id, validator: NotBlank}" />
+		</behavior>
+	</table>
+
 	<table name="publication_photo">
 		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
 		<column name="publication_id" type="integer" />
@@ -274,16 +402,37 @@
 		</behavior>
 	</table>
 
+	<table name="publication_relation">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+
+		<column name="publication_id" type="integer" />
+		<column name="related_publication_id" type="integer" />
+
+		<foreign-key
+			name="ac910e89-ee47-4fd7-adc5-dbbf97967ccf"
+			foreignTable="publication"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="publication_id" foreign="id" />
+		</foreign-key>
+
+		<index name="aa64ab94-118f-41e6-963f-707af0b10da2">
+			<index-column name="related_publication_id" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+	</table>
+
 	<table name="publication_tag">
 		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+
 		<column name="publication_id" type="integer" />
 		<column name="tag_id" type="integer" />
-
-		<column name="created_at" type="timestamp" />
-		<column name="created_by" type="integer" />
-
-		<column name="updated_at" type="timestamp" />
-		<column name="updated_by" type="integer" />
 
 		<foreign-key
 			name="9be06349-8b35-4620-b8db-75d284af1940"
@@ -303,38 +452,10 @@
 			<reference local="tag_id" foreign="id" />
 		</foreign-key>
 
-		<foreign-key
-			name="7aa32bdc-2fcb-40f3-b4cb-4e5abe63b6f5"
-			foreignTable="user"
-			onDelete="setnull"
-			onUpdate="cascade"
-			defaultJoin="INNER JOIN">
-			<reference local="created_by" foreign="id" />
-		</foreign-key>
-
-		<foreign-key
-			name="c3377e91-04d6-48b0-9412-4305f2140629"
-			foreignTable="user"
-			onDelete="setnull"
-			onUpdate="cascade"
-			defaultJoin="INNER JOIN">
-			<reference local="updated_by" foreign="id" />
-		</foreign-key>
-
 		<vendor type="mysql">
 			<parameter name="Engine" value="InnoDB" />
 			<parameter name="Charset" value="utf8" />
 			<parameter name="Collate" value="utf8_unicode_ci" />
 		</vendor>
-
-		<behavior name="Fenric\Propel\Behaviors\Authorable">
-			<parameter name="create_column" value="created_by" />
-			<parameter name="update_column" value="updated_by" />
-		</behavior>
-
-		<behavior name="Fenric\Propel\Behaviors\Timestampable">
-			<parameter name="create_column" value="created_at" />
-			<parameter name="update_column" value="updated_at" />
-		</behavior>
 	</table>
 </database>

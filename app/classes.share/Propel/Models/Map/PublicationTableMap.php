@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'publication' table.
+ * This class defines the structure of the 'fenric_publication' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class PublicationTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'publication';
+    const TABLE_NAME = 'fenric_publication';
 
     /**
      * The related Propel class for this table
@@ -74,107 +74,107 @@ class PublicationTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    const COL_ID = 'publication.id';
+    const COL_ID = 'fenric_publication.id';
 
     /**
      * the column name for the section_id field
      */
-    const COL_SECTION_ID = 'publication.section_id';
+    const COL_SECTION_ID = 'fenric_publication.section_id';
 
     /**
      * the column name for the code field
      */
-    const COL_CODE = 'publication.code';
+    const COL_CODE = 'fenric_publication.code';
 
     /**
      * the column name for the header field
      */
-    const COL_HEADER = 'publication.header';
+    const COL_HEADER = 'fenric_publication.header';
 
     /**
      * the column name for the picture field
      */
-    const COL_PICTURE = 'publication.picture';
+    const COL_PICTURE = 'fenric_publication.picture';
 
     /**
      * the column name for the picture_signature field
      */
-    const COL_PICTURE_SIGNATURE = 'publication.picture_signature';
+    const COL_PICTURE_SIGNATURE = 'fenric_publication.picture_signature';
 
     /**
      * the column name for the anons field
      */
-    const COL_ANONS = 'publication.anons';
+    const COL_ANONS = 'fenric_publication.anons';
 
     /**
      * the column name for the content field
      */
-    const COL_CONTENT = 'publication.content';
+    const COL_CONTENT = 'fenric_publication.content';
 
     /**
      * the column name for the meta_title field
      */
-    const COL_META_TITLE = 'publication.meta_title';
+    const COL_META_TITLE = 'fenric_publication.meta_title';
 
     /**
      * the column name for the meta_author field
      */
-    const COL_META_AUTHOR = 'publication.meta_author';
+    const COL_META_AUTHOR = 'fenric_publication.meta_author';
 
     /**
      * the column name for the meta_keywords field
      */
-    const COL_META_KEYWORDS = 'publication.meta_keywords';
+    const COL_META_KEYWORDS = 'fenric_publication.meta_keywords';
 
     /**
      * the column name for the meta_description field
      */
-    const COL_META_DESCRIPTION = 'publication.meta_description';
+    const COL_META_DESCRIPTION = 'fenric_publication.meta_description';
 
     /**
      * the column name for the meta_canonical field
      */
-    const COL_META_CANONICAL = 'publication.meta_canonical';
+    const COL_META_CANONICAL = 'fenric_publication.meta_canonical';
 
     /**
      * the column name for the meta_robots field
      */
-    const COL_META_ROBOTS = 'publication.meta_robots';
+    const COL_META_ROBOTS = 'fenric_publication.meta_robots';
 
     /**
      * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'publication.created_at';
+    const COL_CREATED_AT = 'fenric_publication.created_at';
 
     /**
      * the column name for the created_by field
      */
-    const COL_CREATED_BY = 'publication.created_by';
+    const COL_CREATED_BY = 'fenric_publication.created_by';
 
     /**
      * the column name for the updated_at field
      */
-    const COL_UPDATED_AT = 'publication.updated_at';
+    const COL_UPDATED_AT = 'fenric_publication.updated_at';
 
     /**
      * the column name for the updated_by field
      */
-    const COL_UPDATED_BY = 'publication.updated_by';
+    const COL_UPDATED_BY = 'fenric_publication.updated_by';
 
     /**
      * the column name for the show_at field
      */
-    const COL_SHOW_AT = 'publication.show_at';
+    const COL_SHOW_AT = 'fenric_publication.show_at';
 
     /**
      * the column name for the hide_at field
      */
-    const COL_HIDE_AT = 'publication.hide_at';
+    const COL_HIDE_AT = 'fenric_publication.hide_at';
 
     /**
      * the column name for the hits field
      */
-    const COL_HITS = 'publication.hits';
+    const COL_HITS = 'fenric_publication.hits';
 
     /**
      * The default string format for model objects of the related table
@@ -219,7 +219,7 @@ class PublicationTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('publication');
+        $this->setName('fenric_publication');
         $this->setPhpName('Publication');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Propel\\Models\\Publication');
@@ -227,7 +227,7 @@ class PublicationTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('section_id', 'SectionId', 'INTEGER', 'section', 'id', false, null, null);
+        $this->addForeignKey('section_id', 'SectionId', 'INTEGER', 'fenric_section', 'id', false, null, null);
         $this->addColumn('code', 'Code', 'VARCHAR', true, 255, null);
         $this->addColumn('header', 'Header', 'VARCHAR', true, 255, null);
         $this->getColumn('header')->setPrimaryString(true);
@@ -242,9 +242,9 @@ class PublicationTableMap extends TableMap
         $this->addColumn('meta_canonical', 'MetaCanonical', 'VARCHAR', false, 255, null);
         $this->addColumn('meta_robots', 'MetaRobots', 'VARCHAR', false, 255, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('show_at', 'ShowAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('hide_at', 'HideAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('hits', 'Hits', 'NUMERIC', false, null, 0);
@@ -276,6 +276,13 @@ class PublicationTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', null, false);
+        $this->addRelation('PublicationField', '\\Propel\\Models\\PublicationField', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':publication_id',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'PublicationFields', false);
         $this->addRelation('PublicationPhoto', '\\Propel\\Models\\PublicationPhoto', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -283,6 +290,13 @@ class PublicationTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', 'PublicationPhotos', false);
+        $this->addRelation('PublicationRelation', '\\Propel\\Models\\PublicationRelation', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':publication_id',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'PublicationRelations', false);
         $this->addRelation('PublicationTag', '\\Propel\\Models\\PublicationTag', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -307,13 +321,15 @@ class PublicationTableMap extends TableMap
         );
     } // getBehaviors()
     /**
-     * Method to invalidate the instance pool of all tables related to publication     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to fenric_publication     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        PublicationFieldTableMap::clearInstancePool();
         PublicationPhotoTableMap::clearInstancePool();
+        PublicationRelationTableMap::clearInstancePool();
         PublicationTagTableMap::clearInstancePool();
     }
 
@@ -567,7 +583,7 @@ class PublicationTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the publication table.
+     * Deletes all rows from the fenric_publication table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

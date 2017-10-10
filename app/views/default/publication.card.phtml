@@ -1,5 +1,6 @@
-<div class="col-4 mb-4">
+<div class="col-12 col-lg-6 mb-4 w-100">
 	<div class="card h-100">
+
 		<?php if ($publication->getPicture()) : ?>
 			<a href="<?= $publication->getUri() ?>">
 				<img class="card-img-top w-100" src="/upload/640x360/<?= $publication->getPicture() ?>" alt="" />
@@ -12,40 +13,71 @@
 
 		<div class="card-block">
 			<div class="card-title">
-				<a class="text-reset" href="<?= $publication->getUri() ?>">
-					<h4><?= $publication->getHeader() ?></h4>
-				</a>
+				<div class="mb-2">
+					<a class="text-reset" href="<?= $publication->getUri() ?>">
+						<h4 class="mb-0"><?= $publication->getHeader() ?></h4>
+					</a>
+				</div>
+				<div class="clearfix">
+					<div class="float-left mr-3">
+						<div class="small text-muted">
+							<i class="fa fa-calendar-o" aria-hidden="true"></i>
+							<span><?= $publication->getCreatedAt()->format('d.m.Y H:i') ?></span>
+						</div>
+					</div>
+					<div class="float-left mr-3">
+						<div class="small text-muted">
+							<i class="fa fa-user-o" aria-hidden="true"></i>
+							<a class="text-reset" href="<?= $publication->getUserRelatedByCreatedBy()->getUri() ?>">
+								<span><?= $publication->getUserRelatedByCreatedBy()->getName() ?></span>
+							</a>
+						</div>
+					</div>
+					<div class="float-left mr-3">
+						<div class="small text-muted">
+							<i class="fa fa-folder-o" aria-hidden="true"></i>
+							<a class="text-reset" href="<?= $publication->getSection()->getUri() ?>">
+								<span><?= $publication->getSection()->getHeader() ?></span>
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
+
 			<div class="card-text">
 				<div class="clearfix">
 					<?= $publication->getSnippetableAnons() ?>
 				</div>
 			</div>
+
+			<?php if ($publication->getPublicationTags()->count() > 0) : ?>
+				<div class="mt-2 small text-muted">
+					<?php foreach ($publication->getPublicationTags() as $publicationTag) : ?>
+						<a class="text-reset" href="<?= $publicationTag->getTag()->getUri() ?>">
+							<span>#<?= $publicationTag->getTag()->getHeader() ?></span>
+						</a>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 
-		<?php if ($publication->getPublicationTags()->count() > 0) : ?>
-			<div class="pl-3 pr-3 pb-3">
-				<?php foreach ($publication->getPublicationTags() as $publicationTag) : ?>
-					<a class="text-muted" href="<?= $publicationTag->getTag()->getUri() ?>">
-						<small>#<?= $publicationTag->getTag()->getHeader() ?></small>
-					</a>
-				<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
-
 		<div class="card-footer">
-			<div class="row">
-				<div class="col-6 text-muted text-left">
-					<?php if ($publication->getCreatedAt()->format('Y') <> date('Y')) : ?>
-						<small><i class="fa fa-calendar-o" aria-hidden="true"></i> <?= $publication->getCreatedAt()->format('m/Y') ?></small>
-					<?php else : ?>
-						<small><i class="fa fa-calendar-o" aria-hidden="true"></i> <?= $publication->getCreatedAt()->format('d.m H:i') ?></small>
-					<?php endif; ?>
+			<div class="clearfix">
+				<div class="float-left mr-3 small text-muted">
+					<i class="fa fa-camera-retro" aria-hidden="true"></i>
+					<a class="text-reset" href="<?= $publication->getUri() ?>#publication_gallery">
+						<span><?= $publication->getCountPhotos() ?></span>
+					</a>
 				</div>
-				<div class="col-6 text-muted text-right">
-					<small class="mr-2"><i class="fa fa-camera-retro" aria-hidden="true"></i> <?= $publication->getCountPhotos() ?></small>
-					<small class="mr-2"><i class="fa fa-comments-o" aria-hidden="true"></i> <span class="disqus-comment-count" data-disqus-identifier="<?= $publication->getId() ?>"><i class="fa fa-spinner fa-spin"></i></span></small>
-					<small><i class="fa fa-eye" aria-hidden="true"></i> <?= $publication->getHits() ?></small>
+				<div class="float-left mr-3 small text-muted">
+					<i class="fa fa-comments-o" aria-hidden="true"></i>
+					<a class="text-reset disqus-comment-count" data-disqus-identifier="<?= $publication->getId() ?>" href="<?= $publication->getUri() ?>#disqus_thread">
+						<i class="fa fa-spinner fa-spin"></i>
+					</a>
+				</div>
+				<div class="float-left mr-3 small text-muted">
+					<i class="fa fa-eye" aria-hidden="true"></i>
+					<span><?= $publication->getHits() ?></span>
 				</div>
 			</div>
 		</div>

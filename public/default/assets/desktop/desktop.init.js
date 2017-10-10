@@ -7,9 +7,9 @@
 {
 	$desktop.init();
 
-	$request.get('/admin/api/desktop-modules/', {success: function(modules)
+	$request.get('{root}/api/desktop-modules/', {success: function(modules)
 	{
-		$request.get('/admin/api/desktop-components/', {success: function(components)
+		$request.get('{root}/api/desktop-components/', {success: function(components)
 		{
 			$desktop.render({modules: modules, components: components, onload: function()
 			{
@@ -97,15 +97,24 @@
 
 				this.component('admin').with(function()
 				{
-					if (this.account.desktop.palette) {
+					$desktop.module('icon').sort(this.account.desktop.icons || null);
+
+					if (this.account.desktop.palette)
+					{
 						$desktop.app.classList.add(this.account.desktop.palette);
 					}
 
-					if (this.account.desktop.wallpaper) {
+					if (this.account.desktop.wallpaper)
+					{
 						$desktop.app.style.backgroundImage = 'url(/upload/' + this.account.desktop.wallpaper + ')';
-					}
 
-					$desktop.module('icon').sort(this.account.desktop.icons || null);
+						$request.get('/upload/{file}', {file: this.account.desktop.wallpaper, onload: function(response)
+						{
+							$desktop.show();
+						}});
+
+						return;
+					}
 
 					$desktop.show();
 				});

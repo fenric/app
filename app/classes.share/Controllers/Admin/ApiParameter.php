@@ -105,10 +105,8 @@ class ApiParameter extends CRUD
 			ParameterTableMap::COL_VALUE,
 		];
 
-		$options = [
+		parent::all($query, $columns, [
 			'limit' => PHP_INT_MAX,
-		];
-
-		parent::all($query, $columns, $options);
+		]);
 	}
 }

@@ -24,12 +24,12 @@
 		this.params.load(this.params.default);
 
 		this.routes = {};
-		this.routes.all = '/admin/api/tag/all/?&{params}';
-		this.routes.create = '/admin/api/tag/create/';
-		this.routes.update = '/admin/api/tag/update/{id}/';
-		this.routes.delete = '/admin/api/tag/delete/{id}/';
-		this.routes.unload = '/admin/api/tag/unload/';
-		this.routes.read = '/admin/api/tag/read/{id}/';
+		this.routes.all = '{root}/api/tag/all/?&{params}';
+		this.routes.create = '{root}/api/tag/create/';
+		this.routes.update = '{root}/api/tag/update/{id}/';
+		this.routes.delete = '{root}/api/tag/delete/{id}/';
+		this.routes.unload = '{root}/api/tag/unload/';
+		this.routes.read = '{root}/api/tag/read/{id}/';
 
 		this.templates = {};
 		this.templates.list = this.root + '/views/list.tpl';
@@ -81,7 +81,7 @@
 
 			self.modal().title('{title} / Список тегов', {title: self.title}).open().block();
 
-			self.httpRequest.get(self.routes.all, {repeat: true, params: self.params.toSerialize(), success: function(items)
+			self.xhr.get(self.routes.all, {repeat: true, params: self.params.toSerialize(), success: function(items)
 			{
 				self.modal().title('{title} / Список тегов ({count})', {title: self.title, count: items.count});
 
@@ -138,10 +138,12 @@
 
 						modal.search('textarea.ckeditor', function(area)
 						{
-							area.value = area.ckeditor.getData();
+							if (area.ckeditor) {
+								area.value = area.ckeditor.getData();
+							}
 						});
 
-						request = self.httpRequest.post(self.routes.create, form, {
+						request = self.xhr.post(self.routes.create, form, {
 							repeat: true,
 						});
 
@@ -197,10 +199,12 @@
 
 						modal.search('textarea.ckeditor', function(area)
 						{
-							area.value = area.ckeditor.getData();
+							if (area.ckeditor) {
+								area.value = area.ckeditor.getData();
+							}
 						});
 
-						self.httpRequest.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
+						self.xhr.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
 						{
 							$desktop.component('formhandle').handle(form, response);
 
@@ -232,13 +236,10 @@
 	 */
 	$component.prototype.read = function(id, complete)
 	{
-		this.with(function(self)
+		this.xhr.get(this.routes.read, {repeat: true, id: id, success: function(response)
 		{
-			self.httpRequest.get(self.routes.read, {repeat: true, id: id, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -252,13 +253,10 @@
 	 */
 	$component.prototype.delete = function(id, complete)
 	{
-		this.with(function(self)
+		this.xhr.delete(this.routes.delete, {repeat: true, id: id, success: function(response)
 		{
-			self.httpRequest.delete(self.routes.delete, {repeat: true, id: id, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -271,13 +269,10 @@
 	 */
 	$component.prototype.unload = function(complete)
 	{
-		this.with(function(self)
+		this.xhr.get(this.routes.unload, {repeat: true, success: function(response)
 		{
-			self.httpRequest.get(self.routes.unload, {repeat: true, success: function(response)
-			{
-				complete.call(this, response);
-			}});
-		});
+			complete.call(this, response);
+		}});
 	};
 
 	/**
@@ -315,6 +310,15 @@
 			});
 		});
 	};
+
+	/**
+	 * Помощь в работе с компонентом
+	 *
+	 * @access  public
+	 * @return  void
+	 */
+	$component.prototype.help = function()
+	{};
 
 	/**
 	 * Инициализация компонента

@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Base class that represents a row from the 'parameter' table.
+ * Base class that represents a row from the 'fenric_parameter' table.
  *
  *
  *
@@ -697,7 +697,7 @@ abstract class Parameter implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO parameter (%s) VALUES (%s)',
+            'INSERT INTO fenric_parameter (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

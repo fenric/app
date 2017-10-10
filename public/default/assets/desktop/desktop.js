@@ -249,7 +249,7 @@ $desktop.prototype.regcom = function(name, component)
 
 	component.prototype.appIcon = [this.dirname, 'components', name, 'res', 'icon@32.png'].join('/');
 
-	component.prototype.httpRequest = $desktop.module('request');
+	component.prototype.xhr = $desktop.module('request');
 
 	component.prototype.modal = function(key, options)
 	{
@@ -339,6 +339,8 @@ $desktop.prototype.includeModules = function(complete)
 
 			script.setAttribute('src', this.dirname + '/modules/' + this.params.modules[i] + '.js?' + Math.random());
 
+			script.setAttribute('data-module', this.params.modules[i]);
+
 			script.addEventListener('load', (function(name)
 			{
 				return function(event)
@@ -383,6 +385,8 @@ $desktop.prototype.includeComponents = function(complete)
 			script = document.createElement('script');
 
 			script.setAttribute('src', this.dirname + '/components/' + this.params.components[i] + '/bootstrap.js?' + Math.random());
+
+			script.setAttribute('data-component', this.params.components[i]);
 
 			script.addEventListener('load', (function(name)
 			{

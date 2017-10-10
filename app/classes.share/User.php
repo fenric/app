@@ -41,8 +41,8 @@ class User
 						fenric('query')->update(TableMap::TABLE_NAME,
 						[
 							TableMap::COL_TRACK_AT => new DateTime('now'),
-							TableMap::COL_TRACK_IP => ip(),
-							TableMap::COL_TRACK_URL => url(),
+							TableMap::COL_TRACK_IP => mb_substr(ip(), 0, 255, 'UTF-8'),
+							TableMap::COL_TRACK_URL => mb_substr(url(), 0, 255, 'UTF-8'),
 						])
 						->where(TableMap::COL_ID, '=', $this->model->getId())
 						->limit(1)

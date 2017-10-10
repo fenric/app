@@ -3,7 +3,13 @@
 namespace Propel\Models;
 
 use Propel\Models\Base\Section as BaseSection;
+use Propel\Models\SectionFieldQuery;
+
+use Propel\Models\Map\SectionFieldTableMap;
 use Propel\Models\Map\PublicationTableMap;
+
+use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 
 /**
@@ -24,6 +30,18 @@ class Section extends BaseSection
 	}
 
 	/**
+	 * Получение количества дополнительных полей в разделе
+	 */
+	public function getCountFields() : int
+	{
+		return fenric('query')
+			->count(SectionFieldTableMap::COL_ID)
+			->from(SectionFieldTableMap::TABLE_NAME)
+			->where(SectionFieldTableMap::COL_SECTION_ID, '=', $this->getId())
+		->readOne();
+	}
+
+	/**
 	 * Получение количества публикаций в разделе
 	 */
 	public function getCountPublications() : int
@@ -41,5 +59,19 @@ class Section extends BaseSection
 	public function getSnippetableContent(ConnectionInterface $connection = null)
 	{
 		return snippetable(parent::getContent($connection));
+	}
+
+	/**
+	 * Получение отсортированной коллекции с дополнительными полями раздела
+	 */
+	public function getSortableSectionFields() : ObjectCollection
+	{
+		$query = SectionFieldQuery::create();
+
+		$query->filterBySectionId($this->getId());
+
+		$query->orderBySequence(Criteria::ASC);
+
+		return $query->find();
 	}
 }

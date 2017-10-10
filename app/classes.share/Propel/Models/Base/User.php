@@ -5,13 +5,15 @@ namespace Propel\Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use Propel\Models\Field as ChildField;
+use Propel\Models\FieldQuery as ChildFieldQuery;
 use Propel\Models\Publication as ChildPublication;
 use Propel\Models\PublicationPhoto as ChildPublicationPhoto;
 use Propel\Models\PublicationPhotoQuery as ChildPublicationPhotoQuery;
 use Propel\Models\PublicationQuery as ChildPublicationQuery;
-use Propel\Models\PublicationTag as ChildPublicationTag;
-use Propel\Models\PublicationTagQuery as ChildPublicationTagQuery;
 use Propel\Models\Section as ChildSection;
+use Propel\Models\SectionField as ChildSectionField;
+use Propel\Models\SectionFieldQuery as ChildSectionFieldQuery;
 use Propel\Models\SectionQuery as ChildSectionQuery;
 use Propel\Models\Snippet as ChildSnippet;
 use Propel\Models\SnippetQuery as ChildSnippetQuery;
@@ -19,9 +21,10 @@ use Propel\Models\Tag as ChildTag;
 use Propel\Models\TagQuery as ChildTagQuery;
 use Propel\Models\User as ChildUser;
 use Propel\Models\UserQuery as ChildUserQuery;
+use Propel\Models\Map\FieldTableMap;
 use Propel\Models\Map\PublicationPhotoTableMap;
 use Propel\Models\Map\PublicationTableMap;
-use Propel\Models\Map\PublicationTagTableMap;
+use Propel\Models\Map\SectionFieldTableMap;
 use Propel\Models\Map\SectionTableMap;
 use Propel\Models\Map\SnippetTableMap;
 use Propel\Models\Map\TagTableMap;
@@ -55,7 +58,7 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Base class that represents a row from the 'user' table.
+ * Base class that represents a row from the 'fenric_user' table.
  *
  *
  *
@@ -358,6 +361,18 @@ abstract class User implements ActiveRecordInterface
     protected $ban_reason;
 
     /**
+     * @var        ObjectCollection|ChildField[] Collection to store aggregation of ChildField objects.
+     */
+    protected $collFieldsRelatedByCreatedBy;
+    protected $collFieldsRelatedByCreatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildField[] Collection to store aggregation of ChildField objects.
+     */
+    protected $collFieldsRelatedByUpdatedBy;
+    protected $collFieldsRelatedByUpdatedByPartial;
+
+    /**
      * @var        ObjectCollection|ChildSection[] Collection to store aggregation of ChildSection objects.
      */
     protected $collSectionsRelatedByCreatedBy;
@@ -368,6 +383,12 @@ abstract class User implements ActiveRecordInterface
      */
     protected $collSectionsRelatedByUpdatedBy;
     protected $collSectionsRelatedByUpdatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildSectionField[] Collection to store aggregation of ChildSectionField objects.
+     */
+    protected $collSectionFields;
+    protected $collSectionFieldsPartial;
 
     /**
      * @var        ObjectCollection|ChildPublication[] Collection to store aggregation of ChildPublication objects.
@@ -392,18 +413,6 @@ abstract class User implements ActiveRecordInterface
      */
     protected $collPublicationPhotosRelatedByUpdatedBy;
     protected $collPublicationPhotosRelatedByUpdatedByPartial;
-
-    /**
-     * @var        ObjectCollection|ChildPublicationTag[] Collection to store aggregation of ChildPublicationTag objects.
-     */
-    protected $collPublicationTagsRelatedByCreatedBy;
-    protected $collPublicationTagsRelatedByCreatedByPartial;
-
-    /**
-     * @var        ObjectCollection|ChildPublicationTag[] Collection to store aggregation of ChildPublicationTag objects.
-     */
-    protected $collPublicationTagsRelatedByUpdatedBy;
-    protected $collPublicationTagsRelatedByUpdatedByPartial;
 
     /**
      * @var        ObjectCollection|ChildSnippet[] Collection to store aggregation of ChildSnippet objects.
@@ -456,6 +465,18 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildField[]
+     */
+    protected $fieldsRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildField[]
+     */
+    protected $fieldsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildSection[]
      */
     protected $sectionsRelatedByCreatedByScheduledForDeletion = null;
@@ -465,6 +486,12 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildSection[]
      */
     protected $sectionsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildSectionField[]
+     */
+    protected $sectionFieldsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -489,18 +516,6 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildPublicationPhoto[]
      */
     protected $publicationPhotosRelatedByUpdatedByScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildPublicationTag[]
-     */
-    protected $publicationTagsRelatedByCreatedByScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildPublicationTag[]
-     */
-    protected $publicationTagsRelatedByUpdatedByScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -2267,9 +2282,15 @@ abstract class User implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collFieldsRelatedByCreatedBy = null;
+
+            $this->collFieldsRelatedByUpdatedBy = null;
+
             $this->collSectionsRelatedByCreatedBy = null;
 
             $this->collSectionsRelatedByUpdatedBy = null;
+
+            $this->collSectionFields = null;
 
             $this->collPublicationsRelatedByCreatedBy = null;
 
@@ -2278,10 +2299,6 @@ abstract class User implements ActiveRecordInterface
             $this->collPublicationPhotosRelatedByCreatedBy = null;
 
             $this->collPublicationPhotosRelatedByUpdatedBy = null;
-
-            $this->collPublicationTagsRelatedByCreatedBy = null;
-
-            $this->collPublicationTagsRelatedByUpdatedBy = null;
 
             $this->collSnippetsRelatedByCreatedBy = null;
 
@@ -2405,6 +2422,42 @@ abstract class User implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->fieldsRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->fieldsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->fieldsRelatedByCreatedByScheduledForDeletion as $fieldRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $fieldRelatedByCreatedBy->save($con);
+                    }
+                    $this->fieldsRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collFieldsRelatedByCreatedBy !== null) {
+                foreach ($this->collFieldsRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->fieldsRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->fieldsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->fieldsRelatedByUpdatedByScheduledForDeletion as $fieldRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $fieldRelatedByUpdatedBy->save($con);
+                    }
+                    $this->fieldsRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collFieldsRelatedByUpdatedBy !== null) {
+                foreach ($this->collFieldsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->sectionsRelatedByCreatedByScheduledForDeletion !== null) {
                 if (!$this->sectionsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
                     foreach ($this->sectionsRelatedByCreatedByScheduledForDeletion as $sectionRelatedByCreatedBy) {
@@ -2435,6 +2488,24 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collSectionsRelatedByUpdatedBy !== null) {
                 foreach ($this->collSectionsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->sectionFieldsScheduledForDeletion !== null) {
+                if (!$this->sectionFieldsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->sectionFieldsScheduledForDeletion as $sectionField) {
+                        // need to save related object because we set the relation to null
+                        $sectionField->save($con);
+                    }
+                    $this->sectionFieldsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collSectionFields !== null) {
+                foreach ($this->collSectionFields as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -2507,42 +2578,6 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collPublicationPhotosRelatedByUpdatedBy !== null) {
                 foreach ($this->collPublicationPhotosRelatedByUpdatedBy as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->publicationTagsRelatedByCreatedByScheduledForDeletion !== null) {
-                if (!$this->publicationTagsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
-                    foreach ($this->publicationTagsRelatedByCreatedByScheduledForDeletion as $publicationTagRelatedByCreatedBy) {
-                        // need to save related object because we set the relation to null
-                        $publicationTagRelatedByCreatedBy->save($con);
-                    }
-                    $this->publicationTagsRelatedByCreatedByScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collPublicationTagsRelatedByCreatedBy !== null) {
-                foreach ($this->collPublicationTagsRelatedByCreatedBy as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->publicationTagsRelatedByUpdatedByScheduledForDeletion !== null) {
-                if (!$this->publicationTagsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
-                    foreach ($this->publicationTagsRelatedByUpdatedByScheduledForDeletion as $publicationTagRelatedByUpdatedBy) {
-                        // need to save related object because we set the relation to null
-                        $publicationTagRelatedByUpdatedBy->save($con);
-                    }
-                    $this->publicationTagsRelatedByUpdatedByScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collPublicationTagsRelatedByUpdatedBy !== null) {
-                foreach ($this->collPublicationTagsRelatedByUpdatedBy as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -2742,7 +2777,7 @@ abstract class User implements ActiveRecordInterface
         }
 
         $sql = sprintf(
-            'INSERT INTO user (%s) VALUES (%s)',
+            'INSERT INTO fenric_user (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -3099,6 +3134,36 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->collFieldsRelatedByCreatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'fields';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_fields';
+                        break;
+                    default:
+                        $key = 'Fields';
+                }
+
+                $result[$key] = $this->collFieldsRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collFieldsRelatedByUpdatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'fields';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_fields';
+                        break;
+                    default:
+                        $key = 'Fields';
+                }
+
+                $result[$key] = $this->collFieldsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collSectionsRelatedByCreatedBy) {
 
                 switch ($keyType) {
@@ -3106,7 +3171,7 @@ abstract class User implements ActiveRecordInterface
                         $key = 'sections';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'sections';
+                        $key = 'fenric_sections';
                         break;
                     default:
                         $key = 'Sections';
@@ -3121,13 +3186,28 @@ abstract class User implements ActiveRecordInterface
                         $key = 'sections';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'sections';
+                        $key = 'fenric_sections';
                         break;
                     default:
                         $key = 'Sections';
                 }
 
                 $result[$key] = $this->collSectionsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collSectionFields) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'sectionFields';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_section_fields';
+                        break;
+                    default:
+                        $key = 'SectionFields';
+                }
+
+                $result[$key] = $this->collSectionFields->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collPublicationsRelatedByCreatedBy) {
 
@@ -3136,7 +3216,7 @@ abstract class User implements ActiveRecordInterface
                         $key = 'publications';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'publications';
+                        $key = 'fenric_publications';
                         break;
                     default:
                         $key = 'Publications';
@@ -3151,7 +3231,7 @@ abstract class User implements ActiveRecordInterface
                         $key = 'publications';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'publications';
+                        $key = 'fenric_publications';
                         break;
                     default:
                         $key = 'Publications';
@@ -3166,7 +3246,7 @@ abstract class User implements ActiveRecordInterface
                         $key = 'publicationPhotos';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'publication_photos';
+                        $key = 'fenric_publication_photos';
                         break;
                     default:
                         $key = 'PublicationPhotos';
@@ -3181,43 +3261,13 @@ abstract class User implements ActiveRecordInterface
                         $key = 'publicationPhotos';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'publication_photos';
+                        $key = 'fenric_publication_photos';
                         break;
                     default:
                         $key = 'PublicationPhotos';
                 }
 
                 $result[$key] = $this->collPublicationPhotosRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collPublicationTagsRelatedByCreatedBy) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'publicationTags';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'publication_tags';
-                        break;
-                    default:
-                        $key = 'PublicationTags';
-                }
-
-                $result[$key] = $this->collPublicationTagsRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collPublicationTagsRelatedByUpdatedBy) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'publicationTags';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'publication_tags';
-                        break;
-                    default:
-                        $key = 'PublicationTags';
-                }
-
-                $result[$key] = $this->collPublicationTagsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collSnippetsRelatedByCreatedBy) {
 
@@ -3226,7 +3276,7 @@ abstract class User implements ActiveRecordInterface
                         $key = 'snippets';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'snippets';
+                        $key = 'fenric_snippets';
                         break;
                     default:
                         $key = 'Snippets';
@@ -3241,7 +3291,7 @@ abstract class User implements ActiveRecordInterface
                         $key = 'snippets';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'snippets';
+                        $key = 'fenric_snippets';
                         break;
                     default:
                         $key = 'Snippets';
@@ -3256,7 +3306,7 @@ abstract class User implements ActiveRecordInterface
                         $key = 'tags';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'tags';
+                        $key = 'fenric_tags';
                         break;
                     default:
                         $key = 'Tags';
@@ -3271,7 +3321,7 @@ abstract class User implements ActiveRecordInterface
                         $key = 'tags';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'tags';
+                        $key = 'fenric_tags';
                         break;
                     default:
                         $key = 'Tags';
@@ -3781,6 +3831,18 @@ abstract class User implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getFieldsRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addFieldRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getFieldsRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addFieldRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getSectionsRelatedByCreatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addSectionRelatedByCreatedBy($relObj->copy($deepCopy));
@@ -3790,6 +3852,12 @@ abstract class User implements ActiveRecordInterface
             foreach ($this->getSectionsRelatedByUpdatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addSectionRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getSectionFields() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addSectionField($relObj->copy($deepCopy));
                 }
             }
 
@@ -3814,18 +3882,6 @@ abstract class User implements ActiveRecordInterface
             foreach ($this->getPublicationPhotosRelatedByUpdatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPublicationPhotoRelatedByUpdatedBy($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getPublicationTagsRelatedByCreatedBy() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addPublicationTagRelatedByCreatedBy($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getPublicationTagsRelatedByUpdatedBy() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addPublicationTagRelatedByUpdatedBy($relObj->copy($deepCopy));
                 }
             }
 
@@ -3894,12 +3950,24 @@ abstract class User implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('FieldRelatedByCreatedBy' == $relationName) {
+            $this->initFieldsRelatedByCreatedBy();
+            return;
+        }
+        if ('FieldRelatedByUpdatedBy' == $relationName) {
+            $this->initFieldsRelatedByUpdatedBy();
+            return;
+        }
         if ('SectionRelatedByCreatedBy' == $relationName) {
             $this->initSectionsRelatedByCreatedBy();
             return;
         }
         if ('SectionRelatedByUpdatedBy' == $relationName) {
             $this->initSectionsRelatedByUpdatedBy();
+            return;
+        }
+        if ('SectionField' == $relationName) {
+            $this->initSectionFields();
             return;
         }
         if ('PublicationRelatedByCreatedBy' == $relationName) {
@@ -3918,14 +3986,6 @@ abstract class User implements ActiveRecordInterface
             $this->initPublicationPhotosRelatedByUpdatedBy();
             return;
         }
-        if ('PublicationTagRelatedByCreatedBy' == $relationName) {
-            $this->initPublicationTagsRelatedByCreatedBy();
-            return;
-        }
-        if ('PublicationTagRelatedByUpdatedBy' == $relationName) {
-            $this->initPublicationTagsRelatedByUpdatedBy();
-            return;
-        }
         if ('SnippetRelatedByCreatedBy' == $relationName) {
             $this->initSnippetsRelatedByCreatedBy();
             return;
@@ -3942,6 +4002,456 @@ abstract class User implements ActiveRecordInterface
             $this->initTagsRelatedByUpdatedBy();
             return;
         }
+    }
+
+    /**
+     * Clears out the collFieldsRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addFieldsRelatedByCreatedBy()
+     */
+    public function clearFieldsRelatedByCreatedBy()
+    {
+        $this->collFieldsRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collFieldsRelatedByCreatedBy collection loaded partially.
+     */
+    public function resetPartialFieldsRelatedByCreatedBy($v = true)
+    {
+        $this->collFieldsRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collFieldsRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collFieldsRelatedByCreatedBy collection to an empty array (like clearcollFieldsRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initFieldsRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collFieldsRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = FieldTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collFieldsRelatedByCreatedBy = new $collectionClassName;
+        $this->collFieldsRelatedByCreatedBy->setModel('\Propel\Models\Field');
+    }
+
+    /**
+     * Gets an array of ChildField objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildField[] List of ChildField objects
+     * @throws PropelException
+     */
+    public function getFieldsRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collFieldsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collFieldsRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collFieldsRelatedByCreatedBy) {
+                // return empty collection
+                $this->initFieldsRelatedByCreatedBy();
+            } else {
+                $collFieldsRelatedByCreatedBy = ChildFieldQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collFieldsRelatedByCreatedByPartial && count($collFieldsRelatedByCreatedBy)) {
+                        $this->initFieldsRelatedByCreatedBy(false);
+
+                        foreach ($collFieldsRelatedByCreatedBy as $obj) {
+                            if (false == $this->collFieldsRelatedByCreatedBy->contains($obj)) {
+                                $this->collFieldsRelatedByCreatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collFieldsRelatedByCreatedByPartial = true;
+                    }
+
+                    return $collFieldsRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collFieldsRelatedByCreatedBy) {
+                    foreach ($this->collFieldsRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collFieldsRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collFieldsRelatedByCreatedBy = $collFieldsRelatedByCreatedBy;
+                $this->collFieldsRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collFieldsRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildField objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $fieldsRelatedByCreatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setFieldsRelatedByCreatedBy(Collection $fieldsRelatedByCreatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildField[] $fieldsRelatedByCreatedByToDelete */
+        $fieldsRelatedByCreatedByToDelete = $this->getFieldsRelatedByCreatedBy(new Criteria(), $con)->diff($fieldsRelatedByCreatedBy);
+
+
+        $this->fieldsRelatedByCreatedByScheduledForDeletion = $fieldsRelatedByCreatedByToDelete;
+
+        foreach ($fieldsRelatedByCreatedByToDelete as $fieldRelatedByCreatedByRemoved) {
+            $fieldRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collFieldsRelatedByCreatedBy = null;
+        foreach ($fieldsRelatedByCreatedBy as $fieldRelatedByCreatedBy) {
+            $this->addFieldRelatedByCreatedBy($fieldRelatedByCreatedBy);
+        }
+
+        $this->collFieldsRelatedByCreatedBy = $fieldsRelatedByCreatedBy;
+        $this->collFieldsRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Field objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Field objects.
+     * @throws PropelException
+     */
+    public function countFieldsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collFieldsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collFieldsRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collFieldsRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getFieldsRelatedByCreatedBy());
+            }
+
+            $query = ChildFieldQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collFieldsRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildField object to this object
+     * through the ChildField foreign key attribute.
+     *
+     * @param  ChildField $l ChildField
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addFieldRelatedByCreatedBy(ChildField $l)
+    {
+        if ($this->collFieldsRelatedByCreatedBy === null) {
+            $this->initFieldsRelatedByCreatedBy();
+            $this->collFieldsRelatedByCreatedByPartial = true;
+        }
+
+        if (!$this->collFieldsRelatedByCreatedBy->contains($l)) {
+            $this->doAddFieldRelatedByCreatedBy($l);
+
+            if ($this->fieldsRelatedByCreatedByScheduledForDeletion and $this->fieldsRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->fieldsRelatedByCreatedByScheduledForDeletion->remove($this->fieldsRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildField $fieldRelatedByCreatedBy The ChildField object to add.
+     */
+    protected function doAddFieldRelatedByCreatedBy(ChildField $fieldRelatedByCreatedBy)
+    {
+        $this->collFieldsRelatedByCreatedBy[]= $fieldRelatedByCreatedBy;
+        $fieldRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param  ChildField $fieldRelatedByCreatedBy The ChildField object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeFieldRelatedByCreatedBy(ChildField $fieldRelatedByCreatedBy)
+    {
+        if ($this->getFieldsRelatedByCreatedBy()->contains($fieldRelatedByCreatedBy)) {
+            $pos = $this->collFieldsRelatedByCreatedBy->search($fieldRelatedByCreatedBy);
+            $this->collFieldsRelatedByCreatedBy->remove($pos);
+            if (null === $this->fieldsRelatedByCreatedByScheduledForDeletion) {
+                $this->fieldsRelatedByCreatedByScheduledForDeletion = clone $this->collFieldsRelatedByCreatedBy;
+                $this->fieldsRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->fieldsRelatedByCreatedByScheduledForDeletion[]= $fieldRelatedByCreatedBy;
+            $fieldRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collFieldsRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addFieldsRelatedByUpdatedBy()
+     */
+    public function clearFieldsRelatedByUpdatedBy()
+    {
+        $this->collFieldsRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collFieldsRelatedByUpdatedBy collection loaded partially.
+     */
+    public function resetPartialFieldsRelatedByUpdatedBy($v = true)
+    {
+        $this->collFieldsRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collFieldsRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collFieldsRelatedByUpdatedBy collection to an empty array (like clearcollFieldsRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initFieldsRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collFieldsRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = FieldTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collFieldsRelatedByUpdatedBy = new $collectionClassName;
+        $this->collFieldsRelatedByUpdatedBy->setModel('\Propel\Models\Field');
+    }
+
+    /**
+     * Gets an array of ChildField objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildField[] List of ChildField objects
+     * @throws PropelException
+     */
+    public function getFieldsRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collFieldsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collFieldsRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collFieldsRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initFieldsRelatedByUpdatedBy();
+            } else {
+                $collFieldsRelatedByUpdatedBy = ChildFieldQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collFieldsRelatedByUpdatedByPartial && count($collFieldsRelatedByUpdatedBy)) {
+                        $this->initFieldsRelatedByUpdatedBy(false);
+
+                        foreach ($collFieldsRelatedByUpdatedBy as $obj) {
+                            if (false == $this->collFieldsRelatedByUpdatedBy->contains($obj)) {
+                                $this->collFieldsRelatedByUpdatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collFieldsRelatedByUpdatedByPartial = true;
+                    }
+
+                    return $collFieldsRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collFieldsRelatedByUpdatedBy) {
+                    foreach ($this->collFieldsRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collFieldsRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collFieldsRelatedByUpdatedBy = $collFieldsRelatedByUpdatedBy;
+                $this->collFieldsRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collFieldsRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildField objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $fieldsRelatedByUpdatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setFieldsRelatedByUpdatedBy(Collection $fieldsRelatedByUpdatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildField[] $fieldsRelatedByUpdatedByToDelete */
+        $fieldsRelatedByUpdatedByToDelete = $this->getFieldsRelatedByUpdatedBy(new Criteria(), $con)->diff($fieldsRelatedByUpdatedBy);
+
+
+        $this->fieldsRelatedByUpdatedByScheduledForDeletion = $fieldsRelatedByUpdatedByToDelete;
+
+        foreach ($fieldsRelatedByUpdatedByToDelete as $fieldRelatedByUpdatedByRemoved) {
+            $fieldRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collFieldsRelatedByUpdatedBy = null;
+        foreach ($fieldsRelatedByUpdatedBy as $fieldRelatedByUpdatedBy) {
+            $this->addFieldRelatedByUpdatedBy($fieldRelatedByUpdatedBy);
+        }
+
+        $this->collFieldsRelatedByUpdatedBy = $fieldsRelatedByUpdatedBy;
+        $this->collFieldsRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Field objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Field objects.
+     * @throws PropelException
+     */
+    public function countFieldsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collFieldsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collFieldsRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collFieldsRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getFieldsRelatedByUpdatedBy());
+            }
+
+            $query = ChildFieldQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collFieldsRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildField object to this object
+     * through the ChildField foreign key attribute.
+     *
+     * @param  ChildField $l ChildField
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addFieldRelatedByUpdatedBy(ChildField $l)
+    {
+        if ($this->collFieldsRelatedByUpdatedBy === null) {
+            $this->initFieldsRelatedByUpdatedBy();
+            $this->collFieldsRelatedByUpdatedByPartial = true;
+        }
+
+        if (!$this->collFieldsRelatedByUpdatedBy->contains($l)) {
+            $this->doAddFieldRelatedByUpdatedBy($l);
+
+            if ($this->fieldsRelatedByUpdatedByScheduledForDeletion and $this->fieldsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->fieldsRelatedByUpdatedByScheduledForDeletion->remove($this->fieldsRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildField $fieldRelatedByUpdatedBy The ChildField object to add.
+     */
+    protected function doAddFieldRelatedByUpdatedBy(ChildField $fieldRelatedByUpdatedBy)
+    {
+        $this->collFieldsRelatedByUpdatedBy[]= $fieldRelatedByUpdatedBy;
+        $fieldRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param  ChildField $fieldRelatedByUpdatedBy The ChildField object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeFieldRelatedByUpdatedBy(ChildField $fieldRelatedByUpdatedBy)
+    {
+        if ($this->getFieldsRelatedByUpdatedBy()->contains($fieldRelatedByUpdatedBy)) {
+            $pos = $this->collFieldsRelatedByUpdatedBy->search($fieldRelatedByUpdatedBy);
+            $this->collFieldsRelatedByUpdatedBy->remove($pos);
+            if (null === $this->fieldsRelatedByUpdatedByScheduledForDeletion) {
+                $this->fieldsRelatedByUpdatedByScheduledForDeletion = clone $this->collFieldsRelatedByUpdatedBy;
+                $this->fieldsRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->fieldsRelatedByUpdatedByScheduledForDeletion[]= $fieldRelatedByUpdatedBy;
+            $fieldRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -4186,10 +4696,10 @@ abstract class User implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildSection[] List of ChildSection objects
      */
-    public function getSectionsRelatedByCreatedByJoinSectionRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getSectionsRelatedByCreatedByJoinParent(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildSectionQuery::create(null, $criteria);
-        $query->joinWith('SectionRelatedByParentId', $joinBehavior);
+        $query->joinWith('Parent', $joinBehavior);
 
         return $this->getSectionsRelatedByCreatedBy($query, $con);
     }
@@ -4436,12 +4946,287 @@ abstract class User implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildSection[] List of ChildSection objects
      */
-    public function getSectionsRelatedByUpdatedByJoinSectionRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getSectionsRelatedByUpdatedByJoinParent(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildSectionQuery::create(null, $criteria);
-        $query->joinWith('SectionRelatedByParentId', $joinBehavior);
+        $query->joinWith('Parent', $joinBehavior);
 
         return $this->getSectionsRelatedByUpdatedBy($query, $con);
+    }
+
+    /**
+     * Clears out the collSectionFields collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addSectionFields()
+     */
+    public function clearSectionFields()
+    {
+        $this->collSectionFields = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collSectionFields collection loaded partially.
+     */
+    public function resetPartialSectionFields($v = true)
+    {
+        $this->collSectionFieldsPartial = $v;
+    }
+
+    /**
+     * Initializes the collSectionFields collection.
+     *
+     * By default this just sets the collSectionFields collection to an empty array (like clearcollSectionFields());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSectionFields($overrideExisting = true)
+    {
+        if (null !== $this->collSectionFields && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = SectionFieldTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collSectionFields = new $collectionClassName;
+        $this->collSectionFields->setModel('\Propel\Models\SectionField');
+    }
+
+    /**
+     * Gets an array of ChildSectionField objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSectionField[] List of ChildSectionField objects
+     * @throws PropelException
+     */
+    public function getSectionFields(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSectionFieldsPartial && !$this->isNew();
+        if (null === $this->collSectionFields || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSectionFields) {
+                // return empty collection
+                $this->initSectionFields();
+            } else {
+                $collSectionFields = ChildSectionFieldQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSectionFieldsPartial && count($collSectionFields)) {
+                        $this->initSectionFields(false);
+
+                        foreach ($collSectionFields as $obj) {
+                            if (false == $this->collSectionFields->contains($obj)) {
+                                $this->collSectionFields->append($obj);
+                            }
+                        }
+
+                        $this->collSectionFieldsPartial = true;
+                    }
+
+                    return $collSectionFields;
+                }
+
+                if ($partial && $this->collSectionFields) {
+                    foreach ($this->collSectionFields as $obj) {
+                        if ($obj->isNew()) {
+                            $collSectionFields[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSectionFields = $collSectionFields;
+                $this->collSectionFieldsPartial = false;
+            }
+        }
+
+        return $this->collSectionFields;
+    }
+
+    /**
+     * Sets a collection of ChildSectionField objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $sectionFields A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setSectionFields(Collection $sectionFields, ConnectionInterface $con = null)
+    {
+        /** @var ChildSectionField[] $sectionFieldsToDelete */
+        $sectionFieldsToDelete = $this->getSectionFields(new Criteria(), $con)->diff($sectionFields);
+
+
+        $this->sectionFieldsScheduledForDeletion = $sectionFieldsToDelete;
+
+        foreach ($sectionFieldsToDelete as $sectionFieldRemoved) {
+            $sectionFieldRemoved->setUser(null);
+        }
+
+        $this->collSectionFields = null;
+        foreach ($sectionFields as $sectionField) {
+            $this->addSectionField($sectionField);
+        }
+
+        $this->collSectionFields = $sectionFields;
+        $this->collSectionFieldsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related SectionField objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related SectionField objects.
+     * @throws PropelException
+     */
+    public function countSectionFields(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSectionFieldsPartial && !$this->isNew();
+        if (null === $this->collSectionFields || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSectionFields) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSectionFields());
+            }
+
+            $query = ChildSectionFieldQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collSectionFields);
+    }
+
+    /**
+     * Method called to associate a ChildSectionField object to this object
+     * through the ChildSectionField foreign key attribute.
+     *
+     * @param  ChildSectionField $l ChildSectionField
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addSectionField(ChildSectionField $l)
+    {
+        if ($this->collSectionFields === null) {
+            $this->initSectionFields();
+            $this->collSectionFieldsPartial = true;
+        }
+
+        if (!$this->collSectionFields->contains($l)) {
+            $this->doAddSectionField($l);
+
+            if ($this->sectionFieldsScheduledForDeletion and $this->sectionFieldsScheduledForDeletion->contains($l)) {
+                $this->sectionFieldsScheduledForDeletion->remove($this->sectionFieldsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSectionField $sectionField The ChildSectionField object to add.
+     */
+    protected function doAddSectionField(ChildSectionField $sectionField)
+    {
+        $this->collSectionFields[]= $sectionField;
+        $sectionField->setUser($this);
+    }
+
+    /**
+     * @param  ChildSectionField $sectionField The ChildSectionField object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeSectionField(ChildSectionField $sectionField)
+    {
+        if ($this->getSectionFields()->contains($sectionField)) {
+            $pos = $this->collSectionFields->search($sectionField);
+            $this->collSectionFields->remove($pos);
+            if (null === $this->sectionFieldsScheduledForDeletion) {
+                $this->sectionFieldsScheduledForDeletion = clone $this->collSectionFields;
+                $this->sectionFieldsScheduledForDeletion->clear();
+            }
+            $this->sectionFieldsScheduledForDeletion[]= $sectionField;
+            $sectionField->setUser(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related SectionFields from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSectionField[] List of ChildSectionField objects
+     */
+    public function getSectionFieldsJoinSection(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSectionFieldQuery::create(null, $criteria);
+        $query->joinWith('Section', $joinBehavior);
+
+        return $this->getSectionFields($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related SectionFields from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSectionField[] List of ChildSectionField objects
+     */
+    public function getSectionFieldsJoinField(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSectionFieldQuery::create(null, $criteria);
+        $query->joinWith('Field', $joinBehavior);
+
+        return $this->getSectionFields($query, $con);
     }
 
     /**
@@ -5445,556 +6230,6 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collPublicationTagsRelatedByCreatedBy collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addPublicationTagsRelatedByCreatedBy()
-     */
-    public function clearPublicationTagsRelatedByCreatedBy()
-    {
-        $this->collPublicationTagsRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collPublicationTagsRelatedByCreatedBy collection loaded partially.
-     */
-    public function resetPartialPublicationTagsRelatedByCreatedBy($v = true)
-    {
-        $this->collPublicationTagsRelatedByCreatedByPartial = $v;
-    }
-
-    /**
-     * Initializes the collPublicationTagsRelatedByCreatedBy collection.
-     *
-     * By default this just sets the collPublicationTagsRelatedByCreatedBy collection to an empty array (like clearcollPublicationTagsRelatedByCreatedBy());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initPublicationTagsRelatedByCreatedBy($overrideExisting = true)
-    {
-        if (null !== $this->collPublicationTagsRelatedByCreatedBy && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = PublicationTagTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collPublicationTagsRelatedByCreatedBy = new $collectionClassName;
-        $this->collPublicationTagsRelatedByCreatedBy->setModel('\Propel\Models\PublicationTag');
-    }
-
-    /**
-     * Gets an array of ChildPublicationTag objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUser is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     * @throws PropelException
-     */
-    public function getPublicationTagsRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPublicationTagsRelatedByCreatedByPartial && !$this->isNew();
-        if (null === $this->collPublicationTagsRelatedByCreatedBy || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collPublicationTagsRelatedByCreatedBy) {
-                // return empty collection
-                $this->initPublicationTagsRelatedByCreatedBy();
-            } else {
-                $collPublicationTagsRelatedByCreatedBy = ChildPublicationTagQuery::create(null, $criteria)
-                    ->filterByUserRelatedByCreatedBy($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collPublicationTagsRelatedByCreatedByPartial && count($collPublicationTagsRelatedByCreatedBy)) {
-                        $this->initPublicationTagsRelatedByCreatedBy(false);
-
-                        foreach ($collPublicationTagsRelatedByCreatedBy as $obj) {
-                            if (false == $this->collPublicationTagsRelatedByCreatedBy->contains($obj)) {
-                                $this->collPublicationTagsRelatedByCreatedBy->append($obj);
-                            }
-                        }
-
-                        $this->collPublicationTagsRelatedByCreatedByPartial = true;
-                    }
-
-                    return $collPublicationTagsRelatedByCreatedBy;
-                }
-
-                if ($partial && $this->collPublicationTagsRelatedByCreatedBy) {
-                    foreach ($this->collPublicationTagsRelatedByCreatedBy as $obj) {
-                        if ($obj->isNew()) {
-                            $collPublicationTagsRelatedByCreatedBy[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collPublicationTagsRelatedByCreatedBy = $collPublicationTagsRelatedByCreatedBy;
-                $this->collPublicationTagsRelatedByCreatedByPartial = false;
-            }
-        }
-
-        return $this->collPublicationTagsRelatedByCreatedBy;
-    }
-
-    /**
-     * Sets a collection of ChildPublicationTag objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $publicationTagsRelatedByCreatedBy A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function setPublicationTagsRelatedByCreatedBy(Collection $publicationTagsRelatedByCreatedBy, ConnectionInterface $con = null)
-    {
-        /** @var ChildPublicationTag[] $publicationTagsRelatedByCreatedByToDelete */
-        $publicationTagsRelatedByCreatedByToDelete = $this->getPublicationTagsRelatedByCreatedBy(new Criteria(), $con)->diff($publicationTagsRelatedByCreatedBy);
-
-
-        $this->publicationTagsRelatedByCreatedByScheduledForDeletion = $publicationTagsRelatedByCreatedByToDelete;
-
-        foreach ($publicationTagsRelatedByCreatedByToDelete as $publicationTagRelatedByCreatedByRemoved) {
-            $publicationTagRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
-        }
-
-        $this->collPublicationTagsRelatedByCreatedBy = null;
-        foreach ($publicationTagsRelatedByCreatedBy as $publicationTagRelatedByCreatedBy) {
-            $this->addPublicationTagRelatedByCreatedBy($publicationTagRelatedByCreatedBy);
-        }
-
-        $this->collPublicationTagsRelatedByCreatedBy = $publicationTagsRelatedByCreatedBy;
-        $this->collPublicationTagsRelatedByCreatedByPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related PublicationTag objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related PublicationTag objects.
-     * @throws PropelException
-     */
-    public function countPublicationTagsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPublicationTagsRelatedByCreatedByPartial && !$this->isNew();
-        if (null === $this->collPublicationTagsRelatedByCreatedBy || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collPublicationTagsRelatedByCreatedBy) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getPublicationTagsRelatedByCreatedBy());
-            }
-
-            $query = ChildPublicationTagQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByUserRelatedByCreatedBy($this)
-                ->count($con);
-        }
-
-        return count($this->collPublicationTagsRelatedByCreatedBy);
-    }
-
-    /**
-     * Method called to associate a ChildPublicationTag object to this object
-     * through the ChildPublicationTag foreign key attribute.
-     *
-     * @param  ChildPublicationTag $l ChildPublicationTag
-     * @return $this|\Propel\Models\User The current object (for fluent API support)
-     */
-    public function addPublicationTagRelatedByCreatedBy(ChildPublicationTag $l)
-    {
-        if ($this->collPublicationTagsRelatedByCreatedBy === null) {
-            $this->initPublicationTagsRelatedByCreatedBy();
-            $this->collPublicationTagsRelatedByCreatedByPartial = true;
-        }
-
-        if (!$this->collPublicationTagsRelatedByCreatedBy->contains($l)) {
-            $this->doAddPublicationTagRelatedByCreatedBy($l);
-
-            if ($this->publicationTagsRelatedByCreatedByScheduledForDeletion and $this->publicationTagsRelatedByCreatedByScheduledForDeletion->contains($l)) {
-                $this->publicationTagsRelatedByCreatedByScheduledForDeletion->remove($this->publicationTagsRelatedByCreatedByScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildPublicationTag $publicationTagRelatedByCreatedBy The ChildPublicationTag object to add.
-     */
-    protected function doAddPublicationTagRelatedByCreatedBy(ChildPublicationTag $publicationTagRelatedByCreatedBy)
-    {
-        $this->collPublicationTagsRelatedByCreatedBy[]= $publicationTagRelatedByCreatedBy;
-        $publicationTagRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
-    }
-
-    /**
-     * @param  ChildPublicationTag $publicationTagRelatedByCreatedBy The ChildPublicationTag object to remove.
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function removePublicationTagRelatedByCreatedBy(ChildPublicationTag $publicationTagRelatedByCreatedBy)
-    {
-        if ($this->getPublicationTagsRelatedByCreatedBy()->contains($publicationTagRelatedByCreatedBy)) {
-            $pos = $this->collPublicationTagsRelatedByCreatedBy->search($publicationTagRelatedByCreatedBy);
-            $this->collPublicationTagsRelatedByCreatedBy->remove($pos);
-            if (null === $this->publicationTagsRelatedByCreatedByScheduledForDeletion) {
-                $this->publicationTagsRelatedByCreatedByScheduledForDeletion = clone $this->collPublicationTagsRelatedByCreatedBy;
-                $this->publicationTagsRelatedByCreatedByScheduledForDeletion->clear();
-            }
-            $this->publicationTagsRelatedByCreatedByScheduledForDeletion[]= $publicationTagRelatedByCreatedBy;
-            $publicationTagRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this User is new, it will return
-     * an empty collection; or if this User has previously
-     * been saved, it will retrieve related PublicationTagsRelatedByCreatedBy from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in User.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     */
-    public function getPublicationTagsRelatedByCreatedByJoinPublication(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPublicationTagQuery::create(null, $criteria);
-        $query->joinWith('Publication', $joinBehavior);
-
-        return $this->getPublicationTagsRelatedByCreatedBy($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this User is new, it will return
-     * an empty collection; or if this User has previously
-     * been saved, it will retrieve related PublicationTagsRelatedByCreatedBy from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in User.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     */
-    public function getPublicationTagsRelatedByCreatedByJoinTag(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPublicationTagQuery::create(null, $criteria);
-        $query->joinWith('Tag', $joinBehavior);
-
-        return $this->getPublicationTagsRelatedByCreatedBy($query, $con);
-    }
-
-    /**
-     * Clears out the collPublicationTagsRelatedByUpdatedBy collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addPublicationTagsRelatedByUpdatedBy()
-     */
-    public function clearPublicationTagsRelatedByUpdatedBy()
-    {
-        $this->collPublicationTagsRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collPublicationTagsRelatedByUpdatedBy collection loaded partially.
-     */
-    public function resetPartialPublicationTagsRelatedByUpdatedBy($v = true)
-    {
-        $this->collPublicationTagsRelatedByUpdatedByPartial = $v;
-    }
-
-    /**
-     * Initializes the collPublicationTagsRelatedByUpdatedBy collection.
-     *
-     * By default this just sets the collPublicationTagsRelatedByUpdatedBy collection to an empty array (like clearcollPublicationTagsRelatedByUpdatedBy());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initPublicationTagsRelatedByUpdatedBy($overrideExisting = true)
-    {
-        if (null !== $this->collPublicationTagsRelatedByUpdatedBy && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = PublicationTagTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collPublicationTagsRelatedByUpdatedBy = new $collectionClassName;
-        $this->collPublicationTagsRelatedByUpdatedBy->setModel('\Propel\Models\PublicationTag');
-    }
-
-    /**
-     * Gets an array of ChildPublicationTag objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUser is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     * @throws PropelException
-     */
-    public function getPublicationTagsRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPublicationTagsRelatedByUpdatedByPartial && !$this->isNew();
-        if (null === $this->collPublicationTagsRelatedByUpdatedBy || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collPublicationTagsRelatedByUpdatedBy) {
-                // return empty collection
-                $this->initPublicationTagsRelatedByUpdatedBy();
-            } else {
-                $collPublicationTagsRelatedByUpdatedBy = ChildPublicationTagQuery::create(null, $criteria)
-                    ->filterByUserRelatedByUpdatedBy($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collPublicationTagsRelatedByUpdatedByPartial && count($collPublicationTagsRelatedByUpdatedBy)) {
-                        $this->initPublicationTagsRelatedByUpdatedBy(false);
-
-                        foreach ($collPublicationTagsRelatedByUpdatedBy as $obj) {
-                            if (false == $this->collPublicationTagsRelatedByUpdatedBy->contains($obj)) {
-                                $this->collPublicationTagsRelatedByUpdatedBy->append($obj);
-                            }
-                        }
-
-                        $this->collPublicationTagsRelatedByUpdatedByPartial = true;
-                    }
-
-                    return $collPublicationTagsRelatedByUpdatedBy;
-                }
-
-                if ($partial && $this->collPublicationTagsRelatedByUpdatedBy) {
-                    foreach ($this->collPublicationTagsRelatedByUpdatedBy as $obj) {
-                        if ($obj->isNew()) {
-                            $collPublicationTagsRelatedByUpdatedBy[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collPublicationTagsRelatedByUpdatedBy = $collPublicationTagsRelatedByUpdatedBy;
-                $this->collPublicationTagsRelatedByUpdatedByPartial = false;
-            }
-        }
-
-        return $this->collPublicationTagsRelatedByUpdatedBy;
-    }
-
-    /**
-     * Sets a collection of ChildPublicationTag objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $publicationTagsRelatedByUpdatedBy A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function setPublicationTagsRelatedByUpdatedBy(Collection $publicationTagsRelatedByUpdatedBy, ConnectionInterface $con = null)
-    {
-        /** @var ChildPublicationTag[] $publicationTagsRelatedByUpdatedByToDelete */
-        $publicationTagsRelatedByUpdatedByToDelete = $this->getPublicationTagsRelatedByUpdatedBy(new Criteria(), $con)->diff($publicationTagsRelatedByUpdatedBy);
-
-
-        $this->publicationTagsRelatedByUpdatedByScheduledForDeletion = $publicationTagsRelatedByUpdatedByToDelete;
-
-        foreach ($publicationTagsRelatedByUpdatedByToDelete as $publicationTagRelatedByUpdatedByRemoved) {
-            $publicationTagRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
-        }
-
-        $this->collPublicationTagsRelatedByUpdatedBy = null;
-        foreach ($publicationTagsRelatedByUpdatedBy as $publicationTagRelatedByUpdatedBy) {
-            $this->addPublicationTagRelatedByUpdatedBy($publicationTagRelatedByUpdatedBy);
-        }
-
-        $this->collPublicationTagsRelatedByUpdatedBy = $publicationTagsRelatedByUpdatedBy;
-        $this->collPublicationTagsRelatedByUpdatedByPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related PublicationTag objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related PublicationTag objects.
-     * @throws PropelException
-     */
-    public function countPublicationTagsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPublicationTagsRelatedByUpdatedByPartial && !$this->isNew();
-        if (null === $this->collPublicationTagsRelatedByUpdatedBy || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collPublicationTagsRelatedByUpdatedBy) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getPublicationTagsRelatedByUpdatedBy());
-            }
-
-            $query = ChildPublicationTagQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByUserRelatedByUpdatedBy($this)
-                ->count($con);
-        }
-
-        return count($this->collPublicationTagsRelatedByUpdatedBy);
-    }
-
-    /**
-     * Method called to associate a ChildPublicationTag object to this object
-     * through the ChildPublicationTag foreign key attribute.
-     *
-     * @param  ChildPublicationTag $l ChildPublicationTag
-     * @return $this|\Propel\Models\User The current object (for fluent API support)
-     */
-    public function addPublicationTagRelatedByUpdatedBy(ChildPublicationTag $l)
-    {
-        if ($this->collPublicationTagsRelatedByUpdatedBy === null) {
-            $this->initPublicationTagsRelatedByUpdatedBy();
-            $this->collPublicationTagsRelatedByUpdatedByPartial = true;
-        }
-
-        if (!$this->collPublicationTagsRelatedByUpdatedBy->contains($l)) {
-            $this->doAddPublicationTagRelatedByUpdatedBy($l);
-
-            if ($this->publicationTagsRelatedByUpdatedByScheduledForDeletion and $this->publicationTagsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
-                $this->publicationTagsRelatedByUpdatedByScheduledForDeletion->remove($this->publicationTagsRelatedByUpdatedByScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildPublicationTag $publicationTagRelatedByUpdatedBy The ChildPublicationTag object to add.
-     */
-    protected function doAddPublicationTagRelatedByUpdatedBy(ChildPublicationTag $publicationTagRelatedByUpdatedBy)
-    {
-        $this->collPublicationTagsRelatedByUpdatedBy[]= $publicationTagRelatedByUpdatedBy;
-        $publicationTagRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
-    }
-
-    /**
-     * @param  ChildPublicationTag $publicationTagRelatedByUpdatedBy The ChildPublicationTag object to remove.
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function removePublicationTagRelatedByUpdatedBy(ChildPublicationTag $publicationTagRelatedByUpdatedBy)
-    {
-        if ($this->getPublicationTagsRelatedByUpdatedBy()->contains($publicationTagRelatedByUpdatedBy)) {
-            $pos = $this->collPublicationTagsRelatedByUpdatedBy->search($publicationTagRelatedByUpdatedBy);
-            $this->collPublicationTagsRelatedByUpdatedBy->remove($pos);
-            if (null === $this->publicationTagsRelatedByUpdatedByScheduledForDeletion) {
-                $this->publicationTagsRelatedByUpdatedByScheduledForDeletion = clone $this->collPublicationTagsRelatedByUpdatedBy;
-                $this->publicationTagsRelatedByUpdatedByScheduledForDeletion->clear();
-            }
-            $this->publicationTagsRelatedByUpdatedByScheduledForDeletion[]= $publicationTagRelatedByUpdatedBy;
-            $publicationTagRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this User is new, it will return
-     * an empty collection; or if this User has previously
-     * been saved, it will retrieve related PublicationTagsRelatedByUpdatedBy from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in User.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     */
-    public function getPublicationTagsRelatedByUpdatedByJoinPublication(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPublicationTagQuery::create(null, $criteria);
-        $query->joinWith('Publication', $joinBehavior);
-
-        return $this->getPublicationTagsRelatedByUpdatedBy($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this User is new, it will return
-     * an empty collection; or if this User has previously
-     * been saved, it will retrieve related PublicationTagsRelatedByUpdatedBy from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in User.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPublicationTag[] List of ChildPublicationTag objects
-     */
-    public function getPublicationTagsRelatedByUpdatedByJoinTag(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPublicationTagQuery::create(null, $criteria);
-        $query->joinWith('Tag', $joinBehavior);
-
-        return $this->getPublicationTagsRelatedByUpdatedBy($query, $con);
-    }
-
-    /**
      * Clears out the collSnippetsRelatedByCreatedBy collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -6957,6 +7192,16 @@ abstract class User implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collFieldsRelatedByCreatedBy) {
+                foreach ($this->collFieldsRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collFieldsRelatedByUpdatedBy) {
+                foreach ($this->collFieldsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collSectionsRelatedByCreatedBy) {
                 foreach ($this->collSectionsRelatedByCreatedBy as $o) {
                     $o->clearAllReferences($deep);
@@ -6964,6 +7209,11 @@ abstract class User implements ActiveRecordInterface
             }
             if ($this->collSectionsRelatedByUpdatedBy) {
                 foreach ($this->collSectionsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collSectionFields) {
+                foreach ($this->collSectionFields as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -6984,16 +7234,6 @@ abstract class User implements ActiveRecordInterface
             }
             if ($this->collPublicationPhotosRelatedByUpdatedBy) {
                 foreach ($this->collPublicationPhotosRelatedByUpdatedBy as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collPublicationTagsRelatedByCreatedBy) {
-                foreach ($this->collPublicationTagsRelatedByCreatedBy as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collPublicationTagsRelatedByUpdatedBy) {
-                foreach ($this->collPublicationTagsRelatedByUpdatedBy as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -7019,14 +7259,15 @@ abstract class User implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collFieldsRelatedByCreatedBy = null;
+        $this->collFieldsRelatedByUpdatedBy = null;
         $this->collSectionsRelatedByCreatedBy = null;
         $this->collSectionsRelatedByUpdatedBy = null;
+        $this->collSectionFields = null;
         $this->collPublicationsRelatedByCreatedBy = null;
         $this->collPublicationsRelatedByUpdatedBy = null;
         $this->collPublicationPhotosRelatedByCreatedBy = null;
         $this->collPublicationPhotosRelatedByUpdatedBy = null;
-        $this->collPublicationTagsRelatedByCreatedBy = null;
-        $this->collPublicationTagsRelatedByUpdatedBy = null;
         $this->collSnippetsRelatedByCreatedBy = null;
         $this->collSnippetsRelatedByUpdatedBy = null;
         $this->collTagsRelatedByCreatedBy = null;
@@ -7096,6 +7337,24 @@ abstract class User implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
+            if (null !== $this->collFieldsRelatedByCreatedBy) {
+                foreach ($this->collFieldsRelatedByCreatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collFieldsRelatedByUpdatedBy) {
+                foreach ($this->collFieldsRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
             if (null !== $this->collSectionsRelatedByCreatedBy) {
                 foreach ($this->collSectionsRelatedByCreatedBy as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
@@ -7107,6 +7366,15 @@ abstract class User implements ActiveRecordInterface
             }
             if (null !== $this->collSectionsRelatedByUpdatedBy) {
                 foreach ($this->collSectionsRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collSectionFields) {
+                foreach ($this->collSectionFields as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());
@@ -7143,24 +7411,6 @@ abstract class User implements ActiveRecordInterface
             }
             if (null !== $this->collPublicationPhotosRelatedByUpdatedBy) {
                 foreach ($this->collPublicationPhotosRelatedByUpdatedBy as $referrerFK) {
-                    if (method_exists($referrerFK, 'validate')) {
-                        if (!$referrerFK->validate($validator)) {
-                            $failureMap->addAll($referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-            }
-            if (null !== $this->collPublicationTagsRelatedByCreatedBy) {
-                foreach ($this->collPublicationTagsRelatedByCreatedBy as $referrerFK) {
-                    if (method_exists($referrerFK, 'validate')) {
-                        if (!$referrerFK->validate($validator)) {
-                            $failureMap->addAll($referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-            }
-            if (null !== $this->collPublicationTagsRelatedByUpdatedBy) {
-                foreach ($this->collPublicationTagsRelatedByUpdatedBy as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());

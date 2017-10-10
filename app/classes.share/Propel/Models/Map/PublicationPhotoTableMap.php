@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'publication_photo' table.
+ * This class defines the structure of the 'fenric_publication_photo' table.
  *
  *
  *
@@ -44,7 +44,7 @@ class PublicationPhotoTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'publication_photo';
+    const TABLE_NAME = 'fenric_publication_photo';
 
     /**
      * The related Propel class for this table
@@ -74,47 +74,47 @@ class PublicationPhotoTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    const COL_ID = 'publication_photo.id';
+    const COL_ID = 'fenric_publication_photo.id';
 
     /**
      * the column name for the publication_id field
      */
-    const COL_PUBLICATION_ID = 'publication_photo.publication_id';
+    const COL_PUBLICATION_ID = 'fenric_publication_photo.publication_id';
 
     /**
      * the column name for the file field
      */
-    const COL_FILE = 'publication_photo.file';
+    const COL_FILE = 'fenric_publication_photo.file';
 
     /**
      * the column name for the display field
      */
-    const COL_DISPLAY = 'publication_photo.display';
+    const COL_DISPLAY = 'fenric_publication_photo.display';
 
     /**
      * the column name for the sequence field
      */
-    const COL_SEQUENCE = 'publication_photo.sequence';
+    const COL_SEQUENCE = 'fenric_publication_photo.sequence';
 
     /**
      * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'publication_photo.created_at';
+    const COL_CREATED_AT = 'fenric_publication_photo.created_at';
 
     /**
      * the column name for the created_by field
      */
-    const COL_CREATED_BY = 'publication_photo.created_by';
+    const COL_CREATED_BY = 'fenric_publication_photo.created_by';
 
     /**
      * the column name for the updated_at field
      */
-    const COL_UPDATED_AT = 'publication_photo.updated_at';
+    const COL_UPDATED_AT = 'fenric_publication_photo.updated_at';
 
     /**
      * the column name for the updated_by field
      */
-    const COL_UPDATED_BY = 'publication_photo.updated_by';
+    const COL_UPDATED_BY = 'fenric_publication_photo.updated_by';
 
     /**
      * The default string format for model objects of the related table
@@ -159,7 +159,7 @@ class PublicationPhotoTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('publication_photo');
+        $this->setName('fenric_publication_photo');
         $this->setPhpName('PublicationPhoto');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Propel\\Models\\PublicationPhoto');
@@ -167,15 +167,15 @@ class PublicationPhotoTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('publication_id', 'PublicationId', 'INTEGER', 'publication', 'id', false, null, null);
+        $this->addForeignKey('publication_id', 'PublicationId', 'INTEGER', 'fenric_publication', 'id', false, null, null);
         $this->addColumn('file', 'File', 'VARCHAR', true, 255, null);
         $this->getColumn('file')->setPrimaryString(true);
         $this->addColumn('display', 'Display', 'BOOLEAN', true, 1, true);
         $this->addColumn('sequence', 'Sequence', 'NUMERIC', true, null, 0);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'user', 'id', false, null, null);
+        $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
     } // initialize()
 
     /**
@@ -448,7 +448,7 @@ class PublicationPhotoTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the publication_photo table.
+     * Deletes all rows from the fenric_publication_photo table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

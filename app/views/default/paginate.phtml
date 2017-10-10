@@ -1,0 +1,18 @@
+<?php if ($criteria instanceof \Propel\Runtime\ActiveQuery\ModelCriteria) : ?>
+	<?php if ($criteria->haveToPaginate()) : ?>
+		<ul class="pagination">
+			<?php foreach ($criteria->getLinks() as $page) : ?>
+			<?php if ($criteria->getPage() <> $page) : ?>
+					<li class="page-item">
+						<a class="page-link" href="<?= url(['page' => $page]) ?>"><?= $page ?></a>
+					</li>
+				<?php else : ?>
+					<li class="page-item active">
+						<span class="page-link"><?= $page ?></span>
+					</li>
+				<?php endif; ?>
+
+			<?php endforeach; ?>
+		</ul>
+	<?php endif; ?>
+<?php endif; ?>

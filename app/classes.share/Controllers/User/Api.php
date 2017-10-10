@@ -22,7 +22,7 @@ class Api extends Actionable
 	/**
 	 * Открепление фотографии пользователя
 	 */
-	protected function actionDetachPhotoViaPatch() : void
+	protected function actionDetachPhotoViaPATCH() : void
 	{
 		fenric('user')->setPhoto(null);
 		fenric('user')->save();
@@ -50,12 +50,6 @@ class Api extends Actionable
 			$this->response->setJsonContent([
 				'file' => basename($file['location']),
 			]);
-
-			if (is_string($this->request->query->get('trigger'))) {
-				fenric()->callSharedService('event', [
-					$this->request->query->get('trigger')
-				])->run([$file]);
-			}
 		}
 
 		catch (\RuntimeException $e)
@@ -120,6 +114,23 @@ class Api extends Actionable
 				'success' => false,
 				'message' => $e->getMessage(),
 			]);
+		}
+	}
+
+	/**
+	 * Загрузка фотографии пользователя
+	 */
+	protected function actionUploadUserPhotoViaPUT() : void
+	{
+		$this->actionUploadImageViaPUT();
+
+		if ($this->response->getStatus() === 200)
+		{
+			$json = json_decode($this->response->getContent(), true);
+
+			fenric('user')->setPhoto($json['file']);
+
+			fenric('user')->save();
 		}
 	}
 }

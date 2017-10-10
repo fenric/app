@@ -329,19 +329,35 @@
 	 */
 	$modal.prototype.listen = function(selector, eventname, listener, context)
 	{
-		this.search(selector, function(element) {
-			element.addEventListener(eventname, listener);
+		this.search(selector, function(element)
+		{
+			element.addEventListener(eventname, function(event)
+			{
+				listener.call(this, event, this);
+			});
+
 		}, context);
 	};
 
-	$modal.prototype.listenClick = function(selector, listener, context)
+	$modal.prototype.click = function(selector, listener, context)
 	{
 		this.listen(selector, 'click', listener, context);
 	};
-
-	$modal.prototype.listenChange = function(selector, listener, context)
+	$modal.prototype.change = function(selector, listener, context)
 	{
 		this.listen(selector, 'change', listener, context);
+	};
+	$modal.prototype.keydown = function(selector, listener, context)
+	{
+		this.listen(selector, 'keydown', listener, context);
+	};
+	$modal.prototype.keypress = function(selector, listener, context)
+	{
+		this.listen(selector, 'keypress', listener, context);
+	};
+	$modal.prototype.keyup = function(selector, listener, context)
+	{
+		this.listen(selector, 'keyup', listener, context);
 	};
 
 	/**
@@ -786,7 +802,7 @@
 			}
 		});
 
-		window.addEventListener('keyup', function(event)
+		window.addEventListener('keydown', function(event)
 		{
 			var $foregroundModal;
 
