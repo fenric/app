@@ -101,7 +101,7 @@ class PublicationQuery extends BasePublicationQuery
 				});
 			}
 
-			$query->_or()->filterById(sprintf('publication.id IN (%s)', $subquery->getSql()), Criteria::CUSTOM);
+			$query->_or()->filterById(sprintf('%s IN (%s)', PublicationTableMap::COL_ID, $subquery->getSql()), Criteria::CUSTOM);
 
 			$query->filterByShowAt(null)->_or()->filterByShowAt(new DateTime('now'), Criteria::LESS_EQUAL);
 			$query->filterByHideAt(null)->_or()->filterByHideAt(new DateTime('now'), Criteria::GREATER_EQUAL);

@@ -89,8 +89,6 @@
 					{
 						element.value = null;
 						element.disabled = false;
-
-						$desktop.show();
 					});
 				});
 			});
