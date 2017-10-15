@@ -19,8 +19,11 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<td width="70%">
+					<td width="35%">
 						<span class="text-muted">Основное</span>
+					</td>
+					<td width="35%">
+						<span class="text-muted">Свойства</span>
 					</td>
 					<td width="20%">
 						<span class="text-muted">История изменений</span>
@@ -42,7 +45,8 @@
 
 							<p><strong>Заголовок</strong>
 							<br><span>{{label}}</span></p>
-
+						</td>
+						<td>
 							{{when is_unique is not false}}
 								<p><span class="label label-primary">Уникальное</span></p>
 							{{endwhen is_unique}}

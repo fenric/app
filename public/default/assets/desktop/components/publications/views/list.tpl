@@ -56,7 +56,7 @@
 							<br><span>{{id}}</span></p>
 
 							<p><strong>Раздел</strong>
-							<br><a href="javascript:void(0)">{{section.header}}</a></p>
+							<br><span>{{section.header}}</span></p>
 
 							<p><strong>Заголовок</strong>
 							<br><span>{{header}}</span></p>
@@ -110,7 +110,7 @@
 
 							{{when tags is not empty}}
 								{{repeat tags}}
-									<p><a href="javascript:void(0)" target="_blank">{{header}}</a>
+									<div class="label label-primary">{{header}}</div>
 								{{endrepeat tags}}
 							{{endwhen tags}}
 						</td>

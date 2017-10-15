@@ -494,25 +494,6 @@ div.desktop-palettes div.desktop-palette.black {
 }
 
 /**
- * CKeditor
- */
-#desktop .cke_chrome {
-	border-color: #ccc;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-}
-#desktop .cke_bottom {
-	background-color: #eee;
-}
-#desktop .cke_path_item {
-	color: #555;
-}
-#desktop .has-error .cke_chrome {
-	border-color: #a94442;
-}
-
-/**
  * CodeMirror
  */
 #desktop .CodeMirror {
