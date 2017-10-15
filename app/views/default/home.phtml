@@ -1,6 +1,7 @@
 <?php $this->layout('layout') ?>
 
 <?php $this->start('metadata') ?>
+
 <?php if (fenric('parameter::home.page.meta.title')) : ?>
 	<title><?= e(fenric('parameter::home.page.meta.title')) ?></title>
 <?php endif; ?>
@@ -19,14 +20,15 @@
 <?php if (fenric('parameter::home.page.meta.generator')) : ?>
 	<meta name="generator" content="<?= e(fenric('parameter::home.page.meta.generator')) ?>" />
 <?php endif; ?>
+
 <?php $this->stop() ?>
 
-<?php $this->start('stylesheets'); ?>
-<?php $this->stop(); ?>
+<?php $this->start('stylesheets') ?>
+<?php $this->stop() ?>
 
-<?php $this->start('javascripts'); ?>
-<?php $this->stop(); ?>
+<?php $this->start('javascripts') ?>
+<?php $this->stop() ?>
 
 <div class="container">
-	<h1 class="display-1 mt-3 mb-3">Home page</h1>
+	<h1 class="display-1 mt-3 mb-3">Welcome!</h1>
 </div>
