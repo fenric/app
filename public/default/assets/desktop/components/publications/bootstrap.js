@@ -6,9 +6,6 @@
 
 	/**
 	 * Конструктор компонента
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{
@@ -19,42 +16,36 @@
 
 		this.params.default = {};
 		this.params.default.page = 1;
-		this.params.default.limit = 20;
+		this.params.default.limit = 25;
 
 		this.params.load(this.params.default);
 
 		this.routes = {};
-		this.routes.all = '{root}/api/publication/all/?&{params}';
-		this.routes.search = '{root}/api/publication/search/?&keywords={keywords}';
-		this.routes.create = '{root}/api/publication/create/';
-		this.routes.update = '{root}/api/publication/update/{id}/';
-		this.routes.delete = '{root}/api/publication/delete/{id}/';
-		this.routes.read = '{root}/api/publication/read/{id}/';
+		this.routes.all            = '{root}/api/publication/all/?&{params}';
+		this.routes.search         = '{root}/api/publication/search/?&keywords={keywords}';
+		this.routes.create         = '{root}/api/publication/create/';
+		this.routes.update         = '{root}/api/publication/update/{id}/';
+		this.routes.delete         = '{root}/api/publication/delete/{id}/';
+		this.routes.read           = '{root}/api/publication/read/{id}/';
 
 		this.routes.photos = {};
-		this.routes.photos.all = '{root}/api/publication/all-photos/{publicationId}/';
-		this.routes.photos.create = '{root}/api/publication/create-photo/{publicationId}/';
-		this.routes.photos.enable = '{root}/api/publication/enable-photo/{photoId}/';
-		this.routes.photos.disable = '{root}/api/publication/disable-photo/{photoId}/';
-		this.routes.photos.delete = '{root}/api/publication/delete-photo/{photoId}/';
-		this.routes.photos.sort = '{root}/api/publication/sort-photos/';
+		this.routes.photos.create  = '{root}/api/publication/{id}/create-photo/';
+		this.routes.photos.delete  = '{root}/api/publication/delete-photo/{id}/';
+		this.routes.photos.show    = '{root}/api/publication/show-photo/{id}/';
+		this.routes.photos.hide    = '{root}/api/publication/hide-photo/{id}/';
+		this.routes.photos.sort    = '{root}/api/publication/sort-photos/';
 
 		this.templates = {};
-		this.templates.list = this.root + '/views/list.tpl';
-		this.templates.photo = this.root + '/views/photo.tpl';
-		this.templates.photos = this.root + '/views/photos.tpl';
-		this.templates.relation = this.root + '/views/relation.tpl';
-		this.templates.field = this.root + '/views/field.tpl';
-		this.templates.form = this.root + '/views/form.tpl';
+		this.templates.list        = this.root + '/views/list.tpl';
+		this.templates.photo       = this.root + '/views/photo.tpl';
+		this.templates.photos      = this.root + '/views/photos.tpl';
+		this.templates.relation    = this.root + '/views/relation.tpl';
+		this.templates.field       = this.root + '/views/field.tpl';
+		this.templates.form        = this.root + '/views/form.tpl';
 	};
 
 	/**
 	 * Список объектов
-	 *
-	 * @param   object   options
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.list = function(options)
 	{
@@ -84,11 +75,6 @@
 				{
 					self.list(options);
 				});
-
-				modal.on('modal.content.find', function()
-				{
-					// @continue
-				});
 			}});
 
 			self.modal().title('{title} / Список публикаций', {title: self.title}).open().block();
@@ -114,7 +100,7 @@
 							self.list();
 						});
 
-						self.modal().search('.delete[data-toggle=confirmation]', function(element)
+						self.modal().search('.delete', function(element)
 						{
 							jQuery(element).confirmation({onConfirm: function()
 							{
@@ -134,9 +120,6 @@
 
 	/**
 	 * Создание объекта
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.add = function()
 	{
@@ -152,14 +135,13 @@
 					{
 						modal.block();
 
-						modal.search('textarea.ckeditor', function(area)
+						modal.search('textarea', function(area)
 						{
-							if (area.ckeditor) {
-								area.value = area.ckeditor.getData();
-							}
+							area.value = area.ckeditor ? area.ckeditor.getData() : area.value;
 						});
 
-						request = self.xhr.post(self.routes.create, form, {
+						request = self.xhr.post(self.routes.create, form,
+						{
 							repeat: true,
 						});
 
@@ -188,11 +170,6 @@
 
 	/**
 	 * Редактирование объекта
-	 *
-	 * @param   integer   id
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.edit = function(id)
 	{
@@ -213,11 +190,9 @@
 					{
 						modal.block();
 
-						modal.search('textarea.ckeditor', function(area)
+						modal.search('textarea', function(area)
 						{
-							if (area.ckeditor) {
-								area.value = area.ckeditor.getData();
-							}
+							area.value = area.ckeditor ? area.ckeditor.getData() : area.value;
 						});
 
 						self.xhr.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
@@ -243,12 +218,6 @@
 
 	/**
 	 * Чтение объекта
-	 *
-	 * @param   integer    id
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.read = function(id, complete)
 	{
@@ -260,12 +229,6 @@
 
 	/**
 	 * Удаление объекта
-	 *
-	 * @param   integer    id
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.delete = function(id, complete)
 	{
@@ -277,128 +240,110 @@
 
 	/**
 	 * Управление фотографиями объекта
-	 *
-	 * @param   integer   publicationId
-	 *
-	 * @access  public
-	 * @return  void
 	 */
-	$component.prototype.photos = function(publicationId)
+	$component.prototype.photos = function(id)
 	{
 		var modal;
 
 		this.with(function(self)
 		{
-			modal = self.modal(publicationId * 1000000, {created: function(modal)
+			modal = self.modal('photos:' + id, {created: function(modal)
 			{
 				modal.on('modal.content.reload', function()
 				{
-					self.photos(publicationId);
+					self.photos(id);
 				});
 			}});
 
 			modal.title('{title} / Фотографии публикации / ...', {title: self.title}).open().block();
 
-			self.read(publicationId, function(publication)
+			self.read(id, function(publication)
 			{
 				modal.title('{title} / Фотографии публикации / {header}', {title: self.title, header: publication.header});
 
-				self.xhr.get(self.routes.photos.all, {repeat: true, publicationId: publicationId, success: function(photos)
+				$bugaboo.load(self.templates.photo, function(tplPhoto)
 				{
-					modal.title('{title} / Фотографии публикации ({count}) / {header}', {title: self.title, header: publication.header, count: photos.count});
-
-					$bugaboo.load(self.templates.photo, function(tplPhoto)
+					$bugaboo.load(self.templates.photos, function(tplPhotos)
 					{
-						$bugaboo.load(self.templates.photos, function(tplPhotos)
-						{
-							modal.content(tplPhotos.format({
-								publication: publication,
-								photos: photos,
-							})).unblock();
+						modal.content(tplPhotos.format({
+							publication: publication,
+						})).unblock();
 
-							modal.find('div.gallery', function(gallery)
+						modal.find('div.gallery', function(gallery)
+						{
+							$desktop.iterate(publication.photos, function(i, photo) {
+								gallery.appendChild(tplPhoto.format({
+									publication: publication,
+									photo: photo,
+								}));
+							});
+
+							modal.change('.upload', function(event, element)
 							{
-								if (photos.count > 0)
+								// Разблокируется автоматически после перезагрузки...
+								modal.block();
+
+								var queue = element.files.length;
+
+								for (var i = 0; i < element.files.length; i++)
 								{
-									photos.items.forEach(function(photo)
+									$desktop.component('uploader').image(element.files[i]).complete(function(response)
 									{
-										gallery.appendChild(tplPhoto.format({
-											publication: publication,
-											photo: photo,
-										}));
+										if ($desktop.inArray(this.status, [200, 201]))
+										{
+											self.xhr.post(self.routes.photos.create, {file: response.file}, {repeat: true, id: publication.id}).complete(function(response)
+											{
+												(--queue === 0) && self.photos(publication.id);
+											});
+
+											return true;
+										}
+
+										(--queue === 0) && self.photos(publication.id);
 									});
 								}
+							});
 
-								modal.change('.upload', function(event, element)
+							modal.click('.to-show', function(event)
+							{
+								self.xhr.patch(self.routes.photos.show, null, {repeat: true, id: this.getAttribute('data-id'), success: function(response)
 								{
-									var queue = element.files.length;
-
-									for (var i = 0; i < element.files.length; i++)
-									{
-										// Разблокируется автоматически после перезагрузки...
-										modal.block();
-
-										$desktop.component('uploader').image(element.files[i], function(uploaded)
-										{
-											self.xhr.post(self.routes.photos.create, {file: uploaded.file}, {repeat: true, publicationId: publicationId, success: function(response)
-											{
-												(queue === 0) && self.photos(publicationId);
-											}});
-
-										}).complete(function(response)
-										{
-											(--queue === 0) && self.photos(publicationId);
-										});
-									}
-								});
-
-								modal.click('.enable', function(event)
-								{
-									self.xhr.patch(self.routes.photos.enable, null, {repeat: true, photoId: this.getAttribute('data-id'), success: function(response)
-									{
-										self.photos(publication.id);
-									}});
-								});
-
-								modal.click('.disable', function(event)
-								{
-									self.xhr.patch(self.routes.photos.disable, null, {repeat: true, photoId: this.getAttribute('data-id'), success: function(response)
-									{
-										self.photos(publication.id);
-									}});
-								});
-
-								modal.search('.delete', function(element)
-								{
-									jQuery(element).confirmation({onConfirm: function()
-									{
-										self.xhr.delete(self.routes.photos.delete, {repeat: true, photoId: element.getAttribute('data-id'), success: function(response)
-										{
-											modal.remove('div.photo[data-id="' + element.getAttribute('data-id') + '"]');
-										}});
-									}});
-								});
-
-								jQuery(gallery).sortable({handle: 'img', update: function(event, ui)
-								{
-									self.xhr.patch(self.routes.photos.sort, {id: jQuery(gallery).sortable('toArray', {attribute: 'data-id'})}, {repeat: true});
+									self.photos(publication.id);
 								}});
 							});
+
+							modal.click('.to-hide', function(event)
+							{
+								self.xhr.patch(self.routes.photos.hide, null, {repeat: true, id: this.getAttribute('data-id'), success: function(response)
+								{
+									self.photos(publication.id);
+								}});
+							});
+
+							modal.search('.delete', function(element)
+							{
+								jQuery(element).confirmation({onConfirm: function(event)
+								{
+									self.xhr.delete(self.routes.photos.delete, {repeat: true, id: element.getAttribute('data-id'), success: function(response)
+									{
+										modal.remove('div.photo[data-id="{id}"]', {id: element.getAttribute('data-id')});
+									}});
+								}});
+							});
+
+							jQuery(gallery).sortable({handle: 'img', update: function(event, ui)
+							{
+								self.xhr.patch(self.routes.photos.sort, {id: jQuery(gallery).sortable('toArray', {attribute: 'data-id'})}, {repeat: true});
+							}});
 						});
 					});
-				}});
+				});
 			});
 		});
 	};
 
 	/**
 	 * Основная форма компонента
-	 *
-	 * @param   object   modal
-	 * @param   object   params
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.form = function(modal, params)
 	{
@@ -408,21 +353,27 @@
 		{
 			modal.block();
 
-			$desktop.component('tags').unload(function(tags)
+			// load templates
+			$bugaboo.load(self.templates.form, function(tplForm)
 			{
-				$desktop.component('sections').unload(function(sections)
+				$bugaboo.load(self.templates.relation, function(tplRelation)
 				{
-
-					$bugaboo.load(self.templates.form, function(formTpl)
+					// load dependencies
+					$desktop.component('tags').unload(function(tags)
 					{
-						$bugaboo.load(self.templates.relation, function(relationTpl)
+						$desktop.component('sections').unload(function(sections)
 						{
+							// selected attached tags
+							$desktop.iterate(tags, function(key, value)
+							{
+								tags[key]['attached'] = $desktop.inArray(value.id, params.tags);
+							});
 
 							params.tags = tags;
 							params.sections = sections;
 
 							modal.content(
-								formTpl.format(params)
+								tplForm.format(params)
 							).unblock();
 
 							modal.search('select.fetch-fields', function(element)
@@ -435,9 +386,12 @@
 									{
 										modal.block();
 
-										self.fields(modal, container, element.value, params.fields || {}, function()
+										$desktop.component('sections').read(element.value, function(section)
 										{
-											modal.unblock();
+											self.fields(modal, container, section, params.fields || {}, function()
+											{
+												modal.unblock();
+											});
 										});
 									}
 								});
@@ -453,9 +407,12 @@
 									{
 										modal.block();
 
-										self.fields(modal, container, element.value, params.fields || {}, function()
+										$desktop.component('sections').read(element.value, function(section)
 										{
-											modal.unblock();
+											self.fields(modal, container, section, params.fields || {}, function()
+											{
+												modal.unblock();
+											});
 										});
 									}
 								});
@@ -463,7 +420,7 @@
 
 							modal.change('input.picture-upload', function(event, element)
 							{
-								var container;
+								var fragment;
 
 								modal.block();
 
@@ -471,17 +428,17 @@
 								{
 									element.value = null;
 
-									container = document.createDocumentFragment();
+									fragment = document.createDocumentFragment();
 
-									container.appendChild($desktop.createElement('img', {
+									fragment.appendChild($desktop.createElement('img', {
 										class: 'img-thumbnail', src: '/upload/150x150/' + response.file,
 									}));
 
-									container.appendChild($desktop.createElement('input', {
+									fragment.appendChild($desktop.createElement('input', {
 										type: 'hidden', name: 'picture', value: response.file,
 									}));
 
-									modal.replace('div.picture-container', container);
+									modal.replace('div.picture-container', fragment);
 
 									modal.unblock();
 								});
@@ -495,26 +452,68 @@
 							modal.search('textarea.ckeditor', function(element)
 							{
 								$desktop.component('ckeditor').init(element);
+
+								modal.onclosing(function()
+								{
+									element.ckeditor.destroy();
+								});
 							});
 
 							modal.search('select.select-picker', function(element)
 							{
-								jQuery(element).selectpicker();
+								jQuery(element).selectpicker({
+									// @continue
+								});
+
+								modal.onclosing(function()
+								{
+									jQuery(element).selectpicker('destroy');
+								});
 							});
 
 							modal.search('input.date-picker', function(element)
 							{
-								jQuery(element).datetimepicker({format: 'Y-m-d'});
+								jQuery(element).datetimepicker({
+									format: 'Y-m-d',
+									datepicker: true,
+									timepicker: false,
+									scrollInput: false,
+								});
+
+								modal.onclosing(function()
+								{
+									jQuery(element).datetimepicker('destroy');
+								});
 							});
 
 							modal.search('input.date-time-picker', function(element)
 							{
-								jQuery(element).datetimepicker({format: 'Y-m-d H:i'});
+								jQuery(element).datetimepicker({
+									format: 'Y-m-d H:i',
+									datepicker: true,
+									timepicker: true,
+									scrollInput: false,
+								});
+
+								modal.onclosing(function()
+								{
+									jQuery(element).datetimepicker('destroy');
+								});
 							});
 
 							modal.search('input.time-picker', function(element)
 							{
-								jQuery(element).datetimepicker({format: 'H:i'});
+								jQuery(element).datetimepicker({
+									format: 'H:i',
+									datepicker: false,
+									timepicker: true,
+									scrollInput: false,
+								});
+
+								modal.onclosing(function()
+								{
+									jQuery(element).datetimepicker('destroy');
+								});
 							});
 
 							modal.find('div.relations', function(container)
@@ -529,26 +528,31 @@
 									{
 										if (element.value.length > 0)
 										{
+											element.setAttribute('disabled', 'true');
+
 											self.xhr.get(self.routes.search, {repeat: true, keywords: encodeURIComponent(element.value), success: function(response)
 											{
-												$desktop.iterate(response, function(index, found)
+												element.removeAttribute('disabled');
+												element.focus();
+
+												$desktop.iterate(response, function(key, value)
 												{
-													if (found.id == params.id) {
+													if (value.id == params.id) {
 														return;
 													}
 
-													if (modal.exists('div.relations p[data-id="{id}"]', {id: found.id})) {
+													if (modal.exists('div.relations > div.relation[data-id="{id}"]', {id: value.id})) {
 														return;
 													}
 
 													container.appendChild(
-														relationTpl.format(found)
+														tplRelation.format(value)
 													);
 												});
 											}});
 										}
 
-									}, 300);
+									}, 800);
 								});
 							});
 
@@ -565,123 +569,137 @@
 
 	/**
 	 * Загрузка дополнительных полей
-	 *
-	 * @param   object     modal
-	 * @param   node       container
-	 * @param   int        sectionId
-	 * @param   object     values
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
-	$component.prototype.fields = function(modal, container, sectionId, values, complete)
+	$component.prototype.fields = function(modal, container, section, values, complete)
 	{
 		this.with(function(self)
 		{
-			$desktop.component('sections').read(sectionId, function(section)
+			$bugaboo.load(self.templates.field, function(tpl)
 			{
-				$bugaboo.load(self.templates.field, function(tpl)
+				if (section.fields.length > 0)
 				{
-					if (section.fields.length > 0)
+					$desktop.iterate(section.fields, function(key, field)
 					{
-						$desktop.iterate(section.fields, function(key, field)
+						field.value = field.parent.default_value;
+
+						// maybe null...
+						if (! (values[field.parent.name] === void(0)))
 						{
-							field.value = field.parent.default_value;
+							field.value = values[field.parent.name];
+						}
 
-							// maybe null...
-							if (! (values[field.parent.name] === void(0)))
-							{
-								field.value = values[field.parent.name];
-							}
+						container.appendChild(tpl.format({field: field}));
+					});
 
-							container.appendChild(tpl.format({field: field}));
+					modal.search('textarea.field-ckeditor', function(element)
+					{
+						$desktop.component('ckeditor').init(element);
+
+						modal.onclosing(function()
+						{
+							element.ckeditor.destroy();
+						});
+					});
+
+					modal.search('input.field-date-picker', function(element)
+					{
+						jQuery(element).datetimepicker({
+							format: 'Y-m-d',
+							datepicker: true,
+							timepicker: false,
+							scrollInput: false,
 						});
 
-						modal.search('textarea.field-ckeditor', function(element)
+						modal.onclosing(function()
 						{
-							$desktop.component('ckeditor').init(element);
+							jQuery(element).datetimepicker('destroy');
+						});
+					});
+
+					modal.search('input.field-date-time-picker', function(element)
+					{
+						jQuery(element).datetimepicker({
+							format: 'Y-m-d H:i',
+							datepicker: true,
+							timepicker: true,
+							scrollInput: false,
 						});
 
-						modal.search('input.field-date-picker', function(element)
+						modal.onclosing(function()
 						{
-							jQuery(element).datetimepicker({format: 'Y-m-d'});
+							jQuery(element).datetimepicker('destroy');
+						});
+					});
+
+					modal.search('input.field-time-picker', function(element)
+					{
+						jQuery(element).datetimepicker({
+							format: 'H:i',
+							datepicker: false,
+							timepicker: true,
+							scrollInput: false,
 						});
 
-						modal.search('input.field-date-time-picker', function(element)
+						modal.onclosing(function()
 						{
-							jQuery(element).datetimepicker({format: 'Y-m-d H:i'});
+							jQuery(element).datetimepicker('destroy');
 						});
+					});
 
-						modal.search('input.field-time-picker', function(element)
+					modal.change('input.field-image-attach[type="file"]', function(event, element)
+					{
+						var fragment;
+
+						modal.block();
+
+						$desktop.component('uploader').image(element.files[0], function(response)
 						{
-							jQuery(element).datetimepicker({format: 'H:i'});
-						});
+							element.value = null;
 
-						modal.change('input.field-image-attach[type="file"]', function(event, element)
-						{
-							var container;
+							fragment = document.createDocumentFragment();
 
-							modal.block();
+							fragment.appendChild($desktop.createElement('img', {
+								class: 'img-thumbnail',
+								src: '/upload/150x150/' + response.file,
+							}));
 
-							$desktop.component('uploader').image(element.files[0], function(response)
-							{
-								element.value = null;
+							fragment.appendChild($desktop.createElement('input', {
+								type: 'hidden',
+								name: element.getAttribute('data-field-name'),
+								value: response.file,
+							}));
 
-								container = document.createDocumentFragment();
-
-								container.appendChild($desktop.createElement('img', {
-									class: 'img-thumbnail',
-									src: '/upload/150x150/' + response.file,
-								}));
-
-								container.appendChild($desktop.createElement('input', {
-									type: 'hidden',
-									name: element.getAttribute('data-field-name'),
-									value: response.file,
-								}));
-
-								modal.replace('.field-image-container[data-field-id="{id}"]', container, {
-									id: element.getAttribute('data-field-id'),
-								});
-
-								modal.unblock();
-							});
-						});
-
-						modal.click('.field-image-detach', function(event, element)
-						{
-							modal.clear('.field-image-container[data-field-id="{id}"]', {
+							modal.replace('.field-image-container[data-field-id="{id}"]', fragment, {
 								id: element.getAttribute('data-field-id'),
 							});
-						});
-					}
 
-					if (complete instanceof Function)
+							modal.unblock();
+						});
+					});
+
+					modal.click('.field-image-detach', function(event, element)
 					{
-						complete();
-					}
-				});
+						modal.clear('.field-image-container[data-field-id="{id}"]', {
+							id: element.getAttribute('data-field-id'),
+						});
+					});
+				}
+
+				if (complete instanceof Function) {
+					complete();
+				}
 			});
 		});
 	};
 
 	/**
 	 * Помощь в работе с компонентом
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.help = function()
 	{};
 
 	/**
 	 * Инициализация компонента
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.__init__ = function(complete)
 	{

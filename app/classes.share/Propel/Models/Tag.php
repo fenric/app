@@ -16,7 +16,7 @@ class Tag extends BaseTag
 {
 
 	/**
-	 * Получение адреса тега
+	 * Получение адреса объекта
 	 */
 	public function getUri() : string
 	{
@@ -24,7 +24,7 @@ class Tag extends BaseTag
 	}
 
 	/**
-	 * Получение количества публикаций по тегу
+	 * Получение количества связанных с объектом публикаций
 	 */
 	public function getCountPublications() : int
 	{
@@ -36,7 +36,7 @@ class Tag extends BaseTag
 	}
 
 	/**
-	 * Форматирование сниппетов в содержимом тега
+	 * Форматирование сниппетов в содержимом объекта
 	 */
 	public function getSnippetableContent(ConnectionInterface $connection = null)
 	{

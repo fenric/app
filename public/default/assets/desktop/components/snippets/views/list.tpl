@@ -44,7 +44,7 @@
 							<br><span>{{title}}</span></p>
 						</td>
 						<td>
-							<p><strong>Код для вставки</strong>
+							<p><strong>Код для вставки в контент</strong>
 							<br><span>{#snippet:{{code}}#}</span></p>
 
 							<p><strong>PHP код для вставки в шаблон</strong>
@@ -53,11 +53,11 @@
 						<td>
 							<p><strong>Создано</strong>
 							<br><span>{{created_at:datetime(d.m.Y H:i:s P)}}</span>
-							<br><a href="javascript:void(0)">{{creator.username}}</a></p>
+							<br><a href="javascript:$desktop.component('users').card({{creator.id}})">{{creator.username}}</a></p>
 
 							<p><strong>Последнее изменение</strong>
 							<br><span>{{updated_at:datetime(d.m.Y H:i:s P)}}</span>
-							<br><a href="javascript:void(0)">{{updater.username}}</a></p>
+							<br><a href="javascript:$desktop.component('users').card({{updater.id}})">{{updater.username}}</a></p>
 						</td>
 						<td>
 							<div class="btn-group-vertical btn-block">

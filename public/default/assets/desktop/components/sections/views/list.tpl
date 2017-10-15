@@ -100,11 +100,11 @@
 						<td>
 							<p><strong>Создано</strong>
 							<br><span>{{created_at:datetime(d.m.Y H:i:s P)}}</span>
-							<br><a href="javascript:void(0)">{{creator.username}}</a></p>
+							<br><a href="javascript:$desktop.component('users').card({{creator.id}})">{{creator.username}}</a></p>
 
 							<p><strong>Последнее изменение</strong>
 							<br><span>{{updated_at:datetime(d.m.Y H:i:s P)}}</span>
-							<br><a href="javascript:void(0)">{{updater.username}}</a></p>
+							<br><a href="javascript:$desktop.component('users').card({{updater.id}})">{{updater.username}}</a></p>
 						</td>
 						<td>
 							<div class="btn-group-vertical btn-block">

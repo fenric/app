@@ -8,7 +8,6 @@ namespace Fenric\Controllers\Admin;
 use Propel\Models\Field;
 use Propel\Models\FieldQuery;
 use Propel\Models\Map\FieldTableMap;
-
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Fenric\Controllers\Abstractable\CRUD;

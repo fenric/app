@@ -41,10 +41,10 @@ EOD;
 	];
 
 	/**
-	* Add code in ObjectBuilder::preInsert
-	*
-	* @return string
-	*/
+	 * Add code in ObjectBuilder::preInsert
+	 *
+	 * @return string
+	 */
 	public function preInsert($builder)
 	{
 		$source = '';
@@ -63,10 +63,10 @@ EOD;
 	}
 
 	/**
-	* Add code in ObjectBuilder::preUpdate
-	*
-	* @return string
-	*/
+	 * Add code in ObjectBuilder::preUpdate
+	 *
+	 * @return string
+	 */
 	public function preUpdate($builder)
 	{
 		$source = '';

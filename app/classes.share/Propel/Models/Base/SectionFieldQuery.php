@@ -24,15 +24,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionFieldQuery orderBySectionId($order = Criteria::ASC) Order by the section_id column
  * @method     ChildSectionFieldQuery orderByFieldId($order = Criteria::ASC) Order by the field_id column
  * @method     ChildSectionFieldQuery orderBySequence($order = Criteria::ASC) Order by the sequence column
- * @method     ChildSectionFieldQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method     ChildSectionFieldQuery orderByCreatedBy($order = Criteria::ASC) Order by the created_by column
  *
  * @method     ChildSectionFieldQuery groupById() Group by the id column
  * @method     ChildSectionFieldQuery groupBySectionId() Group by the section_id column
  * @method     ChildSectionFieldQuery groupByFieldId() Group by the field_id column
  * @method     ChildSectionFieldQuery groupBySequence() Group by the sequence column
- * @method     ChildSectionFieldQuery groupByCreatedAt() Group by the created_at column
- * @method     ChildSectionFieldQuery groupByCreatedBy() Group by the created_by column
  *
  * @method     ChildSectionFieldQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildSectionFieldQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -62,16 +58,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionFieldQuery rightJoinWithField() Adds a RIGHT JOIN clause and with to the query using the Field relation
  * @method     ChildSectionFieldQuery innerJoinWithField() Adds a INNER JOIN clause and with to the query using the Field relation
  *
- * @method     ChildSectionFieldQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method     ChildSectionFieldQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method     ChildSectionFieldQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
- *
- * @method     ChildSectionFieldQuery joinWithUser($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the User relation
- *
- * @method     ChildSectionFieldQuery leftJoinWithUser() Adds a LEFT JOIN clause and with to the query using the User relation
- * @method     ChildSectionFieldQuery rightJoinWithUser() Adds a RIGHT JOIN clause and with to the query using the User relation
- * @method     ChildSectionFieldQuery innerJoinWithUser() Adds a INNER JOIN clause and with to the query using the User relation
- *
  * @method     ChildSectionFieldQuery leftJoinPublicationField($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationField relation
  * @method     ChildSectionFieldQuery rightJoinPublicationField($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationField relation
  * @method     ChildSectionFieldQuery innerJoinPublicationField($relationAlias = null) Adds a INNER JOIN clause to the query using the PublicationField relation
@@ -82,7 +68,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionFieldQuery rightJoinWithPublicationField() Adds a RIGHT JOIN clause and with to the query using the PublicationField relation
  * @method     ChildSectionFieldQuery innerJoinWithPublicationField() Adds a INNER JOIN clause and with to the query using the PublicationField relation
  *
- * @method     \Propel\Models\SectionQuery|\Propel\Models\FieldQuery|\Propel\Models\UserQuery|\Propel\Models\PublicationFieldQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\SectionQuery|\Propel\Models\FieldQuery|\Propel\Models\PublicationFieldQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildSectionField findOne(ConnectionInterface $con = null) Return the first ChildSectionField matching the query
  * @method     ChildSectionField findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSectionField matching the query, or a new ChildSectionField object populated from the query conditions when no match is found
@@ -90,9 +76,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionField findOneById(int $id) Return the first ChildSectionField filtered by the id column
  * @method     ChildSectionField findOneBySectionId(int $section_id) Return the first ChildSectionField filtered by the section_id column
  * @method     ChildSectionField findOneByFieldId(int $field_id) Return the first ChildSectionField filtered by the field_id column
- * @method     ChildSectionField findOneBySequence(string $sequence) Return the first ChildSectionField filtered by the sequence column
- * @method     ChildSectionField findOneByCreatedAt(string $created_at) Return the first ChildSectionField filtered by the created_at column
- * @method     ChildSectionField findOneByCreatedBy(int $created_by) Return the first ChildSectionField filtered by the created_by column *
+ * @method     ChildSectionField findOneBySequence(string $sequence) Return the first ChildSectionField filtered by the sequence column *
 
  * @method     ChildSectionField requirePk($key, ConnectionInterface $con = null) Return the ChildSectionField by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSectionField requireOne(ConnectionInterface $con = null) Return the first ChildSectionField matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -101,16 +85,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionField requireOneBySectionId(int $section_id) Return the first ChildSectionField filtered by the section_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSectionField requireOneByFieldId(int $field_id) Return the first ChildSectionField filtered by the field_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSectionField requireOneBySequence(string $sequence) Return the first ChildSectionField filtered by the sequence column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSectionField requireOneByCreatedAt(string $created_at) Return the first ChildSectionField filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSectionField requireOneByCreatedBy(int $created_by) Return the first ChildSectionField filtered by the created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSectionField[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSectionField objects based on current ModelCriteria
  * @method     ChildSectionField[]|ObjectCollection findById(int $id) Return ChildSectionField objects filtered by the id column
  * @method     ChildSectionField[]|ObjectCollection findBySectionId(int $section_id) Return ChildSectionField objects filtered by the section_id column
  * @method     ChildSectionField[]|ObjectCollection findByFieldId(int $field_id) Return ChildSectionField objects filtered by the field_id column
  * @method     ChildSectionField[]|ObjectCollection findBySequence(string $sequence) Return ChildSectionField objects filtered by the sequence column
- * @method     ChildSectionField[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildSectionField objects filtered by the created_at column
- * @method     ChildSectionField[]|ObjectCollection findByCreatedBy(int $created_by) Return ChildSectionField objects filtered by the created_by column
  * @method     ChildSectionField[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -209,7 +189,7 @@ abstract class SectionFieldQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, section_id, field_id, sequence, created_at, created_by FROM fenric_section_field WHERE id = :p0';
+        $sql = 'SELECT id, section_id, field_id, sequence FROM fenric_section_field WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -468,92 +448,6 @@ abstract class SectionFieldQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the created_at column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
-     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $createdAt The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildSectionFieldQuery The current query, for fluid interface
-     */
-    public function filterByCreatedAt($createdAt = null, $comparison = null)
-    {
-        if (is_array($createdAt)) {
-            $useMinMax = false;
-            if (isset($createdAt['min'])) {
-                $this->addUsingAlias(SectionFieldTableMap::COL_CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdAt['max'])) {
-                $this->addUsingAlias(SectionFieldTableMap::COL_CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(SectionFieldTableMap::COL_CREATED_AT, $createdAt, $comparison);
-    }
-
-    /**
-     * Filter the query on the created_by column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCreatedBy(1234); // WHERE created_by = 1234
-     * $query->filterByCreatedBy(array(12, 34)); // WHERE created_by IN (12, 34)
-     * $query->filterByCreatedBy(array('min' => 12)); // WHERE created_by > 12
-     * </code>
-     *
-     * @see       filterByUser()
-     *
-     * @param     mixed $createdBy The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildSectionFieldQuery The current query, for fluid interface
-     */
-    public function filterByCreatedBy($createdBy = null, $comparison = null)
-    {
-        if (is_array($createdBy)) {
-            $useMinMax = false;
-            if (isset($createdBy['min'])) {
-                $this->addUsingAlias(SectionFieldTableMap::COL_CREATED_BY, $createdBy['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($createdBy['max'])) {
-                $this->addUsingAlias(SectionFieldTableMap::COL_CREATED_BY, $createdBy['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(SectionFieldTableMap::COL_CREATED_BY, $createdBy, $comparison);
-    }
-
-    /**
      * Filter the query by a related \Propel\Models\Section object
      *
      * @param \Propel\Models\Section|ObjectCollection $section The related object(s) to use as filter
@@ -705,83 +599,6 @@ abstract class SectionFieldQuery extends ModelCriteria
         return $this
             ->joinField($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Field', '\Propel\Models\FieldQuery');
-    }
-
-    /**
-     * Filter the query by a related \Propel\Models\User object
-     *
-     * @param \Propel\Models\User|ObjectCollection $user The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
-     *
-     * @return ChildSectionFieldQuery The current query, for fluid interface
-     */
-    public function filterByUser($user, $comparison = null)
-    {
-        if ($user instanceof \Propel\Models\User) {
-            return $this
-                ->addUsingAlias(SectionFieldTableMap::COL_CREATED_BY, $user->getId(), $comparison);
-        } elseif ($user instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(SectionFieldTableMap::COL_CREATED_BY, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByUser() only accepts arguments of type \Propel\Models\User or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the User relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildSectionFieldQuery The current query, for fluid interface
-     */
-    public function joinUser($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('User');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'User');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the User relation User object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Propel\Models\UserQuery A secondary query class using the current class as primary query
-     */
-    public function useUserQuery($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        return $this
-            ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\Propel\Models\UserQuery');
     }
 
     /**

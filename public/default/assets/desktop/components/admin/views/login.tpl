@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class="desktop-admin-login-form-note">
-			<span>Для того, чтобы продолжить, вам необходимо ввести пароль, и нажать на соответствующую кнопку...</span>
+			<span>Ваша сессия истекла, введите пароль,<br>и нажмите «ВОЙТИ», чтобы продолжить.</span>
 		</div>
 		<input type="hidden" name="username" value="{{account.username}}" />
 	</form>

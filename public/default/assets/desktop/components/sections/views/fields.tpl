@@ -18,10 +18,6 @@
 
 								<p><strong>Заголовок</strong>
 								<br><span>{{parent.label}}</span></p>
-
-								<p><strong>Прикреплено</strong>
-								<br><span>{{attached_at:datetime(d.m.Y H:i:s P)}}</span>
-								<br><a href="javascript:void(0)">{{attached_by.username}}</a></p>
 							</div>
 							<div class="pull-right">
 								<div class="btn-group">
@@ -43,7 +39,7 @@
 	<p>&nbsp;</p>
 
 	<h4>Открепленные дополнительные поля</h4>
-	<p class="help-block">Нажмите на открепленное дополнительное поле, чтобы прикрепить его.</p>
+	<p class="help-block">Нажмите на открепленное дополнительное поле, чтобы прикрепить его к настоящему разделу.</p>
 
 	{{when fields is empty}}
 		<div class="alert alert-info">Открепленных дополнительных полей не найдено.</div>

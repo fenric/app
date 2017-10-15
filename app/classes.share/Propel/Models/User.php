@@ -69,7 +69,7 @@ class User extends BaseUser
 	 */
 	public function isAdministrator() : bool
 	{
-		return strcmp($this->getRole(), 'administrator') === 0;
+		return 0 === strcmp($this->getRole(), 'administrator');
 	}
 
 	/**
@@ -77,7 +77,7 @@ class User extends BaseUser
 	 */
 	public function isRedactor() : bool
 	{
-		return strcmp($this->getRole(), 'redactor') === 0;
+		return 0 === strcmp($this->getRole(), 'redactor');
 	}
 
 	/**
@@ -85,7 +85,7 @@ class User extends BaseUser
 	 */
 	public function isModerator() : bool
 	{
-		return strcmp($this->getRole(), 'moderator') === 0;
+		return 0 === strcmp($this->getRole(), 'moderator');
 	}
 
 	/**
@@ -93,7 +93,7 @@ class User extends BaseUser
 	 */
 	public function isUser() : bool
 	{
-		return strcmp($this->getRole(), 'user') === 0;
+		return 0 === strcmp($this->getRole(), 'user');
 	}
 
 	/**
@@ -199,7 +199,7 @@ class User extends BaseUser
 	{
 		if ($this->getTrackAt() instanceof DateTime)
 		{
-			if ($this->getTrackAt()->getTimestamp() > time() - 600)
+			if ($this->getTrackAt()->getTimestamp() > time() - 300)
 			{
 				return true;
 			}
@@ -262,7 +262,7 @@ class User extends BaseUser
 	/**
 	 * Установка даты рождения пользователя с предварительной валидацией
 	 *
-	 * ORM создает сразу экземпляр DateTime, который может выбросить исключение в случаи некорректной даты,
+	 * ORM создает сразу экземпляр DateTime, который может бросить исключение в случаи некорректной даты,
 	 * что может вызвать дополнительные проблемы как для пользователя, так и для приложения в целом...
 	 */
 	public function setBirthday($value)

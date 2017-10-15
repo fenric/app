@@ -6,9 +6,6 @@
 
 	/**
 	 * Конструктор компонента
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{
@@ -19,7 +16,7 @@
 
 		this.params.default = {};
 		this.params.default.page = 1;
-		this.params.default.limit = 20;
+		this.params.default.limit = 25;
 
 		this.params.load(this.params.default);
 
@@ -44,11 +41,6 @@
 
 	/**
 	 * Список объектов
-	 *
-	 * @param   object   options
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.list = function(options)
 	{
@@ -78,11 +70,6 @@
 				{
 					self.list(options);
 				});
-
-				modal.on('modal.content.find', function()
-				{
-					// @continue
-				});
 			}});
 
 			self.modal().title('{title} / Список разделов', {title: self.title}).open().block();
@@ -105,7 +92,7 @@
 						self.list();
 					});
 
-					self.modal().search('.delete[data-toggle=confirmation]', function(element)
+					self.modal().search('.delete', function(element)
 					{
 						jQuery(element).confirmation({onConfirm: function()
 						{
@@ -124,9 +111,6 @@
 
 	/**
 	 * Создание объекта
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.add = function()
 	{
@@ -142,14 +126,13 @@
 					{
 						modal.block();
 
-						modal.search('textarea.ckeditor', function(area)
+						modal.search('textarea', function(area)
 						{
-							if (area.ckeditor) {
-								area.value = area.ckeditor.getData();
-							}
+							area.value = area.ckeditor ? area.ckeditor.getData() : area.value;
 						});
 
-						request = self.xhr.post(self.routes.create, form, {
+						request = self.xhr.post(self.routes.create, form,
+						{
 							repeat: true,
 						});
 
@@ -170,7 +153,7 @@
 				});
 			}});
 
-			modal.title('{title} / Создание рубрики', {title: self.title}).open();
+			modal.title('{title} / Создание раздела', {title: self.title}).open();
 
 			self.form(modal, {});
 		});
@@ -178,11 +161,6 @@
 
 	/**
 	 * Редактирование объекта
-	 *
-	 * @param   integer   id
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.edit = function(id)
 	{
@@ -203,11 +181,9 @@
 					{
 						modal.block();
 
-						modal.search('textarea.ckeditor', function(area)
+						modal.search('textarea', function(area)
 						{
-							if (area.ckeditor) {
-								area.value = area.ckeditor.getData();
-							}
+							area.value = area.ckeditor ? area.ckeditor.getData() : area.value;
 						});
 
 						self.xhr.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
@@ -233,12 +209,6 @@
 
 	/**
 	 * Чтение объекта
-	 *
-	 * @param   integer    id
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.read = function(id, complete)
 	{
@@ -250,12 +220,6 @@
 
 	/**
 	 * Удаление объекта
-	 *
-	 * @param   integer    id
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.delete = function(id, complete)
 	{
@@ -267,11 +231,6 @@
 
 	/**
 	 * Простая выгрузка объектов
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.unload = function(complete)
 	{
@@ -282,30 +241,33 @@
 	};
 
 	/**
-	 * Управление дополнительными полями объекта
-	 *
-	 * @param   integer   sectionId
-	 *
-	 * @access  public
-	 * @return  void
+	 * Карточка объекта
 	 */
-	$component.prototype.fields = function(sectionId)
+	$component.prototype.card = function(id)
+	{
+		// @continue
+	};
+
+	/**
+	 * Управление дополнительными полями объекта
+	 */
+	$component.prototype.fields = function(id)
 	{
 		var modal;
 
 		this.with(function(self)
 		{
-			modal = self.modal(sectionId * 1000000, {created: function(modal)
+			modal = self.modal('fields:' + id, {created: function(modal)
 			{
 				modal.on('modal.content.reload', function()
 				{
-					self.fields(sectionId);
+					self.fields(id);
 				});
 			}});
 
 			modal.title('{title} / Дополнительные поля раздела / ...', {title: self.title}).open().block();
 
-			self.read(sectionId, function(section)
+			self.read(id, function(section)
 			{
 				modal.title('{title} / Дополнительные поля раздела / {header}', {title: self.title, header: section.header});
 
@@ -314,6 +276,7 @@
 					$bugaboo.load(self.templates.fields, function(tpl)
 					{
 
+						// Удаление уже прикрепленных дополнительных полей из списка
 						$desktop.iterate(fields, function(parentKey, parent)
 						{
 							$desktop.iterate(section.fields, function(fieldKey, field)
@@ -338,7 +301,7 @@
 							});
 						});
 
-						modal.search('.detach[data-toggle=confirmation]', function(element)
+						modal.search('.detach', function(element)
 						{
 							jQuery(element).confirmation({onConfirm: function()
 							{
@@ -363,7 +326,6 @@
 								self.xhr.patch(self.routes.fields.sort, {fieldIds: sortedIds}, {sectionId: section.id});
 							}});
 						});
-
 					});
 				});
 			});
@@ -372,12 +334,6 @@
 
 	/**
 	 * Основная форма компонента
-	 *
-	 * @param   object   modal
-	 * @param   object   params
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.form = function(modal, params)
 	{
@@ -387,51 +343,56 @@
 		{
 			modal.block();
 
-			$bugaboo.load(self.templates.form, function(tpl)
+			self.unload(function(sections)
 			{
-				modal.content(
-					tpl.format(params)
-				).unblock();
-
-				modal.search('textarea.ckeditor', function(element)
+				$bugaboo.load(self.templates.form, function(tpl)
 				{
-					$desktop.component('ckeditor').init(element);
-				});
+					params.sections = sections;
 
-				modal.click('button.picture-reset', function(event)
-				{
-					modal.clear('.picture-container');
-				});
+					modal.content(
+						tpl.format(params)
+					).unblock();
 
-				modal.change('input.picture-upload', function(event, element)
-				{
-					var container;
-
-					modal.block();
-
-					$desktop.component('uploader').image(element.files[0], function(response)
+					modal.search('textarea.ckeditor', function(element)
 					{
-						element.value = null;
-
-						container = document.createDocumentFragment();
-
-						container.appendChild($desktop.createElement('img', {
-							class: 'img-thumbnail', src: '/upload/150x150/' + response.file,
-						}));
-
-						container.appendChild($desktop.createElement('input', {
-							type: 'hidden', name: 'picture', value: response.file,
-						}));
-
-						modal.replace('div.picture-container', container);
-
-						modal.unblock();
+						$desktop.component('ckeditor').init(element);
 					});
-				});
 
-				modal.submit(function(event)
-				{
-					modal.triggerEventListeners('modal.content.save');
+					modal.click('button.picture-reset', function(event)
+					{
+						modal.clear('.picture-container');
+					});
+
+					modal.change('input.picture-upload', function(event, element)
+					{
+						var container;
+
+						modal.block();
+
+						$desktop.component('uploader').image(element.files[0], function(response)
+						{
+							element.value = null;
+
+							container = document.createDocumentFragment();
+
+							container.appendChild($desktop.createElement('img', {
+								class: 'img-thumbnail', src: '/upload/150x150/' + response.file,
+							}));
+
+							container.appendChild($desktop.createElement('input', {
+								type: 'hidden', name: 'picture', value: response.file,
+							}));
+
+							modal.replace('div.picture-container', container);
+
+							modal.unblock();
+						});
+					});
+
+					modal.submit(function(event)
+					{
+						modal.triggerEventListeners('modal.content.save');
+					});
 				});
 			});
 		});
@@ -439,20 +400,12 @@
 
 	/**
 	 * Помощь в работе с компонентом
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.help = function()
 	{};
 
 	/**
 	 * Инициализация компонента
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.__init__ = function(complete)
 	{

@@ -82,9 +82,9 @@ class PublicationRelationTableMap extends TableMap
     const COL_PUBLICATION_ID = 'fenric_publication_relation.publication_id';
 
     /**
-     * the column name for the related_publication_id field
+     * the column name for the relation_id field
      */
-    const COL_RELATED_PUBLICATION_ID = 'fenric_publication_relation.related_publication_id';
+    const COL_RELATION_ID = 'fenric_publication_relation.relation_id';
 
     /**
      * The default string format for model objects of the related table
@@ -98,10 +98,10 @@ class PublicationRelationTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PublicationId', 'RelatedPublicationId', ),
-        self::TYPE_CAMELNAME     => array('id', 'publicationId', 'relatedPublicationId', ),
-        self::TYPE_COLNAME       => array(PublicationRelationTableMap::COL_ID, PublicationRelationTableMap::COL_PUBLICATION_ID, PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'publication_id', 'related_publication_id', ),
+        self::TYPE_PHPNAME       => array('Id', 'PublicationId', 'RelationId', ),
+        self::TYPE_CAMELNAME     => array('id', 'publicationId', 'relationId', ),
+        self::TYPE_COLNAME       => array(PublicationRelationTableMap::COL_ID, PublicationRelationTableMap::COL_PUBLICATION_ID, PublicationRelationTableMap::COL_RELATION_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'publication_id', 'relation_id', ),
         self::TYPE_NUM           => array(0, 1, 2, )
     );
 
@@ -112,10 +112,10 @@ class PublicationRelationTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PublicationId' => 1, 'RelatedPublicationId' => 2, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'publicationId' => 1, 'relatedPublicationId' => 2, ),
-        self::TYPE_COLNAME       => array(PublicationRelationTableMap::COL_ID => 0, PublicationRelationTableMap::COL_PUBLICATION_ID => 1, PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'publication_id' => 1, 'related_publication_id' => 2, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'PublicationId' => 1, 'RelationId' => 2, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'publicationId' => 1, 'relationId' => 2, ),
+        self::TYPE_COLNAME       => array(PublicationRelationTableMap::COL_ID => 0, PublicationRelationTableMap::COL_PUBLICATION_ID => 1, PublicationRelationTableMap::COL_RELATION_ID => 2, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'publication_id' => 1, 'relation_id' => 2, ),
         self::TYPE_NUM           => array(0, 1, 2, )
     );
 
@@ -138,7 +138,7 @@ class PublicationRelationTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('publication_id', 'PublicationId', 'INTEGER', 'fenric_publication', 'id', false, null, null);
-        $this->addColumn('related_publication_id', 'RelatedPublicationId', 'INTEGER', false, null, null);
+        $this->addColumn('relation_id', 'RelationId', 'INTEGER', false, null, null);
     } // initialize()
 
     /**
@@ -298,11 +298,11 @@ class PublicationRelationTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(PublicationRelationTableMap::COL_ID);
             $criteria->addSelectColumn(PublicationRelationTableMap::COL_PUBLICATION_ID);
-            $criteria->addSelectColumn(PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID);
+            $criteria->addSelectColumn(PublicationRelationTableMap::COL_RELATION_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.publication_id');
-            $criteria->addSelectColumn($alias . '.related_publication_id');
+            $criteria->addSelectColumn($alias . '.relation_id');
         }
     }
 

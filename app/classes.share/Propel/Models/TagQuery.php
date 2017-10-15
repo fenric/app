@@ -19,11 +19,10 @@ class TagQuery extends BaseTagQuery
 	 */
 	public static function existsByCode(string $code) : bool
 	{
-		$query = fenric('query')
+		return fenric('query')
 			->select(TagTableMap::COL_ID)
 			->from(TagTableMap::TABLE_NAME)
-			->where(TagTableMap::COL_CODE, '=', $code);
-
-		return $query->readOne() ? true : false;
+			->where(TagTableMap::COL_CODE, '=', $code)
+		->readOne() ? true : false;
 	}
 }

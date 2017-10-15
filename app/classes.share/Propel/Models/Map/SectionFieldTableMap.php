@@ -59,7 +59,7 @@ class SectionFieldTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class SectionFieldTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
@@ -92,16 +92,6 @@ class SectionFieldTableMap extends TableMap
     const COL_SEQUENCE = 'fenric_section_field.sequence';
 
     /**
-     * the column name for the created_at field
-     */
-    const COL_CREATED_AT = 'fenric_section_field.created_at';
-
-    /**
-     * the column name for the created_by field
-     */
-    const COL_CREATED_BY = 'fenric_section_field.created_by';
-
-    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -113,11 +103,11 @@ class SectionFieldTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'SectionId', 'FieldId', 'Sequence', 'CreatedAt', 'CreatedBy', ),
-        self::TYPE_CAMELNAME     => array('id', 'sectionId', 'fieldId', 'sequence', 'createdAt', 'createdBy', ),
-        self::TYPE_COLNAME       => array(SectionFieldTableMap::COL_ID, SectionFieldTableMap::COL_SECTION_ID, SectionFieldTableMap::COL_FIELD_ID, SectionFieldTableMap::COL_SEQUENCE, SectionFieldTableMap::COL_CREATED_AT, SectionFieldTableMap::COL_CREATED_BY, ),
-        self::TYPE_FIELDNAME     => array('id', 'section_id', 'field_id', 'sequence', 'created_at', 'created_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id', 'SectionId', 'FieldId', 'Sequence', ),
+        self::TYPE_CAMELNAME     => array('id', 'sectionId', 'fieldId', 'sequence', ),
+        self::TYPE_COLNAME       => array(SectionFieldTableMap::COL_ID, SectionFieldTableMap::COL_SECTION_ID, SectionFieldTableMap::COL_FIELD_ID, SectionFieldTableMap::COL_SEQUENCE, ),
+        self::TYPE_FIELDNAME     => array('id', 'section_id', 'field_id', 'sequence', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -127,11 +117,11 @@ class SectionFieldTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'SectionId' => 1, 'FieldId' => 2, 'Sequence' => 3, 'CreatedAt' => 4, 'CreatedBy' => 5, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'sectionId' => 1, 'fieldId' => 2, 'sequence' => 3, 'createdAt' => 4, 'createdBy' => 5, ),
-        self::TYPE_COLNAME       => array(SectionFieldTableMap::COL_ID => 0, SectionFieldTableMap::COL_SECTION_ID => 1, SectionFieldTableMap::COL_FIELD_ID => 2, SectionFieldTableMap::COL_SEQUENCE => 3, SectionFieldTableMap::COL_CREATED_AT => 4, SectionFieldTableMap::COL_CREATED_BY => 5, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'section_id' => 1, 'field_id' => 2, 'sequence' => 3, 'created_at' => 4, 'created_by' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'SectionId' => 1, 'FieldId' => 2, 'Sequence' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'sectionId' => 1, 'fieldId' => 2, 'sequence' => 3, ),
+        self::TYPE_COLNAME       => array(SectionFieldTableMap::COL_ID => 0, SectionFieldTableMap::COL_SECTION_ID => 1, SectionFieldTableMap::COL_FIELD_ID => 2, SectionFieldTableMap::COL_SEQUENCE => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'section_id' => 1, 'field_id' => 2, 'sequence' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -155,8 +145,6 @@ class SectionFieldTableMap extends TableMap
         $this->addForeignKey('section_id', 'SectionId', 'INTEGER', 'fenric_section', 'id', false, null, null);
         $this->addForeignKey('field_id', 'FieldId', 'INTEGER', 'fenric_field', 'id', false, null, null);
         $this->addColumn('sequence', 'Sequence', 'NUMERIC', true, null, 0);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
     } // initialize()
 
     /**
@@ -178,13 +166,6 @@ class SectionFieldTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', null, false);
-        $this->addRelation('User', '\\Propel\\Models\\User', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':created_by',
-    1 => ':id',
-  ),
-), 'SET NULL', 'CASCADE', null, false);
         $this->addRelation('PublicationField', '\\Propel\\Models\\PublicationField', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -203,8 +184,6 @@ class SectionFieldTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'false', 'update_column' => 'updated_by', ),
-            'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'false', 'update_column' => 'updated_at', ),
             'validate' => array('f671f3e6-f2db-4e01-85a3-59f171eb4b80' => array ('column' => 'section_id','validator' => 'NotBlank',), 'f7449a7e-c61d-4cb6-a27b-637a5e7552bd' => array ('column' => 'field_id','validator' => 'NotBlank',), ),
         );
     } // getBehaviors()
@@ -363,15 +342,11 @@ class SectionFieldTableMap extends TableMap
             $criteria->addSelectColumn(SectionFieldTableMap::COL_SECTION_ID);
             $criteria->addSelectColumn(SectionFieldTableMap::COL_FIELD_ID);
             $criteria->addSelectColumn(SectionFieldTableMap::COL_SEQUENCE);
-            $criteria->addSelectColumn(SectionFieldTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(SectionFieldTableMap::COL_CREATED_BY);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.section_id');
             $criteria->addSelectColumn($alias . '.field_id');
             $criteria->addSelectColumn($alias . '.sequence');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.created_by');
         }
     }
 

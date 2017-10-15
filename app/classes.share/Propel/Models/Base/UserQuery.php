@@ -132,16 +132,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithSectionRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the SectionRelatedByUpdatedBy relation
  * @method     ChildUserQuery innerJoinWithSectionRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the SectionRelatedByUpdatedBy relation
  *
- * @method     ChildUserQuery leftJoinSectionField($relationAlias = null) Adds a LEFT JOIN clause to the query using the SectionField relation
- * @method     ChildUserQuery rightJoinSectionField($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SectionField relation
- * @method     ChildUserQuery innerJoinSectionField($relationAlias = null) Adds a INNER JOIN clause to the query using the SectionField relation
- *
- * @method     ChildUserQuery joinWithSectionField($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SectionField relation
- *
- * @method     ChildUserQuery leftJoinWithSectionField() Adds a LEFT JOIN clause and with to the query using the SectionField relation
- * @method     ChildUserQuery rightJoinWithSectionField() Adds a RIGHT JOIN clause and with to the query using the SectionField relation
- * @method     ChildUserQuery innerJoinWithSectionField() Adds a INNER JOIN clause and with to the query using the SectionField relation
- *
  * @method     ChildUserQuery leftJoinPublicationRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinPublicationRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationRelatedByCreatedBy relation
  * @method     ChildUserQuery innerJoinPublicationRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PublicationRelatedByCreatedBy relation
@@ -222,7 +212,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithTagRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the TagRelatedByUpdatedBy relation
  * @method     ChildUserQuery innerJoinWithTagRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the TagRelatedByUpdatedBy relation
  *
- * @method     \Propel\Models\FieldQuery|\Propel\Models\SectionQuery|\Propel\Models\SectionFieldQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\FieldQuery|\Propel\Models\SectionQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -1757,79 +1747,6 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinSectionRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'SectionRelatedByUpdatedBy', '\Propel\Models\SectionQuery');
-    }
-
-    /**
-     * Filter the query by a related \Propel\Models\SectionField object
-     *
-     * @param \Propel\Models\SectionField|ObjectCollection $sectionField the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildUserQuery The current query, for fluid interface
-     */
-    public function filterBySectionField($sectionField, $comparison = null)
-    {
-        if ($sectionField instanceof \Propel\Models\SectionField) {
-            return $this
-                ->addUsingAlias(UserTableMap::COL_ID, $sectionField->getCreatedBy(), $comparison);
-        } elseif ($sectionField instanceof ObjectCollection) {
-            return $this
-                ->useSectionFieldQuery()
-                ->filterByPrimaryKeys($sectionField->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterBySectionField() only accepts arguments of type \Propel\Models\SectionField or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the SectionField relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function joinSectionField($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('SectionField');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'SectionField');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the SectionField relation SectionField object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Propel\Models\SectionFieldQuery A secondary query class using the current class as primary query
-     */
-    public function useSectionFieldQuery($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        return $this
-            ->joinSectionField($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SectionField', '\Propel\Models\SectionFieldQuery');
     }
 
     /**

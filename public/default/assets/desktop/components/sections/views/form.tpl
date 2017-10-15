@@ -7,7 +7,7 @@
 				</button>
 			</div>
 			<div class="btn-group pull-right">
-				<button type="button" class="btn btn-sm btn-info" onclick="$desktop.component('sections').help()">
+				<button type="button" class="btn btn-sm btn-default" onclick="$desktop.component('sections').help()">
 					<i class="fa fa-life-ring" aria-hidden="true"></i> Помощь
 				</button>
 			</div>

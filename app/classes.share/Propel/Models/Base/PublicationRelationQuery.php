@@ -22,11 +22,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildPublicationRelationQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildPublicationRelationQuery orderByPublicationId($order = Criteria::ASC) Order by the publication_id column
- * @method     ChildPublicationRelationQuery orderByRelatedPublicationId($order = Criteria::ASC) Order by the related_publication_id column
+ * @method     ChildPublicationRelationQuery orderByRelationId($order = Criteria::ASC) Order by the relation_id column
  *
  * @method     ChildPublicationRelationQuery groupById() Group by the id column
  * @method     ChildPublicationRelationQuery groupByPublicationId() Group by the publication_id column
- * @method     ChildPublicationRelationQuery groupByRelatedPublicationId() Group by the related_publication_id column
+ * @method     ChildPublicationRelationQuery groupByRelationId() Group by the relation_id column
  *
  * @method     ChildPublicationRelationQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPublicationRelationQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -53,19 +53,19 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildPublicationRelation findOneById(int $id) Return the first ChildPublicationRelation filtered by the id column
  * @method     ChildPublicationRelation findOneByPublicationId(int $publication_id) Return the first ChildPublicationRelation filtered by the publication_id column
- * @method     ChildPublicationRelation findOneByRelatedPublicationId(int $related_publication_id) Return the first ChildPublicationRelation filtered by the related_publication_id column *
+ * @method     ChildPublicationRelation findOneByRelationId(int $relation_id) Return the first ChildPublicationRelation filtered by the relation_id column *
 
  * @method     ChildPublicationRelation requirePk($key, ConnectionInterface $con = null) Return the ChildPublicationRelation by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublicationRelation requireOne(ConnectionInterface $con = null) Return the first ChildPublicationRelation matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPublicationRelation requireOneById(int $id) Return the first ChildPublicationRelation filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublicationRelation requireOneByPublicationId(int $publication_id) Return the first ChildPublicationRelation filtered by the publication_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildPublicationRelation requireOneByRelatedPublicationId(int $related_publication_id) Return the first ChildPublicationRelation filtered by the related_publication_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPublicationRelation requireOneByRelationId(int $relation_id) Return the first ChildPublicationRelation filtered by the relation_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPublicationRelation[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPublicationRelation objects based on current ModelCriteria
  * @method     ChildPublicationRelation[]|ObjectCollection findById(int $id) Return ChildPublicationRelation objects filtered by the id column
  * @method     ChildPublicationRelation[]|ObjectCollection findByPublicationId(int $publication_id) Return ChildPublicationRelation objects filtered by the publication_id column
- * @method     ChildPublicationRelation[]|ObjectCollection findByRelatedPublicationId(int $related_publication_id) Return ChildPublicationRelation objects filtered by the related_publication_id column
+ * @method     ChildPublicationRelation[]|ObjectCollection findByRelationId(int $relation_id) Return ChildPublicationRelation objects filtered by the relation_id column
  * @method     ChildPublicationRelation[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -164,7 +164,7 @@ abstract class PublicationRelationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, publication_id, related_publication_id FROM fenric_publication_relation WHERE id = :p0';
+        $sql = 'SELECT id, publication_id, relation_id FROM fenric_publication_relation WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -339,16 +339,16 @@ abstract class PublicationRelationQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the related_publication_id column
+     * Filter the query on the relation_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByRelatedPublicationId(1234); // WHERE related_publication_id = 1234
-     * $query->filterByRelatedPublicationId(array(12, 34)); // WHERE related_publication_id IN (12, 34)
-     * $query->filterByRelatedPublicationId(array('min' => 12)); // WHERE related_publication_id > 12
+     * $query->filterByRelationId(1234); // WHERE relation_id = 1234
+     * $query->filterByRelationId(array(12, 34)); // WHERE relation_id IN (12, 34)
+     * $query->filterByRelationId(array('min' => 12)); // WHERE relation_id > 12
      * </code>
      *
-     * @param     mixed $relatedPublicationId The value to use as filter.
+     * @param     mixed $relationId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -356,16 +356,16 @@ abstract class PublicationRelationQuery extends ModelCriteria
      *
      * @return $this|ChildPublicationRelationQuery The current query, for fluid interface
      */
-    public function filterByRelatedPublicationId($relatedPublicationId = null, $comparison = null)
+    public function filterByRelationId($relationId = null, $comparison = null)
     {
-        if (is_array($relatedPublicationId)) {
+        if (is_array($relationId)) {
             $useMinMax = false;
-            if (isset($relatedPublicationId['min'])) {
-                $this->addUsingAlias(PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID, $relatedPublicationId['min'], Criteria::GREATER_EQUAL);
+            if (isset($relationId['min'])) {
+                $this->addUsingAlias(PublicationRelationTableMap::COL_RELATION_ID, $relationId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($relatedPublicationId['max'])) {
-                $this->addUsingAlias(PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID, $relatedPublicationId['max'], Criteria::LESS_EQUAL);
+            if (isset($relationId['max'])) {
+                $this->addUsingAlias(PublicationRelationTableMap::COL_RELATION_ID, $relationId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -376,7 +376,7 @@ abstract class PublicationRelationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID, $relatedPublicationId, $comparison);
+        return $this->addUsingAlias(PublicationRelationTableMap::COL_RELATION_ID, $relationId, $comparison);
     }
 
     /**

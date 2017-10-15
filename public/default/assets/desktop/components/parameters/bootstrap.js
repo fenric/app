@@ -6,9 +6,6 @@
 
 	/**
 	 * Конструктор компонента
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{
@@ -25,9 +22,6 @@
 
 	/**
 	 * Запуск компонента
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.open = function()
 	{
@@ -86,11 +80,6 @@
 
 	/**
 	 * Инициализация компонента
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.__init__ = function(complete)
 	{

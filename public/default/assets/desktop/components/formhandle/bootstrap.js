@@ -6,30 +6,18 @@
 
 	/**
 	 * Компонент рабочего стола
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{};
 
 	/**
 	 * Обработка формы
-	 *
-	 * @param   Node     form
-	 * @param   object   response
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.handle = function(form, response)
 	{
 		var i;
-
 		var err;
-
 		var group;
-
 		var groups = form.querySelectorAll('div.form-group');
 
 		for (i = 0; i < groups.length; i++)

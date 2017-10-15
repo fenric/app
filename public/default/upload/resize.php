@@ -15,7 +15,7 @@ if ($requestPathname = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
 
 	if (preg_match($regularExpression, $requestPathname, $matches))
 	{
-		if (($matches[1] > 0 || 0 < $matches[2]) && $matches[1] >= 16 && $matches[2] <= 1200)
+		if (($matches[1] > 0 || $matches[2] > 0) && ($matches[1] == 0 || ($matches[1] >= 16 && $matches[1] <= 1200)) && ($matches[2] == 0 || ($matches[2] >= 16 && $matches[2] <= 1200)))
 		{
 			$absolutePathname = __DIR__ . preg_replace($regularExpression, '/$4/$5/$6/$3.$8', $requestPathname);
 			$absoluteAliasname = __DIR__ . preg_replace($regularExpression, '/$4/$5/$6/$3.$1x$2.$8', $requestPathname);

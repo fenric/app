@@ -19,12 +19,11 @@ class UserQuery extends BaseUserQuery
 	 */
 	public static function existsById(int $id) : bool
 	{
-		$query = fenric('query')
-		->select(UserTableMap::COL_ID)
-		->from(UserTableMap::TABLE_NAME)
-		->where(UserTableMap::COL_ID, '=', $id);
-
-		return $query->readOne() ? true : false;
+		return fenric('query')
+			->select(UserTableMap::COL_ID)
+			->from(UserTableMap::TABLE_NAME)
+			->where(UserTableMap::COL_ID, '=', $id)
+		->readOne() ? true : false;
 	}
 
 	/**
@@ -32,12 +31,11 @@ class UserQuery extends BaseUserQuery
 	 */
 	public static function existsByRegistrationConfirmationCode(string $value) : bool
 	{
-		$query = fenric('query')
-		->select(UserTableMap::COL_ID)
-		->from(UserTableMap::TABLE_NAME)
-		->where(UserTableMap::COL_REGISTRATION_CONFIRMATION_CODE, '=', $value);
-
-		return $query->readOne() ? true : false;
+		return fenric('query')
+			->select(UserTableMap::COL_ID)
+			->from(UserTableMap::TABLE_NAME)
+			->where(UserTableMap::COL_REGISTRATION_CONFIRMATION_CODE, '=', $value)
+		->readOne() ? true : false;
 	}
 
 	/**
@@ -45,11 +43,10 @@ class UserQuery extends BaseUserQuery
 	 */
 	public static function existsByAuthenticationToken(string $value) : bool
 	{
-		$query = fenric('query')
-		->select(UserTableMap::COL_ID)
-		->from(UserTableMap::TABLE_NAME)
-		->where(UserTableMap::COL_AUTHENTICATION_TOKEN, '=', $value);
-
-		return $query->readOne() ? true : false;
+		return fenric('query')
+			->select(UserTableMap::COL_ID)
+			->from(UserTableMap::TABLE_NAME)
+			->where(UserTableMap::COL_AUTHENTICATION_TOKEN, '=', $value)
+		->readOne() ? true : false;
 	}
 }

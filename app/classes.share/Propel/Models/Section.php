@@ -3,8 +3,8 @@
 namespace Propel\Models;
 
 use Propel\Models\Base\Section as BaseSection;
-use Propel\Models\SectionFieldQuery;
 
+use Propel\Models\SectionFieldQuery;
 use Propel\Models\Map\SectionFieldTableMap;
 use Propel\Models\Map\PublicationTableMap;
 

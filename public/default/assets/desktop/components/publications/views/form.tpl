@@ -7,7 +7,7 @@
 				</button>
 			</div>
 			<div class="btn-group pull-right">
-				<button type="button" class="btn btn-sm btn-info" onclick="$desktop.component('publications').help()">
+				<button type="button" class="btn btn-sm btn-default" onclick="$desktop.component('publications').help()">
 					<i class="fa fa-life-ring" aria-hidden="true"></i> Помощь
 				</button>
 			</div>
@@ -166,32 +166,32 @@
 				<input class="form-control search-relations" type="text" />
 			</div>
 			<div class="relations" style="margin-top: 25px;">
-				{{when publication_relations is not empty}}
-					{{repeat publication_relations}}
-						<p data-id="{{id}}">
+				{{when relations is not empty}}
+					{{repeat relations}}
+						<div class="relation" style="margin-bottom: 5px;" data-id="{{id}}">
 							<label style="cursor: pointer;">
 								<input type="checkbox" name="relations[]" value="{{id}}" checked="true" /> &nbsp;<span>{{header}}</span>
 							</label>
-						</p>
-					{{endrepeat publication_relations}}
-				{{endwhen publication_relations}}
+						</div>
+					{{endrepeat relations}}
+				{{endwhen relations}}
 			</div>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="ea19808d-079f-4230-9da5-a4ae932158bb-{{id|0}}">
 			<div class="form-group" data-name="tags">
 				{{when tags is not empty}}
 					{{repeat tags}}
-						{{when id in array | this.__parent__.publication_tags}}
+						{{when attached is true}}
 							<label class="btn btn-sm btn-default">
 								<input type="checkbox" name="tags[]" value="{{id}}" checked /> {{header}}
 							</label>
-						{{endwhen id}}
+						{{endwhen attached}}
 
-						{{when id not in array | this.__parent__.publication_tags}}
+						{{when attached is not true}}
 							<label class="btn btn-sm btn-default">
 								<input type="checkbox" name="tags[]" value="{{id}}" /> {{header}}
 							</label>
-						{{endwhen id}}
+						{{endwhen attached}}
 					{{endrepeat tags}}
 				{{endwhen tags}}
 

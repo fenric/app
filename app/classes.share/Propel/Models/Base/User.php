@@ -12,8 +12,6 @@ use Propel\Models\PublicationPhoto as ChildPublicationPhoto;
 use Propel\Models\PublicationPhotoQuery as ChildPublicationPhotoQuery;
 use Propel\Models\PublicationQuery as ChildPublicationQuery;
 use Propel\Models\Section as ChildSection;
-use Propel\Models\SectionField as ChildSectionField;
-use Propel\Models\SectionFieldQuery as ChildSectionFieldQuery;
 use Propel\Models\SectionQuery as ChildSectionQuery;
 use Propel\Models\Snippet as ChildSnippet;
 use Propel\Models\SnippetQuery as ChildSnippetQuery;
@@ -24,7 +22,6 @@ use Propel\Models\UserQuery as ChildUserQuery;
 use Propel\Models\Map\FieldTableMap;
 use Propel\Models\Map\PublicationPhotoTableMap;
 use Propel\Models\Map\PublicationTableMap;
-use Propel\Models\Map\SectionFieldTableMap;
 use Propel\Models\Map\SectionTableMap;
 use Propel\Models\Map\SnippetTableMap;
 use Propel\Models\Map\TagTableMap;
@@ -385,12 +382,6 @@ abstract class User implements ActiveRecordInterface
     protected $collSectionsRelatedByUpdatedByPartial;
 
     /**
-     * @var        ObjectCollection|ChildSectionField[] Collection to store aggregation of ChildSectionField objects.
-     */
-    protected $collSectionFields;
-    protected $collSectionFieldsPartial;
-
-    /**
      * @var        ObjectCollection|ChildPublication[] Collection to store aggregation of ChildPublication objects.
      */
     protected $collPublicationsRelatedByCreatedBy;
@@ -486,12 +477,6 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildSection[]
      */
     protected $sectionsRelatedByUpdatedByScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildSectionField[]
-     */
-    protected $sectionFieldsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -2290,8 +2275,6 @@ abstract class User implements ActiveRecordInterface
 
             $this->collSectionsRelatedByUpdatedBy = null;
 
-            $this->collSectionFields = null;
-
             $this->collPublicationsRelatedByCreatedBy = null;
 
             $this->collPublicationsRelatedByUpdatedBy = null;
@@ -2488,24 +2471,6 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collSectionsRelatedByUpdatedBy !== null) {
                 foreach ($this->collSectionsRelatedByUpdatedBy as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->sectionFieldsScheduledForDeletion !== null) {
-                if (!$this->sectionFieldsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->sectionFieldsScheduledForDeletion as $sectionField) {
-                        // need to save related object because we set the relation to null
-                        $sectionField->save($con);
-                    }
-                    $this->sectionFieldsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSectionFields !== null) {
-                foreach ($this->collSectionFields as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -3194,21 +3159,6 @@ abstract class User implements ActiveRecordInterface
 
                 $result[$key] = $this->collSectionsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collSectionFields) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'sectionFields';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'fenric_section_fields';
-                        break;
-                    default:
-                        $key = 'SectionFields';
-                }
-
-                $result[$key] = $this->collSectionFields->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collPublicationsRelatedByCreatedBy) {
 
                 switch ($keyType) {
@@ -3855,12 +3805,6 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getSectionFields() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSectionField($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getPublicationsRelatedByCreatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPublicationRelatedByCreatedBy($relObj->copy($deepCopy));
@@ -3964,10 +3908,6 @@ abstract class User implements ActiveRecordInterface
         }
         if ('SectionRelatedByUpdatedBy' == $relationName) {
             $this->initSectionsRelatedByUpdatedBy();
-            return;
-        }
-        if ('SectionField' == $relationName) {
-            $this->initSectionFields();
             return;
         }
         if ('PublicationRelatedByCreatedBy' == $relationName) {
@@ -4952,281 +4892,6 @@ abstract class User implements ActiveRecordInterface
         $query->joinWith('Parent', $joinBehavior);
 
         return $this->getSectionsRelatedByUpdatedBy($query, $con);
-    }
-
-    /**
-     * Clears out the collSectionFields collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addSectionFields()
-     */
-    public function clearSectionFields()
-    {
-        $this->collSectionFields = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collSectionFields collection loaded partially.
-     */
-    public function resetPartialSectionFields($v = true)
-    {
-        $this->collSectionFieldsPartial = $v;
-    }
-
-    /**
-     * Initializes the collSectionFields collection.
-     *
-     * By default this just sets the collSectionFields collection to an empty array (like clearcollSectionFields());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initSectionFields($overrideExisting = true)
-    {
-        if (null !== $this->collSectionFields && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = SectionFieldTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collSectionFields = new $collectionClassName;
-        $this->collSectionFields->setModel('\Propel\Models\SectionField');
-    }
-
-    /**
-     * Gets an array of ChildSectionField objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUser is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildSectionField[] List of ChildSectionField objects
-     * @throws PropelException
-     */
-    public function getSectionFields(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collSectionFieldsPartial && !$this->isNew();
-        if (null === $this->collSectionFields || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collSectionFields) {
-                // return empty collection
-                $this->initSectionFields();
-            } else {
-                $collSectionFields = ChildSectionFieldQuery::create(null, $criteria)
-                    ->filterByUser($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collSectionFieldsPartial && count($collSectionFields)) {
-                        $this->initSectionFields(false);
-
-                        foreach ($collSectionFields as $obj) {
-                            if (false == $this->collSectionFields->contains($obj)) {
-                                $this->collSectionFields->append($obj);
-                            }
-                        }
-
-                        $this->collSectionFieldsPartial = true;
-                    }
-
-                    return $collSectionFields;
-                }
-
-                if ($partial && $this->collSectionFields) {
-                    foreach ($this->collSectionFields as $obj) {
-                        if ($obj->isNew()) {
-                            $collSectionFields[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collSectionFields = $collSectionFields;
-                $this->collSectionFieldsPartial = false;
-            }
-        }
-
-        return $this->collSectionFields;
-    }
-
-    /**
-     * Sets a collection of ChildSectionField objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $sectionFields A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function setSectionFields(Collection $sectionFields, ConnectionInterface $con = null)
-    {
-        /** @var ChildSectionField[] $sectionFieldsToDelete */
-        $sectionFieldsToDelete = $this->getSectionFields(new Criteria(), $con)->diff($sectionFields);
-
-
-        $this->sectionFieldsScheduledForDeletion = $sectionFieldsToDelete;
-
-        foreach ($sectionFieldsToDelete as $sectionFieldRemoved) {
-            $sectionFieldRemoved->setUser(null);
-        }
-
-        $this->collSectionFields = null;
-        foreach ($sectionFields as $sectionField) {
-            $this->addSectionField($sectionField);
-        }
-
-        $this->collSectionFields = $sectionFields;
-        $this->collSectionFieldsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related SectionField objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related SectionField objects.
-     * @throws PropelException
-     */
-    public function countSectionFields(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collSectionFieldsPartial && !$this->isNew();
-        if (null === $this->collSectionFields || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSectionFields) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getSectionFields());
-            }
-
-            $query = ChildSectionFieldQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByUser($this)
-                ->count($con);
-        }
-
-        return count($this->collSectionFields);
-    }
-
-    /**
-     * Method called to associate a ChildSectionField object to this object
-     * through the ChildSectionField foreign key attribute.
-     *
-     * @param  ChildSectionField $l ChildSectionField
-     * @return $this|\Propel\Models\User The current object (for fluent API support)
-     */
-    public function addSectionField(ChildSectionField $l)
-    {
-        if ($this->collSectionFields === null) {
-            $this->initSectionFields();
-            $this->collSectionFieldsPartial = true;
-        }
-
-        if (!$this->collSectionFields->contains($l)) {
-            $this->doAddSectionField($l);
-
-            if ($this->sectionFieldsScheduledForDeletion and $this->sectionFieldsScheduledForDeletion->contains($l)) {
-                $this->sectionFieldsScheduledForDeletion->remove($this->sectionFieldsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildSectionField $sectionField The ChildSectionField object to add.
-     */
-    protected function doAddSectionField(ChildSectionField $sectionField)
-    {
-        $this->collSectionFields[]= $sectionField;
-        $sectionField->setUser($this);
-    }
-
-    /**
-     * @param  ChildSectionField $sectionField The ChildSectionField object to remove.
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function removeSectionField(ChildSectionField $sectionField)
-    {
-        if ($this->getSectionFields()->contains($sectionField)) {
-            $pos = $this->collSectionFields->search($sectionField);
-            $this->collSectionFields->remove($pos);
-            if (null === $this->sectionFieldsScheduledForDeletion) {
-                $this->sectionFieldsScheduledForDeletion = clone $this->collSectionFields;
-                $this->sectionFieldsScheduledForDeletion->clear();
-            }
-            $this->sectionFieldsScheduledForDeletion[]= $sectionField;
-            $sectionField->setUser(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this User is new, it will return
-     * an empty collection; or if this User has previously
-     * been saved, it will retrieve related SectionFields from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in User.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSectionField[] List of ChildSectionField objects
-     */
-    public function getSectionFieldsJoinSection(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildSectionFieldQuery::create(null, $criteria);
-        $query->joinWith('Section', $joinBehavior);
-
-        return $this->getSectionFields($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this User is new, it will return
-     * an empty collection; or if this User has previously
-     * been saved, it will retrieve related SectionFields from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in User.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSectionField[] List of ChildSectionField objects
-     */
-    public function getSectionFieldsJoinField(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildSectionFieldQuery::create(null, $criteria);
-        $query->joinWith('Field', $joinBehavior);
-
-        return $this->getSectionFields($query, $con);
     }
 
     /**
@@ -7212,11 +6877,6 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collSectionFields) {
-                foreach ($this->collSectionFields as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collPublicationsRelatedByCreatedBy) {
                 foreach ($this->collPublicationsRelatedByCreatedBy as $o) {
                     $o->clearAllReferences($deep);
@@ -7263,7 +6923,6 @@ abstract class User implements ActiveRecordInterface
         $this->collFieldsRelatedByUpdatedBy = null;
         $this->collSectionsRelatedByCreatedBy = null;
         $this->collSectionsRelatedByUpdatedBy = null;
-        $this->collSectionFields = null;
         $this->collPublicationsRelatedByCreatedBy = null;
         $this->collPublicationsRelatedByUpdatedBy = null;
         $this->collPublicationPhotosRelatedByCreatedBy = null;
@@ -7366,15 +7025,6 @@ abstract class User implements ActiveRecordInterface
             }
             if (null !== $this->collSectionsRelatedByUpdatedBy) {
                 foreach ($this->collSectionsRelatedByUpdatedBy as $referrerFK) {
-                    if (method_exists($referrerFK, 'validate')) {
-                        if (!$referrerFK->validate($validator)) {
-                            $failureMap->addAll($referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-            }
-            if (null !== $this->collSectionFields) {
-                foreach ($this->collSectionFields as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());

@@ -147,7 +147,7 @@ class ApiTag extends CRUD
 				->select(TagTableMap::COL_ID)
 				->select(TagTableMap::COL_HEADER)
 				->from(TagTableMap::TABLE_NAME)
-				->toArray()
+			->toArray()
 		);
 	}
 }

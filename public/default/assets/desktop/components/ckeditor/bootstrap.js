@@ -6,18 +6,12 @@
 
 	/**
 	 * Конструктор компонента
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{};
 
 	/**
 	 * Конструктор редактора
-	 *
-	 * @access  public
-	 * @return  object
 	 */
 	$ckeditor = function(area)
 	{
@@ -28,14 +22,14 @@
 			area.ckeditor = CKEDITOR.instances[area.getAttribute('name')];
 
 			CKEDITOR.instances[area.getAttribute('name')].ui.addButton('btn-upload-image', {
-				icon: self.root + '/res/icons/upload@16.png',
+				icon: self.root + '/res/icons/image@16.png',
 				label: 'Загрузить изображение',
 				command: 'cmd-upload-image',
 			});
 
 			CKEDITOR.instances[area.getAttribute('name')].ui.addButton('btn-upload-pdf', {
 				icon: self.root + '/res/icons/pdf@16.png',
-				label: 'Загрузить PDF файл',
+				label: 'Загрузить PDF документ',
 				command: 'cmd-upload-pdf',
 			});
 
@@ -51,6 +45,8 @@
 				{
 					modal.unblock().content(tpl.format()).submit(function(event, form, params)
 					{
+						modal.block();
+
 						width = Math.abs(params.get('width')) || 0;
 						height = Math.abs(params.get('height')) || 0;
 
@@ -73,7 +69,11 @@
 									}
 
 									editor.insertHtml(html);
-								}});
+									modal.close();
+
+								}}).complete(function() {
+									modal.unblock();
+								});
 							}
 						}
 					});
@@ -92,6 +92,8 @@
 				{
 					modal.unblock().content(tpl.format()).submit(function(event, form, params)
 					{
+						modal.block();
+
 						width = Math.abs(params.get('width')) || 0;
 						height = Math.abs(params.get('height')) || 0;
 
@@ -109,7 +111,11 @@
 									html = '<a href="/upload/' + response.file + '" target="_blank">' + html + '</a>';
 
 									editor.insertHtml(html);
-								}});
+									modal.close();
+
+								}}).complete(function() {
+									modal.unblock();
+								});
 							}
 						}
 					});
@@ -127,11 +133,6 @@
 
 	/**
 	 * Инициализация редактора
-	 *
-	 * @param   Node   area
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.init = function(area)
 	{

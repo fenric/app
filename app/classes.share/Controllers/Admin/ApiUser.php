@@ -32,12 +32,14 @@ class ApiUser extends CRUD
 			UserTableMap::COL_EMAIL => $this->request->post->get('email'),
 			UserTableMap::COL_USERNAME => $this->request->post->get('username'),
 			UserTableMap::COL_PASSWORD => $this->request->post->get('password'),
+
 			UserTableMap::COL_PHOTO => $this->request->post->get('photo'),
 			UserTableMap::COL_FIRSTNAME => $this->request->post->get('firstname'),
 			UserTableMap::COL_LASTNAME => $this->request->post->get('lastname'),
 			UserTableMap::COL_GENDER => $this->request->post->get('gender'),
 			UserTableMap::COL_BIRTHDAY => $this->request->post->get('birthday'),
 			UserTableMap::COL_ABOUT => $this->request->post->get('about'),
+
 			UserTableMap::COL_BAN_FROM => $this->request->post->get('ban_from'),
 			UserTableMap::COL_BAN_UNTIL => $this->request->post->get('ban_until'),
 			UserTableMap::COL_BAN_REASON => $this->request->post->get('ban_reason'),
@@ -51,7 +53,7 @@ class ApiUser extends CRUD
 	{
 		fenric()->callSharedService('event', [self::EVENT_BEFORE_VALIDATE])->subscribe(function(User $user)
 		{
-			// Load password.
+			// Loading password, see schema.
 			$user->getPassword();
 
 			if (strlen($this->request->post->get('password')) > 0) {
@@ -63,12 +65,14 @@ class ApiUser extends CRUD
 			UserTableMap::COL_ROLE => $this->request->post->get('role'),
 			UserTableMap::COL_EMAIL => $this->request->post->get('email'),
 			UserTableMap::COL_USERNAME => $this->request->post->get('username'),
+
 			UserTableMap::COL_PHOTO => $this->request->post->get('photo'),
 			UserTableMap::COL_FIRSTNAME => $this->request->post->get('firstname'),
 			UserTableMap::COL_LASTNAME => $this->request->post->get('lastname'),
 			UserTableMap::COL_GENDER => $this->request->post->get('gender'),
 			UserTableMap::COL_BIRTHDAY => $this->request->post->get('birthday'),
 			UserTableMap::COL_ABOUT => $this->request->post->get('about'),
+
 			UserTableMap::COL_BAN_FROM => $this->request->post->get('ban_from'),
 			UserTableMap::COL_BAN_UNTIL => $this->request->post->get('ban_until'),
 			UserTableMap::COL_BAN_REASON => $this->request->post->get('ban_reason'),
@@ -181,7 +185,7 @@ class ApiUser extends CRUD
 				->select(UserTableMap::COL_ID)
 				->select(UserTableMap::COL_USERNAME)
 				->from(UserTableMap::TABLE_NAME)
-				->toArray()
+			->toArray()
 		);
 	}
 }

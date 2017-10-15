@@ -95,32 +95,21 @@ class ApiSection extends CRUD
 
 			if ($section->getSortableSectionFields()->count() > 0)
 			{
-				foreach ($section->getSortableSectionFields() as $i => $sectionField)
+				foreach ($section->getSortableSectionFields() as $i => $sfield)
 				{
-					$json['fields'][$i]['id'] = $sectionField->getId();
-					$json['fields'][$i]['parent']['id'] = $sectionField->getField()->getId();
+					$json['fields'][$i]['id'] = $sfield->getId();
+					$json['fields'][$i]['parent']['id'] = $sfield->getField()->getId();
 
-					$json['fields'][$i]['parent']['type'] = $sectionField->getField()->getType();
-					$json['fields'][$i]['parent']['name'] = $sectionField->getField()->getName();
+					$json['fields'][$i]['parent']['type'] = $sfield->getField()->getType();
+					$json['fields'][$i]['parent']['name'] = $sfield->getField()->getName();
 
-					$json['fields'][$i]['parent']['label'] = $sectionField->getField()->getLabel();
-					$json['fields'][$i]['parent']['tooltip'] = $sectionField->getField()->getTooltip();
+					$json['fields'][$i]['parent']['label'] = $sfield->getField()->getLabel();
+					$json['fields'][$i]['parent']['tooltip'] = $sfield->getField()->getTooltip();
 
-					$json['fields'][$i]['parent']['default_value'] = $sectionField->getField()->getDefaultValue();
+					$json['fields'][$i]['parent']['default_value'] = $sfield->getField()->getDefaultValue();
 
-					$json['fields'][$i]['parent']['is_unique'] = $sectionField->getField()->isUnique();
-					$json['fields'][$i]['parent']['is_required'] = $sectionField->getField()->isRequired();
-
-					if ($sectionField->getUser() instanceof ActiveRecordInterface)
-					{
-						$json['fields'][$i]['attached_by']['id'] = $sectionField->getUser()->getId();
-						$json['fields'][$i]['attached_by']['username'] = $sectionField->getUser()->getUsername();
-					}
-
-					if ($sectionField->getCreatedAt() instanceof DateTime)
-					{
-						$json['fields'][$i]['attached_at'] = $sectionField->getCreatedAt()->format(DateTime::W3C);
-					}
+					$json['fields'][$i]['parent']['is_unique'] = $sfield->getField()->isUnique();
+					$json['fields'][$i]['parent']['is_required'] = $sfield->getField()->isRequired();
 				}
 			}
 		});
@@ -154,8 +143,8 @@ class ApiSection extends CRUD
 			if ($section->getParent() instanceof ActiveRecordInterface)
 			{
 				$json['parent'] = [];
-				$json['creator']['id'] = $section->getParent()->getId();
-				$json['creator']['username'] = $section->getParent()->getHeader();
+				$json['parent']['id'] = $section->getParent()->getId();
+				$json['parent']['header'] = $section->getParent()->getHeader();
 			}
 
 			if ($section->getUserRelatedByCreatedBy() instanceof ActiveRecordInterface)

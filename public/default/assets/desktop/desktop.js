@@ -171,9 +171,9 @@ $desktop.prototype.show = function()
  * @access  public
  * @return  void
  */
-$desktop.prototype.decorate = function(pallet, complete)
+$desktop.prototype.decorate = function(palette, complete)
 {
-	if (this.app.classList.contains(pallet)) {
+	if (this.app.classList.contains(palette)) {
 		return false;
 	}
 
@@ -190,9 +190,9 @@ $desktop.prototype.decorate = function(pallet, complete)
 	this.app.classList.remove('jeans');
 	this.app.classList.remove('black');
 
-	this.app.classList.add(pallet);
+	this.app.classList.add(palette);
 
-	complete.call(this, pallet);
+	complete.call(this, palette);
 
 	return this;
 };
@@ -495,21 +495,24 @@ $desktop.prototype.inArray = function(needle, haystack, strict)
 {
 	var i;
 
-	for (i = 0; i < haystack.length; i++)
+	if (haystack instanceof Array)
 	{
-		if (strict === true)
+		for (i = 0; i < haystack.length; i++)
 		{
-			if (haystack[i] === needle)
+			if (strict === true)
+			{
+				if (haystack[i] === needle)
+				{
+					return true;
+				}
+
+				continue;
+			}
+
+			if (haystack[i] == needle)
 			{
 				return true;
 			}
-
-			continue;
-		}
-
-		if (haystack[i] == needle)
-		{
-			return true;
 		}
 	}
 

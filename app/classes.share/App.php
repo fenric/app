@@ -27,7 +27,7 @@ final class App
 	/**
 	 * Версия приложения
 	 */
-	const VERSION = '0.9.2-dev';
+	const VERSION = '0.9.3-dev';
 
 	/**
 	 * Запуск приложения
@@ -60,11 +60,14 @@ final class App
 	 */
 	public function rounting()
 	{
+		// Адрес панели управления сайтом
+		$admin = fenric('config::app')->get('admin', 'admin');
+
 		// Главная страница сайта
 		fenric('router')->get('/', \Fenric\Controllers\Home::class);
 
 		// Панель управления сайтом
-		fenric('router')->scope('/admin', function(Router $router)
+		fenric('router')->scope("/{$admin}", function(Router $router)
 		{
 			// Главная страница панели управления сайтом
 			$router->get('(/)', \Fenric\Controllers\Admin\Index::class, function(Router $router, Request $request, Response $response, Controller $controller)
@@ -79,24 +82,31 @@ final class App
 				$router->any('/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\Api::class);
 
 				// Управления пользователями
+				$router->any('/user/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiUser::class);
 				$router->any('/user/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiUser::class);
 
 				// Управления разделами
+				$router->any('/section/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiSection::class);
 				$router->any('/section/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiSection::class);
 
 				// Управление публикациями
+				$router->any('/publication/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiPublication::class);
 				$router->any('/publication/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiPublication::class);
 
 				// Управление дополнительными полями
+				$router->any('/field/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiField::class);
 				$router->any('/field/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiField::class);
 
 				// Управления тегами
+				$router->any('/tag/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiTag::class);
 				$router->any('/tag/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiTag::class);
 
 				// Управление сниппетами
+				$router->any('/snippet/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiSnippet::class);
 				$router->any('/snippet/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiSnippet::class);
 
 				// Управление параметрами
+				$router->any('/parameter/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiParameter::class);
 				$router->any('/parameter/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiParameter::class);
 			});
 

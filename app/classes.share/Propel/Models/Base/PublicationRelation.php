@@ -76,11 +76,11 @@ abstract class PublicationRelation implements ActiveRecordInterface
     protected $publication_id;
 
     /**
-     * The value for the related_publication_id field.
+     * The value for the relation_id field.
      *
      * @var        int
      */
-    protected $related_publication_id;
+    protected $relation_id;
 
     /**
      * @var        ChildPublication
@@ -341,13 +341,13 @@ abstract class PublicationRelation implements ActiveRecordInterface
     }
 
     /**
-     * Get the [related_publication_id] column value.
+     * Get the [relation_id] column value.
      *
      * @return int
      */
-    public function getRelatedPublicationId()
+    public function getRelationId()
     {
-        return $this->related_publication_id;
+        return $this->relation_id;
     }
 
     /**
@@ -395,24 +395,24 @@ abstract class PublicationRelation implements ActiveRecordInterface
     } // setPublicationId()
 
     /**
-     * Set the value of [related_publication_id] column.
+     * Set the value of [relation_id] column.
      *
      * @param int $v new value
      * @return $this|\Propel\Models\PublicationRelation The current object (for fluent API support)
      */
-    public function setRelatedPublicationId($v)
+    public function setRelationId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->related_publication_id !== $v) {
-            $this->related_publication_id = $v;
-            $this->modifiedColumns[PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID] = true;
+        if ($this->relation_id !== $v) {
+            $this->relation_id = $v;
+            $this->modifiedColumns[PublicationRelationTableMap::COL_RELATION_ID] = true;
         }
 
         return $this;
-    } // setRelatedPublicationId()
+    } // setRelationId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -456,8 +456,8 @@ abstract class PublicationRelation implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PublicationRelationTableMap::translateFieldName('PublicationId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->publication_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PublicationRelationTableMap::translateFieldName('RelatedPublicationId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->related_publication_id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PublicationRelationTableMap::translateFieldName('RelationId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->relation_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -689,8 +689,8 @@ abstract class PublicationRelation implements ActiveRecordInterface
         if ($this->isColumnModified(PublicationRelationTableMap::COL_PUBLICATION_ID)) {
             $modifiedColumns[':p' . $index++]  = 'publication_id';
         }
-        if ($this->isColumnModified(PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'related_publication_id';
+        if ($this->isColumnModified(PublicationRelationTableMap::COL_RELATION_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'relation_id';
         }
 
         $sql = sprintf(
@@ -709,8 +709,8 @@ abstract class PublicationRelation implements ActiveRecordInterface
                     case 'publication_id':
                         $stmt->bindValue($identifier, $this->publication_id, PDO::PARAM_INT);
                         break;
-                    case 'related_publication_id':
-                        $stmt->bindValue($identifier, $this->related_publication_id, PDO::PARAM_INT);
+                    case 'relation_id':
+                        $stmt->bindValue($identifier, $this->relation_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -781,7 +781,7 @@ abstract class PublicationRelation implements ActiveRecordInterface
                 return $this->getPublicationId();
                 break;
             case 2:
-                return $this->getRelatedPublicationId();
+                return $this->getRelationId();
                 break;
             default:
                 return null;
@@ -815,7 +815,7 @@ abstract class PublicationRelation implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPublicationId(),
-            $keys[2] => $this->getRelatedPublicationId(),
+            $keys[2] => $this->getRelationId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -879,7 +879,7 @@ abstract class PublicationRelation implements ActiveRecordInterface
                 $this->setPublicationId($value);
                 break;
             case 2:
-                $this->setRelatedPublicationId($value);
+                $this->setRelationId($value);
                 break;
         } // switch()
 
@@ -914,7 +914,7 @@ abstract class PublicationRelation implements ActiveRecordInterface
             $this->setPublicationId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setRelatedPublicationId($arr[$keys[2]]);
+            $this->setRelationId($arr[$keys[2]]);
         }
     }
 
@@ -963,8 +963,8 @@ abstract class PublicationRelation implements ActiveRecordInterface
         if ($this->isColumnModified(PublicationRelationTableMap::COL_PUBLICATION_ID)) {
             $criteria->add(PublicationRelationTableMap::COL_PUBLICATION_ID, $this->publication_id);
         }
-        if ($this->isColumnModified(PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID)) {
-            $criteria->add(PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID, $this->related_publication_id);
+        if ($this->isColumnModified(PublicationRelationTableMap::COL_RELATION_ID)) {
+            $criteria->add(PublicationRelationTableMap::COL_RELATION_ID, $this->relation_id);
         }
 
         return $criteria;
@@ -1053,7 +1053,7 @@ abstract class PublicationRelation implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setPublicationId($this->getPublicationId());
-        $copyObj->setRelatedPublicationId($this->getRelatedPublicationId());
+        $copyObj->setRelationId($this->getRelationId());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1145,7 +1145,7 @@ abstract class PublicationRelation implements ActiveRecordInterface
         }
         $this->id = null;
         $this->publication_id = null;
-        $this->related_publication_id = null;
+        $this->relation_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

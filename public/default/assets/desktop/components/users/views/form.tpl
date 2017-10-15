@@ -7,7 +7,7 @@
 				</button>
 			</div>
 			<div class="btn-group pull-right">
-				<button type="button" class="btn btn-sm btn-info" onclick="$desktop.component('users').help()">
+				<button type="button" class="btn btn-sm btn-default" onclick="$desktop.component('users').help()">
 					<i class="fa fa-life-ring" aria-hidden="true"></i> Помощь
 				</button>
 			</div>
@@ -64,7 +64,6 @@
 		</button>
 		<div class="help-block error"></div>
 	</div>
-	<hr>
 
 	<div class="form-group" data-name="firstname">
 		<label>Имя пользователя</label>
@@ -79,7 +78,7 @@
 	<hr>
 
 	<div class="form-group" data-name="gender">
-		<label>Пол пользователя</label>
+		<label>Половая принадлежность пользователя</label>
 		<select class="form-control" name="gender">
 			<option value=""></option>
 			<option value="male" {{when gender is equal | male}}selected{{endwhen gender}}>&#x2642; Мужчина</option>
@@ -97,15 +96,15 @@
 		<textarea class="form-control" name="about" rows="6">{{about}}</textarea>
 		<div class="help-block error"></div>
 	</div>
-
 	<hr>
+
 	<div class="form-group" data-name="ban_from">
-		<label>С какого числа начинается блокировка учетной записи</label>
+		<label>Начало блокировки учетной записи</label>
 		<input class="form-control date-time-picker" type="text" name="ban_from" value="{{ban_from:datetime(Y-m-d H:i:s)}}" />
 		<div class="help-block error"></div>
 	</div>
 	<div class="form-group" data-name="ban_until">
-		<label>По какое число продолжается блокировка учетной записи</label>
+		<label>Окончание блокировки учетной записи</label>
 		<input class="form-control date-time-picker" type="text" name="ban_until" value="{{ban_until:datetime(Y-m-d H:i:s)}}" />
 		<div class="help-block error"></div>
 	</div>

@@ -343,13 +343,6 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', 'SectionsRelatedByUpdatedBy', false);
-        $this->addRelation('SectionField', '\\Propel\\Models\\SectionField', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':created_by',
-    1 => ':id',
-  ),
-), 'SET NULL', 'CASCADE', 'SectionFields', false);
         $this->addRelation('PublicationRelatedByCreatedBy', '\\Propel\\Models\\Publication', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -429,7 +422,6 @@ class UserTableMap extends TableMap
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         FieldTableMap::clearInstancePool();
         SectionTableMap::clearInstancePool();
-        SectionFieldTableMap::clearInstancePool();
         PublicationTableMap::clearInstancePool();
         PublicationPhotoTableMap::clearInstancePool();
         SnippetTableMap::clearInstancePool();

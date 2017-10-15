@@ -6,9 +6,6 @@
 
 	/**
 	 * Компонент рабочего стола
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{
@@ -23,9 +20,6 @@
 
 	/**
 	 * Открытие приложения
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.open = function()
 	{
@@ -56,11 +50,11 @@
 					$desktop.module('icon').sort();
 				});
 
-				modal.click('.desktop-pallet', function(event)
+				modal.click('.desktop-palette', function(event)
 				{
-					$desktop.decorate(this.getAttribute('data-value'), function(pallet)
+					$desktop.decorate(this.getAttribute('data-value'), function(palette)
 					{
-						self.xhr.patch(self.routes.saveDesktopPalette, {'palette': pallet}, {repeat: true});
+						self.xhr.patch(self.routes.saveDesktopPalette, {'palette': palette}, {repeat: true});
 					});
 				});
 
@@ -89,6 +83,8 @@
 					{
 						element.value = null;
 						element.disabled = false;
+
+						$desktop.show();
 					});
 				});
 			});
@@ -97,11 +93,6 @@
 
 	/**
 	 * Инициализация компонента
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.__init__ = function(complete)
 	{

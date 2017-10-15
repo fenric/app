@@ -19,6 +19,10 @@ use Propel\Models\PublicationPhoto;
 use Propel\Models\PublicationPhotoQuery;
 use Propel\Models\Map\PublicationPhotoTableMap;
 
+use Propel\Models\PublicationRelation;
+use Propel\Models\PublicationRelationQuery;
+use Propel\Models\Map\PublicationRelationTableMap;
+
 use Propel\Models\PublicationTag;
 use Propel\Models\PublicationTagQuery;
 use Propel\Models\Map\PublicationTagTableMap;
@@ -77,7 +81,7 @@ class ApiPublication extends CRUD
 
 				foreach ($this->request->post->all() as $key => $value)
 				{
-					if (strpos($key, $prefix) === 0)
+					if (0 === strpos($key, $prefix))
 					{
 						$name = substr($key, strlen($prefix));
 
@@ -159,40 +163,58 @@ class ApiPublication extends CRUD
 	{
 		fenric()->callSharedService('event', [self::EVENT_PREPARE_ITEM])->subscribe(function(Publication $publication, array & $json)
 		{
-			$json['fields'] = [];
+			$json['fields'] = $publication->getVirtualColumns();
 
-			$json['publication_tags'] = [];
+			$json['photos'] = $json['relations'] = $json['tags'] = [];
 
-			$json['publication_relations'] = [];
-
-			foreach ($publication->getVirtualColumns() as $name => $value)
+			if ($publication->getSortablePhotos() instanceof ObjectCollection)
 			{
-				$json['fields'][$name] = $value;
-
-				if ($json['fields'][$name] instanceof DateTime)
+				if ($publication->getSortablePhotos()->count() > 0)
 				{
-					$json['fields'][$name] = $json['fields'][$name]->format(DateTime::W3C);
+					$i = 0;
+
+					foreach ($publication->getSortablePhotos() as $photo)
+					{
+						$json['photos'][$i]['id'] = $photo->getId();
+						$json['photos'][$i]['file'] = $photo->getFile();
+						$json['photos'][$i]['display'] = $photo->isDisplay();
+
+						$i++;
+					}
+				}
+			}
+
+			if ($publication->getRelations() instanceof ObjectCollection)
+			{
+				if ($publication->getRelations()->count() > 0)
+				{
+					$i = 0;
+
+					foreach ($publication->getRelations() as $relation)
+					{
+						$json['relations'][$i]['id'] = $relation->getId();
+						$json['relations'][$i]['header'] = $relation->getHeader();
+
+						$i++;
+					}
 				}
 			}
 
 			if ($publication->getPublicationTags() instanceof ObjectCollection)
 			{
-				foreach ($publication->getPublicationTags() as $ptag)
+				if ($publication->getPublicationTags()->count() > 0)
 				{
-					$json['publication_tags'][] = $ptag->getTagId();
-				}
-			}
+					$i = 0;
 
-			if ($publication->getRelationship() instanceof ObjectCollection)
-			{
-				foreach ($publication->getRelationship() as $relation)
-				{
-					$row = [];
+					foreach ($publication->getPublicationTags() as $ptag)
+					{
+						if (!! ($ptag->getTag() instanceof ActiveRecordInterface))
+						{
+							$json['tags'][$i] = $ptag->getTag()->getId();
 
-					$row['id'] = $relation->getId();
-					$row['header'] = $relation->getHeader();
-
-					$json['publication_relations'][] = $row;
+							$i++;
+						}
+					}
 				}
 			}
 		});
@@ -274,14 +296,23 @@ class ApiPublication extends CRUD
 
 			if ($publication->getPublicationTags() instanceof ObjectCollection)
 			{
-				$json['tags'] = [];
-
-				foreach ($publication->getPublicationTags() as $i => $publicationTag)
+				if ($publication->getPublicationTags()->count())
 				{
-					$json['tags'][$i]['id'] = $publicationTag->getTag()->getId();
-					$json['tags'][$i]['code'] = $publicationTag->getTag()->getCode();
-					$json['tags'][$i]['header'] = $publicationTag->getTag()->getHeader();
-					$json['tags'][$i]['uri'] = $publicationTag->getTag()->getUri();
+					$i = 0;
+					$json['tags'] = [];
+
+					foreach ($publication->getPublicationTags() as $ptag)
+					{
+						if (!! ($ptag->getTag() instanceof ActiveRecordInterface))
+						{
+							$json['tags'][$i] = [];
+							$json['tags'][$i]['id'] = $ptag->getTag()->getId();
+							$json['tags'][$i]['code'] = $ptag->getTag()->getCode();
+							$json['tags'][$i]['header'] = $ptag->getTag()->getHeader();
+							$json['tags'][$i]['uri'] = $ptag->getTag()->getUri();
+							$i++;
+						}
+					}
 				}
 			}
 		});
@@ -317,7 +348,12 @@ class ApiPublication extends CRUD
 	 */
 	protected function actionSearchViaGET() : void
 	{
-		$result = [];
+		$found = [];
+
+		$query = fenric('query');
+		$query->select(PublicationTableMap::COL_ID);
+		$query->select(PublicationTableMap::COL_HEADER);
+		$query->from(PublicationTableMap::TABLE_NAME);
 
 		if ($keywords = $this->request->query->get('keywords'))
 		{
@@ -333,12 +369,6 @@ class ApiPublication extends CRUD
 
 			if (count($keywords) > 0)
 			{
-				$query = fenric('query');
-
-				$query->select(PublicationTableMap::COL_ID);
-				$query->select(PublicationTableMap::COL_HEADER);
-				$query->from(PublicationTableMap::TABLE_NAME);
-
 				array_walk($keywords, function($keyword) use($query)
 				{
 					$query->or->where(PublicationTableMap::COL_HEADER, 'like', sprintf('%%%s%%', $keyword));
@@ -346,11 +376,11 @@ class ApiPublication extends CRUD
 
 				$query->limit(25);
 
-				$result = $query->toArray();
+				$found = $query->toArray();
 			}
 		}
 
-		$this->response->setJsonContent($result);
+		$this->response->setJsonContent($found);
 	}
 
 	/**
@@ -365,9 +395,17 @@ class ApiPublication extends CRUD
 	}
 
 	/**
+	 * Удаление фотографии объекта
+	 */
+	protected function actionDeletePhotoViaDELETE() : void
+	{
+		parent::delete(PublicationPhotoQuery::create());
+	}
+
+	/**
 	 * Включение фотографии объекта
 	 */
-	protected function actionEnablePhotoViaPATCH() : void
+	protected function actionShowPhotoViaPATCH() : void
 	{
 		parent::update(PublicationPhotoQuery::create(), [
 			PublicationPhotoTableMap::COL_DISPLAY => true,
@@ -377,39 +415,10 @@ class ApiPublication extends CRUD
 	/**
 	 * Выключение фотографии объекта
 	 */
-	protected function actionDisablePhotoViaPATCH() : void
+	protected function actionHidePhotoViaPATCH() : void
 	{
 		parent::update(PublicationPhotoQuery::create(), [
 			PublicationPhotoTableMap::COL_DISPLAY => false,
-		]);
-	}
-
-	/**
-	 * Удаление фотографии объекта
-	 */
-	protected function actionDeletePhotoViaDELETE() : void
-	{
-		parent::delete(PublicationPhotoQuery::create());
-	}
-
-	/**
-	 * Выгрузка фотографий объекта
-	 */
-	protected function actionAllPhotosViaGET() : void
-	{
-		$query = PublicationPhotoQuery::create();
-		$query->orderBySequence(Criteria::ASC);
-
-		$query->filterByPublicationId(
-			$this->request->parameters->get('id')
-		);
-
-		$columns[] = PublicationPhotoTableMap::COL_ID;
-		$columns[] = PublicationPhotoTableMap::COL_FILE;
-		$columns[] = PublicationPhotoTableMap::COL_DISPLAY;
-
-		parent::all($query, $columns, [
-			'limit' => PHP_INT_MAX,
 		]);
 	}
 
@@ -422,10 +431,10 @@ class ApiPublication extends CRUD
 
 		foreach ($this->request->post->all() as $id)
 		{
-			$updating[PublicationPhotoTableMap::COL_SEQUENCE] = ++$sequence;
+			$update[PublicationPhotoTableMap::COL_SEQUENCE] = ++$sequence;
 
 			fenric('query')
-				->update(PublicationPhotoTableMap::TABLE_NAME, $updating)
+				->update(PublicationPhotoTableMap::TABLE_NAME, $update)
 				->where(PublicationPhotoTableMap::COL_ID, '=', $id)
 				->limit(1)
 			->shutdown();

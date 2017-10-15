@@ -175,7 +175,6 @@
 		request.onload = function(event)
 		{
 			this.uri = uri;
-
 			this.verb = verb;
 
 			var response = this.responseText;
@@ -329,7 +328,7 @@
 	{
 		params = params || {};
 
-		params.root = window.location.pathname.replace(/\/$/, '') || '';
+		params['root'] = window.location.pathname.replace(/\/$/, '') || '';
 
 		uri = $desktop.interpolate(uri, params);
 

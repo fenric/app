@@ -6,9 +6,6 @@
 
 	/**
 	 * Компонент рабочего стола
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{
@@ -22,11 +19,6 @@
 
 	/**
 	 * Чтение учетной записи
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.read = function(complete)
 	{
@@ -43,11 +35,6 @@
 
 	/**
 	 * Авторизация учетной записи
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.login = function(complete)
 	{
@@ -89,8 +76,7 @@
 					{
 						$desktop.remove('div.desktop-admin-login-overlay');
 
-						if (complete instanceof Function)
-						{
+						if (complete instanceof Function) {
 							complete.call(this);
 						}
 					});
@@ -106,9 +92,6 @@
 
 	/**
 	 * Разавторизация учетной записи
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.logout = function()
 	{
@@ -127,11 +110,6 @@
 
 	/**
 	 * Загрузка компонента рабочего стола
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.__load__ = function(complete)
 	{
@@ -143,11 +121,6 @@
 
 	/**
 	 * Инициализация компонента рабочего стола
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.__init__ = function(complete)
 	{
@@ -170,4 +143,5 @@
 	 * Регистрация компонента на рабочем столе
 	 */
 	$desktop.regcom('admin', $component);
+
 })();

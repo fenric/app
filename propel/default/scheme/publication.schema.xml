@@ -99,13 +99,6 @@
 
 		<column name="sequence" type="numeric" required="true" defaultValue="0" />
 
-		<column name="created_at" type="timestamp" />
-		<column name="created_by" type="integer" />
-
-		<index name="0690bf57-4850-46df-820e-f4dad8737aba">
-			<index-column name="sequence" />
-		</index>
-
 		<foreign-key
 			name="c292993a-a319-4f99-81db-f77c686d8d96"
 			foreignTable="section"
@@ -124,30 +117,15 @@
 			<reference local="field_id" foreign="id" />
 		</foreign-key>
 
-		<foreign-key
-			name="ec6149c7-f7fc-40c3-93b4-8873976aae67"
-			foreignTable="user"
-			onDelete="setnull"
-			onUpdate="cascade"
-			defaultJoin="INNER JOIN">
-			<reference local="created_by" foreign="id" />
-		</foreign-key>
+		<index name="0690bf57-4850-46df-820e-f4dad8737aba">
+			<index-column name="sequence" />
+		</index>
 
 		<vendor type="mysql">
 			<parameter name="Engine" value="InnoDB" />
 			<parameter name="Charset" value="utf8" />
 			<parameter name="Collate" value="utf8_unicode_ci" />
 		</vendor>
-
-		<behavior name="Fenric\Propel\Behaviors\Authorable">
-			<parameter name="create_column" value="created_by" />
-			<parameter name="update_enable" value="false" />
-		</behavior>
-
-		<behavior name="Fenric\Propel\Behaviors\Timestampable">
-			<parameter name="create_column" value="created_at" />
-			<parameter name="update_enable" value="false" />
-		</behavior>
 
 		<behavior name="validate">
 			<parameter name="f671f3e6-f2db-4e01-85a3-59f171eb4b80" value="{column: section_id, validator: NotBlank}" />
@@ -406,7 +384,7 @@
 		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
 
 		<column name="publication_id" type="integer" />
-		<column name="related_publication_id" type="integer" />
+		<column name="relation_id" type="integer" />
 
 		<foreign-key
 			name="ac910e89-ee47-4fd7-adc5-dbbf97967ccf"
@@ -418,7 +396,7 @@
 		</foreign-key>
 
 		<index name="aa64ab94-118f-41e6-963f-707af0b10da2">
-			<index-column name="related_publication_id" />
+			<index-column name="relation_id" />
 		</index>
 
 		<vendor type="mysql">

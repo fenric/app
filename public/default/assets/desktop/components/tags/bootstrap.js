@@ -6,9 +6,6 @@
 
 	/**
 	 * Конструктор компонента
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{
@@ -19,7 +16,7 @@
 
 		this.params.default = {};
 		this.params.default.page = 1;
-		this.params.default.limit = 20;
+		this.params.default.limit = 25;
 
 		this.params.load(this.params.default);
 
@@ -38,11 +35,6 @@
 
 	/**
 	 * Список объектов
-	 *
-	 * @param   object   options
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.list = function(options)
 	{
@@ -72,11 +64,6 @@
 				{
 					self.list(options);
 				});
-
-				modal.on('modal.content.find', function()
-				{
-					// @continue
-				});
 			}});
 
 			self.modal().title('{title} / Список тегов', {title: self.title}).open().block();
@@ -99,7 +86,7 @@
 						self.list();
 					});
 
-					self.modal().search('.delete[data-toggle=confirmation]', function(element)
+					self.modal().search('.delete', function(element)
 					{
 						jQuery(element).confirmation({onConfirm: function()
 						{
@@ -118,9 +105,6 @@
 
 	/**
 	 * Создание объекта
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.add = function()
 	{
@@ -136,14 +120,13 @@
 					{
 						modal.block();
 
-						modal.search('textarea.ckeditor', function(area)
+						modal.search('textarea', function(area)
 						{
-							if (area.ckeditor) {
-								area.value = area.ckeditor.getData();
-							}
+							area.value = area.ckeditor ? area.ckeditor.getData() : area.value;
 						});
 
-						request = self.xhr.post(self.routes.create, form, {
+						request = self.xhr.post(self.routes.create, form,
+						{
 							repeat: true,
 						});
 
@@ -172,11 +155,6 @@
 
 	/**
 	 * Редактирование объекта
-	 *
-	 * @param   integer   id
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.edit = function(id)
 	{
@@ -197,11 +175,9 @@
 					{
 						modal.block();
 
-						modal.search('textarea.ckeditor', function(area)
+						modal.search('textarea', function(area)
 						{
-							if (area.ckeditor) {
-								area.value = area.ckeditor.getData();
-							}
+							area.value = area.ckeditor ? area.ckeditor.getData() : area.value;
 						});
 
 						self.xhr.patch(self.routes.update, form, {repeat: true, id: id}).complete(function(response)
@@ -227,12 +203,6 @@
 
 	/**
 	 * Чтение объекта
-	 *
-	 * @param   integer    id
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.read = function(id, complete)
 	{
@@ -244,12 +214,6 @@
 
 	/**
 	 * Удаление объекта
-	 *
-	 * @param   integer    id
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.delete = function(id, complete)
 	{
@@ -261,11 +225,6 @@
 
 	/**
 	 * Простая выгрузка объектов
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.unload = function(complete)
 	{
@@ -277,12 +236,6 @@
 
 	/**
 	 * Основная форма компонента
-	 *
-	 * @param   object   modal
-	 * @param   object   params
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.form = function(modal, params)
 	{
@@ -313,20 +266,12 @@
 
 	/**
 	 * Помощь в работе с компонентом
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.help = function()
 	{};
 
 	/**
 	 * Инициализация компонента
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.__init__ = function(complete)
 	{

@@ -14,8 +14,8 @@ use Propel\Models\Map\PublicationFieldTableMap;
 use Propel\Models\Map\PublicationPhotoTableMap;
 use Propel\Models\Map\PublicationRelationTableMap;
 
-use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 
@@ -319,11 +319,11 @@ class Publication extends BasePublication
 	/**
 	 * Получение связанных публикаций
 	 */
-	public function getRelationship() : ObjectCollection
+	public function getRelations() : ObjectCollection
 	{
 		$query = fenric('query');
 
-		$query->select(PublicationRelationTableMap::COL_RELATED_PUBLICATION_ID);
+		$query->select(PublicationRelationTableMap::COL_RELATION_ID);
 		$query->from(PublicationRelationTableMap::TABLE_NAME);
 		$query->where(PublicationRelationTableMap::COL_PUBLICATION_ID, '=', $this->getId());
 
@@ -390,7 +390,7 @@ class Publication extends BasePublication
 		{
 			foreach ($this->getPublicationRelations() as $relation)
 			{
-				if (($i = array_search($relation->getRelatedPublicationId(), $ids)) === false)
+				if (($i = array_search($relation->getRelationId(), $ids)) === false)
 				{
 					$relation->delete();
 
@@ -414,7 +414,7 @@ class Publication extends BasePublication
 						$relation = new PublicationRelation();
 
 						$relation->setPublication($this);
-						$relation->setRelatedPublicationId($publication->getId());
+						$relation->setRelationId($publication->getId());
 
 						$this->addPublicationRelation($relation);
 					}

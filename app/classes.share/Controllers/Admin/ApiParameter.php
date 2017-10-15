@@ -99,11 +99,9 @@ class ApiParameter extends CRUD
 		$query = ParameterQuery::create();
 		$query->orderById(Criteria::ASC);
 
-		$columns = [
-			ParameterTableMap::COL_ID,
-			ParameterTableMap::COL_CODE,
-			ParameterTableMap::COL_VALUE,
-		];
+		$columns[] = ParameterTableMap::COL_ID;
+		$columns[] = ParameterTableMap::COL_CODE;
+		$columns[] = ParameterTableMap::COL_VALUE;
 
 		parent::all($query, $columns, [
 			'limit' => PHP_INT_MAX,

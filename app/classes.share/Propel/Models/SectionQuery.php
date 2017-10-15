@@ -19,11 +19,10 @@ class SectionQuery extends BaseSectionQuery
 	 */
 	public static function existsByCode(string $code) : bool
 	{
-		$query = fenric('query')
+		return fenric('query')
 			->select(SectionTableMap::COL_ID)
 			->from(SectionTableMap::TABLE_NAME)
-			->where(SectionTableMap::COL_CODE, '=', $code);
-
-		return $query->readOne() ? true : false;
+			->where(SectionTableMap::COL_CODE, '=', $code)
+		->readOne() ? true : false;
 	}
 }

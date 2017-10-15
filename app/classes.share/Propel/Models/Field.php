@@ -16,9 +16,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isFlag() : bool
 	{
@@ -27,9 +24,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isNumber() : bool
 	{
@@ -38,9 +32,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isString() : bool
 	{
@@ -49,9 +40,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isText() : bool
 	{
@@ -60,9 +48,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isHtml() : bool
 	{
@@ -71,9 +56,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isYear() : bool
 	{
@@ -82,9 +64,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isDate() : bool
 	{
@@ -93,9 +72,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isDateTime() : bool
 	{
@@ -104,9 +80,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isTime() : bool
 	{
@@ -115,9 +88,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isIp() : bool
 	{
@@ -126,9 +96,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isUrl() : bool
 	{
@@ -137,9 +104,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isEmail() : bool
 	{
@@ -148,9 +112,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isImage() : bool
 	{
@@ -159,9 +120,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isSearchable() : bool
 	{
@@ -172,9 +130,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  bool
 	 */
 	public function isTimestamp() : bool
 	{
@@ -185,9 +140,6 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
-	 *
-	 * @access  public
-	 * @return  string
 	 */
 	public function getPublicationValueColumn() : string
 	{

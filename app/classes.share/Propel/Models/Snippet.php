@@ -31,7 +31,11 @@ class Snippet extends BaseSnippet
 				{
 					ob_start();
 
-					eval($code);
+					(function() use($code)
+					{
+						eval($code);
+
+					})->call($this->getSandbox());
 
 					return ob_get_clean();
 				}
@@ -45,5 +49,25 @@ class Snippet extends BaseSnippet
 			}
 
 		}, $this->getValue($connection));
+	}
+
+	/**
+	 * Песочница для исполняемого кода сниппета
+	 */
+	private function getSandbox()
+	{
+		static $scope;
+
+		if (empty($scope))
+		{
+			$scope = new class
+			{};
+
+			$scope->id = $this->getId();
+			$scope->code = $this->getCode();
+			$scope->title = $this->getTitle();
+		}
+
+		return $scope;
 	}
 }

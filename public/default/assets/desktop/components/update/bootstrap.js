@@ -6,9 +6,6 @@
 
 	/**
 	 * Конструктор компонента
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component = function()
 	{
@@ -18,9 +15,6 @@
 
 	/**
 	 * Запуск обновления
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.run = function()
 	{
@@ -30,7 +24,7 @@
 		{
 			self.modal(null).title(self.title).open(800, 480).block();
 
-			$desktop.module('request').get('{root}/update/', {repeat: true, success: function(response)
+			self.xhr.get('{root}/update/', {repeat: true, success: function(response)
 			{
 				container = document.createElement('pre');
 
@@ -45,11 +39,6 @@
 
 	/**
 	 * Инициализация компонента
-	 *
-	 * @param   callback   complete
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	$component.prototype.__init__ = function(complete)
 	{
@@ -68,4 +57,5 @@
 	 * Регистрация компонента на рабочем столе
 	 */
 	$desktop.regcom('update', $component);
+
 })();

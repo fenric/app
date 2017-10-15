@@ -138,13 +138,11 @@ abstract class CRUD extends Actionable
 	{
 		if (! $this->request->parameters->exists(static::ID_PARAMETER_NAME)) {
 			$this->response->setStatus(400);
-
 			return;
 		}
 
 		if (! ($model = $query->findPk($this->request->parameters->get(static::ID_PARAMETER_NAME)))) {
 			$this->response->setStatus(404);
-
 			return;
 		}
 
@@ -200,13 +198,11 @@ abstract class CRUD extends Actionable
 	{
 		if (! $this->request->parameters->exists(static::ID_PARAMETER_NAME)) {
 			$this->response->setStatus(400);
-
 			return;
 		}
 
 		if (! ($model = $query->findPk($this->request->parameters->get(static::ID_PARAMETER_NAME)))) {
 			$this->response->setStatus(404);
-
 			return;
 		}
 
@@ -214,7 +210,6 @@ abstract class CRUD extends Actionable
 
 		if (! $model->isDeleted()) {
 			$this->response->setStatus(503);
-
 			return;
 		}
 
@@ -228,13 +223,11 @@ abstract class CRUD extends Actionable
 	{
 		if (! $this->request->parameters->exists(static::ID_PARAMETER_NAME)) {
 			$this->response->setStatus(400);
-
 			return;
 		}
 
 		if (! ($model = $query->findPk($this->request->parameters->get(static::ID_PARAMETER_NAME)))) {
 			$this->response->setStatus(404);
-
 			return;
 		}
 
@@ -245,17 +238,21 @@ abstract class CRUD extends Actionable
 			$f = ltrim(strrchr($col, '.'), '.');
 
 			$output[$f] = $model->getByName($col, TableMap::TYPE_COLNAME);
-
-			if ($output[$f] instanceof \DateTime) {
-				$output[$f] = $output[$f]->format(\DateTime::W3C);
-			}
-
-			if ($output[$f] instanceof ActiveRecordInterface) {
-				$output[$f] = $output[$f]->toArray(TableMap::TYPE_FIELDNAME, false);
-			}
 		}
 
-		fenric()->callSharedService('event', [self::EVENT_PREPARE_ITEM])->run([$model, & $output]);
+		fenric()->callSharedService('event', [
+			self::EVENT_PREPARE_ITEM
+		])->run([$model, & $output]);
+
+		array_walk_recursive($output, function(& $value)
+		{
+			if ($value instanceof \DateTime) {
+				$value = $value->format(\DateTime::W3C);
+			}
+			if ($value instanceof ActiveRecordInterface) {
+				$value = $value->toArray(TableMap::TYPE_FIELDNAME, false);
+			}
+		});
 
 		$this->response->setJsonContent($output);
 	}
@@ -313,17 +310,21 @@ abstract class CRUD extends Actionable
 				$f = ltrim(strrchr($col, '.'), '.');
 
 				$output['items'][$i][$f] = $model->getByName($col, TableMap::TYPE_COLNAME);
-
-				if ($output['items'][$i][$f] instanceof \DateTime) {
-					$output['items'][$i][$f] = $output['items'][$i][$f]->format(\DateTime::W3C);
-				}
-
-				if ($output['items'][$i][$f] instanceof ActiveRecordInterface) {
-					$output['items'][$i][$f] = $output['items'][$i][$f]->toArray(TableMap::TYPE_FIELDNAME, false);
-				}
 			}
 
-			fenric()->callSharedService('event', [self::EVENT_PREPARE_ITEM])->run([$model, & $output['items'][$i]]);
+			fenric()->callSharedService('event', [
+				self::EVENT_PREPARE_ITEM
+			])->run([$model, & $output['items'][$i]]);
+
+			array_walk_recursive($output['items'][$i], function(& $value)
+			{
+				if ($value instanceof \DateTime) {
+					$value = $value->format(\DateTime::W3C);
+				}
+				if ($value instanceof ActiveRecordInterface) {
+					$value = $value->toArray(TableMap::TYPE_FIELDNAME, false);
+				}
+			});
 		}
 
 		$this->response->setJsonContent($output);

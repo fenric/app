@@ -2,7 +2,6 @@
 
 namespace Propel\Models\Base;
 
-use \DateTime;
 use \Exception;
 use \PDO;
 use Propel\Models\Field as ChildField;
@@ -13,8 +12,6 @@ use Propel\Models\Section as ChildSection;
 use Propel\Models\SectionField as ChildSectionField;
 use Propel\Models\SectionFieldQuery as ChildSectionFieldQuery;
 use Propel\Models\SectionQuery as ChildSectionQuery;
-use Propel\Models\User as ChildUser;
-use Propel\Models\UserQuery as ChildUserQuery;
 use Propel\Models\Map\PublicationFieldTableMap;
 use Propel\Models\Map\SectionFieldTableMap;
 use Propel\Runtime\Propel;
@@ -29,7 +26,6 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -112,20 +108,6 @@ abstract class SectionField implements ActiveRecordInterface
     protected $sequence;
 
     /**
-     * The value for the created_at field.
-     *
-     * @var        DateTime
-     */
-    protected $created_at;
-
-    /**
-     * The value for the created_by field.
-     *
-     * @var        int
-     */
-    protected $created_by;
-
-    /**
      * @var        ChildSection
      */
     protected $aSection;
@@ -134,11 +116,6 @@ abstract class SectionField implements ActiveRecordInterface
      * @var        ChildField
      */
     protected $aField;
-
-    /**
-     * @var        ChildUser
-     */
-    protected $aUser;
 
     /**
      * @var        ObjectCollection|ChildPublicationField[] Collection to store aggregation of ChildPublicationField objects.
@@ -456,36 +433,6 @@ abstract class SectionField implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [created_at] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getCreatedAt($format = NULL)
-    {
-        if ($format === null) {
-            return $this->created_at;
-        } else {
-            return $this->created_at instanceof \DateTimeInterface ? $this->created_at->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [created_by] column value.
-     *
-     * @return int
-     */
-    public function getCreatedBy()
-    {
-        return $this->created_by;
-    }
-
-    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -574,50 +521,6 @@ abstract class SectionField implements ActiveRecordInterface
     } // setSequence()
 
     /**
-     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\Propel\Models\SectionField The current object (for fluent API support)
-     */
-    public function setCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->created_at !== null || $dt !== null) {
-            if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created_at->format("Y-m-d H:i:s.u")) {
-                $this->created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[SectionFieldTableMap::COL_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setCreatedAt()
-
-    /**
-     * Set the value of [created_by] column.
-     *
-     * @param int $v new value
-     * @return $this|\Propel\Models\SectionField The current object (for fluent API support)
-     */
-    public function setCreatedBy($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->created_by !== $v) {
-            $this->created_by = $v;
-            $this->modifiedColumns[SectionFieldTableMap::COL_CREATED_BY] = true;
-        }
-
-        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
-            $this->aUser = null;
-        }
-
-        return $this;
-    } // setCreatedBy()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -668,15 +571,6 @@ abstract class SectionField implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SectionFieldTableMap::translateFieldName('Sequence', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sequence = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SectionFieldTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SectionFieldTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->created_by = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -685,7 +579,7 @@ abstract class SectionField implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = SectionFieldTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = SectionFieldTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Models\\SectionField'), 0, $e);
@@ -712,9 +606,6 @@ abstract class SectionField implements ActiveRecordInterface
         }
         if ($this->aField !== null && $this->field_id !== $this->aField->getId()) {
             $this->aField = null;
-        }
-        if ($this->aUser !== null && $this->created_by !== $this->aUser->getId()) {
-            $this->aUser = null;
         }
     } // ensureConsistency
 
@@ -757,7 +648,6 @@ abstract class SectionField implements ActiveRecordInterface
 
             $this->aSection = null;
             $this->aField = null;
-            $this->aUser = null;
             $this->collPublicationFields = null;
 
         } // if (deep)
@@ -826,18 +716,6 @@ abstract class SectionField implements ActiveRecordInterface
             $isInsert = $this->isNew();
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
-                // Fenric\Propel\Behaviors\Authorable behavior
-                    if (! $this->isColumnModified(SectionFieldTableMap::COL_CREATED_BY)) {
-                        if (fenric()->existsSharedService('user')) {
-                            if (fenric('user')->isLogged()) {
-                                $this->setCreatedBy(fenric('user')->getId());
-                            }
-                        }
-                    }
-                // Fenric\Propel\Behaviors\Timestampable behavior
-                    if (! $this->isColumnModified(SectionFieldTableMap::COL_CREATED_AT)) {
-                        $this->setCreatedAt(new \DateTime('now'));
-                    }
             } else {
                 $ret = $ret && $this->preUpdate($con);
             }
@@ -892,13 +770,6 @@ abstract class SectionField implements ActiveRecordInterface
                     $affectedRows += $this->aField->save($con);
                 }
                 $this->setField($this->aField);
-            }
-
-            if ($this->aUser !== null) {
-                if ($this->aUser->isModified() || $this->aUser->isNew()) {
-                    $affectedRows += $this->aUser->save($con);
-                }
-                $this->setUser($this->aUser);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -967,12 +838,6 @@ abstract class SectionField implements ActiveRecordInterface
         if ($this->isColumnModified(SectionFieldTableMap::COL_SEQUENCE)) {
             $modifiedColumns[':p' . $index++]  = 'sequence';
         }
-        if ($this->isColumnModified(SectionFieldTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'created_at';
-        }
-        if ($this->isColumnModified(SectionFieldTableMap::COL_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'created_by';
-        }
 
         $sql = sprintf(
             'INSERT INTO fenric_section_field (%s) VALUES (%s)',
@@ -995,12 +860,6 @@ abstract class SectionField implements ActiveRecordInterface
                         break;
                     case 'sequence':
                         $stmt->bindValue($identifier, $this->sequence, PDO::PARAM_INT);
-                        break;
-                    case 'created_at':
-                        $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
-                        break;
-                    case 'created_by':
-                        $stmt->bindValue($identifier, $this->created_by, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1076,12 +935,6 @@ abstract class SectionField implements ActiveRecordInterface
             case 3:
                 return $this->getSequence();
                 break;
-            case 4:
-                return $this->getCreatedAt();
-                break;
-            case 5:
-                return $this->getCreatedBy();
-                break;
             default:
                 return null;
                 break;
@@ -1116,13 +969,7 @@ abstract class SectionField implements ActiveRecordInterface
             $keys[1] => $this->getSectionId(),
             $keys[2] => $this->getFieldId(),
             $keys[3] => $this->getSequence(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getCreatedBy(),
         );
-        if ($result[$keys[4]] instanceof \DateTimeInterface) {
-            $result[$keys[4]] = $result[$keys[4]]->format('c');
-        }
-
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1158,21 +1005,6 @@ abstract class SectionField implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aField->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->aUser) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'user';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'fenric_user';
-                        break;
-                    default:
-                        $key = 'User';
-                }
-
-                $result[$key] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collPublicationFields) {
 
@@ -1235,12 +1067,6 @@ abstract class SectionField implements ActiveRecordInterface
             case 3:
                 $this->setSequence($value);
                 break;
-            case 4:
-                $this->setCreatedAt($value);
-                break;
-            case 5:
-                $this->setCreatedBy($value);
-                break;
         } // switch()
 
         return $this;
@@ -1278,12 +1104,6 @@ abstract class SectionField implements ActiveRecordInterface
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setSequence($arr[$keys[3]]);
-        }
-        if (array_key_exists($keys[4], $arr)) {
-            $this->setCreatedAt($arr[$keys[4]]);
-        }
-        if (array_key_exists($keys[5], $arr)) {
-            $this->setCreatedBy($arr[$keys[5]]);
         }
     }
 
@@ -1337,12 +1157,6 @@ abstract class SectionField implements ActiveRecordInterface
         }
         if ($this->isColumnModified(SectionFieldTableMap::COL_SEQUENCE)) {
             $criteria->add(SectionFieldTableMap::COL_SEQUENCE, $this->sequence);
-        }
-        if ($this->isColumnModified(SectionFieldTableMap::COL_CREATED_AT)) {
-            $criteria->add(SectionFieldTableMap::COL_CREATED_AT, $this->created_at);
-        }
-        if ($this->isColumnModified(SectionFieldTableMap::COL_CREATED_BY)) {
-            $criteria->add(SectionFieldTableMap::COL_CREATED_BY, $this->created_by);
         }
 
         return $criteria;
@@ -1433,8 +1247,6 @@ abstract class SectionField implements ActiveRecordInterface
         $copyObj->setSectionId($this->getSectionId());
         $copyObj->setFieldId($this->getFieldId());
         $copyObj->setSequence($this->getSequence());
-        $copyObj->setCreatedAt($this->getCreatedAt());
-        $copyObj->setCreatedBy($this->getCreatedBy());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1577,57 +1389,6 @@ abstract class SectionField implements ActiveRecordInterface
         }
 
         return $this->aField;
-    }
-
-    /**
-     * Declares an association between this object and a ChildUser object.
-     *
-     * @param  ChildUser $v
-     * @return $this|\Propel\Models\SectionField The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setUser(ChildUser $v = null)
-    {
-        if ($v === null) {
-            $this->setCreatedBy(NULL);
-        } else {
-            $this->setCreatedBy($v->getId());
-        }
-
-        $this->aUser = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildUser object, it will not be re-added.
-        if ($v !== null) {
-            $v->addSectionField($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildUser object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildUser The associated ChildUser object.
-     * @throws PropelException
-     */
-    public function getUser(ConnectionInterface $con = null)
-    {
-        if ($this->aUser === null && ($this->created_by != 0)) {
-            $this->aUser = ChildUserQuery::create()->findPk($this->created_by, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aUser->addSectionFields($this);
-             */
-        }
-
-        return $this->aUser;
     }
 
 
@@ -1910,15 +1671,10 @@ abstract class SectionField implements ActiveRecordInterface
         if (null !== $this->aField) {
             $this->aField->removeSectionField($this);
         }
-        if (null !== $this->aUser) {
-            $this->aUser->removeSectionField($this);
-        }
         $this->id = null;
         $this->section_id = null;
         $this->field_id = null;
         $this->sequence = null;
-        $this->created_at = null;
-        $this->created_by = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1948,7 +1704,6 @@ abstract class SectionField implements ActiveRecordInterface
         $this->collPublicationFields = null;
         $this->aSection = null;
         $this->aField = null;
-        $this->aUser = null;
     }
 
     /**
@@ -2013,12 +1768,6 @@ abstract class SectionField implements ActiveRecordInterface
             if (method_exists($this->aField, 'validate')) {
                 if (!$this->aField->validate($validator)) {
                     $failureMap->addAll($this->aField->getValidationFailures());
-                }
-            }
-            // If validate() method exists, the validate-behavior is configured for related object
-            if (method_exists($this->aUser, 'validate')) {
-                if (!$this->aUser->validate($validator)) {
-                    $failureMap->addAll($this->aUser->getValidationFailures());
                 }
             }
 
