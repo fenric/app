@@ -22,12 +22,6 @@
 <?php if ($publication->getMetaCanonical()) : ?>
 	<link rel="canonical" href="<?= e($publication->getMetaCanonical()) ?>" />
 <?php endif; ?>
-
-<script>
-	var disqus_config = function() {
-		this.page.identifier = <?= $publication->getId() ?>;
-	};
-</script>
 <?php $this->stop() ?>
 
 <?php $this->start('stylesheets') ?>
@@ -75,12 +69,6 @@
 			<i class="fa fa-camera-retro" aria-hidden="true"></i>
 			<a class="text-reset" href="<?= $publication->getUri() ?>#publication_gallery">
 				<span><?= $publication->getCountPhotos() ?></span>
-			</a>
-		</div>
-		<div class="float-left mr-3">
-			<i class="fa fa-comments-o" aria-hidden="true"></i>
-			<a class="text-reset disqus-comment-count" data-disqus-identifier="<?= $publication->getId() ?>" href="<?= $publication->getUri() ?>#disqus_thread">
-				<i class="fa fa-spinner fa-spin"></i>
 			</a>
 		</div>
 		<div class="float-left mr-3">
@@ -212,11 +200,3 @@
 		</div>
 	</div>
 <?php endif; ?>
-
-<hr class="mt-5 mb-5">
-
-<div class="container">
-	<div class="clearfix">
-		<?= fenric('snippet::disqus') ?>
-	</div>
-</div>
