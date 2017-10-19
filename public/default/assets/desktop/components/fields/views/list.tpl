@@ -54,6 +54,10 @@
 							{{when is_required is not false}}
 								<p><span class="label label-primary">Обязательное</span></p>
 							{{endwhen is_required}}
+
+							{{when is_searchable is not false}}
+								<p><span class="label label-primary">Поисковое</span></p>
+							{{endwhen is_searchable}}
 						</td>
 						<td>
 							<p><strong>Создано</strong>

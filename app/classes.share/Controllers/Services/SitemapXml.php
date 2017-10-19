@@ -28,10 +28,10 @@ class SitemapXml extends Abstractable
 		$sitemap = new SimpleXMLElement($blank);
 
 		$query = fenric('query')
-		->cache(10800) // 3 hours.
+		->cache(3600) // 1 hour.
 
-		->select(SectionTableMap::COL_CODE)->alias('section')
-		->select(PublicationTableMap::COL_CODE)->alias('publication')
+		->select(SectionTableMap::COL_CODE)->alias('scode')
+		->select(PublicationTableMap::COL_CODE)->alias('pcode')
 		->select(PublicationTableMap::COL_UPDATED_AT)
 
 		->from(PublicationTableMap::TABLE_NAME)
@@ -51,15 +51,23 @@ class SitemapXml extends Abstractable
 		->order(PublicationTableMap::COL_ID)
 		->asc();
 
+		$req = $this->request;
+
 		if ($rows = $query->toArray())
 		{
 			foreach ($rows as $row)
 			{
-				$loc = $this->request->getScheme() . '://' . $this->request->getHost() . '/%s/%s/';
+				$loc = sprintf('%s://%s/%s/%s.html',
+					$req->getScheme(),
+					$req->getHost(),
+					$row['scode'],
+					$row['pcode']
+				);
+
 				$lastmod = new DateTime($row['updated_at']);
 
 				$url = $sitemap->addChild('url');
-				$url->addChild('loc', sprintf($loc, $row['section'], $row['publication']));
+				$url->addChild('loc', $loc);
 				$url->addChild('lastmod', $lastmod->format(DateTime::W3C));
 				$url->addChild('changefreq', 'monthly');
 				$url->addChild('priority', '1.0');

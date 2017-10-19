@@ -12,10 +12,11 @@
 
 		<column name="default_value" type="longvarchar" />
 		<column name="validation_regex" type="varchar" />
-		<column name="error_message" type="varchar" />
+		<column name="validation_error" type="varchar" />
 
 		<column name="is_unique" type="boolean" required="true" defaultValue="0" />
 		<column name="is_required" type="boolean" required="true" defaultValue="0" />
+		<column name="is_searchable" type="boolean" required="true" defaultValue="0" />
 
 		<column name="created_at" type="timestamp" />
 		<column name="created_by" type="integer" />
@@ -47,6 +48,12 @@
 
 		<index name="032a3207-024f-4673-b9d0-afd86cbdac3f">
 			<index-column name="label" />
+		</index>
+
+		<index name="06a394fd-2bde-4126-832c-f958b7a5762a">
+			<index-column name="is_unique" />
+			<index-column name="is_required" />
+			<index-column name="is_searchable" />
 		</index>
 
 		<index name="02cdca6e-a332-48dd-9aaa-ac812f886145">

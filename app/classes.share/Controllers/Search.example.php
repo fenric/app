@@ -77,8 +77,7 @@ class Search extends Abstractable
 					$query->orderById(Criteria::DESC);
 
 					$data['publications'] = $query->paginate(
-						$page ?? 1,
-						$limit ?? 25
+						$page ?? 1, $limit ?? 25
 					);
 				}
 			}

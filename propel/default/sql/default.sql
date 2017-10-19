@@ -67,7 +67,6 @@ DROP TABLE IF EXISTS `fenric_section`;
 CREATE TABLE `fenric_section`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `parent_id` INTEGER,
     `code` VARCHAR(255) NOT NULL,
     `header` VARCHAR(255) NOT NULL,
     `picture` VARCHAR(255),
@@ -86,14 +85,8 @@ CREATE TABLE `fenric_section`
     UNIQUE INDEX `fenric_section_u_4db226` (`code`),
     INDEX `13b1aca8-173e-477e-9437-cf57d593e5f7` (`header`),
     INDEX `8572f35e-590b-49d6-b224-c3a99e0fce00` (`created_at`, `updated_at`),
-    INDEX `fi_67a39-999a-4624-86f0-ede675b26d97` (`parent_id`),
     INDEX `fi_af8a9-dacd-4b52-a60a-e13fb80e7342` (`created_by`),
     INDEX `fi_a7a88-b516-4f37-a575-84aea282b1ed` (`updated_by`),
-    CONSTRAINT `bbf67a39-999a-4624-86f0-ede675b26d97`
-        FOREIGN KEY (`parent_id`)
-        REFERENCES `fenric_section` (`id`)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
     CONSTRAINT `ae3af8a9-dacd-4b52-a60a-e13fb80e7342`
         FOREIGN KEY (`created_by`)
         REFERENCES `fenric_user` (`id`)
@@ -118,13 +111,10 @@ CREATE TABLE `fenric_section_field`
     `section_id` INTEGER,
     `field_id` INTEGER,
     `sequence` DECIMAL DEFAULT 0 NOT NULL,
-    `created_at` DATETIME,
-    `created_by` INTEGER,
     PRIMARY KEY (`id`),
     INDEX `0690bf57-4850-46df-820e-f4dad8737aba` (`sequence`),
     INDEX `fi_2993a-a319-4f99-81db-f77c686d8d96` (`section_id`),
     INDEX `fi_d6703-acbc-4873-9954-8b7616ab0f4d` (`field_id`),
-    INDEX `fi_149c7-f7fc-40c3-93b4-8873976aae67` (`created_by`),
     CONSTRAINT `c292993a-a319-4f99-81db-f77c686d8d96`
         FOREIGN KEY (`section_id`)
         REFERENCES `fenric_section` (`id`)
@@ -134,12 +124,7 @@ CREATE TABLE `fenric_section_field`
         FOREIGN KEY (`field_id`)
         REFERENCES `fenric_field` (`id`)
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    CONSTRAINT `ec6149c7-f7fc-40c3-93b4-8873976aae67`
-        FOREIGN KEY (`created_by`)
-        REFERENCES `fenric_user` (`id`)
-        ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE CASCADE
 ) ENGINE=InnoDB CHARACTER SET='utf8' COLLATE='utf8_unicode_ci';
 
 -- ---------------------------------------------------------------------
@@ -284,9 +269,9 @@ CREATE TABLE `fenric_publication_relation`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `publication_id` INTEGER,
-    `related_publication_id` INTEGER,
+    `relation_id` INTEGER,
     PRIMARY KEY (`id`),
-    INDEX `aa64ab94-118f-41e6-963f-707af0b10da2` (`related_publication_id`),
+    INDEX `aa64ab94-118f-41e6-963f-707af0b10da2` (`relation_id`),
     INDEX `fi_10e89-ee47-4fd7-adc5-dbbf97967ccf` (`publication_id`),
     CONSTRAINT `ac910e89-ee47-4fd7-adc5-dbbf97967ccf`
         FOREIGN KEY (`publication_id`)

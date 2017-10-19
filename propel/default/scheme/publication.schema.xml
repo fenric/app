@@ -3,7 +3,6 @@
 
 	<table name="section">
 		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-		<column name="parent_id" type="integer" />
 
 		<column name="code" type="varchar" required="true" />
 		<column name="header" type="varchar" required="true" primaryString="true" />
@@ -22,16 +21,6 @@
 
 		<column name="updated_at" type="timestamp" />
 		<column name="updated_by" type="integer" />
-
-		<foreign-key
-			name="bbf67a39-999a-4624-86f0-ede675b26d97"
-			phpName="Parent"
-			foreignTable="section"
-			onDelete="cascade"
-			onUpdate="cascade"
-			defaultJoin="INNER JOIN">
-			<reference local="parent_id" foreign="id" />
-		</foreign-key>
 
 		<foreign-key
 			name="ae3af8a9-dacd-4b52-a60a-e13fb80e7342"

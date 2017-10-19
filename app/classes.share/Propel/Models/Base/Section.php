@@ -92,13 +92,6 @@ abstract class Section implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the parent_id field.
-     *
-     * @var        int
-     */
-    protected $parent_id;
-
-    /**
      * The value for the code field.
      *
      * @var        string
@@ -204,11 +197,6 @@ abstract class Section implements ActiveRecordInterface
     protected $updated_by;
 
     /**
-     * @var        ChildSection
-     */
-    protected $aParent;
-
-    /**
      * @var        ChildUser
      */
     protected $aUserRelatedByCreatedBy;
@@ -217,12 +205,6 @@ abstract class Section implements ActiveRecordInterface
      * @var        ChildUser
      */
     protected $aUserRelatedByUpdatedBy;
-
-    /**
-     * @var        ObjectCollection|ChildSection[] Collection to store aggregation of ChildSection objects.
-     */
-    protected $collSectionsRelatedById;
-    protected $collSectionsRelatedByIdPartial;
 
     /**
      * @var        ObjectCollection|ChildSectionField[] Collection to store aggregation of ChildSectionField objects.
@@ -260,12 +242,6 @@ abstract class Section implements ActiveRecordInterface
      * @var     ConstraintViolationList
      */
     protected $validationFailures;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildSection[]
-     */
-    protected $sectionsRelatedByIdScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -515,16 +491,6 @@ abstract class Section implements ActiveRecordInterface
     }
 
     /**
-     * Get the [parent_id] column value.
-     *
-     * @return int
-     */
-    public function getParentId()
-    {
-        return $this->parent_id;
-    }
-
-    /**
      * Get the [code] column value.
      *
      * @return string
@@ -736,30 +702,6 @@ abstract class Section implements ActiveRecordInterface
 
         return $this;
     } // setId()
-
-    /**
-     * Set the value of [parent_id] column.
-     *
-     * @param int $v new value
-     * @return $this|\Propel\Models\Section The current object (for fluent API support)
-     */
-    public function setParentId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->parent_id !== $v) {
-            $this->parent_id = $v;
-            $this->modifiedColumns[SectionTableMap::COL_PARENT_ID] = true;
-        }
-
-        if ($this->aParent !== null && $this->aParent->getId() !== $v) {
-            $this->aParent = null;
-        }
-
-        return $this;
-    } // setParentId()
 
     /**
      * Set the value of [code] column.
@@ -1094,52 +1036,49 @@ abstract class Section implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SectionTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SectionTableMap::translateFieldName('ParentId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->parent_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SectionTableMap::translateFieldName('Code', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SectionTableMap::translateFieldName('Code', TableMap::TYPE_PHPNAME, $indexType)];
             $this->code = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SectionTableMap::translateFieldName('Header', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SectionTableMap::translateFieldName('Header', TableMap::TYPE_PHPNAME, $indexType)];
             $this->header = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SectionTableMap::translateFieldName('Picture', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SectionTableMap::translateFieldName('Picture', TableMap::TYPE_PHPNAME, $indexType)];
             $this->picture = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SectionTableMap::translateFieldName('MetaTitle', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SectionTableMap::translateFieldName('MetaTitle', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SectionTableMap::translateFieldName('MetaAuthor', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SectionTableMap::translateFieldName('MetaAuthor', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_author = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SectionTableMap::translateFieldName('MetaKeywords', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SectionTableMap::translateFieldName('MetaKeywords', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_keywords = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SectionTableMap::translateFieldName('MetaDescription', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SectionTableMap::translateFieldName('MetaDescription', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_description = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SectionTableMap::translateFieldName('MetaCanonical', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SectionTableMap::translateFieldName('MetaCanonical', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_canonical = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SectionTableMap::translateFieldName('MetaRobots', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SectionTableMap::translateFieldName('MetaRobots', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_robots = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SectionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SectionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : SectionTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SectionTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->created_by = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : SectionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : SectionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : SectionTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : SectionTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->updated_by = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -1149,7 +1088,7 @@ abstract class Section implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 15; // 15 = SectionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 14; // 14 = SectionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Models\\Section'), 0, $e);
@@ -1171,9 +1110,6 @@ abstract class Section implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aParent !== null && $this->parent_id !== $this->aParent->getId()) {
-            $this->aParent = null;
-        }
         if ($this->aUserRelatedByCreatedBy !== null && $this->created_by !== $this->aUserRelatedByCreatedBy->getId()) {
             $this->aUserRelatedByCreatedBy = null;
         }
@@ -1223,11 +1159,8 @@ abstract class Section implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aParent = null;
             $this->aUserRelatedByCreatedBy = null;
             $this->aUserRelatedByUpdatedBy = null;
-            $this->collSectionsRelatedById = null;
-
             $this->collSectionFields = null;
 
             $this->collPublications = null;
@@ -1372,13 +1305,6 @@ abstract class Section implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aParent !== null) {
-                if ($this->aParent->isModified() || $this->aParent->isNew()) {
-                    $affectedRows += $this->aParent->save($con);
-                }
-                $this->setParent($this->aParent);
-            }
-
             if ($this->aUserRelatedByCreatedBy !== null) {
                 if ($this->aUserRelatedByCreatedBy->isModified() || $this->aUserRelatedByCreatedBy->isNew()) {
                     $affectedRows += $this->aUserRelatedByCreatedBy->save($con);
@@ -1402,23 +1328,6 @@ abstract class Section implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
-            }
-
-            if ($this->sectionsRelatedByIdScheduledForDeletion !== null) {
-                if (!$this->sectionsRelatedByIdScheduledForDeletion->isEmpty()) {
-                    \Propel\Models\SectionQuery::create()
-                        ->filterByPrimaryKeys($this->sectionsRelatedByIdScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->sectionsRelatedByIdScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSectionsRelatedById !== null) {
-                foreach ($this->collSectionsRelatedById as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             if ($this->sectionFieldsScheduledForDeletion !== null) {
@@ -1484,9 +1393,6 @@ abstract class Section implements ActiveRecordInterface
         if ($this->isColumnModified(SectionTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(SectionTableMap::COL_PARENT_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'parent_id';
-        }
         if ($this->isColumnModified(SectionTableMap::COL_CODE)) {
             $modifiedColumns[':p' . $index++]  = 'code';
         }
@@ -1542,9 +1448,6 @@ abstract class Section implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
-                    case 'parent_id':
-                        $stmt->bindValue($identifier, $this->parent_id, PDO::PARAM_INT);
                         break;
                     case 'code':
                         $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
@@ -1654,48 +1557,45 @@ abstract class Section implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getParentId();
-                break;
-            case 2:
                 return $this->getCode();
                 break;
-            case 3:
+            case 2:
                 return $this->getHeader();
                 break;
-            case 4:
+            case 3:
                 return $this->getPicture();
                 break;
-            case 5:
+            case 4:
                 return $this->getContent();
                 break;
-            case 6:
+            case 5:
                 return $this->getMetaTitle();
                 break;
-            case 7:
+            case 6:
                 return $this->getMetaAuthor();
                 break;
-            case 8:
+            case 7:
                 return $this->getMetaKeywords();
                 break;
-            case 9:
+            case 8:
                 return $this->getMetaDescription();
                 break;
-            case 10:
+            case 9:
                 return $this->getMetaCanonical();
                 break;
-            case 11:
+            case 10:
                 return $this->getMetaRobots();
                 break;
-            case 12:
+            case 11:
                 return $this->getCreatedAt();
                 break;
-            case 13:
+            case 12:
                 return $this->getCreatedBy();
                 break;
-            case 14:
+            case 13:
                 return $this->getUpdatedAt();
                 break;
-            case 15:
+            case 14:
                 return $this->getUpdatedBy();
                 break;
             default:
@@ -1729,28 +1629,27 @@ abstract class Section implements ActiveRecordInterface
         $keys = SectionTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getParentId(),
-            $keys[2] => $this->getCode(),
-            $keys[3] => $this->getHeader(),
-            $keys[4] => $this->getPicture(),
-            $keys[5] => ($includeLazyLoadColumns) ? $this->getContent() : null,
-            $keys[6] => $this->getMetaTitle(),
-            $keys[7] => $this->getMetaAuthor(),
-            $keys[8] => $this->getMetaKeywords(),
-            $keys[9] => $this->getMetaDescription(),
-            $keys[10] => $this->getMetaCanonical(),
-            $keys[11] => $this->getMetaRobots(),
-            $keys[12] => $this->getCreatedAt(),
-            $keys[13] => $this->getCreatedBy(),
-            $keys[14] => $this->getUpdatedAt(),
-            $keys[15] => $this->getUpdatedBy(),
+            $keys[1] => $this->getCode(),
+            $keys[2] => $this->getHeader(),
+            $keys[3] => $this->getPicture(),
+            $keys[4] => ($includeLazyLoadColumns) ? $this->getContent() : null,
+            $keys[5] => $this->getMetaTitle(),
+            $keys[6] => $this->getMetaAuthor(),
+            $keys[7] => $this->getMetaKeywords(),
+            $keys[8] => $this->getMetaDescription(),
+            $keys[9] => $this->getMetaCanonical(),
+            $keys[10] => $this->getMetaRobots(),
+            $keys[11] => $this->getCreatedAt(),
+            $keys[12] => $this->getCreatedBy(),
+            $keys[13] => $this->getUpdatedAt(),
+            $keys[14] => $this->getUpdatedBy(),
         );
-        if ($result[$keys[12]] instanceof \DateTimeInterface) {
-            $result[$keys[12]] = $result[$keys[12]]->format('c');
+        if ($result[$keys[11]] instanceof \DateTimeInterface) {
+            $result[$keys[11]] = $result[$keys[11]]->format('c');
         }
 
-        if ($result[$keys[14]] instanceof \DateTimeInterface) {
-            $result[$keys[14]] = $result[$keys[14]]->format('c');
+        if ($result[$keys[13]] instanceof \DateTimeInterface) {
+            $result[$keys[13]] = $result[$keys[13]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1759,21 +1658,6 @@ abstract class Section implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aParent) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'section';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'fenric_section';
-                        break;
-                    default:
-                        $key = 'Parent';
-                }
-
-                $result[$key] = $this->aParent->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
             if (null !== $this->aUserRelatedByCreatedBy) {
 
                 switch ($keyType) {
@@ -1803,21 +1687,6 @@ abstract class Section implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aUserRelatedByUpdatedBy->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collSectionsRelatedById) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'sections';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'fenric_sections';
-                        break;
-                    default:
-                        $key = 'Sections';
-                }
-
-                $result[$key] = $this->collSectionsRelatedById->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collSectionFields) {
 
@@ -1887,48 +1756,45 @@ abstract class Section implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setParentId($value);
-                break;
-            case 2:
                 $this->setCode($value);
                 break;
-            case 3:
+            case 2:
                 $this->setHeader($value);
                 break;
-            case 4:
+            case 3:
                 $this->setPicture($value);
                 break;
-            case 5:
+            case 4:
                 $this->setContent($value);
                 break;
-            case 6:
+            case 5:
                 $this->setMetaTitle($value);
                 break;
-            case 7:
+            case 6:
                 $this->setMetaAuthor($value);
                 break;
-            case 8:
+            case 7:
                 $this->setMetaKeywords($value);
                 break;
-            case 9:
+            case 8:
                 $this->setMetaDescription($value);
                 break;
-            case 10:
+            case 9:
                 $this->setMetaCanonical($value);
                 break;
-            case 11:
+            case 10:
                 $this->setMetaRobots($value);
                 break;
-            case 12:
+            case 11:
                 $this->setCreatedAt($value);
                 break;
-            case 13:
+            case 12:
                 $this->setCreatedBy($value);
                 break;
-            case 14:
+            case 13:
                 $this->setUpdatedAt($value);
                 break;
-            case 15:
+            case 14:
                 $this->setUpdatedBy($value);
                 break;
         } // switch()
@@ -1961,49 +1827,46 @@ abstract class Section implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setParentId($arr[$keys[1]]);
+            $this->setCode($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setCode($arr[$keys[2]]);
+            $this->setHeader($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setHeader($arr[$keys[3]]);
+            $this->setPicture($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setPicture($arr[$keys[4]]);
+            $this->setContent($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setContent($arr[$keys[5]]);
+            $this->setMetaTitle($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setMetaTitle($arr[$keys[6]]);
+            $this->setMetaAuthor($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setMetaAuthor($arr[$keys[7]]);
+            $this->setMetaKeywords($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setMetaKeywords($arr[$keys[8]]);
+            $this->setMetaDescription($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setMetaDescription($arr[$keys[9]]);
+            $this->setMetaCanonical($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setMetaCanonical($arr[$keys[10]]);
+            $this->setMetaRobots($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setMetaRobots($arr[$keys[11]]);
+            $this->setCreatedAt($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setCreatedAt($arr[$keys[12]]);
+            $this->setCreatedBy($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setCreatedBy($arr[$keys[13]]);
+            $this->setUpdatedAt($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setUpdatedAt($arr[$keys[14]]);
-        }
-        if (array_key_exists($keys[15], $arr)) {
-            $this->setUpdatedBy($arr[$keys[15]]);
+            $this->setUpdatedBy($arr[$keys[14]]);
         }
     }
 
@@ -2048,9 +1911,6 @@ abstract class Section implements ActiveRecordInterface
 
         if ($this->isColumnModified(SectionTableMap::COL_ID)) {
             $criteria->add(SectionTableMap::COL_ID, $this->id);
-        }
-        if ($this->isColumnModified(SectionTableMap::COL_PARENT_ID)) {
-            $criteria->add(SectionTableMap::COL_PARENT_ID, $this->parent_id);
         }
         if ($this->isColumnModified(SectionTableMap::COL_CODE)) {
             $criteria->add(SectionTableMap::COL_CODE, $this->code);
@@ -2180,7 +2040,6 @@ abstract class Section implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setParentId($this->getParentId());
         $copyObj->setCode($this->getCode());
         $copyObj->setHeader($this->getHeader());
         $copyObj->setPicture($this->getPicture());
@@ -2200,12 +2059,6 @@ abstract class Section implements ActiveRecordInterface
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
-
-            foreach ($this->getSectionsRelatedById() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSectionRelatedById($relObj->copy($deepCopy));
-                }
-            }
 
             foreach ($this->getSectionFields() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -2247,57 +2100,6 @@ abstract class Section implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
-    }
-
-    /**
-     * Declares an association between this object and a ChildSection object.
-     *
-     * @param  ChildSection $v
-     * @return $this|\Propel\Models\Section The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setParent(ChildSection $v = null)
-    {
-        if ($v === null) {
-            $this->setParentId(NULL);
-        } else {
-            $this->setParentId($v->getId());
-        }
-
-        $this->aParent = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildSection object, it will not be re-added.
-        if ($v !== null) {
-            $v->addSectionRelatedById($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildSection object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildSection The associated ChildSection object.
-     * @throws PropelException
-     */
-    public function getParent(ConnectionInterface $con = null)
-    {
-        if ($this->aParent === null && ($this->parent_id != 0)) {
-            $this->aParent = ChildSectionQuery::create()->findPk($this->parent_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aParent->addSectionsRelatedById($this);
-             */
-        }
-
-        return $this->aParent;
     }
 
     /**
@@ -2413,10 +2215,6 @@ abstract class Section implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('SectionRelatedById' == $relationName) {
-            $this->initSectionsRelatedById();
-            return;
-        }
         if ('SectionField' == $relationName) {
             $this->initSectionFields();
             return;
@@ -2425,281 +2223,6 @@ abstract class Section implements ActiveRecordInterface
             $this->initPublications();
             return;
         }
-    }
-
-    /**
-     * Clears out the collSectionsRelatedById collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addSectionsRelatedById()
-     */
-    public function clearSectionsRelatedById()
-    {
-        $this->collSectionsRelatedById = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collSectionsRelatedById collection loaded partially.
-     */
-    public function resetPartialSectionsRelatedById($v = true)
-    {
-        $this->collSectionsRelatedByIdPartial = $v;
-    }
-
-    /**
-     * Initializes the collSectionsRelatedById collection.
-     *
-     * By default this just sets the collSectionsRelatedById collection to an empty array (like clearcollSectionsRelatedById());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initSectionsRelatedById($overrideExisting = true)
-    {
-        if (null !== $this->collSectionsRelatedById && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = SectionTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collSectionsRelatedById = new $collectionClassName;
-        $this->collSectionsRelatedById->setModel('\Propel\Models\Section');
-    }
-
-    /**
-     * Gets an array of ChildSection objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildSection is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildSection[] List of ChildSection objects
-     * @throws PropelException
-     */
-    public function getSectionsRelatedById(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collSectionsRelatedByIdPartial && !$this->isNew();
-        if (null === $this->collSectionsRelatedById || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collSectionsRelatedById) {
-                // return empty collection
-                $this->initSectionsRelatedById();
-            } else {
-                $collSectionsRelatedById = ChildSectionQuery::create(null, $criteria)
-                    ->filterByParent($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collSectionsRelatedByIdPartial && count($collSectionsRelatedById)) {
-                        $this->initSectionsRelatedById(false);
-
-                        foreach ($collSectionsRelatedById as $obj) {
-                            if (false == $this->collSectionsRelatedById->contains($obj)) {
-                                $this->collSectionsRelatedById->append($obj);
-                            }
-                        }
-
-                        $this->collSectionsRelatedByIdPartial = true;
-                    }
-
-                    return $collSectionsRelatedById;
-                }
-
-                if ($partial && $this->collSectionsRelatedById) {
-                    foreach ($this->collSectionsRelatedById as $obj) {
-                        if ($obj->isNew()) {
-                            $collSectionsRelatedById[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collSectionsRelatedById = $collSectionsRelatedById;
-                $this->collSectionsRelatedByIdPartial = false;
-            }
-        }
-
-        return $this->collSectionsRelatedById;
-    }
-
-    /**
-     * Sets a collection of ChildSection objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $sectionsRelatedById A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildSection The current object (for fluent API support)
-     */
-    public function setSectionsRelatedById(Collection $sectionsRelatedById, ConnectionInterface $con = null)
-    {
-        /** @var ChildSection[] $sectionsRelatedByIdToDelete */
-        $sectionsRelatedByIdToDelete = $this->getSectionsRelatedById(new Criteria(), $con)->diff($sectionsRelatedById);
-
-
-        $this->sectionsRelatedByIdScheduledForDeletion = $sectionsRelatedByIdToDelete;
-
-        foreach ($sectionsRelatedByIdToDelete as $sectionRelatedByIdRemoved) {
-            $sectionRelatedByIdRemoved->setParent(null);
-        }
-
-        $this->collSectionsRelatedById = null;
-        foreach ($sectionsRelatedById as $sectionRelatedById) {
-            $this->addSectionRelatedById($sectionRelatedById);
-        }
-
-        $this->collSectionsRelatedById = $sectionsRelatedById;
-        $this->collSectionsRelatedByIdPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Section objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Section objects.
-     * @throws PropelException
-     */
-    public function countSectionsRelatedById(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collSectionsRelatedByIdPartial && !$this->isNew();
-        if (null === $this->collSectionsRelatedById || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSectionsRelatedById) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getSectionsRelatedById());
-            }
-
-            $query = ChildSectionQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByParent($this)
-                ->count($con);
-        }
-
-        return count($this->collSectionsRelatedById);
-    }
-
-    /**
-     * Method called to associate a ChildSection object to this object
-     * through the ChildSection foreign key attribute.
-     *
-     * @param  ChildSection $l ChildSection
-     * @return $this|\Propel\Models\Section The current object (for fluent API support)
-     */
-    public function addSectionRelatedById(ChildSection $l)
-    {
-        if ($this->collSectionsRelatedById === null) {
-            $this->initSectionsRelatedById();
-            $this->collSectionsRelatedByIdPartial = true;
-        }
-
-        if (!$this->collSectionsRelatedById->contains($l)) {
-            $this->doAddSectionRelatedById($l);
-
-            if ($this->sectionsRelatedByIdScheduledForDeletion and $this->sectionsRelatedByIdScheduledForDeletion->contains($l)) {
-                $this->sectionsRelatedByIdScheduledForDeletion->remove($this->sectionsRelatedByIdScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildSection $sectionRelatedById The ChildSection object to add.
-     */
-    protected function doAddSectionRelatedById(ChildSection $sectionRelatedById)
-    {
-        $this->collSectionsRelatedById[]= $sectionRelatedById;
-        $sectionRelatedById->setParent($this);
-    }
-
-    /**
-     * @param  ChildSection $sectionRelatedById The ChildSection object to remove.
-     * @return $this|ChildSection The current object (for fluent API support)
-     */
-    public function removeSectionRelatedById(ChildSection $sectionRelatedById)
-    {
-        if ($this->getSectionsRelatedById()->contains($sectionRelatedById)) {
-            $pos = $this->collSectionsRelatedById->search($sectionRelatedById);
-            $this->collSectionsRelatedById->remove($pos);
-            if (null === $this->sectionsRelatedByIdScheduledForDeletion) {
-                $this->sectionsRelatedByIdScheduledForDeletion = clone $this->collSectionsRelatedById;
-                $this->sectionsRelatedByIdScheduledForDeletion->clear();
-            }
-            $this->sectionsRelatedByIdScheduledForDeletion[]= $sectionRelatedById;
-            $sectionRelatedById->setParent(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Section is new, it will return
-     * an empty collection; or if this Section has previously
-     * been saved, it will retrieve related SectionsRelatedById from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Section.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSection[] List of ChildSection objects
-     */
-    public function getSectionsRelatedByIdJoinUserRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildSectionQuery::create(null, $criteria);
-        $query->joinWith('UserRelatedByCreatedBy', $joinBehavior);
-
-        return $this->getSectionsRelatedById($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Section is new, it will return
-     * an empty collection; or if this Section has previously
-     * been saved, it will retrieve related SectionsRelatedById from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Section.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSection[] List of ChildSection objects
-     */
-    public function getSectionsRelatedByIdJoinUserRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildSectionQuery::create(null, $criteria);
-        $query->joinWith('UserRelatedByUpdatedBy', $joinBehavior);
-
-        return $this->getSectionsRelatedById($query, $con);
     }
 
     /**
@@ -3234,9 +2757,6 @@ abstract class Section implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aParent) {
-            $this->aParent->removeSectionRelatedById($this);
-        }
         if (null !== $this->aUserRelatedByCreatedBy) {
             $this->aUserRelatedByCreatedBy->removeSectionRelatedByCreatedBy($this);
         }
@@ -3244,7 +2764,6 @@ abstract class Section implements ActiveRecordInterface
             $this->aUserRelatedByUpdatedBy->removeSectionRelatedByUpdatedBy($this);
         }
         $this->id = null;
-        $this->parent_id = null;
         $this->code = null;
         $this->header = null;
         $this->picture = null;
@@ -3278,11 +2797,6 @@ abstract class Section implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collSectionsRelatedById) {
-                foreach ($this->collSectionsRelatedById as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collSectionFields) {
                 foreach ($this->collSectionFields as $o) {
                     $o->clearAllReferences($deep);
@@ -3295,10 +2809,8 @@ abstract class Section implements ActiveRecordInterface
             }
         } // if ($deep)
 
-        $this->collSectionsRelatedById = null;
         $this->collSectionFields = null;
         $this->collPublications = null;
-        $this->aParent = null;
         $this->aUserRelatedByCreatedBy = null;
         $this->aUserRelatedByUpdatedBy = null;
     }
@@ -3368,12 +2880,6 @@ abstract class Section implements ActiveRecordInterface
             // foreign key reference.
 
             // If validate() method exists, the validate-behavior is configured for related object
-            if (method_exists($this->aParent, 'validate')) {
-                if (!$this->aParent->validate($validator)) {
-                    $failureMap->addAll($this->aParent->getValidationFailures());
-                }
-            }
-            // If validate() method exists, the validate-behavior is configured for related object
             if (method_exists($this->aUserRelatedByCreatedBy, 'validate')) {
                 if (!$this->aUserRelatedByCreatedBy->validate($validator)) {
                     $failureMap->addAll($this->aUserRelatedByCreatedBy->getValidationFailures());
@@ -3391,15 +2897,6 @@ abstract class Section implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
-            if (null !== $this->collSectionsRelatedById) {
-                foreach ($this->collSectionsRelatedById as $referrerFK) {
-                    if (method_exists($referrerFK, 'validate')) {
-                        if (!$referrerFK->validate($validator)) {
-                            $failureMap->addAll($referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-            }
             if (null !== $this->collSectionFields) {
                 foreach ($this->collSectionFields as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {

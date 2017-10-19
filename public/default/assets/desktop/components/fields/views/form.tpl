@@ -98,4 +98,10 @@
 		</label>
 		<div class="help-block error"></div>
 	</div>
+	<div class="form-group" data-name="is_searchable">
+		<label>
+			<input type="checkbox" name="is_searchable" value="1" data-unchecked-value="0" {{when is_searchable is true}}checked{{endwhen is_searchable}} /> Поле предназначено для поиска
+		</label>
+		<div class="help-block error"></div>
+	</div>
 </form>

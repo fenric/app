@@ -68,7 +68,7 @@
 
 				modal.on('modal.content.reload', function()
 				{
-					self.list(options);
+					self.list(self.params.all());
 				});
 			}});
 
@@ -241,14 +241,6 @@
 	};
 
 	/**
-	 * Карточка объекта
-	 */
-	$component.prototype.card = function(id)
-	{
-		// @continue
-	};
-
-	/**
 	 * Управление дополнительными полями объекта
 	 */
 	$component.prototype.fields = function(id)
@@ -343,56 +335,66 @@
 		{
 			modal.block();
 
-			self.unload(function(sections)
+			$bugaboo.load(self.templates.form, function(tpl)
 			{
-				$bugaboo.load(self.templates.form, function(tpl)
+				modal.content(
+					tpl.format(params)
+				).unblock();
+
+				modal.search('textarea.ckeditor', function(element)
 				{
-					params.sections = sections;
+					$desktop.component('ckeditor').init(element);
 
-					modal.content(
-						tpl.format(params)
-					).unblock();
+					modal.onclosing(function() {
+						element.ckeditor.destroy();
+					});
+				});
 
-					modal.search('textarea.ckeditor', function(element)
-					{
-						$desktop.component('ckeditor').init(element);
+				modal.search('select.select-picker', function(element)
+				{
+					jQuery(element).selectpicker({
+						// @continue
 					});
 
-					modal.click('button.picture-reset', function(event)
-					{
-						modal.clear('.picture-container');
+					modal.onclosing(function() {
+						jQuery(element).selectpicker('destroy');
 					});
+				});
 
-					modal.change('input.picture-upload', function(event, element)
+				modal.click('button.picture-reset', function(event)
+				{
+					modal.clear('.picture-container');
+				});
+
+				modal.change('input.picture-upload', function(event, element)
+				{
+					var container;
+
+					modal.block();
+
+					$desktop.component('uploader').image(element.files[0], function(response)
 					{
-						var container;
+						element.value = null;
 
-						modal.block();
+						container = document.createDocumentFragment();
 
-						$desktop.component('uploader').image(element.files[0], function(response)
-						{
-							element.value = null;
+						container.appendChild($desktop.createElement('img', {
+							class: 'img-thumbnail', src: '/upload/150x150/' + response.file,
+						}));
 
-							container = document.createDocumentFragment();
+						container.appendChild($desktop.createElement('input', {
+							type: 'hidden', name: 'picture', value: response.file,
+						}));
 
-							container.appendChild($desktop.createElement('img', {
-								class: 'img-thumbnail', src: '/upload/150x150/' + response.file,
-							}));
+						modal.replace('div.picture-container', container);
 
-							container.appendChild($desktop.createElement('input', {
-								type: 'hidden', name: 'picture', value: response.file,
-							}));
-
-							modal.replace('div.picture-container', container);
-
-							modal.unblock();
-						});
+						modal.unblock();
 					});
+				});
 
-					modal.submit(function(event)
-					{
-						modal.triggerEventListeners('modal.content.save');
-					});
+				modal.submit(function(event)
+				{
+					modal.triggerEventListeners('modal.content.save');
 				});
 			});
 		});

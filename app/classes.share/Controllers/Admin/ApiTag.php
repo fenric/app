@@ -8,6 +8,7 @@ namespace Fenric\Controllers\Admin;
 use Propel\Models\Tag;
 use Propel\Models\TagQuery;
 use Propel\Models\Map\TagTableMap;
+
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Fenric\Controllers\Abstractable\CRUD;

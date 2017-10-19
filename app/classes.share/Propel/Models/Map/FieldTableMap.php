@@ -59,7 +59,7 @@ class FieldTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 14;
+    const NUM_COLUMNS = 15;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class FieldTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 14;
+    const NUM_HYDRATE_COLUMNS = 15;
 
     /**
      * the column name for the id field
@@ -107,9 +107,9 @@ class FieldTableMap extends TableMap
     const COL_VALIDATION_REGEX = 'fenric_field.validation_regex';
 
     /**
-     * the column name for the error_message field
+     * the column name for the validation_error field
      */
-    const COL_ERROR_MESSAGE = 'fenric_field.error_message';
+    const COL_VALIDATION_ERROR = 'fenric_field.validation_error';
 
     /**
      * the column name for the is_unique field
@@ -120,6 +120,11 @@ class FieldTableMap extends TableMap
      * the column name for the is_required field
      */
     const COL_IS_REQUIRED = 'fenric_field.is_required';
+
+    /**
+     * the column name for the is_searchable field
+     */
+    const COL_IS_SEARCHABLE = 'fenric_field.is_searchable';
 
     /**
      * the column name for the created_at field
@@ -153,11 +158,11 @@ class FieldTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Type', 'Name', 'Label', 'Tooltip', 'DefaultValue', 'ValidationRegex', 'ErrorMessage', 'IsUnique', 'IsRequired', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', ),
-        self::TYPE_CAMELNAME     => array('id', 'type', 'name', 'label', 'tooltip', 'defaultValue', 'validationRegex', 'errorMessage', 'isUnique', 'isRequired', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', ),
-        self::TYPE_COLNAME       => array(FieldTableMap::COL_ID, FieldTableMap::COL_TYPE, FieldTableMap::COL_NAME, FieldTableMap::COL_LABEL, FieldTableMap::COL_TOOLTIP, FieldTableMap::COL_DEFAULT_VALUE, FieldTableMap::COL_VALIDATION_REGEX, FieldTableMap::COL_ERROR_MESSAGE, FieldTableMap::COL_IS_UNIQUE, FieldTableMap::COL_IS_REQUIRED, FieldTableMap::COL_CREATED_AT, FieldTableMap::COL_CREATED_BY, FieldTableMap::COL_UPDATED_AT, FieldTableMap::COL_UPDATED_BY, ),
-        self::TYPE_FIELDNAME     => array('id', 'type', 'name', 'label', 'tooltip', 'default_value', 'validation_regex', 'error_message', 'is_unique', 'is_required', 'created_at', 'created_by', 'updated_at', 'updated_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        self::TYPE_PHPNAME       => array('Id', 'Type', 'Name', 'Label', 'Tooltip', 'DefaultValue', 'ValidationRegex', 'ValidationError', 'IsUnique', 'IsRequired', 'IsSearchable', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', ),
+        self::TYPE_CAMELNAME     => array('id', 'type', 'name', 'label', 'tooltip', 'defaultValue', 'validationRegex', 'validationError', 'isUnique', 'isRequired', 'isSearchable', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', ),
+        self::TYPE_COLNAME       => array(FieldTableMap::COL_ID, FieldTableMap::COL_TYPE, FieldTableMap::COL_NAME, FieldTableMap::COL_LABEL, FieldTableMap::COL_TOOLTIP, FieldTableMap::COL_DEFAULT_VALUE, FieldTableMap::COL_VALIDATION_REGEX, FieldTableMap::COL_VALIDATION_ERROR, FieldTableMap::COL_IS_UNIQUE, FieldTableMap::COL_IS_REQUIRED, FieldTableMap::COL_IS_SEARCHABLE, FieldTableMap::COL_CREATED_AT, FieldTableMap::COL_CREATED_BY, FieldTableMap::COL_UPDATED_AT, FieldTableMap::COL_UPDATED_BY, ),
+        self::TYPE_FIELDNAME     => array('id', 'type', 'name', 'label', 'tooltip', 'default_value', 'validation_regex', 'validation_error', 'is_unique', 'is_required', 'is_searchable', 'created_at', 'created_by', 'updated_at', 'updated_by', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -167,11 +172,11 @@ class FieldTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Type' => 1, 'Name' => 2, 'Label' => 3, 'Tooltip' => 4, 'DefaultValue' => 5, 'ValidationRegex' => 6, 'ErrorMessage' => 7, 'IsUnique' => 8, 'IsRequired' => 9, 'CreatedAt' => 10, 'CreatedBy' => 11, 'UpdatedAt' => 12, 'UpdatedBy' => 13, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'type' => 1, 'name' => 2, 'label' => 3, 'tooltip' => 4, 'defaultValue' => 5, 'validationRegex' => 6, 'errorMessage' => 7, 'isUnique' => 8, 'isRequired' => 9, 'createdAt' => 10, 'createdBy' => 11, 'updatedAt' => 12, 'updatedBy' => 13, ),
-        self::TYPE_COLNAME       => array(FieldTableMap::COL_ID => 0, FieldTableMap::COL_TYPE => 1, FieldTableMap::COL_NAME => 2, FieldTableMap::COL_LABEL => 3, FieldTableMap::COL_TOOLTIP => 4, FieldTableMap::COL_DEFAULT_VALUE => 5, FieldTableMap::COL_VALIDATION_REGEX => 6, FieldTableMap::COL_ERROR_MESSAGE => 7, FieldTableMap::COL_IS_UNIQUE => 8, FieldTableMap::COL_IS_REQUIRED => 9, FieldTableMap::COL_CREATED_AT => 10, FieldTableMap::COL_CREATED_BY => 11, FieldTableMap::COL_UPDATED_AT => 12, FieldTableMap::COL_UPDATED_BY => 13, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'type' => 1, 'name' => 2, 'label' => 3, 'tooltip' => 4, 'default_value' => 5, 'validation_regex' => 6, 'error_message' => 7, 'is_unique' => 8, 'is_required' => 9, 'created_at' => 10, 'created_by' => 11, 'updated_at' => 12, 'updated_by' => 13, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Type' => 1, 'Name' => 2, 'Label' => 3, 'Tooltip' => 4, 'DefaultValue' => 5, 'ValidationRegex' => 6, 'ValidationError' => 7, 'IsUnique' => 8, 'IsRequired' => 9, 'IsSearchable' => 10, 'CreatedAt' => 11, 'CreatedBy' => 12, 'UpdatedAt' => 13, 'UpdatedBy' => 14, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'type' => 1, 'name' => 2, 'label' => 3, 'tooltip' => 4, 'defaultValue' => 5, 'validationRegex' => 6, 'validationError' => 7, 'isUnique' => 8, 'isRequired' => 9, 'isSearchable' => 10, 'createdAt' => 11, 'createdBy' => 12, 'updatedAt' => 13, 'updatedBy' => 14, ),
+        self::TYPE_COLNAME       => array(FieldTableMap::COL_ID => 0, FieldTableMap::COL_TYPE => 1, FieldTableMap::COL_NAME => 2, FieldTableMap::COL_LABEL => 3, FieldTableMap::COL_TOOLTIP => 4, FieldTableMap::COL_DEFAULT_VALUE => 5, FieldTableMap::COL_VALIDATION_REGEX => 6, FieldTableMap::COL_VALIDATION_ERROR => 7, FieldTableMap::COL_IS_UNIQUE => 8, FieldTableMap::COL_IS_REQUIRED => 9, FieldTableMap::COL_IS_SEARCHABLE => 10, FieldTableMap::COL_CREATED_AT => 11, FieldTableMap::COL_CREATED_BY => 12, FieldTableMap::COL_UPDATED_AT => 13, FieldTableMap::COL_UPDATED_BY => 14, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'type' => 1, 'name' => 2, 'label' => 3, 'tooltip' => 4, 'default_value' => 5, 'validation_regex' => 6, 'validation_error' => 7, 'is_unique' => 8, 'is_required' => 9, 'is_searchable' => 10, 'created_at' => 11, 'created_by' => 12, 'updated_at' => 13, 'updated_by' => 14, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -199,9 +204,10 @@ class FieldTableMap extends TableMap
         $this->addColumn('tooltip', 'Tooltip', 'VARCHAR', false, 255, null);
         $this->addColumn('default_value', 'DefaultValue', 'LONGVARCHAR', false, null, null);
         $this->addColumn('validation_regex', 'ValidationRegex', 'VARCHAR', false, 255, null);
-        $this->addColumn('error_message', 'ErrorMessage', 'VARCHAR', false, 255, null);
+        $this->addColumn('validation_error', 'ValidationError', 'VARCHAR', false, 255, null);
         $this->addColumn('is_unique', 'IsUnique', 'BOOLEAN', true, 1, false);
         $this->addColumn('is_required', 'IsRequired', 'BOOLEAN', true, 1, false);
+        $this->addColumn('is_searchable', 'IsSearchable', 'BOOLEAN', true, 1, false);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
@@ -408,9 +414,10 @@ class FieldTableMap extends TableMap
             $criteria->addSelectColumn(FieldTableMap::COL_TOOLTIP);
             $criteria->addSelectColumn(FieldTableMap::COL_DEFAULT_VALUE);
             $criteria->addSelectColumn(FieldTableMap::COL_VALIDATION_REGEX);
-            $criteria->addSelectColumn(FieldTableMap::COL_ERROR_MESSAGE);
+            $criteria->addSelectColumn(FieldTableMap::COL_VALIDATION_ERROR);
             $criteria->addSelectColumn(FieldTableMap::COL_IS_UNIQUE);
             $criteria->addSelectColumn(FieldTableMap::COL_IS_REQUIRED);
+            $criteria->addSelectColumn(FieldTableMap::COL_IS_SEARCHABLE);
             $criteria->addSelectColumn(FieldTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(FieldTableMap::COL_CREATED_BY);
             $criteria->addSelectColumn(FieldTableMap::COL_UPDATED_AT);
@@ -423,9 +430,10 @@ class FieldTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.tooltip');
             $criteria->addSelectColumn($alias . '.default_value');
             $criteria->addSelectColumn($alias . '.validation_regex');
-            $criteria->addSelectColumn($alias . '.error_message');
+            $criteria->addSelectColumn($alias . '.validation_error');
             $criteria->addSelectColumn($alias . '.is_unique');
             $criteria->addSelectColumn($alias . '.is_required');
+            $criteria->addSelectColumn($alias . '.is_searchable');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.created_by');
             $criteria->addSelectColumn($alias . '.updated_at');

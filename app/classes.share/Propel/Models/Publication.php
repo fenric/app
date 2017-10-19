@@ -516,7 +516,8 @@ class Publication extends BasePublication
 							$uniqueness->where(PublicationFieldTableMap::COL_PUBLICATION_ID, '=', $this->getId());
 							$uniqueness->where(PublicationFieldTableMap::COL_SECTION_FIELD_ID, '=', $sfield->getId());
 
-							if ($uniqueness->readOne() > 0) {
+							if ($uniqueness->readOne() > 0)
+							{
 								continue;
 							}
 
@@ -571,219 +572,15 @@ class Publication extends BasePublication
 							{
 								if ($context->getRoot()->hasVirtualColumn($sfield->getField()->getName()))
 								{
-									$value = $context->getRoot()->getVirtualColumn($sfield->getField()->getName());
-
-									$violationPath = sprintf('field:%s', $sfield->getField()->getName());
-
-									if (strlen($value) === 0)
+									try
 									{
-										if ($sfield->getField()->isRequired())
-										{
-											$message = 'Is empty.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-										}
-
-										continue;
+										$sfield->getField()->isValidPublicationValue($context->getRoot());
 									}
-
-									if ($sfield->getField()->isFlag())
+									catch (\RuntimeException $e)
 									{
-										$values = ['0', '1'];
-
-										if (! in_array($value, $values))
-										{
-											$message = 'Invalid value.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-									else if ($sfield->getField()->isNumber())
-									{
-										if (! is_numeric($value))
-										{
-											$message = 'Invalid number.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-									else if ($sfield->getField()->isYear())
-									{
-										$regexp = '/^(?<year>[0-9]{4})$/';
-
-										if (! (preg_match($regexp, $value, $matches) && checkdate(1, 1, $matches['year'])))
-										{
-											$message = 'Invalid year.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-									else if ($sfield->getField()->isDate())
-									{
-										$regexp = '/^(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})$/';
-
-										if (! (preg_match($regexp, $value, $matches) && checkdate($matches['month'], $matches['day'], $matches['year'])))
-										{
-											$message = 'Invalid date.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-									else if ($sfield->getField()->isDateTime())
-									{
-										$regexp = '/^(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})\040(?<hour>[0-9]{2}):(?<minute>[0-9]{2})$/';
-
-										if (! (preg_match($regexp, $value, $matches) && checkdate($matches['month'], $matches['day'], $matches['year']) && ($matches['hour'] >= 0 && $matches['hour'] <= 23) && ($matches['minute'] >= 0 && $matches['minute'] <= 59)))
-										{
-											$message = 'Invalid datetime.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-									else if ($sfield->getField()->isTime())
-									{
-										$regexp = '/^(?<hour>[0-9]{2}):(?<minute>[0-9]{2})$/';
-
-										if (! (preg_match($regexp, $value, $matches) && ($matches['hour'] >= 0 && $matches['hour'] <= 23) && ($matches['minute'] >= 0 && $matches['minute'] <= 59)))
-										{
-											$message = 'Invalid time.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-									else if ($sfield->getField()->isIp())
-									{
-										if (! filter_var($value, FILTER_VALIDATE_IP))
-										{
-											$message = 'Invalid IP.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-									else if ($sfield->getField()->isUrl())
-									{
-										if (! filter_var($value, FILTER_VALIDATE_URL))
-										{
-											$message = 'Invalid URL.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-									else if ($sfield->getField()->isEmail())
-									{
-										if (! filter_var($value, FILTER_VALIDATE_EMAIL))
-										{
-											$message = 'Invalid email.';
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-
-									if (strlen($sfield->getField()->getValidationRegex()) > 0)
-									{
-										$filter['options']['regexp'] = $sfield->getField()->getValidationRegex();
-
-										if (! filter_var($value, FILTER_VALIDATE_REGEXP, $filter))
-										{
-											$message = 'Is not valid.';
-
-											if (strlen($sfield->getField()->getErrorMessage()) > 0) {
-												$message = $sfield->getField()->getErrorMessage();
-											}
-
-											$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-											continue;
-										}
-									}
-
-									if ($sfield->getField()->isUnique())
-									{
-										if ($sfield->getField()->isSearchable())
-										{
-											$uniqueness = fenric('query');
-
-											$uniqueness->count(PublicationFieldTableMap::COL_ID);
-											$uniqueness->from(PublicationFieldTableMap::TABLE_NAME);
-
-											$uniqueness->inner()->join(SectionFieldTableMap::TABLE_NAME);
-											$uniqueness->on(SectionFieldTableMap::COL_ID, '=', PublicationFieldTableMap::COL_SECTION_FIELD_ID);
-
-											$uniqueness->inner()->join(SectionTableMap::TABLE_NAME);
-											$uniqueness->on(SectionTableMap::COL_ID, '=', SectionFieldTableMap::COL_SECTION_ID);
-
-											$uniqueness->where(SectionTableMap::COL_ID, '=', $context->getRoot()->getSection()->getId());
-											$uniqueness->where($sfield->getField()->getPublicationValueColumn(), 'is not', null);
-
-											if (! $context->getRoot()->isNew())
-											{
-												$uniqueness->where(PublicationFieldTableMap::COL_PUBLICATION_ID, '!=', $context->getRoot()->getId());
-											}
-
-											if (! $sfield->getField()->isTimestamp())
-											{
-												$uniqueness->where($sfield->getField()->getPublicationValueColumn(), '=', $value);
-											}
-											else if ($sfield->getField()->isYear())
-											{
-												$uniqueness->where(function() use($sfield)
-												{
-													return sprintf('DATE_FORMAT(%s, "%%Y")', $sfield->getField()->getPublicationValueColumn());
-
-												}, '=', $value);
-											}
-											else if ($sfield->getField()->isDate())
-											{
-												$uniqueness->where(function() use($sfield)
-												{
-													return sprintf('DATE_FORMAT(%s, "%%Y-%%m-%%d")', $sfield->getField()->getPublicationValueColumn());
-
-												}, '=', (new DateTime($value))->format('Y-m-d'));
-											}
-											else if ($sfield->getField()->isDateTime())
-											{
-												$uniqueness->where(function() use($sfield)
-												{
-													return sprintf('DATE_FORMAT(%s, "%%Y-%%m-%%d %%H:%%i")', $sfield->getField()->getPublicationValueColumn());
-
-												}, '=', (new DateTime($value))->format('Y-m-d H:i'));
-											}
-											else if ($sfield->getField()->isTime())
-											{
-												$uniqueness->where(function() use($sfield)
-												{
-													return sprintf('DATE_FORMAT(%s, "%%H:%%i")', $sfield->getField()->getPublicationValueColumn());
-
-												}, '=', (new DateTime($value))->format('H:i'));
-											}
-
-											if ($uniqueness->readOne() > 0)
-											{
-												$message = 'Is not unique.';
-
-												$context->buildViolation($message)->atPath($violationPath)->addViolation();
-
-												continue;
-											}
-										}
+										$context->buildViolation($e->getMessage())->atPath(
+											sprintf('field:%s', $sfield->getField()->getName())
+										)->addViolation();
 									}
 								}
 							}

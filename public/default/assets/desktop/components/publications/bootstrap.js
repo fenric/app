@@ -73,7 +73,7 @@
 
 				modal.on('modal.content.reload', function()
 				{
-					self.list(options);
+					self.list(self.params.all());
 				});
 			}});
 
@@ -453,8 +453,7 @@
 							{
 								$desktop.component('ckeditor').init(element);
 
-								modal.onclosing(function()
-								{
+								modal.onclosing(function() {
 									element.ckeditor.destroy();
 								});
 							});
@@ -465,8 +464,7 @@
 									// @continue
 								});
 
-								modal.onclosing(function()
-								{
+								modal.onclosing(function() {
 									jQuery(element).selectpicker('destroy');
 								});
 							});
@@ -480,8 +478,7 @@
 									scrollInput: false,
 								});
 
-								modal.onclosing(function()
-								{
+								modal.onclosing(function() {
 									jQuery(element).datetimepicker('destroy');
 								});
 							});
@@ -495,8 +492,7 @@
 									scrollInput: false,
 								});
 
-								modal.onclosing(function()
-								{
+								modal.onclosing(function() {
 									jQuery(element).datetimepicker('destroy');
 								});
 							});
@@ -510,8 +506,7 @@
 									scrollInput: false,
 								});
 
-								modal.onclosing(function()
-								{
+								modal.onclosing(function() {
 									jQuery(element).datetimepicker('destroy');
 								});
 							});
@@ -595,8 +590,7 @@
 					{
 						$desktop.component('ckeditor').init(element);
 
-						modal.onclosing(function()
-						{
+						modal.onclosing(function() {
 							element.ckeditor.destroy();
 						});
 					});
@@ -610,8 +604,7 @@
 							scrollInput: false,
 						});
 
-						modal.onclosing(function()
-						{
+						modal.onclosing(function() {
 							jQuery(element).datetimepicker('destroy');
 						});
 					});
@@ -625,8 +618,7 @@
 							scrollInput: false,
 						});
 
-						modal.onclosing(function()
-						{
+						modal.onclosing(function() {
 							jQuery(element).datetimepicker('destroy');
 						});
 					});
@@ -640,8 +632,7 @@
 							scrollInput: false,
 						});
 
-						modal.onclosing(function()
-						{
+						modal.onclosing(function() {
 							jQuery(element).datetimepicker('destroy');
 						});
 					});

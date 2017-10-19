@@ -43,9 +43,10 @@ class ApiField extends CRUD
 			FieldTableMap::COL_TOOLTIP => $this->request->post->get('tooltip'),
 			FieldTableMap::COL_DEFAULT_VALUE => $this->request->post->get('default_value'),
 			FieldTableMap::COL_VALIDATION_REGEX => $this->request->post->get('validation_regex'),
-			FieldTableMap::COL_ERROR_MESSAGE => $this->request->post->get('error_message'),
+			FieldTableMap::COL_VALIDATION_ERROR => $this->request->post->get('validation_error'),
 			FieldTableMap::COL_IS_UNIQUE => $this->request->post->get('is_unique'),
 			FieldTableMap::COL_IS_REQUIRED => $this->request->post->get('is_required'),
+			FieldTableMap::COL_IS_SEARCHABLE => $this->request->post->get('is_searchable'),
 		]);
 	}
 
@@ -61,9 +62,10 @@ class ApiField extends CRUD
 			FieldTableMap::COL_TOOLTIP => $this->request->post->get('tooltip'),
 			FieldTableMap::COL_DEFAULT_VALUE => $this->request->post->get('default_value'),
 			FieldTableMap::COL_VALIDATION_REGEX => $this->request->post->get('validation_regex'),
-			FieldTableMap::COL_ERROR_MESSAGE => $this->request->post->get('error_message'),
+			FieldTableMap::COL_VALIDATION_ERROR => $this->request->post->get('validation_error'),
 			FieldTableMap::COL_IS_UNIQUE => $this->request->post->get('is_unique'),
 			FieldTableMap::COL_IS_REQUIRED => $this->request->post->get('is_required'),
+			FieldTableMap::COL_IS_SEARCHABLE => $this->request->post->get('is_searchable'),
 		]);
 	}
 
@@ -88,9 +90,10 @@ class ApiField extends CRUD
 			FieldTableMap::COL_TOOLTIP,
 			FieldTableMap::COL_DEFAULT_VALUE,
 			FieldTableMap::COL_VALIDATION_REGEX,
-			FieldTableMap::COL_ERROR_MESSAGE,
+			FieldTableMap::COL_VALIDATION_ERROR,
 			FieldTableMap::COL_IS_UNIQUE,
 			FieldTableMap::COL_IS_REQUIRED,
+			FieldTableMap::COL_IS_SEARCHABLE,
 		]);
 	}
 
@@ -125,6 +128,7 @@ class ApiField extends CRUD
 			FieldTableMap::COL_LABEL,
 			FieldTableMap::COL_IS_UNIQUE,
 			FieldTableMap::COL_IS_REQUIRED,
+			FieldTableMap::COL_IS_SEARCHABLE,
 			FieldTableMap::COL_CREATED_AT,
 			FieldTableMap::COL_UPDATED_AT,
 		]);

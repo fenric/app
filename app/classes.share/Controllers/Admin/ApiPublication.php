@@ -374,7 +374,7 @@ class ApiPublication extends CRUD
 					$query->or->where(PublicationTableMap::COL_HEADER, 'like', sprintf('%%%s%%', $keyword));
 				});
 
-				$query->limit(25);
+				$query->limit(100);
 
 				$found = $query->toArray();
 			}

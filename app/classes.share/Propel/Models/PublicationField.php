@@ -32,46 +32,62 @@ class PublicationField extends BasePublicationField
 				switch ($this->getSectionField()->getField()->getType())
 				{
 					case 'flag' :
-						$this->setBoolValue($value);
+						if (strlen($value) > 0) {
+							$this->setBoolValue($value);
+						}
 						break;
 
 					case 'number' :
-						$this->setNumberValue(
-							$this->normalizeNumberValue($value)
-						);
+						if (strlen($value) > 0) {
+							$this->setNumberValue(
+								$this->normalizeNumberValue($value)
+							);
+						}
 						break;
 
 					case 'year' :
-						$this->setDatetimeValue(
-							sprintf('%d-01-01 00:00:00', $value)
-						);
+						if (strlen($value) > 0) {
+							$this->setDatetimeValue(
+								sprintf('%d-01-01 00:00:00', $value)
+							);
+						}
 						break;
 
 					case 'date' :
-						$this->setDatetimeValue(
-							(new \DateTime($value))->format('Y-m-d 00:00:00')
-						);
+						if (strlen($value) > 0) {
+							$this->setDatetimeValue(
+								(new \DateTime($value))->format('Y-m-d 00:00:00')
+							);
+						}
 						break;
 
 					case 'datetime' :
-						$this->setDatetimeValue(
-							(new \DateTime($value))->format('Y-m-d H:i:00')
-						);
+						if (strlen($value) > 0) {
+							$this->setDatetimeValue(
+								(new \DateTime($value))->format('Y-m-d H:i:00')
+							);
+						}
 						break;
 
 					case 'time' :
-						$this->setDatetimeValue(
-							(new \DateTime($value))->format('1970-01-01 H:i:00')
-						);
+						if (strlen($value) > 0) {
+							$this->setDatetimeValue(
+								(new \DateTime($value))->format('1970-01-01 H:i:00')
+							);
+						}
 						break;
 
 					case 'text' :
 					case 'html' :
-						$this->setTextValue($value);
+						if (strlen($value) > 0) {
+							$this->setTextValue($value);
+						}
 						break;
 
 					default :
-						$this->setStringValue($value);
+						if (strlen($value) > 0) {
+							$this->setStringValue($value);
+						}
 						break;
 				}
 			}

@@ -129,7 +129,6 @@ class Api extends Actionable
 			$json = json_decode($this->response->getContent(), true);
 
 			fenric('user')->setPhoto($json['file']);
-
 			fenric('user')->save();
 		}
 	}

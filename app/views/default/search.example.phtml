@@ -1,4 +1,4 @@
-<?php $this->layout('layout') ?>
+<?php $this->layout('layouts/main') ?>
 
 <?php $this->start('metadata') ?>
 <title>Поиск</title>
@@ -46,7 +46,7 @@
 			</div>
 
 			<nav>
-				<?= $this->partial('paginate', [
+				<?= $this->partial('partials/paginate', [
 					'criteria' => $publications,
 				]) ?>
 			</nav>

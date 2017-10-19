@@ -21,7 +21,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildSectionQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildSectionQuery orderByParentId($order = Criteria::ASC) Order by the parent_id column
  * @method     ChildSectionQuery orderByCode($order = Criteria::ASC) Order by the code column
  * @method     ChildSectionQuery orderByHeader($order = Criteria::ASC) Order by the header column
  * @method     ChildSectionQuery orderByPicture($order = Criteria::ASC) Order by the picture column
@@ -38,7 +37,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionQuery orderByUpdatedBy($order = Criteria::ASC) Order by the updated_by column
  *
  * @method     ChildSectionQuery groupById() Group by the id column
- * @method     ChildSectionQuery groupByParentId() Group by the parent_id column
  * @method     ChildSectionQuery groupByCode() Group by the code column
  * @method     ChildSectionQuery groupByHeader() Group by the header column
  * @method     ChildSectionQuery groupByPicture() Group by the picture column
@@ -62,16 +60,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildSectionQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildSectionQuery leftJoinParent($relationAlias = null) Adds a LEFT JOIN clause to the query using the Parent relation
- * @method     ChildSectionQuery rightJoinParent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Parent relation
- * @method     ChildSectionQuery innerJoinParent($relationAlias = null) Adds a INNER JOIN clause to the query using the Parent relation
- *
- * @method     ChildSectionQuery joinWithParent($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Parent relation
- *
- * @method     ChildSectionQuery leftJoinWithParent() Adds a LEFT JOIN clause and with to the query using the Parent relation
- * @method     ChildSectionQuery rightJoinWithParent() Adds a RIGHT JOIN clause and with to the query using the Parent relation
- * @method     ChildSectionQuery innerJoinWithParent() Adds a INNER JOIN clause and with to the query using the Parent relation
- *
  * @method     ChildSectionQuery leftJoinUserRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByCreatedBy relation
  * @method     ChildSectionQuery rightJoinUserRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByCreatedBy relation
  * @method     ChildSectionQuery innerJoinUserRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByCreatedBy relation
@@ -91,16 +79,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionQuery leftJoinWithUserRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
  * @method     ChildSectionQuery rightJoinWithUserRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
  * @method     ChildSectionQuery innerJoinWithUserRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
- *
- * @method     ChildSectionQuery leftJoinSectionRelatedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the SectionRelatedById relation
- * @method     ChildSectionQuery rightJoinSectionRelatedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SectionRelatedById relation
- * @method     ChildSectionQuery innerJoinSectionRelatedById($relationAlias = null) Adds a INNER JOIN clause to the query using the SectionRelatedById relation
- *
- * @method     ChildSectionQuery joinWithSectionRelatedById($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SectionRelatedById relation
- *
- * @method     ChildSectionQuery leftJoinWithSectionRelatedById() Adds a LEFT JOIN clause and with to the query using the SectionRelatedById relation
- * @method     ChildSectionQuery rightJoinWithSectionRelatedById() Adds a RIGHT JOIN clause and with to the query using the SectionRelatedById relation
- * @method     ChildSectionQuery innerJoinWithSectionRelatedById() Adds a INNER JOIN clause and with to the query using the SectionRelatedById relation
  *
  * @method     ChildSectionQuery leftJoinSectionField($relationAlias = null) Adds a LEFT JOIN clause to the query using the SectionField relation
  * @method     ChildSectionQuery rightJoinSectionField($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SectionField relation
@@ -122,13 +100,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSectionQuery rightJoinWithPublication() Adds a RIGHT JOIN clause and with to the query using the Publication relation
  * @method     ChildSectionQuery innerJoinWithPublication() Adds a INNER JOIN clause and with to the query using the Publication relation
  *
- * @method     \Propel\Models\SectionQuery|\Propel\Models\UserQuery|\Propel\Models\SectionFieldQuery|\Propel\Models\PublicationQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\UserQuery|\Propel\Models\SectionFieldQuery|\Propel\Models\PublicationQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildSection findOne(ConnectionInterface $con = null) Return the first ChildSection matching the query
  * @method     ChildSection findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSection matching the query, or a new ChildSection object populated from the query conditions when no match is found
  *
  * @method     ChildSection findOneById(int $id) Return the first ChildSection filtered by the id column
- * @method     ChildSection findOneByParentId(int $parent_id) Return the first ChildSection filtered by the parent_id column
  * @method     ChildSection findOneByCode(string $code) Return the first ChildSection filtered by the code column
  * @method     ChildSection findOneByHeader(string $header) Return the first ChildSection filtered by the header column
  * @method     ChildSection findOneByPicture(string $picture) Return the first ChildSection filtered by the picture column
@@ -148,7 +125,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSection requireOne(ConnectionInterface $con = null) Return the first ChildSection matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSection requireOneById(int $id) Return the first ChildSection filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSection requireOneByParentId(int $parent_id) Return the first ChildSection filtered by the parent_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSection requireOneByCode(string $code) Return the first ChildSection filtered by the code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSection requireOneByHeader(string $header) Return the first ChildSection filtered by the header column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSection requireOneByPicture(string $picture) Return the first ChildSection filtered by the picture column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -166,7 +142,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildSection[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSection objects based on current ModelCriteria
  * @method     ChildSection[]|ObjectCollection findById(int $id) Return ChildSection objects filtered by the id column
- * @method     ChildSection[]|ObjectCollection findByParentId(int $parent_id) Return ChildSection objects filtered by the parent_id column
  * @method     ChildSection[]|ObjectCollection findByCode(string $code) Return ChildSection objects filtered by the code column
  * @method     ChildSection[]|ObjectCollection findByHeader(string $header) Return ChildSection objects filtered by the header column
  * @method     ChildSection[]|ObjectCollection findByPicture(string $picture) Return ChildSection objects filtered by the picture column
@@ -279,7 +254,7 @@ abstract class SectionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, parent_id, code, header, picture, meta_title, meta_author, meta_keywords, meta_description, meta_canonical, meta_robots, created_at, created_by, updated_at, updated_by FROM fenric_section WHERE id = :p0';
+        $sql = 'SELECT id, code, header, picture, meta_title, meta_author, meta_keywords, meta_description, meta_canonical, meta_robots, created_at, created_by, updated_at, updated_by FROM fenric_section WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -408,49 +383,6 @@ abstract class SectionQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SectionTableMap::COL_ID, $id, $comparison);
-    }
-
-    /**
-     * Filter the query on the parent_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByParentId(1234); // WHERE parent_id = 1234
-     * $query->filterByParentId(array(12, 34)); // WHERE parent_id IN (12, 34)
-     * $query->filterByParentId(array('min' => 12)); // WHERE parent_id > 12
-     * </code>
-     *
-     * @see       filterByParent()
-     *
-     * @param     mixed $parentId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildSectionQuery The current query, for fluid interface
-     */
-    public function filterByParentId($parentId = null, $comparison = null)
-    {
-        if (is_array($parentId)) {
-            $useMinMax = false;
-            if (isset($parentId['min'])) {
-                $this->addUsingAlias(SectionTableMap::COL_PARENT_ID, $parentId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($parentId['max'])) {
-                $this->addUsingAlias(SectionTableMap::COL_PARENT_ID, $parentId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(SectionTableMap::COL_PARENT_ID, $parentId, $comparison);
     }
 
     /**
@@ -876,83 +808,6 @@ abstract class SectionQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Propel\Models\Section object
-     *
-     * @param \Propel\Models\Section|ObjectCollection $section The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
-     *
-     * @return ChildSectionQuery The current query, for fluid interface
-     */
-    public function filterByParent($section, $comparison = null)
-    {
-        if ($section instanceof \Propel\Models\Section) {
-            return $this
-                ->addUsingAlias(SectionTableMap::COL_PARENT_ID, $section->getId(), $comparison);
-        } elseif ($section instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(SectionTableMap::COL_PARENT_ID, $section->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByParent() only accepts arguments of type \Propel\Models\Section or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Parent relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildSectionQuery The current query, for fluid interface
-     */
-    public function joinParent($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Parent');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Parent');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Parent relation Section object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Propel\Models\SectionQuery A secondary query class using the current class as primary query
-     */
-    public function useParentQuery($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        return $this
-            ->joinParent($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Parent', '\Propel\Models\SectionQuery');
-    }
-
-    /**
      * Filter the query by a related \Propel\Models\User object
      *
      * @param \Propel\Models\User|ObjectCollection $user The related object(s) to use as filter
@@ -1104,79 +959,6 @@ abstract class SectionQuery extends ModelCriteria
         return $this
             ->joinUserRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByUpdatedBy', '\Propel\Models\UserQuery');
-    }
-
-    /**
-     * Filter the query by a related \Propel\Models\Section object
-     *
-     * @param \Propel\Models\Section|ObjectCollection $section the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildSectionQuery The current query, for fluid interface
-     */
-    public function filterBySectionRelatedById($section, $comparison = null)
-    {
-        if ($section instanceof \Propel\Models\Section) {
-            return $this
-                ->addUsingAlias(SectionTableMap::COL_ID, $section->getParentId(), $comparison);
-        } elseif ($section instanceof ObjectCollection) {
-            return $this
-                ->useSectionRelatedByIdQuery()
-                ->filterByPrimaryKeys($section->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterBySectionRelatedById() only accepts arguments of type \Propel\Models\Section or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the SectionRelatedById relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildSectionQuery The current query, for fluid interface
-     */
-    public function joinSectionRelatedById($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('SectionRelatedById');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'SectionRelatedById');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the SectionRelatedById relation Section object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Propel\Models\SectionQuery A secondary query class using the current class as primary query
-     */
-    public function useSectionRelatedByIdQuery($relationAlias = null, $joinType = 'INNER JOIN')
-    {
-        return $this
-            ->joinSectionRelatedById($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SectionRelatedById', '\Propel\Models\SectionQuery');
     }
 
     /**

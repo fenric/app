@@ -59,7 +59,7 @@ class SectionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 16;
+    const NUM_COLUMNS = 15;
 
     /**
      * The number of lazy-loaded columns
@@ -69,17 +69,12 @@ class SectionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 15;
+    const NUM_HYDRATE_COLUMNS = 14;
 
     /**
      * the column name for the id field
      */
     const COL_ID = 'fenric_section.id';
-
-    /**
-     * the column name for the parent_id field
-     */
-    const COL_PARENT_ID = 'fenric_section.parent_id';
 
     /**
      * the column name for the code field
@@ -163,11 +158,11 @@ class SectionTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'ParentId', 'Code', 'Header', 'Picture', 'Content', 'MetaTitle', 'MetaAuthor', 'MetaKeywords', 'MetaDescription', 'MetaCanonical', 'MetaRobots', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', ),
-        self::TYPE_CAMELNAME     => array('id', 'parentId', 'code', 'header', 'picture', 'content', 'metaTitle', 'metaAuthor', 'metaKeywords', 'metaDescription', 'metaCanonical', 'metaRobots', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', ),
-        self::TYPE_COLNAME       => array(SectionTableMap::COL_ID, SectionTableMap::COL_PARENT_ID, SectionTableMap::COL_CODE, SectionTableMap::COL_HEADER, SectionTableMap::COL_PICTURE, SectionTableMap::COL_CONTENT, SectionTableMap::COL_META_TITLE, SectionTableMap::COL_META_AUTHOR, SectionTableMap::COL_META_KEYWORDS, SectionTableMap::COL_META_DESCRIPTION, SectionTableMap::COL_META_CANONICAL, SectionTableMap::COL_META_ROBOTS, SectionTableMap::COL_CREATED_AT, SectionTableMap::COL_CREATED_BY, SectionTableMap::COL_UPDATED_AT, SectionTableMap::COL_UPDATED_BY, ),
-        self::TYPE_FIELDNAME     => array('id', 'parent_id', 'code', 'header', 'picture', 'content', 'meta_title', 'meta_author', 'meta_keywords', 'meta_description', 'meta_canonical', 'meta_robots', 'created_at', 'created_by', 'updated_at', 'updated_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
+        self::TYPE_PHPNAME       => array('Id', 'Code', 'Header', 'Picture', 'Content', 'MetaTitle', 'MetaAuthor', 'MetaKeywords', 'MetaDescription', 'MetaCanonical', 'MetaRobots', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', ),
+        self::TYPE_CAMELNAME     => array('id', 'code', 'header', 'picture', 'content', 'metaTitle', 'metaAuthor', 'metaKeywords', 'metaDescription', 'metaCanonical', 'metaRobots', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', ),
+        self::TYPE_COLNAME       => array(SectionTableMap::COL_ID, SectionTableMap::COL_CODE, SectionTableMap::COL_HEADER, SectionTableMap::COL_PICTURE, SectionTableMap::COL_CONTENT, SectionTableMap::COL_META_TITLE, SectionTableMap::COL_META_AUTHOR, SectionTableMap::COL_META_KEYWORDS, SectionTableMap::COL_META_DESCRIPTION, SectionTableMap::COL_META_CANONICAL, SectionTableMap::COL_META_ROBOTS, SectionTableMap::COL_CREATED_AT, SectionTableMap::COL_CREATED_BY, SectionTableMap::COL_UPDATED_AT, SectionTableMap::COL_UPDATED_BY, ),
+        self::TYPE_FIELDNAME     => array('id', 'code', 'header', 'picture', 'content', 'meta_title', 'meta_author', 'meta_keywords', 'meta_description', 'meta_canonical', 'meta_robots', 'created_at', 'created_by', 'updated_at', 'updated_by', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -177,11 +172,11 @@ class SectionTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'ParentId' => 1, 'Code' => 2, 'Header' => 3, 'Picture' => 4, 'Content' => 5, 'MetaTitle' => 6, 'MetaAuthor' => 7, 'MetaKeywords' => 8, 'MetaDescription' => 9, 'MetaCanonical' => 10, 'MetaRobots' => 11, 'CreatedAt' => 12, 'CreatedBy' => 13, 'UpdatedAt' => 14, 'UpdatedBy' => 15, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'parentId' => 1, 'code' => 2, 'header' => 3, 'picture' => 4, 'content' => 5, 'metaTitle' => 6, 'metaAuthor' => 7, 'metaKeywords' => 8, 'metaDescription' => 9, 'metaCanonical' => 10, 'metaRobots' => 11, 'createdAt' => 12, 'createdBy' => 13, 'updatedAt' => 14, 'updatedBy' => 15, ),
-        self::TYPE_COLNAME       => array(SectionTableMap::COL_ID => 0, SectionTableMap::COL_PARENT_ID => 1, SectionTableMap::COL_CODE => 2, SectionTableMap::COL_HEADER => 3, SectionTableMap::COL_PICTURE => 4, SectionTableMap::COL_CONTENT => 5, SectionTableMap::COL_META_TITLE => 6, SectionTableMap::COL_META_AUTHOR => 7, SectionTableMap::COL_META_KEYWORDS => 8, SectionTableMap::COL_META_DESCRIPTION => 9, SectionTableMap::COL_META_CANONICAL => 10, SectionTableMap::COL_META_ROBOTS => 11, SectionTableMap::COL_CREATED_AT => 12, SectionTableMap::COL_CREATED_BY => 13, SectionTableMap::COL_UPDATED_AT => 14, SectionTableMap::COL_UPDATED_BY => 15, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'parent_id' => 1, 'code' => 2, 'header' => 3, 'picture' => 4, 'content' => 5, 'meta_title' => 6, 'meta_author' => 7, 'meta_keywords' => 8, 'meta_description' => 9, 'meta_canonical' => 10, 'meta_robots' => 11, 'created_at' => 12, 'created_by' => 13, 'updated_at' => 14, 'updated_by' => 15, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Code' => 1, 'Header' => 2, 'Picture' => 3, 'Content' => 4, 'MetaTitle' => 5, 'MetaAuthor' => 6, 'MetaKeywords' => 7, 'MetaDescription' => 8, 'MetaCanonical' => 9, 'MetaRobots' => 10, 'CreatedAt' => 11, 'CreatedBy' => 12, 'UpdatedAt' => 13, 'UpdatedBy' => 14, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'code' => 1, 'header' => 2, 'picture' => 3, 'content' => 4, 'metaTitle' => 5, 'metaAuthor' => 6, 'metaKeywords' => 7, 'metaDescription' => 8, 'metaCanonical' => 9, 'metaRobots' => 10, 'createdAt' => 11, 'createdBy' => 12, 'updatedAt' => 13, 'updatedBy' => 14, ),
+        self::TYPE_COLNAME       => array(SectionTableMap::COL_ID => 0, SectionTableMap::COL_CODE => 1, SectionTableMap::COL_HEADER => 2, SectionTableMap::COL_PICTURE => 3, SectionTableMap::COL_CONTENT => 4, SectionTableMap::COL_META_TITLE => 5, SectionTableMap::COL_META_AUTHOR => 6, SectionTableMap::COL_META_KEYWORDS => 7, SectionTableMap::COL_META_DESCRIPTION => 8, SectionTableMap::COL_META_CANONICAL => 9, SectionTableMap::COL_META_ROBOTS => 10, SectionTableMap::COL_CREATED_AT => 11, SectionTableMap::COL_CREATED_BY => 12, SectionTableMap::COL_UPDATED_AT => 13, SectionTableMap::COL_UPDATED_BY => 14, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'code' => 1, 'header' => 2, 'picture' => 3, 'content' => 4, 'meta_title' => 5, 'meta_author' => 6, 'meta_keywords' => 7, 'meta_description' => 8, 'meta_canonical' => 9, 'meta_robots' => 10, 'created_at' => 11, 'created_by' => 12, 'updated_at' => 13, 'updated_by' => 14, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -202,7 +197,6 @@ class SectionTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addForeignKey('parent_id', 'ParentId', 'INTEGER', 'fenric_section', 'id', false, null, null);
         $this->addColumn('code', 'Code', 'VARCHAR', true, 255, null);
         $this->addColumn('header', 'Header', 'VARCHAR', true, 255, null);
         $this->getColumn('header')->setPrimaryString(true);
@@ -225,13 +219,6 @@ class SectionTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Parent', '\\Propel\\Models\\Section', RelationMap::MANY_TO_ONE, array (
-  0 =>
-  array (
-    0 => ':parent_id',
-    1 => ':id',
-  ),
-), 'CASCADE', 'CASCADE', null, false);
         $this->addRelation('UserRelatedByCreatedBy', '\\Propel\\Models\\User', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
@@ -246,13 +233,6 @@ class SectionTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', null, false);
-        $this->addRelation('SectionRelatedById', '\\Propel\\Models\\Section', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':parent_id',
-    1 => ':id',
-  ),
-), 'CASCADE', 'CASCADE', 'SectionsRelatedById', false);
         $this->addRelation('SectionField', '\\Propel\\Models\\SectionField', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -290,7 +270,6 @@ class SectionTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        SectionTableMap::clearInstancePool();
         SectionFieldTableMap::clearInstancePool();
         PublicationTableMap::clearInstancePool();
     }
@@ -437,7 +416,6 @@ class SectionTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(SectionTableMap::COL_ID);
-            $criteria->addSelectColumn(SectionTableMap::COL_PARENT_ID);
             $criteria->addSelectColumn(SectionTableMap::COL_CODE);
             $criteria->addSelectColumn(SectionTableMap::COL_HEADER);
             $criteria->addSelectColumn(SectionTableMap::COL_PICTURE);
@@ -453,7 +431,6 @@ class SectionTableMap extends TableMap
             $criteria->addSelectColumn(SectionTableMap::COL_UPDATED_BY);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.parent_id');
             $criteria->addSelectColumn($alias . '.code');
             $criteria->addSelectColumn($alias . '.header');
             $criteria->addSelectColumn($alias . '.picture');

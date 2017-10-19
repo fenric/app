@@ -110,7 +110,7 @@
 
 							{{when tags is not empty}}
 								{{repeat tags}}
-									<div class="label label-primary">{{header}}</div>
+									<div class="label label-primary" style="display: inline-block; margin: 0 2px 3px 0;">{{header}}</div>
 								{{endrepeat tags}}
 							{{endwhen tags}}
 						</td>

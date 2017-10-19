@@ -182,13 +182,13 @@
 				{{when tags is not empty}}
 					{{repeat tags}}
 						{{when attached is true}}
-							<label class="btn btn-sm btn-default">
+							<label class="btn btn-sm btn-default" style="display: inline-block; margin: 0 5px 5px 0;">
 								<input type="checkbox" name="tags[]" value="{{id}}" checked /> {{header}}
 							</label>
 						{{endwhen attached}}
 
 						{{when attached is not true}}
-							<label class="btn btn-sm btn-default">
+							<label class="btn btn-sm btn-default" style="display: inline-block; margin: 0 5px 5px 0;">
 								<input type="checkbox" name="tags[]" value="{{id}}" /> {{header}}
 							</label>
 						{{endwhen attached}}

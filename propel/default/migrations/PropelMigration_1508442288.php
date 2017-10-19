@@ -4,10 +4,10 @@ use Propel\Generator\Manager\MigrationManager;
 
 /**
  * Data object containing the SQL and PHP code to migrate the database
- * up to version 1507720898.
- * Generated on 2017-10-11 11:21:38 by fenric
+ * up to version 1508442288.
+ * Generated on 2017-10-19 19:44:48 by fenric
  */
-class PropelMigration_1507720898
+class PropelMigration_1508442288
 {
     public $comment = '';
 
@@ -45,23 +45,13 @@ class PropelMigration_1507720898
 # It "suspends judgement" for fkey relationships until are tables are set.
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP INDEX `aa64ab94-118f-41e6-963f-707af0b10da2` ON `fenric_publication_relation`;
+ALTER TABLE `fenric_field`
 
-ALTER TABLE `fenric_publication_relation`
+  CHANGE `error_message` `validation_error` VARCHAR(255),
 
-  CHANGE `related_publication_id` `relation_id` INTEGER;
+  ADD `is_searchable` TINYINT(1) DEFAULT 0 NOT NULL AFTER `is_required`;
 
-CREATE INDEX `aa64ab94-118f-41e6-963f-707af0b10da2` ON `fenric_publication_relation` (`relation_id`);
-
-ALTER TABLE `fenric_section_field` DROP FOREIGN KEY `ec6149c7-f7fc-40c3-93b4-8873976aae67`;
-
-DROP INDEX `fi_149c7-f7fc-40c3-93b4-8873976aae67` ON `fenric_section_field`;
-
-ALTER TABLE `fenric_section_field`
-
-  DROP `created_at`,
-
-  DROP `created_by`;
+CREATE INDEX `06a394fd-2bde-4126-832c-f958b7a5762a` ON `fenric_field` (`is_unique`, `is_required`, `is_searchable`);
 
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;
@@ -83,27 +73,13 @@ SET FOREIGN_KEY_CHECKS = 1;
 # It "suspends judgement" for fkey relationships until are tables are set.
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP INDEX `aa64ab94-118f-41e6-963f-707af0b10da2` ON `fenric_publication_relation`;
+DROP INDEX `06a394fd-2bde-4126-832c-f958b7a5762a` ON `fenric_field`;
 
-ALTER TABLE `fenric_publication_relation`
+ALTER TABLE `fenric_field`
 
-  CHANGE `relation_id` `related_publication_id` INTEGER;
+  CHANGE `validation_error` `error_message` VARCHAR(255),
 
-CREATE INDEX `aa64ab94-118f-41e6-963f-707af0b10da2` ON `fenric_publication_relation` (`related_publication_id`);
-
-ALTER TABLE `fenric_section_field`
-
-  ADD `created_at` DATETIME AFTER `sequence`,
-
-  ADD `created_by` INTEGER AFTER `created_at`;
-
-CREATE INDEX `fi_149c7-f7fc-40c3-93b4-8873976aae67` ON `fenric_section_field` (`created_by`);
-
-ALTER TABLE `fenric_section_field` ADD CONSTRAINT `ec6149c7-f7fc-40c3-93b4-8873976aae67`
-    FOREIGN KEY (`created_by`)
-    REFERENCES `fenric_user` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE SET NULL;
+  DROP `is_searchable`;
 
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;

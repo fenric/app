@@ -22,7 +22,7 @@ class Section extends Abstractable
 	 */
 	public function preInit() : bool
 	{
-		if (! SectionQuery::existsByCode($this->request->parameters->get('code'))) {
+		if (! SectionQuery::existsByCode($this->request->parameters->get('section'))) {
 			$this->response->setStatus(404);
 			return false;
 		}
@@ -66,7 +66,7 @@ class Section extends Abstractable
 		}
 
 		$section = SectionQuery::create()->findOneByCode(
-			$this->request->parameters->get('code')
+			$this->request->parameters->get('section')
 		);
 
 		$publications = PublicationQuery::create();
@@ -77,15 +77,16 @@ class Section extends Abstractable
 		$publications->filterByHideAt(null)->_or()->filterByHideAt(new DateTime('now'), Criteria::GREATER_EQUAL);
 		$publications->orderByCreatedAt(Criteria::DESC);
 
+		// @filter by tag
+
 		$publications = $publications->paginate(
-			$page ?? 1,
-			$limit ?? 18
+			$page ?? 1, $limit ?? 18
 		);
 
 		$view = fenric('view::section');
 
-		if (fenric(sprintf('view::sections/%s/section', $this->request->parameters->get('code')))->exists()) {
-			$view = fenric(sprintf('view::sections/%s/section', $this->request->parameters->get('code')));
+		if (fenric(sprintf('view::sections/%s/section', $section->getCode()))->exists()) {
+			$view = fenric(sprintf('view::sections/%s/section', $section->getCode()));
 		}
 
 		$this->response->setContent($view->render([

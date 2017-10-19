@@ -2,18 +2,41 @@
 
 	{{when field.parent.type is equal | flag}}
 		<label>
-			<input type="checkbox" name="field_{{field.parent.name}}" value="1" data-unchecked-value="0" {{when field.value is true}}checked{{endwhen field.value}} /> {{field.parent.label}}
+			<input
+				type="checkbox"
+				name="field_{{field.parent.name}}"
+				value="1"
+
+				{{when field.parent.is_required is true}}
+					data-unchecked-value="0"
+				{{endwhen field.parent.is_required}}
+
+				{{when field.value is true}}
+					checked
+				{{endwhen field.value}}
+
+			/> {{field.parent.label}}
 		</label>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | number}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control" type="text" name="field_{{field.parent.name}}" value="{{field.value}}" />
+		<input
+			class="form-control"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | string}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control" type="text" name="field_{{field.parent.name}}" value="{{field.value}}" />
+		<input
+			class="form-control"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | text}}
@@ -28,37 +51,72 @@
 
 	{{when field.parent.type is equal | year}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control field-year-picker" type="text" name="field_{{field.parent.name}}" value="{{field.value:datetime(Y)}}" />
+		<input
+			class="form-control field-year-picker"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value:datetime(Y)}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | date}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control field-date-picker" type="text" name="field_{{field.parent.name}}" value="{{field.value:datetime(Y-m-d)}}" />
+		<input
+			class="form-control field-date-picker"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value:datetime(Y-m-d)}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | datetime}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control field-date-time-picker" type="text" name="field_{{field.parent.name}}" value="{{field.value:datetime(Y-m-d H:i)}}" />
+		<input
+			class="form-control field-date-time-picker"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value:datetime(Y-m-d H:i)}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | time}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control field-time-picker" type="text" name="field_{{field.parent.name}}" value="{{field.value:datetime(H:i)}}" />
+		<input
+			class="form-control field-time-picker"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value:datetime(H:i)}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | ip}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control" type="text" name="field_{{field.parent.name}}" value="{{field.value}}" />
+		<input
+			class="form-control"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | url}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control" type="text" name="field_{{field.parent.name}}" value="{{field.value}}" />
+		<input
+			class="form-control"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | email}}
 		<label>{{field.parent.label}}</label>
-		<input class="form-control" type="text" name="field_{{field.parent.name}}" value="{{field.value}}" />
+		<input
+			class="form-control"
+			type="text"
+			name="field_{{field.parent.name}}"
+			value="{{field.value}}"
+		/>
 	{{endwhen field.parent.type}}
 
 	{{when field.parent.type is equal | image}}

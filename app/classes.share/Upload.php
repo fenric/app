@@ -67,31 +67,23 @@ class Upload
 			{
 				if (in_array($mime, ['image/gif', 'image/jpeg', 'image/png']))
 				{
-					if ($file = getimagesizefromstring($this->getBlob()))
+					$file['name'] = hash('md5', uniqid($this->getBlob(), true));
+
+					$file['folder'] = fenric()->path('upload', substr($file['name'], 0, 2), substr($file['name'], 2, 2), substr($file['name'], 4, 2));
+
+					$file['extension'] = pathinfo($mime, PATHINFO_BASENAME);
+
+					$file['location'] = "{$file['folder']}/{$file['name']}.{$file['extension']}";
+
+					if (is_dir($file['folder']) || mkdir($file['folder'], 0755, true))
 					{
-						if (true /* in_array($file[2], [IMG_GIF, IMG_JPEG, IMG_JPG, IMG_PNG]) */)
+						if (file_put_contents($file['location'], $this->getBlob(), LOCK_EX))
 						{
-							$file['name'] = hash('md5', uniqid($this->getBlob(), true));
-
-							$file['folder'] = fenric()->path('upload', substr($file['name'], 0, 2), substr($file['name'], 2, 2), substr($file['name'], 4, 2));
-
-							$file['extension'] = pathinfo($mime, PATHINFO_BASENAME);
-
-							$file['location'] = "{$file['folder']}/{$file['name']}.{$file['extension']}";
-
-							if (is_dir($file['folder']) || mkdir($file['folder'], 0755, true))
-							{
-								if (file_put_contents($file['location'], $this->getBlob(), LOCK_EX))
-								{
-									return $file;
-								}
-								else throw new RuntimeException('Не удалось сохранить файл на диске.', 2);
-							}
-							else throw new RuntimeException('Не удалось создать директорию для загрузки файла.', 2);
+							return $file;
 						}
-						else throw new RuntimeException('Файл не является изображением (GD).', 1);
+						else throw new RuntimeException('Не удалось сохранить изображение на диске.', 2);
 					}
-					else throw new RuntimeException('Не удалось прочитать файл (GD).', 2);
+					else throw new RuntimeException('Не удалось создать директорию для загрузки изображения.', 2);
 				}
 				else throw new RuntimeException('Файл не является изображением (finfo).', 1);
 			}
@@ -138,7 +130,7 @@ class Upload
 						}
 						else throw new RuntimeException('Не удалось сохранить PDF документ на диске.', 2);
 					}
-					else throw new RuntimeException('Не удалось создать директорию для загрузки файла.', 2);
+					else throw new RuntimeException('Не удалось создать директорию для загрузки PDF документа.', 2);
 				}
 				else throw new RuntimeException('Файл не является PDF документом (finfo).', 1);
 			}

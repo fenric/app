@@ -110,6 +110,7 @@ class ApiSection extends CRUD
 
 					$json['fields'][$i]['parent']['is_unique'] = $sfield->getField()->isUnique();
 					$json['fields'][$i]['parent']['is_required'] = $sfield->getField()->isRequired();
+					$json['fields'][$i]['parent']['is_searchable'] = $sfield->getField()->isSearchable();
 				}
 			}
 		});
@@ -139,13 +140,6 @@ class ApiSection extends CRUD
 			$json['uri'] = $section->getUri();
 			$json['fields'] = $section->getCountFields();
 			$json['publications'] = $section->getCountPublications();
-
-			if ($section->getParent() instanceof ActiveRecordInterface)
-			{
-				$json['parent'] = [];
-				$json['parent']['id'] = $section->getParent()->getId();
-				$json['parent']['header'] = $section->getParent()->getHeader();
-			}
 
 			if ($section->getUserRelatedByCreatedBy() instanceof ActiveRecordInterface)
 			{

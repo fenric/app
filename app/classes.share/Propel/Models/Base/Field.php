@@ -131,11 +131,11 @@ abstract class Field implements ActiveRecordInterface
     protected $validation_regex;
 
     /**
-     * The value for the error_message field.
+     * The value for the validation_error field.
      *
      * @var        string
      */
-    protected $error_message;
+    protected $validation_error;
 
     /**
      * The value for the is_unique field.
@@ -152,6 +152,14 @@ abstract class Field implements ActiveRecordInterface
      * @var        boolean
      */
     protected $is_required;
+
+    /**
+     * The value for the is_searchable field.
+     *
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $is_searchable;
 
     /**
      * The value for the created_at field.
@@ -238,6 +246,7 @@ abstract class Field implements ActiveRecordInterface
     {
         $this->is_unique = false;
         $this->is_required = false;
+        $this->is_searchable = false;
     }
 
     /**
@@ -538,13 +547,13 @@ abstract class Field implements ActiveRecordInterface
     }
 
     /**
-     * Get the [error_message] column value.
+     * Get the [validation_error] column value.
      *
      * @return string
      */
-    public function getErrorMessage()
+    public function getValidationError()
     {
-        return $this->error_message;
+        return $this->validation_error;
     }
 
     /**
@@ -585,6 +594,26 @@ abstract class Field implements ActiveRecordInterface
     public function isRequired()
     {
         return $this->getIsRequired();
+    }
+
+    /**
+     * Get the [is_searchable] column value.
+     *
+     * @return boolean
+     */
+    public function getIsSearchable()
+    {
+        return $this->is_searchable;
+    }
+
+    /**
+     * Get the [is_searchable] column value.
+     *
+     * @return boolean
+     */
+    public function isSearchable()
+    {
+        return $this->getIsSearchable();
     }
 
     /**
@@ -788,24 +817,24 @@ abstract class Field implements ActiveRecordInterface
     } // setValidationRegex()
 
     /**
-     * Set the value of [error_message] column.
+     * Set the value of [validation_error] column.
      *
      * @param string $v new value
      * @return $this|\Propel\Models\Field The current object (for fluent API support)
      */
-    public function setErrorMessage($v)
+    public function setValidationError($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->error_message !== $v) {
-            $this->error_message = $v;
-            $this->modifiedColumns[FieldTableMap::COL_ERROR_MESSAGE] = true;
+        if ($this->validation_error !== $v) {
+            $this->validation_error = $v;
+            $this->modifiedColumns[FieldTableMap::COL_VALIDATION_ERROR] = true;
         }
 
         return $this;
-    } // setErrorMessage()
+    } // setValidationError()
 
     /**
      * Sets the value of the [is_unique] column.
@@ -862,6 +891,34 @@ abstract class Field implements ActiveRecordInterface
 
         return $this;
     } // setIsRequired()
+
+    /**
+     * Sets the value of the [is_searchable] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\Propel\Models\Field The current object (for fluent API support)
+     */
+    public function setIsSearchable($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_searchable !== $v) {
+            $this->is_searchable = $v;
+            $this->modifiedColumns[FieldTableMap::COL_IS_SEARCHABLE] = true;
+        }
+
+        return $this;
+    } // setIsSearchable()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
@@ -969,6 +1026,10 @@ abstract class Field implements ActiveRecordInterface
                 return false;
             }
 
+            if ($this->is_searchable !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -1016,8 +1077,8 @@ abstract class Field implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : FieldTableMap::translateFieldName('ValidationRegex', TableMap::TYPE_PHPNAME, $indexType)];
             $this->validation_regex = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : FieldTableMap::translateFieldName('ErrorMessage', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->error_message = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : FieldTableMap::translateFieldName('ValidationError', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->validation_error = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : FieldTableMap::translateFieldName('IsUnique', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_unique = (null !== $col) ? (boolean) $col : null;
@@ -1025,22 +1086,25 @@ abstract class Field implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : FieldTableMap::translateFieldName('IsRequired', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_required = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : FieldTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : FieldTableMap::translateFieldName('IsSearchable', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_searchable = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : FieldTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : FieldTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : FieldTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->created_by = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : FieldTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : FieldTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : FieldTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : FieldTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->updated_by = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -1050,7 +1114,7 @@ abstract class Field implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 14; // 14 = FieldTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 15; // 15 = FieldTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Models\\Field'), 0, $e);
@@ -1350,14 +1414,17 @@ abstract class Field implements ActiveRecordInterface
         if ($this->isColumnModified(FieldTableMap::COL_VALIDATION_REGEX)) {
             $modifiedColumns[':p' . $index++]  = 'validation_regex';
         }
-        if ($this->isColumnModified(FieldTableMap::COL_ERROR_MESSAGE)) {
-            $modifiedColumns[':p' . $index++]  = 'error_message';
+        if ($this->isColumnModified(FieldTableMap::COL_VALIDATION_ERROR)) {
+            $modifiedColumns[':p' . $index++]  = 'validation_error';
         }
         if ($this->isColumnModified(FieldTableMap::COL_IS_UNIQUE)) {
             $modifiedColumns[':p' . $index++]  = 'is_unique';
         }
         if ($this->isColumnModified(FieldTableMap::COL_IS_REQUIRED)) {
             $modifiedColumns[':p' . $index++]  = 'is_required';
+        }
+        if ($this->isColumnModified(FieldTableMap::COL_IS_SEARCHABLE)) {
+            $modifiedColumns[':p' . $index++]  = 'is_searchable';
         }
         if ($this->isColumnModified(FieldTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
@@ -1403,14 +1470,17 @@ abstract class Field implements ActiveRecordInterface
                     case 'validation_regex':
                         $stmt->bindValue($identifier, $this->validation_regex, PDO::PARAM_STR);
                         break;
-                    case 'error_message':
-                        $stmt->bindValue($identifier, $this->error_message, PDO::PARAM_STR);
+                    case 'validation_error':
+                        $stmt->bindValue($identifier, $this->validation_error, PDO::PARAM_STR);
                         break;
                     case 'is_unique':
                         $stmt->bindValue($identifier, (int) $this->is_unique, PDO::PARAM_INT);
                         break;
                     case 'is_required':
                         $stmt->bindValue($identifier, (int) $this->is_required, PDO::PARAM_INT);
+                        break;
+                    case 'is_searchable':
+                        $stmt->bindValue($identifier, (int) $this->is_searchable, PDO::PARAM_INT);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -1508,7 +1578,7 @@ abstract class Field implements ActiveRecordInterface
                 return $this->getValidationRegex();
                 break;
             case 7:
-                return $this->getErrorMessage();
+                return $this->getValidationError();
                 break;
             case 8:
                 return $this->getIsUnique();
@@ -1517,15 +1587,18 @@ abstract class Field implements ActiveRecordInterface
                 return $this->getIsRequired();
                 break;
             case 10:
-                return $this->getCreatedAt();
+                return $this->getIsSearchable();
                 break;
             case 11:
-                return $this->getCreatedBy();
+                return $this->getCreatedAt();
                 break;
             case 12:
-                return $this->getUpdatedAt();
+                return $this->getCreatedBy();
                 break;
             case 13:
+                return $this->getUpdatedAt();
+                break;
+            case 14:
                 return $this->getUpdatedBy();
                 break;
             default:
@@ -1565,20 +1638,21 @@ abstract class Field implements ActiveRecordInterface
             $keys[4] => $this->getTooltip(),
             $keys[5] => $this->getDefaultValue(),
             $keys[6] => $this->getValidationRegex(),
-            $keys[7] => $this->getErrorMessage(),
+            $keys[7] => $this->getValidationError(),
             $keys[8] => $this->getIsUnique(),
             $keys[9] => $this->getIsRequired(),
-            $keys[10] => $this->getCreatedAt(),
-            $keys[11] => $this->getCreatedBy(),
-            $keys[12] => $this->getUpdatedAt(),
-            $keys[13] => $this->getUpdatedBy(),
+            $keys[10] => $this->getIsSearchable(),
+            $keys[11] => $this->getCreatedAt(),
+            $keys[12] => $this->getCreatedBy(),
+            $keys[13] => $this->getUpdatedAt(),
+            $keys[14] => $this->getUpdatedBy(),
         );
-        if ($result[$keys[10]] instanceof \DateTimeInterface) {
-            $result[$keys[10]] = $result[$keys[10]]->format('c');
+        if ($result[$keys[11]] instanceof \DateTimeInterface) {
+            $result[$keys[11]] = $result[$keys[11]]->format('c');
         }
 
-        if ($result[$keys[12]] instanceof \DateTimeInterface) {
-            $result[$keys[12]] = $result[$keys[12]]->format('c');
+        if ($result[$keys[13]] instanceof \DateTimeInterface) {
+            $result[$keys[13]] = $result[$keys[13]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1688,7 +1762,7 @@ abstract class Field implements ActiveRecordInterface
                 $this->setValidationRegex($value);
                 break;
             case 7:
-                $this->setErrorMessage($value);
+                $this->setValidationError($value);
                 break;
             case 8:
                 $this->setIsUnique($value);
@@ -1697,15 +1771,18 @@ abstract class Field implements ActiveRecordInterface
                 $this->setIsRequired($value);
                 break;
             case 10:
-                $this->setCreatedAt($value);
+                $this->setIsSearchable($value);
                 break;
             case 11:
-                $this->setCreatedBy($value);
+                $this->setCreatedAt($value);
                 break;
             case 12:
-                $this->setUpdatedAt($value);
+                $this->setCreatedBy($value);
                 break;
             case 13:
+                $this->setUpdatedAt($value);
+                break;
+            case 14:
                 $this->setUpdatedBy($value);
                 break;
         } // switch()
@@ -1756,7 +1833,7 @@ abstract class Field implements ActiveRecordInterface
             $this->setValidationRegex($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setErrorMessage($arr[$keys[7]]);
+            $this->setValidationError($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
             $this->setIsUnique($arr[$keys[8]]);
@@ -1765,16 +1842,19 @@ abstract class Field implements ActiveRecordInterface
             $this->setIsRequired($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setCreatedAt($arr[$keys[10]]);
+            $this->setIsSearchable($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setCreatedBy($arr[$keys[11]]);
+            $this->setCreatedAt($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setUpdatedAt($arr[$keys[12]]);
+            $this->setCreatedBy($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setUpdatedBy($arr[$keys[13]]);
+            $this->setUpdatedAt($arr[$keys[13]]);
+        }
+        if (array_key_exists($keys[14], $arr)) {
+            $this->setUpdatedBy($arr[$keys[14]]);
         }
     }
 
@@ -1838,14 +1918,17 @@ abstract class Field implements ActiveRecordInterface
         if ($this->isColumnModified(FieldTableMap::COL_VALIDATION_REGEX)) {
             $criteria->add(FieldTableMap::COL_VALIDATION_REGEX, $this->validation_regex);
         }
-        if ($this->isColumnModified(FieldTableMap::COL_ERROR_MESSAGE)) {
-            $criteria->add(FieldTableMap::COL_ERROR_MESSAGE, $this->error_message);
+        if ($this->isColumnModified(FieldTableMap::COL_VALIDATION_ERROR)) {
+            $criteria->add(FieldTableMap::COL_VALIDATION_ERROR, $this->validation_error);
         }
         if ($this->isColumnModified(FieldTableMap::COL_IS_UNIQUE)) {
             $criteria->add(FieldTableMap::COL_IS_UNIQUE, $this->is_unique);
         }
         if ($this->isColumnModified(FieldTableMap::COL_IS_REQUIRED)) {
             $criteria->add(FieldTableMap::COL_IS_REQUIRED, $this->is_required);
+        }
+        if ($this->isColumnModified(FieldTableMap::COL_IS_SEARCHABLE)) {
+            $criteria->add(FieldTableMap::COL_IS_SEARCHABLE, $this->is_searchable);
         }
         if ($this->isColumnModified(FieldTableMap::COL_CREATED_AT)) {
             $criteria->add(FieldTableMap::COL_CREATED_AT, $this->created_at);
@@ -1951,9 +2034,10 @@ abstract class Field implements ActiveRecordInterface
         $copyObj->setTooltip($this->getTooltip());
         $copyObj->setDefaultValue($this->getDefaultValue());
         $copyObj->setValidationRegex($this->getValidationRegex());
-        $copyObj->setErrorMessage($this->getErrorMessage());
+        $copyObj->setValidationError($this->getValidationError());
         $copyObj->setIsUnique($this->getIsUnique());
         $copyObj->setIsRequired($this->getIsRequired());
+        $copyObj->setIsSearchable($this->getIsSearchable());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setCreatedBy($this->getCreatedBy());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -2389,9 +2473,10 @@ abstract class Field implements ActiveRecordInterface
         $this->tooltip = null;
         $this->default_value = null;
         $this->validation_regex = null;
-        $this->error_message = null;
+        $this->validation_error = null;
         $this->is_unique = null;
         $this->is_required = null;
+        $this->is_searchable = null;
         $this->created_at = null;
         $this->created_by = null;
         $this->updated_at = null;

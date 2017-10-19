@@ -62,7 +62,7 @@
 
 				modal.on('modal.content.reload', function()
 				{
-					self.list(options);
+					self.list(self.params.all());
 				});
 			}});
 

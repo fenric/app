@@ -27,9 +27,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFieldQuery orderByTooltip($order = Criteria::ASC) Order by the tooltip column
  * @method     ChildFieldQuery orderByDefaultValue($order = Criteria::ASC) Order by the default_value column
  * @method     ChildFieldQuery orderByValidationRegex($order = Criteria::ASC) Order by the validation_regex column
- * @method     ChildFieldQuery orderByErrorMessage($order = Criteria::ASC) Order by the error_message column
+ * @method     ChildFieldQuery orderByValidationError($order = Criteria::ASC) Order by the validation_error column
  * @method     ChildFieldQuery orderByIsUnique($order = Criteria::ASC) Order by the is_unique column
  * @method     ChildFieldQuery orderByIsRequired($order = Criteria::ASC) Order by the is_required column
+ * @method     ChildFieldQuery orderByIsSearchable($order = Criteria::ASC) Order by the is_searchable column
  * @method     ChildFieldQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildFieldQuery orderByCreatedBy($order = Criteria::ASC) Order by the created_by column
  * @method     ChildFieldQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
@@ -42,9 +43,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFieldQuery groupByTooltip() Group by the tooltip column
  * @method     ChildFieldQuery groupByDefaultValue() Group by the default_value column
  * @method     ChildFieldQuery groupByValidationRegex() Group by the validation_regex column
- * @method     ChildFieldQuery groupByErrorMessage() Group by the error_message column
+ * @method     ChildFieldQuery groupByValidationError() Group by the validation_error column
  * @method     ChildFieldQuery groupByIsUnique() Group by the is_unique column
  * @method     ChildFieldQuery groupByIsRequired() Group by the is_required column
+ * @method     ChildFieldQuery groupByIsSearchable() Group by the is_searchable column
  * @method     ChildFieldQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildFieldQuery groupByCreatedBy() Group by the created_by column
  * @method     ChildFieldQuery groupByUpdatedAt() Group by the updated_at column
@@ -100,9 +102,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildField findOneByTooltip(string $tooltip) Return the first ChildField filtered by the tooltip column
  * @method     ChildField findOneByDefaultValue(string $default_value) Return the first ChildField filtered by the default_value column
  * @method     ChildField findOneByValidationRegex(string $validation_regex) Return the first ChildField filtered by the validation_regex column
- * @method     ChildField findOneByErrorMessage(string $error_message) Return the first ChildField filtered by the error_message column
+ * @method     ChildField findOneByValidationError(string $validation_error) Return the first ChildField filtered by the validation_error column
  * @method     ChildField findOneByIsUnique(boolean $is_unique) Return the first ChildField filtered by the is_unique column
  * @method     ChildField findOneByIsRequired(boolean $is_required) Return the first ChildField filtered by the is_required column
+ * @method     ChildField findOneByIsSearchable(boolean $is_searchable) Return the first ChildField filtered by the is_searchable column
  * @method     ChildField findOneByCreatedAt(string $created_at) Return the first ChildField filtered by the created_at column
  * @method     ChildField findOneByCreatedBy(int $created_by) Return the first ChildField filtered by the created_by column
  * @method     ChildField findOneByUpdatedAt(string $updated_at) Return the first ChildField filtered by the updated_at column
@@ -118,9 +121,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildField requireOneByTooltip(string $tooltip) Return the first ChildField filtered by the tooltip column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildField requireOneByDefaultValue(string $default_value) Return the first ChildField filtered by the default_value column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildField requireOneByValidationRegex(string $validation_regex) Return the first ChildField filtered by the validation_regex column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildField requireOneByErrorMessage(string $error_message) Return the first ChildField filtered by the error_message column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildField requireOneByValidationError(string $validation_error) Return the first ChildField filtered by the validation_error column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildField requireOneByIsUnique(boolean $is_unique) Return the first ChildField filtered by the is_unique column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildField requireOneByIsRequired(boolean $is_required) Return the first ChildField filtered by the is_required column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildField requireOneByIsSearchable(boolean $is_searchable) Return the first ChildField filtered by the is_searchable column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildField requireOneByCreatedAt(string $created_at) Return the first ChildField filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildField requireOneByCreatedBy(int $created_by) Return the first ChildField filtered by the created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildField requireOneByUpdatedAt(string $updated_at) Return the first ChildField filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -134,9 +138,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildField[]|ObjectCollection findByTooltip(string $tooltip) Return ChildField objects filtered by the tooltip column
  * @method     ChildField[]|ObjectCollection findByDefaultValue(string $default_value) Return ChildField objects filtered by the default_value column
  * @method     ChildField[]|ObjectCollection findByValidationRegex(string $validation_regex) Return ChildField objects filtered by the validation_regex column
- * @method     ChildField[]|ObjectCollection findByErrorMessage(string $error_message) Return ChildField objects filtered by the error_message column
+ * @method     ChildField[]|ObjectCollection findByValidationError(string $validation_error) Return ChildField objects filtered by the validation_error column
  * @method     ChildField[]|ObjectCollection findByIsUnique(boolean $is_unique) Return ChildField objects filtered by the is_unique column
  * @method     ChildField[]|ObjectCollection findByIsRequired(boolean $is_required) Return ChildField objects filtered by the is_required column
+ * @method     ChildField[]|ObjectCollection findByIsSearchable(boolean $is_searchable) Return ChildField objects filtered by the is_searchable column
  * @method     ChildField[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildField objects filtered by the created_at column
  * @method     ChildField[]|ObjectCollection findByCreatedBy(int $created_by) Return ChildField objects filtered by the created_by column
  * @method     ChildField[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildField objects filtered by the updated_at column
@@ -239,7 +244,7 @@ abstract class FieldQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, type, name, label, tooltip, default_value, validation_regex, error_message, is_unique, is_required, created_at, created_by, updated_at, updated_by FROM fenric_field WHERE id = :p0';
+        $sql = 'SELECT id, type, name, label, tooltip, default_value, validation_regex, validation_error, is_unique, is_required, is_searchable, created_at, created_by, updated_at, updated_by FROM fenric_field WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -521,28 +526,28 @@ abstract class FieldQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the error_message column
+     * Filter the query on the validation_error column
      *
      * Example usage:
      * <code>
-     * $query->filterByErrorMessage('fooValue');   // WHERE error_message = 'fooValue'
-     * $query->filterByErrorMessage('%fooValue%', Criteria::LIKE); // WHERE error_message LIKE '%fooValue%'
+     * $query->filterByValidationError('fooValue');   // WHERE validation_error = 'fooValue'
+     * $query->filterByValidationError('%fooValue%', Criteria::LIKE); // WHERE validation_error LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $errorMessage The value to use as filter.
+     * @param     string $validationError The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildFieldQuery The current query, for fluid interface
      */
-    public function filterByErrorMessage($errorMessage = null, $comparison = null)
+    public function filterByValidationError($validationError = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($errorMessage)) {
+            if (is_array($validationError)) {
                 $comparison = Criteria::IN;
             }
         }
 
-        return $this->addUsingAlias(FieldTableMap::COL_ERROR_MESSAGE, $errorMessage, $comparison);
+        return $this->addUsingAlias(FieldTableMap::COL_VALIDATION_ERROR, $validationError, $comparison);
     }
 
     /**
@@ -597,6 +602,33 @@ abstract class FieldQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(FieldTableMap::COL_IS_REQUIRED, $isRequired, $comparison);
+    }
+
+    /**
+     * Filter the query on the is_searchable column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsSearchable(true); // WHERE is_searchable = true
+     * $query->filterByIsSearchable('yes'); // WHERE is_searchable = true
+     * </code>
+     *
+     * @param     boolean|string $isSearchable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildFieldQuery The current query, for fluid interface
+     */
+    public function filterByIsSearchable($isSearchable = null, $comparison = null)
+    {
+        if (is_string($isSearchable)) {
+            $isSearchable = in_array(strtolower($isSearchable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(FieldTableMap::COL_IS_SEARCHABLE, $isSearchable, $comparison);
     }
 
     /**

@@ -27,7 +27,7 @@ final class App
 	/**
 	 * Версия приложения
 	 */
-	const VERSION = '0.9.3-dev';
+	const VERSION = '0.9.4-dev';
 
 	/**
 	 * Запуск приложения
@@ -93,13 +93,13 @@ final class App
 				$router->any('/publication/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiPublication::class);
 				$router->any('/publication/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiPublication::class);
 
-				// Управление дополнительными полями
-				$router->any('/field/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiField::class);
-				$router->any('/field/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiField::class);
-
 				// Управления тегами
 				$router->any('/tag/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiTag::class);
 				$router->any('/tag/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiTag::class);
+
+				// Управление дополнительными полями
+				$router->any('/field/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiField::class);
+				$router->any('/field/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiField::class);
 
 				// Управление сниппетами
 				$router->any('/snippet/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiSnippet::class);
@@ -181,65 +181,39 @@ final class App
 			$router->any('/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\User\Api::class);
 		});
 
-		// Список пользователей
-		fenric('router')->get('/users(/)', \Fenric\Controllers\User\Profiles::class, function(Router $router, Request $request, Response $response, Controller $controller)
-		{
-			$controller->trailingSlashes();
-		});
-
-		// Страница пользователя
-		fenric('router')->get('/users/<id:[1-9][0-9]{0,10}>(/)', \Fenric\Controllers\User\Profile::class, function(Router $router, Request $request, Response $response, Controller $controller)
-		{
-			$controller->trailingSlashes();
-		});
-
-		// Список тегов
-		fenric('router')->get('/tags(/)', \Fenric\Controllers\Tags::class, function(Router $router, Request $request, Response $response, Controller $controller)
-		{
-			$controller->trailingSlashes();
-		});
-
-		// Список публикаций по тегу
-		fenric('router')->get('/tags/<code:[a-z0-9-]{1,255}>(/)', \Fenric\Controllers\Tag::class, function(Router $router, Request $request, Response $response, Controller $controller)
-		{
-			$controller->trailingSlashes();
-		});
-
 		// Поиск по сайту
 		fenric('router')->get('/search(/)', \Fenric\Controllers\Search::class, function(Router $router, Request $request, Response $response, Controller $controller)
 		{
 			$controller->trailingSlashes();
 		});
 
-		// Страница раздела
-		fenric('router')->get('<code:(/[a-z0-9-]{1,255}){1,10}>(/)', \Fenric\Controllers\Section::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		// Список пользователей
+		fenric('router')->get('/users(/)', \Fenric\Controllers\Users::class, function(Router $router, Request $request, Response $response, Controller $controller)
 		{
 			$controller->trailingSlashes();
+		});
 
-			$request->parameters->set('code', ltrim($request->parameters->get(2), '/'));
+		// Страница пользователя
+		fenric('router')->get('/users/<id:[1-9][0-9]{0,10}>(/)', \Fenric\Controllers\User::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			$controller->trailingSlashes();
+		});
 
-			$request->parameters->set('codes', explode('/', ltrim($request->parameters->get(1), '/')));
+		// Страница раздела
+		fenric('router')->get('/<section:[a-z0-9-]{1,255}>(/<tag:[a-z0-9-]{1,255}>)(/)', \Fenric\Controllers\Section::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			$controller->trailingSlashes();
 		});
 
 		// Страница публикации
-		fenric('router')->get('<section:(/[a-z0-9-]{1,255}){1,10}>/<publication:[a-z0-9-]{1,255}>.html', \Fenric\Controllers\Publication::class, function(Router $router, Request $request, Response $response, Controller $controller)
-		{
-			$request->parameters->set('section', ltrim($request->parameters->get(2), '/'));
-
-			$request->parameters->set('sections', explode('/', ltrim($request->parameters->get(1), '/')));
-		});
-
-		// Robots.txt
-		fenric('router')->get('/robots.txt', \Fenric\Controllers\Services\RobotsTxt::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		fenric('router')->get('/<section:[a-z0-9-]{1,255}>/<publication:[a-z0-9-]{1,255}>.html', \Fenric\Controllers\Publication::class, function(Router $router, Request $request, Response $response, Controller $controller)
 		{
 			// @continue
 		});
 
-		// Карта сайта
-		fenric('router')->get('/sitemap.xml', \Fenric\Controllers\Services\SitemapXml::class, function(Router $router, Request $request, Response $response, Controller $controller)
-		{
-			// @continue
-		});
+		// Сервисы
+		fenric('router')->get('/robots.txt', \Fenric\Controllers\Services\RobotsTxt::class);
+		fenric('router')->get('/sitemap.xml', \Fenric\Controllers\Services\SitemapXml::class);
 	}
 
 	/**
