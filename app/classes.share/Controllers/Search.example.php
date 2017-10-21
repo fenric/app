@@ -7,7 +7,6 @@ namespace Fenric\Controllers;
  */
 use Propel\Models\PublicationQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
-use Propel\Runtime\Collection\ObjectCollection;
 use Fenric\Controllers\Abstractable\Abstractable;
 
 /**
@@ -21,23 +20,32 @@ class Search extends Abstractable
 	 */
 	public function preInit() : bool
 	{
-		if ($this->request->query->exists('q')) {
-			if (! is_string($this->request->query->get('q'))) {
+		if ($this->request->query->exists('q'))
+		{
+			if (! is_string($this->request->query->get('q')))
+			{
 				$this->response->setStatus(400);
+
 				return false;
 			}
 		}
 
-		if ($this->request->query->exists('page')) {
-			if (! ctype_digit($this->request->query->get('page'))) {
+		if ($this->request->query->exists('page'))
+		{
+			if (! ctype_digit($this->request->query->get('page')))
+			{
 				$this->response->setStatus(400);
+
 				return false;
 			}
 		}
 
-		if ($this->request->query->exists('limit')) {
-			if (! ctype_digit($this->request->query->get('limit'))) {
+		if ($this->request->query->exists('limit'))
+		{
+			if (! ctype_digit($this->request->query->get('limit')))
+			{
 				$this->response->setStatus(400);
+
 				return false;
 			}
 		}
@@ -50,41 +58,48 @@ class Search extends Abstractable
 	 */
 	public function render() : void
 	{
-		$data['publications'] = new ObjectCollection();
+		$page = 1;
+		$limit = 25;
+
+		if ($this->request->query->exists('page'))
+		{
+			if ($this->request->query->get('page') >= 1)
+			{
+				if ($this->request->query->get('page') <= PHP_INT_MAX)
+				{
+					$page = $this->request->query->get('page');
+				}
+			}
+		}
+
+		if ($this->request->query->exists('limit'))
+		{
+			if ($this->request->query->get('limit') >= 1)
+			{
+				if ($this->request->query->get('limit') <= 100)
+				{
+					$limit = $this->request->query->get('limit');
+				}
+			}
+		}
 
 		if ($this->request->query->exists('q'))
 		{
-			if ($this->request->query->exists('page')) {
-				if ($this->request->query->get('page') >= 1) {
-					if ($this->request->query->get('page') <= PHP_INT_MAX) {
-						$page = $this->request->query->get('page');
-					}
-				}
-			}
-
-			if ($this->request->query->exists('limit')) {
-				if ($this->request->query->get('limit') >= 1) {
-					if ($this->request->query->get('limit') <= 100) {
-						$limit = $this->request->query->get('limit');
-					}
-				}
-			}
-
 			if ($q = trim($this->request->query->get('q')))
 			{
-				if ($query = PublicationQuery::search($q))
+				if ($found = PublicationQuery::search($q))
 				{
-					$query->orderById(Criteria::DESC);
+					$found->orderById(Criteria::DESC);
 
-					$data['publications'] = $query->paginate(
-						$page ?? 1, $limit ?? 25
-					);
+					$publications = $found->paginate($page, $limit);
 				}
 			}
 		}
 
 		$this->response->setContent(
-			fenric('view::search')->render($data)
+			fenric('view::search')->render([
+				'publications' => $publications ?? null,
+			])
 		);
 	}
 }

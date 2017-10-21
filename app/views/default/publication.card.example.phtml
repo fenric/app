@@ -53,7 +53,7 @@
 			<?php if ($publication->getPublicationTags()->count() > 0) : ?>
 				<div class="mt-2 small text-muted">
 					<?php foreach ($publication->getPublicationTags() as $publicationTag) : ?>
-						<a class="text-reset" href="<?= $publicationTag->getTag()->getUri() ?>">
+						<a class="text-reset" href="/<?= $publication->getSection()->getCode() ?>/<?= $publicationTag->getTag()->getCode() ?>/">
 							<span>#<?= $publicationTag->getTag()->getHeader() ?></span>
 						</a>
 					<?php endforeach; ?>

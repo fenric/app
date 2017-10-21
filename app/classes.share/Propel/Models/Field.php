@@ -36,6 +36,22 @@ class Field extends BaseField
 	/**
 	 * {@description}
 	 */
+	public function getNameWithPrefix(string $prefix) : string
+	{
+		return $prefix . $this->getName();
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function getNameWithPostfix(string $postfix) : string
+	{
+		return $this->getName() . $postfix;
+	}
+
+	/**
+	 * {@description}
+	 */
 	public function isUnique()
 	{
 		if (parent::isUnique())
@@ -211,6 +227,170 @@ class Field extends BaseField
 
 	/**
 	 * {@description}
+	 */
+	public function isValidFlag($value) : bool
+	{
+		if (in_array($value, ['0', '1']))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidNumber($value) : bool
+	{
+		if (is_numeric($value))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidYear($value) : bool
+	{
+		$regexp = '/^(?<year>[0-9]{4})$/';
+
+		if (preg_match($regexp, $value, $matches))
+		{
+			if (checkdate(1, 1, $matches['year']))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidDate($value) : bool
+	{
+		$regexp = '/^(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})$/';
+
+		if (preg_match($regexp, $value, $matches))
+		{
+			if (checkdate($matches['month'], $matches['day'], $matches['year']))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidDateTime($value) : bool
+	{
+		$regexp = '/^(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})\040(?<hour>[0-9]{2}):(?<minute>[0-9]{2})$/';
+
+		if (preg_match($regexp, $value, $matches))
+		{
+			if (checkdate($matches['month'], $matches['day'], $matches['year']))
+			{
+				if ($matches['hour'] >= 0 && $matches['hour'] <= 23)
+				{
+					if ($matches['minute'] >= 0 && $matches['minute'] <= 59)
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidTime($value) : bool
+	{
+		$regexp = '/^(?<hour>[0-9]{2}):(?<minute>[0-9]{2})$/';
+
+		if (preg_match($regexp, $value, $matches))
+		{
+			if ($matches['hour'] >= 0 && $matches['hour'] <= 23)
+			{
+				if ($matches['minute'] >= 0 && $matches['minute'] <= 59)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidIp($value) : bool
+	{
+		if (filter_var($value, FILTER_VALIDATE_IP))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidUrl($value) : bool
+	{
+		if (filter_var($value, FILTER_VALIDATE_URL))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidEmail($value) : bool
+	{
+		if (filter_var($value, FILTER_VALIDATE_EMAIL))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isValidByRegex($value) : bool
+	{
+		if (strlen($this->getValidationRegex()) === 0)
+		{
+			return true;
+		}
+
+		if (preg_match($this->getValidationRegex(), $value))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@description}
 	 *
 	 * @throws  \RuntimeException
 	 */
@@ -220,119 +400,111 @@ class Field extends BaseField
 		{
 			if ($this->isFlag())
 			{
-				if (! in_array($value, ['0', '1']))
+				if (! $this->isValidFlag($value))
 				{
-					throw new \RuntimeException('Invalid flag.');
-				}
-			}
+					$error = 'Invalid flag.';
 
-			if ($this->isNumber())
-			{
-				if (! is_numeric($value))
-				{
-					throw new \RuntimeException('Invalid number.');
-				}
-			}
-
-			if ($this->isYear())
-			{
-				$regexp = '/^(?<year>[0-9]{4})$/';
-
-				if (! preg_match($regexp, $value, $matches))
-				{
-					throw new \RuntimeException('Invalid year.');
-				}
-
-				if (! checkdate(1, 1, $matches['year']))
-				{
-					throw new \RuntimeException('Incorrect year.');
-				}
-			}
-
-			if ($this->isDate())
-			{
-				$regexp = '/^(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})$/';
-
-				if (! preg_match($regexp, $value, $matches))
-				{
-					throw new \RuntimeException('Invalid date.');
-				}
-
-				if (! checkdate($matches['month'], $matches['day'], $matches['year']))
-				{
-					throw new \RuntimeException('Incorrect date.');
-				}
-			}
-
-			if ($this->isDateTime())
-			{
-				$regexp = '/^(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})\040(?<hour>[0-9]{2}):(?<minute>[0-9]{2})$/';
-
-				if (! preg_match($regexp, $value, $matches))
-				{
-					throw new \RuntimeException('Invalid datetime.');
-				}
-
-				if (! checkdate($matches['month'], $matches['day'], $matches['year']))
-				{
-					throw new \RuntimeException('Incorrect date.');
-				}
-
-				if (! ($matches['hour'] >= 0 && $matches['hour'] <= 23) && ($matches['minute'] >= 0 && $matches['minute'] <= 59))
-				{
-					throw new \RuntimeException('Incorrect time.');
-				}
-			}
-
-			if ($this->isTime())
-			{
-				$regexp = '/^(?<hour>[0-9]{2}):(?<minute>[0-9]{2})$/';
-
-				if (! preg_match($regexp, $value, $matches))
-				{
-					throw new \RuntimeException('Invalid time.');
-				}
-
-				if (! ($matches['hour'] >= 0 && $matches['hour'] <= 23) && ($matches['minute'] >= 0 && $matches['minute'] <= 59))
-				{
-					throw new \RuntimeException('Incorrect time.');
-				}
-			}
-
-			if ($this->isIp())
-			{
-				if (! filter_var($value, FILTER_VALIDATE_IP))
-				{
-					throw new \RuntimeException('Invalid IP.');
-				}
-			}
-
-			if ($this->isUrl())
-			{
-				if (! filter_var($value, FILTER_VALIDATE_URL))
-				{
-					throw new \RuntimeException('Invalid URL.');
-				}
-			}
-
-			if ($this->isEmail())
-			{
-				if (! filter_var($value, FILTER_VALIDATE_EMAIL))
-				{
-					throw new \RuntimeException('Invalid email.');
-				}
-			}
-
-			if (strlen($this->getValidationRegex()) > 0)
-			{
-				$filter['options']['regexp'] = $this->getValidationRegex();
-
-				if (! filter_var($value, FILTER_VALIDATE_REGEXP, $filter))
-				{
 					throw new \RuntimeException(
-						$this->getValidationError() ?: 'Is not valid.'
+						$this->getValidationError() ?: $error
 					);
 				}
+			}
+			if ($this->isNumber())
+			{
+				if (! $this->isValidNumber($value))
+				{
+					$error = 'Invalid number.';
+
+					throw new \RuntimeException(
+						$this->getValidationError() ?: $error
+					);
+				}
+			}
+			if ($this->isYear())
+			{
+				if (! $this->isValidYear($value))
+				{
+					$error = 'Invalid year.';
+
+					throw new \RuntimeException(
+						$this->getValidationError() ?: $error
+					);
+				}
+			}
+			if ($this->isDate())
+			{
+				if (! $this->isValidDate($value))
+				{
+					$error = 'Invalid date.';
+
+					throw new \RuntimeException(
+						$this->getValidationError() ?: $error
+					);
+				}
+			}
+			if ($this->isDateTime())
+			{
+				if (! $this->isValidDateTime($value))
+				{
+					$error = 'Invalid datetime.';
+
+					throw new \RuntimeException(
+						$this->getValidationError() ?: $error
+					);
+				}
+			}
+			if ($this->isTime())
+			{
+				if (! $this->isValidTime($value))
+				{
+					$error = 'Invalid time.';
+
+					throw new \RuntimeException(
+						$this->getValidationError() ?: $error
+					);
+				}
+			}
+			if ($this->isIp())
+			{
+				if (! $this->isValidIp($value))
+				{
+					$error = 'Invalid IP.';
+
+					throw new \RuntimeException(
+						$this->getValidationError() ?: $error
+					);
+				}
+			}
+			if ($this->isUrl())
+			{
+				if (! $this->isValidUrl($value))
+				{
+					$error = 'Invalid URL.';
+
+					throw new \RuntimeException(
+						$this->getValidationError() ?: $error
+					);
+				}
+			}
+			if ($this->isEmail())
+			{
+				if (! $this->isValidEmail($value))
+				{
+					$error = 'Invalid email.';
+
+					throw new \RuntimeException(
+						$this->getValidationError() ?: $error
+					);
+				}
+			}
+
+			if (! $this->isValidByRegex($value))
+			{
+				$error = 'Is not valid.';
+
+				throw new \RuntimeException(
+					$this->getValidationError() ?: $error
+				);
 			}
 		}
 
@@ -340,7 +512,11 @@ class Field extends BaseField
 		{
 			if ($this->isRequired())
 			{
-				throw new \RuntimeException('Is empty.');
+				$error = 'Is empty.';
+
+				throw new \RuntimeException(
+					$this->getValidationError() ?: $error
+				);
 			}
 		}
 
@@ -391,7 +567,7 @@ class Field extends BaseField
 
 					if ($this->isYear())
 					{
-						$q->where(function() : string
+						$q->where(function() use($c) : string
 						{
 							return sprintf('DATE_FORMAT(%s, "%%Y")', $c);
 
@@ -400,7 +576,7 @@ class Field extends BaseField
 
 					if ($this->isDate())
 					{
-						$q->where(function() : string
+						$q->where(function() use($c) : string
 						{
 							return sprintf('DATE_FORMAT(%s, "%%Y-%%m-%%d")', $c);
 
@@ -409,7 +585,7 @@ class Field extends BaseField
 
 					if ($this->isDateTime())
 					{
-						$q->where(function() : string
+						$q->where(function() use($c) : string
 						{
 							return sprintf('DATE_FORMAT(%s, "%%Y-%%m-%%d %%H:%%i")', $c);
 
@@ -418,7 +594,7 @@ class Field extends BaseField
 
 					if ($this->isTime())
 					{
-						$q->where(function() : string
+						$q->where(function() use($c) : string
 						{
 							return sprintf('DATE_FORMAT(%s, "%%H:%%i")', $c);
 

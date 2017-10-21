@@ -2,9 +2,9 @@
 
 $connections = [];
 
-$connections['default']['dsn'] = 'mysql:host=127.0.0.1;dbname=cms;charset=utf8';
+$connections['default']['dsn'] = 'mysql:host=localhost;dbname=fenric;charset=utf8';
 $connections['default']['user'] = 'root';
-$connections['default']['password'] = '0123456789';
+$connections['default']['password'] = null;
 
 $connections['propel.connections']['default'] = $connections['default'];
 $connections['propel.connections']['default']['adapter'] = 'mysql';

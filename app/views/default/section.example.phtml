@@ -33,12 +33,22 @@
 <div class="container mt-3">
 	<nav class="breadcrumb">
 		<a class="breadcrumb-item" href="/">Главная</a>
-		<span class="breadcrumb-item active"><?= $section->getHeader() ?></span>
+		<?php if (empty($tag)) : ?>
+			<span class="breadcrumb-item active"><?= $section->getHeader() ?></span>
+		<?php else : ?>
+			<a class="breadcrumb-item" href="<?= $section->getUri() ?>"><?= $section->getHeader() ?></a>
+			<span class="breadcrumb-item active"><?= $tag->getHeader() ?></span>
+		<?php endif; ?>
+
 	</nav>
 </div>
 
 <div class="container mt-4">
-	<h1 class="display-1"><?= $section->getHeader() ?></h1>
+	<?php if (empty($tag)) : ?>
+		<h1 class="display-1"><?= $section->getHeader() ?></h1>
+	<?php else : ?>
+		<h1 class="display-1"><?= $tag->getHeader() ?></h1>
+	<?php endif; ?>
 </div>
 
 <?php if ($section->getPicture()) : ?>

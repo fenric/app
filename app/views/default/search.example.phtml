@@ -34,7 +34,7 @@
 	</form>
 </div>
 
-<?php if (fenric('request')->query->exists('q')) : ?>
+<?php if (isset($publications)) : ?>
 	<div class="container mt-4">
 		<?php if ($publications->count() > 0) : ?>
 			<div class="row">

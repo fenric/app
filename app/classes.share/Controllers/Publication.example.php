@@ -23,15 +23,21 @@ class Publication extends Abstractable
 		$section = $this->request->parameters->get('section');
 		$publication = $this->request->parameters->get('publication');
 
-		if (! PublicationQuery::checkNestingByCode($publication, $section)) {
+		if (! PublicationQuery::checkNestingByCode($publication, $section))
+		{
 			$this->response->setStatus(404);
+
 			return false;
 		}
 
-		if ($this->request->environment->exists('HTTP_IF_MODIFIED_SINCE')) {
-			if ($timestamp = strtotime($this->request->environment->get('HTTP_IF_MODIFIED_SINCE'))) {
-				if (! PublicationQuery::checkModifiedByCode($publication, $timestamp)) {
+		if ($this->request->environment->exists('HTTP_IF_MODIFIED_SINCE'))
+		{
+			if ($timestamp = strtotime($this->request->environment->get('HTTP_IF_MODIFIED_SINCE')))
+			{
+				if (! PublicationQuery::checkModifiedByCode($publication, $timestamp))
+				{
 					$this->response->setStatus(304);
+
 					return false;
 				}
 			}
@@ -51,7 +57,8 @@ class Publication extends Abstractable
 
 		$view = fenric('view::publication');
 
-		if (fenric(sprintf('view::sections/%s/publication', $publication->getSection()->getCode()))->exists()) {
+		if (fenric(sprintf('view::sections/%s/publication', $publication->getSection()->getCode()))->exists())
+		{
 			$view = fenric(sprintf('view::sections/%s/publication', $publication->getSection()->getCode()));
 		}
 

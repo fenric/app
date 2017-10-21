@@ -157,7 +157,7 @@
 			<span>Похожие темы</span>
 		</div>
 		<?php foreach ($publication->getPublicationTags() as $publicationTag) : ?>
-			<a href="<?= $publicationTag->getTag()->getUri() ?>">
+			<a href="/<?= $publication->getSection()->getCode() ?>/<?= $publicationTag->getTag()->getCode() ?>/">
 				<small>#<?= $publicationTag->getTag()->getHeader() ?></small>
 			</a>
 		<?php endforeach; ?>
