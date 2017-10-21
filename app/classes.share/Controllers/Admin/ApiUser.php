@@ -143,6 +143,19 @@ class ApiUser extends CRUD
 		$query = UserQuery::create();
 		$query->orderById(Criteria::DESC);
 
+		if ($this->request->query->exists('q'))
+		{
+			$q = searchable($this->request->query->get('q'), 32, '%');
+
+			$query->_or()->filterById(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByRole(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByEmail(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByUsername(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByFirstname(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByLastname(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByGender(sprintf('%%%s%%', $q), Criteria::LIKE);
+		}
+
 		parent::all($query, [
 			UserTableMap::COL_ID,
 			UserTableMap::COL_ROLE,

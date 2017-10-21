@@ -309,7 +309,6 @@ class ApiPublication extends CRUD
 							$json['tags'][$i]['id'] = $ptag->getTag()->getId();
 							$json['tags'][$i]['code'] = $ptag->getTag()->getCode();
 							$json['tags'][$i]['header'] = $ptag->getTag()->getHeader();
-							$json['tags'][$i]['uri'] = $ptag->getTag()->getUri();
 							$i++;
 						}
 					}
@@ -318,11 +317,16 @@ class ApiPublication extends CRUD
 		});
 
 		$query = PublicationQuery::create();
-		$query->orderById(Criteria::DESC);
 
-		if (ctype_digit($this->request->query->get('section'))) {
-			$query->filterBySectionId($this->request->query->get('section'));
+		if (trim($q = $this->request->query->get('q')))
+		{
+			$mode = PublicationQuery::SEARCH_FILTER_MAX;
+			$mode ^= PublicationQuery::SEARCH_FILTER_DISPLAY;
+
+			$query = PublicationQuery::search($q, $mode) ?: $query;
 		}
+
+		$query->orderById(Criteria::DESC);
 
 		parent::all($query, [
 			PublicationTableMap::COL_ID,
@@ -350,33 +354,22 @@ class ApiPublication extends CRUD
 	{
 		$found = [];
 
-		$query = fenric('query');
-		$query->select(PublicationTableMap::COL_ID);
-		$query->select(PublicationTableMap::COL_HEADER);
-		$query->from(PublicationTableMap::TABLE_NAME);
-
-		if ($keywords = $this->request->query->get('keywords'))
+		if (trim($q = $this->request->query->get('q')))
 		{
-			$keywords = explode(' ', $keywords, 10);
+			$mode = PublicationQuery::SEARCH_FILTER_MAX;
+			$mode ^= PublicationQuery::SEARCH_FILTER_DISPLAY;
 
-			$keywords = array_map(function($keyword) {
-				return searchable($keyword, 16, '%');
-			}, $keywords);
-
-			$keywords = array_filter($keywords, function($keyword) {
-				return mb_strlen($keyword, 'utf-8') >= 2;
-			});
-
-			if (count($keywords) > 0)
+			if ($query = PublicationQuery::search($q, $mode))
 			{
-				array_walk($keywords, function($keyword) use($query)
+				$query->orderById(Criteria::DESC);
+				$query->limit(50);
+
+				foreach ($query->find() as $i => $p)
 				{
-					$query->or->where(PublicationTableMap::COL_HEADER, 'like', sprintf('%%%s%%', $keyword));
-				});
-
-				$query->limit(100);
-
-				$found = $query->toArray();
+					$found[$i]['id'] = $p->getId();
+					$found[$i]['code'] = $p->getCode();
+					$found[$i]['header'] = $p->getHeader();
+				}
 			}
 		}
 

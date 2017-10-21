@@ -122,6 +122,15 @@ class ApiField extends CRUD
 		$query = FieldQuery::create();
 		$query->orderById(Criteria::DESC);
 
+		if ($this->request->query->exists('q'))
+		{
+			$q = searchable($this->request->query->get('q'), 32, '%');
+
+			$query->_or()->filterById(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByName(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByLabel(sprintf('%%%s%%', $q), Criteria::LIKE);
+		}
+
 		parent::all($query, [
 			FieldTableMap::COL_ID,
 			FieldTableMap::COL_TYPE,
