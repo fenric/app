@@ -22,7 +22,7 @@
 
 		this.routes = {};
 		this.routes.all            = '{root}/api/publication/all/?&{params}';
-		this.routes.search         = '{root}/api/publication/search/?&keywords={keywords}';
+		this.routes.search         = '{root}/api/publication/search/?&q={q}';
 		this.routes.create         = '{root}/api/publication/create/';
 		this.routes.update         = '{root}/api/publication/update/{id}/';
 		this.routes.delete         = '{root}/api/publication/delete/{id}/';
@@ -74,6 +74,11 @@
 				modal.on('modal.content.reload', function()
 				{
 					self.list(self.params.all());
+				});
+
+				modal.on('modal.live.search', function(event, element)
+				{
+					self.list({q: element.value});
 				});
 			}});
 
@@ -525,7 +530,7 @@
 										{
 											element.setAttribute('disabled', 'true');
 
-											self.xhr.get(self.routes.search, {repeat: true, keywords: encodeURIComponent(element.value), success: function(response)
+											self.xhr.get(self.routes.search, {repeat: true, q: encodeURIComponent(element.value), success: function(response)
 											{
 												element.removeAttribute('disabled');
 												element.focus();

@@ -10,7 +10,7 @@
 				</button>
 			</div>
 			<div class="btn-group pull-right">
-				<!-- @continue -->
+				<input class="form-control input-sm modal-live-search" type="text" size="25" maxlength="255" value="{{params.items.q}}" placeholder="Live Search" />
 			</div>
 		</div>
 	</nav>
@@ -109,9 +109,15 @@
 							{{endwhen tags}}
 
 							{{when tags is not empty}}
-								{{repeat tags}}
-									<div class="label label-primary" style="display: inline-block; margin: 0 2px 3px 0;">{{header}}</div>
-								{{endrepeat tags}}
+								<div class="clearfix">
+									{{repeat tags}}
+										<div class="pull-left" style="margin: 0 3px 3px 0;">
+											<a class="btn btn-xs btn-default" href="/{{__parent__.section.code}}/{{code}}/" target="_blank">
+												<small><i class="fa fa-tag" aria-hidden="true"></i> {{header}}</small>
+											</a>
+										</div>
+									{{endrepeat tags}}
+								</div>
 							{{endwhen tags}}
 						</td>
 						<td>

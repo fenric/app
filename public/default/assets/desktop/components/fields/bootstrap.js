@@ -64,6 +64,11 @@
 				{
 					self.list(self.params.all());
 				});
+
+				modal.on('modal.live.search', function(event, element)
+				{
+					self.list({q: element.value});
+				});
 			}});
 
 			self.modal().title('{title} / Список дополнительных полей', {title: self.title}).open().block();

@@ -10,7 +10,7 @@
 				</button>
 			</div>
 			<div class="btn-group pull-right">
-				<!-- @continue -->
+				<input class="form-control input-sm modal-live-search" type="text" size="25" maxlength="255" value="{{params.items.q}}" placeholder="Live Search" />
 			</div>
 		</div>
 	</nav>
@@ -93,9 +93,6 @@
 						</td>
 						<td>
 							<div class="btn-group-vertical btn-block">
-								<a class="btn btn-block btn-sm btn-default" href="{{uri}}" target="_blank">
-									<small>На сайте</small>
-								</a>
 								<button class="btn btn-block btn-sm btn-warning" type="button" onclick="$desktop.component('tags').edit({{id}})">
 									<small>Редактировать</small>
 								</button>

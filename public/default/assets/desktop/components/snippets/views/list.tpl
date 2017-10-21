@@ -10,7 +10,7 @@
 				</button>
 			</div>
 			<div class="btn-group pull-right">
-				<!-- @continue -->
+				<input class="form-control input-sm modal-live-search" type="text" size="25" maxlength="255" value="{{params.items.q}}" placeholder="Live Search" />
 			</div>
 		</div>
 	</nav>

@@ -29,6 +29,18 @@
 
 		this.defaultPercentageWidth = 80;
 		this.defaultPercentageHeight = 80;
+
+		(function(self)
+		{
+			self.on('modal.content.find', function()
+			{
+				self.find('input.modal-live-search', function(element)
+				{
+					element.focus();
+				});
+			});
+
+		})(this);
 	};
 
 	/**
@@ -359,6 +371,14 @@
 	{
 		this.listen(selector, 'keyup', listener, context);
 	};
+	$modal.prototype.focus = function(selector, listener, context)
+	{
+		this.listen(selector, 'focus', listener, context);
+	};
+	$modal.prototype.blur = function(selector, listener, context)
+	{
+		this.listen(selector, 'blur', listener, context);
+	};
 
 	/**
 	 * Смена иконки модального окна
@@ -438,6 +458,31 @@
 		if (this.params.onchangecontent instanceof Function) {
 			this.params.onchangecontent.apply(this, arguments);
 		}
+
+		(function(self)
+		{
+			self.find('input.modal-live-search', function(element)
+			{
+				var finder;
+
+				element.addEventListener('keyup', function(event)
+				{
+					clearTimeout(finder);
+
+					finder = setTimeout(function()
+					{
+						self.triggerEventListeners('modal.live.search', [event, element]);
+
+					}, 1000);
+				});
+
+				element.addEventListener('blur', function(event)
+				{
+					clearTimeout(finder);
+				});
+			});
+
+		})(this);
 
 		return this;
 	};
@@ -817,47 +862,55 @@
 					{
 						// [ALT][SHIFT] + [E]
 						case 69 :
+							event.preventDefault();
 							$foregroundModal.triggerEventListeners('modalContentEdit');
 							$foregroundModal.triggerEventListeners('modal.content.edit');
 							break;
 
 						// [ALT][SHIFT] + [F]
 						case 70 :
+							event.preventDefault();
 							$foregroundModal.triggerEventListeners('modalContentFind');
 							$foregroundModal.triggerEventListeners('modal.content.find');
 							break;
 
 						// [ALT][SHIFT] + [N]
 						case 78 :
+							event.preventDefault();
 							$foregroundModal.triggerEventListeners('modalContentNew');
 							$foregroundModal.triggerEventListeners('modal.content.new');
 							break;
 
 						// [ALT][SHIFT] + [P]
 						case 80 :
+							event.preventDefault();
 							$foregroundModal.triggerEventListeners('modalContentPrint');
 							$foregroundModal.triggerEventListeners('modal.content.print');
 							break;
 
 						// [ALT][SHIFT] + [R]
 						case 82 :
+							event.preventDefault();
 							$foregroundModal.triggerEventListeners('modalContentReload');
 							$foregroundModal.triggerEventListeners('modal.content.reload');
 							break;
 
 						// [ALT][SHIFT] + [S]
 						case 83 :
+							event.preventDefault();
 							$foregroundModal.triggerEventListeners('modalContentSave');
 							$foregroundModal.triggerEventListeners('modal.content.save');
 							break;
 
 						// [ALT][SHIFT] + [W]
 						case 87 :
+							event.preventDefault();
 							$foregroundModal.close();
 							break;
 
 						// [ALT][SHIFT] + [Z]
 						case 90 :
+							event.preventDefault();
 							$foregroundModal.unblock();
 							break;
 					}

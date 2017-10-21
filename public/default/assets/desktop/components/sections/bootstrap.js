@@ -70,6 +70,11 @@
 				{
 					self.list(self.params.all());
 				});
+
+				modal.on('modal.live.search', function(event, element)
+				{
+					self.list({q: element.value});
+				});
 			}});
 
 			self.modal().title('{title} / Список разделов', {title: self.title}).open().block();
