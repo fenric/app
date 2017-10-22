@@ -27,7 +27,7 @@ final class App
 	/**
 	 * Версия приложения
 	 */
-	const VERSION = '0.9.4-dev';
+	const VERSION = '0.9.5-dev';
 
 	/**
 	 * Запуск приложения
