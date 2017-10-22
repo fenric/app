@@ -25,9 +25,22 @@ final class App
 {
 
 	/**
-	 * Версия приложения
+	 * Получение информации о релизе
 	 */
-	const VERSION = '0.9.5-dev';
+	public function getReleaseInfo()
+	{
+		if (is_file(fenric()->path('.', 'release.json')))
+		{
+			if (is_readable(fenric()->path('.', 'release.json')))
+			{
+				$content = file_get_contents(
+					fenric()->path('.', 'release.json')
+				);
+
+				return json_decode($content);
+			}
+		}
+	}
 
 	/**
 	 * Запуск приложения
