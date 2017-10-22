@@ -165,7 +165,9 @@ class ApiPublication extends CRUD
 		{
 			$json['fields'] = $publication->getVirtualColumns();
 
-			$json['photos'] = $json['relations'] = $json['tags'] = [];
+			$json['photos'] = [];
+			$json['relations'] = [];
+			$json['tags'] = [];
 
 			if ($publication->getSortablePhotos() instanceof ObjectCollection)
 			{

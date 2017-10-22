@@ -321,13 +321,11 @@ class Publication extends BasePublication
 	 */
 	public function getRelations() : ObjectCollection
 	{
-		$query = fenric('query');
-
-		$query->select(PublicationRelationTableMap::COL_RELATION_ID);
-		$query->from(PublicationRelationTableMap::TABLE_NAME);
-		$query->where(PublicationRelationTableMap::COL_PUBLICATION_ID, '=', $this->getId());
-
-		return PublicationQuery::create()->findPks($query->readCol());
+		return PublicationQuery::create()->findPks(fenric('query')
+			->select(PublicationRelationTableMap::COL_RELATION_ID)
+			->from(PublicationRelationTableMap::TABLE_NAME)
+			->where(PublicationRelationTableMap::COL_PUBLICATION_ID, '=', $this->getId())
+		->readCol());
 	}
 
 	/**

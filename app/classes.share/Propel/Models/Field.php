@@ -376,17 +376,15 @@ class Field extends BaseField
 	 */
 	public function isValidByRegex($value) : bool
 	{
-		if (strlen($this->getValidationRegex()) === 0)
+		if (! (strlen($this->getValidationRegex()) === 0))
 		{
-			return true;
+			if (! preg_match($this->getValidationRegex(), $value))
+			{
+				return false;
+			}
 		}
 
-		if (preg_match($this->getValidationRegex(), $value))
-		{
-			return true;
-		}
-
-		return false;
+		return true;
 	}
 
 	/**

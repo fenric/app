@@ -240,6 +240,8 @@ class Section extends Abstractable
 											});
 										}
 
+										$values = array_slice($values, 0, 16);
+
 										if (isset($values))
 										{
 											if (count($values) > 0)
