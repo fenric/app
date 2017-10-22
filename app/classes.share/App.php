@@ -47,6 +47,8 @@ final class App
 	 */
 	public function run(Closure $middleware)
 	{
+		fenric('snippet::system.middleware');
+
 		$this->setTimezone();
 		$this->tuneSession();
 
