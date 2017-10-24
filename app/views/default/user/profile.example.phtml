@@ -109,7 +109,7 @@
 						<?php endif; ?>
 
 						<?php if ($user->haveAccessToDesktop()) : ?>
-							<a href="/admin/" class="btn btn-secondary">
+							<a href="/<?= fenric('config::app')->get('admin', 'admin') ?>/" class="btn btn-secondary">
 								<span>Рабочий стол</span>
 							</a>
 						<?php endif; ?>
