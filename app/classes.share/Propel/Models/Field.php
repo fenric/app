@@ -396,16 +396,16 @@ class Field extends BaseField
 	{
 		if ($value instanceof \DateTime)
 		{
-			if ($this->isTimestampable())
+			if (! $this->isTimestampable())
 			{
-				return true;
+				$error = 'Invalid value.';
+
+				throw new \RuntimeException(
+					$this->getValidationError() ?: $error
+				);
 			}
 
-			$error = 'Invalid value.';
-
-			throw new \RuntimeException(
-				$this->getValidationError() ?: $error
-			);
+			return true;
 		}
 
 		if (strlen($value) > 0)
@@ -545,6 +545,25 @@ class Field extends BaseField
 		if ($p->hasVirtualColumn($this->getName()))
 		{
 			$v = $p->getVirtualColumn($this->getName());
+
+			if ($v instanceof \DateTime)
+			{
+				if ($this->isYear()) {
+					$v = $v->format('Y');
+				}
+
+				if ($this->isDate()) {
+					$v = $v->format('Y-m-d');
+				}
+
+				if ($this->isDateTime()) {
+					$v = $v->format('Y-m-d H:i');
+				}
+
+				if ($this->isTime()) {
+					$v = $v->format('H:i');
+				}
+			}
 
 			if ($this->isValidValue($v))
 			{
