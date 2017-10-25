@@ -69,7 +69,11 @@ class Upload
 				{
 					$file['name'] = hash('md5', uniqid($this->getBlob(), true));
 
-					$file['folder'] = fenric()->path('upload', substr($file['name'], 0, 2), substr($file['name'], 2, 2), substr($file['name'], 4, 2));
+					$file['folder'] = fenric()->path('upload',
+						substr($file['name'], 0, 2),
+						substr($file['name'], 2, 2),
+						substr($file['name'], 4, 2)
+					);
 
 					$file['extension'] = pathinfo($mime, PATHINFO_BASENAME);
 
@@ -107,7 +111,11 @@ class Upload
 				{
 					$file['name'] = hash('md5', uniqid($this->getBlob(), true));
 
-					$file['folder'] = fenric()->path('upload', substr($file['name'], 0, 2), substr($file['name'], 2, 2), substr($file['name'], 4, 2));
+					$file['folder'] = fenric()->path('upload',
+						substr($file['name'], 0, 2),
+						substr($file['name'], 2, 2),
+						substr($file['name'], 4, 2)
+					);
 
 					$file['location'] = "{$file['folder']}/{$file['name']}.pdf";
 
@@ -137,5 +145,18 @@ class Upload
 			else throw new RuntimeException('Не удалось прочитать файл (finfo).', 2);
 		}
 		else throw new RuntimeException('Файл пустой.', 1);
+	}
+
+	/**
+	 * Получение абсолютного пути загруженного файла
+	 */
+	public static function path(string $file) : string
+	{
+		return fenric()->path('upload',
+			substr($filename, 0, 2),
+			substr($filename, 2, 2),
+			substr($filename, 4, 2),
+			$filename
+		);
 	}
 }
