@@ -150,7 +150,7 @@ class Upload
 	/**
 	 * Получение абсолютного пути загруженного файла
 	 */
-	public static function path(string $file) : string
+	public static function path(string $filename) : string
 	{
 		return fenric()->path('upload',
 			substr($filename, 0, 2),
