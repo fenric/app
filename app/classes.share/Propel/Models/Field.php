@@ -394,6 +394,18 @@ class Field extends BaseField
 	 */
 	public function isValidValue($value) : bool
 	{
+		if ($value instanceof \DateTime)
+		{
+			if (! $this->isTimestampable())
+			{
+				$error = 'Invalid value.';
+
+				throw new \RuntimeException(
+					$this->getValidationError() ?: $error
+				);
+			}
+		}
+
 		if (strlen($value) > 0)
 		{
 			if ($this->isFlag())
