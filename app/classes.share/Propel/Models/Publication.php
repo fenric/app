@@ -545,6 +545,44 @@ class Publication extends BasePublication
 	}
 
 	/**
+	 * Code to be run before deleting the object in database
+	 *
+	 * @param   ConnectionInterface   $connection
+	 *
+	 * @access  public
+	 * @return  bool
+	 */
+	public function preDelete(ConnectionInterface $connection = null)
+	{
+		if (is_file(\Fenric\Upload::path($this->getPicture())))
+		{
+			if (is_readable(\Fenric\Upload::path($this->getPicture())))
+			{
+				unlink(\Fenric\Upload::path($this->getPicture()));
+			}
+		}
+
+		if ($this->getPublicationPhotos() instanceof ObjectCollection)
+		{
+			if ($this->getPublicationPhotos()->count() > 0)
+			{
+				foreach ($this->getPublicationPhotos() as $photo)
+				{
+					if (is_file($photo->getPath()))
+					{
+						if (is_readable($photo->getPath()))
+						{
+							unlink($photo->getPath());
+						}
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Configure validators constraints.
 	 *
 	 * The Validator object uses this method to perform object validation
