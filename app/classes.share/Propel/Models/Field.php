@@ -396,14 +396,16 @@ class Field extends BaseField
 	{
 		if ($value instanceof \DateTime)
 		{
-			if (! $this->isTimestampable())
+			if ($this->isTimestampable())
 			{
-				$error = 'Invalid value.';
-
-				throw new \RuntimeException(
-					$this->getValidationError() ?: $error
-				);
+				return true;
 			}
+
+			$error = 'Invalid value.';
+
+			throw new \RuntimeException(
+				$this->getValidationError() ?: $error
+			);
 		}
 
 		if (strlen($value) > 0)
