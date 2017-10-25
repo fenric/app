@@ -20,12 +20,7 @@ class PublicationPhoto extends BasePublicationPhoto
 	 */
 	public function getPath() : string
 	{
-		return fenric()->path('upload',
-			substr($this->getFile(), 0, 2),
-			substr($this->getFile(), 2, 2),
-			substr($this->getFile(), 4, 2),
-			$this->getFile()
-		);
+		return \Fenric\Upload::path($this->getFile());
 	}
 
 	/**
@@ -43,10 +38,18 @@ class PublicationPhoto extends BasePublicationPhoto
 	}
 
 	/**
-	 * Code to be run after deleting the object in database
+	 * Code to be run before deleting the object in database
 	 */
-	public function postDelete(ConnectionInterface $connection = null)
+	public function preDelete(ConnectionInterface $connection = null)
 	{
-		return unlink($this->getPath());
+		if (is_file($this->getPath()))
+		{
+			if (is_readable($this->getPath()))
+			{
+				unlink($this->getPath());
+			}
+		}
+
+		return true;
 	}
 }
