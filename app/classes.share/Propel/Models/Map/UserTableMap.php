@@ -315,6 +315,27 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('CommentRelatedByCreatedBy', '\\Propel\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'CommentsRelatedByCreatedBy', false);
+        $this->addRelation('CommentRelatedByUpdatedBy', '\\Propel\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':updated_by',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'CommentsRelatedByUpdatedBy', false);
+        $this->addRelation('CommentRelatedByDeletedBy', '\\Propel\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':deleted_by',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'CommentsRelatedByDeletedBy', false);
         $this->addRelation('FieldRelatedByCreatedBy', '\\Propel\\Models\\Field', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -427,6 +448,7 @@ class UserTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        CommentTableMap::clearInstancePool();
         FieldTableMap::clearInstancePool();
         SectionTableMap::clearInstancePool();
         PublicationTableMap::clearInstancePool();

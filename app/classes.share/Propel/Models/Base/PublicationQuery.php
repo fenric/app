@@ -102,6 +102,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationQuery rightJoinWithUserRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
  * @method     ChildPublicationQuery innerJoinWithUserRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
  *
+ * @method     ChildPublicationQuery leftJoinComment($relationAlias = null) Adds a LEFT JOIN clause to the query using the Comment relation
+ * @method     ChildPublicationQuery rightJoinComment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Comment relation
+ * @method     ChildPublicationQuery innerJoinComment($relationAlias = null) Adds a INNER JOIN clause to the query using the Comment relation
+ *
+ * @method     ChildPublicationQuery joinWithComment($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Comment relation
+ *
+ * @method     ChildPublicationQuery leftJoinWithComment() Adds a LEFT JOIN clause and with to the query using the Comment relation
+ * @method     ChildPublicationQuery rightJoinWithComment() Adds a RIGHT JOIN clause and with to the query using the Comment relation
+ * @method     ChildPublicationQuery innerJoinWithComment() Adds a INNER JOIN clause and with to the query using the Comment relation
+ *
  * @method     ChildPublicationQuery leftJoinPublicationField($relationAlias = null) Adds a LEFT JOIN clause to the query using the PublicationField relation
  * @method     ChildPublicationQuery rightJoinPublicationField($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PublicationField relation
  * @method     ChildPublicationQuery innerJoinPublicationField($relationAlias = null) Adds a INNER JOIN clause to the query using the PublicationField relation
@@ -152,7 +162,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationQuery rightJoinWithUserFavorite() Adds a RIGHT JOIN clause and with to the query using the UserFavorite relation
  * @method     ChildPublicationQuery innerJoinWithUserFavorite() Adds a INNER JOIN clause and with to the query using the UserFavorite relation
  *
- * @method     \Propel\Models\SectionQuery|\Propel\Models\UserQuery|\Propel\Models\PublicationFieldQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\PublicationRelationQuery|\Propel\Models\PublicationTagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\SectionQuery|\Propel\Models\UserQuery|\Propel\Models\CommentQuery|\Propel\Models\PublicationFieldQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\PublicationRelationQuery|\Propel\Models\PublicationTagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPublication findOne(ConnectionInterface $con = null) Return the first ChildPublication matching the query
  * @method     ChildPublication findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPublication matching the query, or a new ChildPublication object populated from the query conditions when no match is found
@@ -1326,6 +1336,79 @@ abstract class PublicationQuery extends ModelCriteria
         return $this
             ->joinUserRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByUpdatedBy', '\Propel\Models\UserQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Comment object
+     *
+     * @param \Propel\Models\Comment|ObjectCollection $comment the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPublicationQuery The current query, for fluid interface
+     */
+    public function filterByComment($comment, $comparison = null)
+    {
+        if ($comment instanceof \Propel\Models\Comment) {
+            return $this
+                ->addUsingAlias(PublicationTableMap::COL_ID, $comment->getPublicationId(), $comparison);
+        } elseif ($comment instanceof ObjectCollection) {
+            return $this
+                ->useCommentQuery()
+                ->filterByPrimaryKeys($comment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByComment() only accepts arguments of type \Propel\Models\Comment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Comment relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPublicationQuery The current query, for fluid interface
+     */
+    public function joinComment($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Comment');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Comment');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Comment relation Comment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\CommentQuery A secondary query class using the current class as primary query
+     */
+    public function useCommentQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinComment($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Comment', '\Propel\Models\CommentQuery');
     }
 
     /**

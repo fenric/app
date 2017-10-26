@@ -276,6 +276,13 @@ class PublicationTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', null, false);
+        $this->addRelation('Comment', '\\Propel\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':publication_id',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'Comments', false);
         $this->addRelation('PublicationField', '\\Propel\\Models\\PublicationField', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -334,6 +341,7 @@ class PublicationTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        CommentTableMap::clearInstancePool();
         PublicationFieldTableMap::clearInstancePool();
         PublicationPhotoTableMap::clearInstancePool();
         PublicationRelationTableMap::clearInstancePool();

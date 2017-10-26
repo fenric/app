@@ -5,6 +5,8 @@ namespace Propel\Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use Propel\Models\Comment as ChildComment;
+use Propel\Models\CommentQuery as ChildCommentQuery;
 use Propel\Models\Field as ChildField;
 use Propel\Models\FieldQuery as ChildFieldQuery;
 use Propel\Models\Publication as ChildPublication;
@@ -21,6 +23,7 @@ use Propel\Models\User as ChildUser;
 use Propel\Models\UserFavorite as ChildUserFavorite;
 use Propel\Models\UserFavoriteQuery as ChildUserFavoriteQuery;
 use Propel\Models\UserQuery as ChildUserQuery;
+use Propel\Models\Map\CommentTableMap;
 use Propel\Models\Map\FieldTableMap;
 use Propel\Models\Map\PublicationPhotoTableMap;
 use Propel\Models\Map\PublicationTableMap;
@@ -361,6 +364,24 @@ abstract class User implements ActiveRecordInterface
     protected $ban_reason;
 
     /**
+     * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
+     */
+    protected $collCommentsRelatedByCreatedBy;
+    protected $collCommentsRelatedByCreatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
+     */
+    protected $collCommentsRelatedByUpdatedBy;
+    protected $collCommentsRelatedByUpdatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
+     */
+    protected $collCommentsRelatedByDeletedBy;
+    protected $collCommentsRelatedByDeletedByPartial;
+
+    /**
      * @var        ObjectCollection|ChildField[] Collection to store aggregation of ChildField objects.
      */
     protected $collFieldsRelatedByCreatedBy;
@@ -462,6 +483,24 @@ abstract class User implements ActiveRecordInterface
      * @var     ConstraintViolationList
      */
     protected $validationFailures;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildComment[]
+     */
+    protected $commentsRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildComment[]
+     */
+    protected $commentsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildComment[]
+     */
+    protected $commentsRelatedByDeletedByScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -2282,6 +2321,12 @@ abstract class User implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collCommentsRelatedByCreatedBy = null;
+
+            $this->collCommentsRelatedByUpdatedBy = null;
+
+            $this->collCommentsRelatedByDeletedBy = null;
+
             $this->collFieldsRelatedByCreatedBy = null;
 
             $this->collFieldsRelatedByUpdatedBy = null;
@@ -2420,6 +2465,57 @@ abstract class User implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->commentsRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->commentsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    \Propel\Models\CommentQuery::create()
+                        ->filterByPrimaryKeys($this->commentsRelatedByCreatedByScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->commentsRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCommentsRelatedByCreatedBy !== null) {
+                foreach ($this->collCommentsRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->commentsRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->commentsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    \Propel\Models\CommentQuery::create()
+                        ->filterByPrimaryKeys($this->commentsRelatedByUpdatedByScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->commentsRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCommentsRelatedByUpdatedBy !== null) {
+                foreach ($this->collCommentsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->commentsRelatedByDeletedByScheduledForDeletion !== null) {
+                if (!$this->commentsRelatedByDeletedByScheduledForDeletion->isEmpty()) {
+                    \Propel\Models\CommentQuery::create()
+                        ->filterByPrimaryKeys($this->commentsRelatedByDeletedByScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->commentsRelatedByDeletedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCommentsRelatedByDeletedBy !== null) {
+                foreach ($this->collCommentsRelatedByDeletedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->fieldsRelatedByCreatedByScheduledForDeletion !== null) {
@@ -3133,6 +3229,51 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->collCommentsRelatedByCreatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'comments';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_comments';
+                        break;
+                    default:
+                        $key = 'Comments';
+                }
+
+                $result[$key] = $this->collCommentsRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collCommentsRelatedByUpdatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'comments';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_comments';
+                        break;
+                    default:
+                        $key = 'Comments';
+                }
+
+                $result[$key] = $this->collCommentsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collCommentsRelatedByDeletedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'comments';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_comments';
+                        break;
+                    default:
+                        $key = 'Comments';
+                }
+
+                $result[$key] = $this->collCommentsRelatedByDeletedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collFieldsRelatedByCreatedBy) {
 
                 switch ($keyType) {
@@ -3830,6 +3971,24 @@ abstract class User implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getCommentsRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCommentRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getCommentsRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCommentRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getCommentsRelatedByDeletedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCommentRelatedByDeletedBy($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getFieldsRelatedByCreatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addFieldRelatedByCreatedBy($relObj->copy($deepCopy));
@@ -3949,6 +4108,18 @@ abstract class User implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('CommentRelatedByCreatedBy' == $relationName) {
+            $this->initCommentsRelatedByCreatedBy();
+            return;
+        }
+        if ('CommentRelatedByUpdatedBy' == $relationName) {
+            $this->initCommentsRelatedByUpdatedBy();
+            return;
+        }
+        if ('CommentRelatedByDeletedBy' == $relationName) {
+            $this->initCommentsRelatedByDeletedBy();
+            return;
+        }
         if ('FieldRelatedByCreatedBy' == $relationName) {
             $this->initFieldsRelatedByCreatedBy();
             return;
@@ -4001,6 +4172,831 @@ abstract class User implements ActiveRecordInterface
             $this->initUserFavorites();
             return;
         }
+    }
+
+    /**
+     * Clears out the collCommentsRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addCommentsRelatedByCreatedBy()
+     */
+    public function clearCommentsRelatedByCreatedBy()
+    {
+        $this->collCommentsRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collCommentsRelatedByCreatedBy collection loaded partially.
+     */
+    public function resetPartialCommentsRelatedByCreatedBy($v = true)
+    {
+        $this->collCommentsRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collCommentsRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collCommentsRelatedByCreatedBy collection to an empty array (like clearcollCommentsRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCommentsRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collCommentsRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = CommentTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collCommentsRelatedByCreatedBy = new $collectionClassName;
+        $this->collCommentsRelatedByCreatedBy->setModel('\Propel\Models\Comment');
+    }
+
+    /**
+     * Gets an array of ChildComment objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     * @throws PropelException
+     */
+    public function getCommentsRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCommentsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collCommentsRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCommentsRelatedByCreatedBy) {
+                // return empty collection
+                $this->initCommentsRelatedByCreatedBy();
+            } else {
+                $collCommentsRelatedByCreatedBy = ChildCommentQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collCommentsRelatedByCreatedByPartial && count($collCommentsRelatedByCreatedBy)) {
+                        $this->initCommentsRelatedByCreatedBy(false);
+
+                        foreach ($collCommentsRelatedByCreatedBy as $obj) {
+                            if (false == $this->collCommentsRelatedByCreatedBy->contains($obj)) {
+                                $this->collCommentsRelatedByCreatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collCommentsRelatedByCreatedByPartial = true;
+                    }
+
+                    return $collCommentsRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collCommentsRelatedByCreatedBy) {
+                    foreach ($this->collCommentsRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collCommentsRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCommentsRelatedByCreatedBy = $collCommentsRelatedByCreatedBy;
+                $this->collCommentsRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collCommentsRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildComment objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $commentsRelatedByCreatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setCommentsRelatedByCreatedBy(Collection $commentsRelatedByCreatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildComment[] $commentsRelatedByCreatedByToDelete */
+        $commentsRelatedByCreatedByToDelete = $this->getCommentsRelatedByCreatedBy(new Criteria(), $con)->diff($commentsRelatedByCreatedBy);
+
+
+        $this->commentsRelatedByCreatedByScheduledForDeletion = $commentsRelatedByCreatedByToDelete;
+
+        foreach ($commentsRelatedByCreatedByToDelete as $commentRelatedByCreatedByRemoved) {
+            $commentRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collCommentsRelatedByCreatedBy = null;
+        foreach ($commentsRelatedByCreatedBy as $commentRelatedByCreatedBy) {
+            $this->addCommentRelatedByCreatedBy($commentRelatedByCreatedBy);
+        }
+
+        $this->collCommentsRelatedByCreatedBy = $commentsRelatedByCreatedBy;
+        $this->collCommentsRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Comment objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Comment objects.
+     * @throws PropelException
+     */
+    public function countCommentsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCommentsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collCommentsRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCommentsRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCommentsRelatedByCreatedBy());
+            }
+
+            $query = ChildCommentQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collCommentsRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildComment object to this object
+     * through the ChildComment foreign key attribute.
+     *
+     * @param  ChildComment $l ChildComment
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addCommentRelatedByCreatedBy(ChildComment $l)
+    {
+        if ($this->collCommentsRelatedByCreatedBy === null) {
+            $this->initCommentsRelatedByCreatedBy();
+            $this->collCommentsRelatedByCreatedByPartial = true;
+        }
+
+        if (!$this->collCommentsRelatedByCreatedBy->contains($l)) {
+            $this->doAddCommentRelatedByCreatedBy($l);
+
+            if ($this->commentsRelatedByCreatedByScheduledForDeletion and $this->commentsRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->commentsRelatedByCreatedByScheduledForDeletion->remove($this->commentsRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildComment $commentRelatedByCreatedBy The ChildComment object to add.
+     */
+    protected function doAddCommentRelatedByCreatedBy(ChildComment $commentRelatedByCreatedBy)
+    {
+        $this->collCommentsRelatedByCreatedBy[]= $commentRelatedByCreatedBy;
+        $commentRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param  ChildComment $commentRelatedByCreatedBy The ChildComment object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeCommentRelatedByCreatedBy(ChildComment $commentRelatedByCreatedBy)
+    {
+        if ($this->getCommentsRelatedByCreatedBy()->contains($commentRelatedByCreatedBy)) {
+            $pos = $this->collCommentsRelatedByCreatedBy->search($commentRelatedByCreatedBy);
+            $this->collCommentsRelatedByCreatedBy->remove($pos);
+            if (null === $this->commentsRelatedByCreatedByScheduledForDeletion) {
+                $this->commentsRelatedByCreatedByScheduledForDeletion = clone $this->collCommentsRelatedByCreatedBy;
+                $this->commentsRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->commentsRelatedByCreatedByScheduledForDeletion[]= $commentRelatedByCreatedBy;
+            $commentRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related CommentsRelatedByCreatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     */
+    public function getCommentsRelatedByCreatedByJoinCommentRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCommentQuery::create(null, $criteria);
+        $query->joinWith('CommentRelatedByParentId', $joinBehavior);
+
+        return $this->getCommentsRelatedByCreatedBy($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related CommentsRelatedByCreatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     */
+    public function getCommentsRelatedByCreatedByJoinPublication(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCommentQuery::create(null, $criteria);
+        $query->joinWith('Publication', $joinBehavior);
+
+        return $this->getCommentsRelatedByCreatedBy($query, $con);
+    }
+
+    /**
+     * Clears out the collCommentsRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addCommentsRelatedByUpdatedBy()
+     */
+    public function clearCommentsRelatedByUpdatedBy()
+    {
+        $this->collCommentsRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collCommentsRelatedByUpdatedBy collection loaded partially.
+     */
+    public function resetPartialCommentsRelatedByUpdatedBy($v = true)
+    {
+        $this->collCommentsRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collCommentsRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collCommentsRelatedByUpdatedBy collection to an empty array (like clearcollCommentsRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCommentsRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collCommentsRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = CommentTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collCommentsRelatedByUpdatedBy = new $collectionClassName;
+        $this->collCommentsRelatedByUpdatedBy->setModel('\Propel\Models\Comment');
+    }
+
+    /**
+     * Gets an array of ChildComment objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     * @throws PropelException
+     */
+    public function getCommentsRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCommentsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collCommentsRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCommentsRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initCommentsRelatedByUpdatedBy();
+            } else {
+                $collCommentsRelatedByUpdatedBy = ChildCommentQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collCommentsRelatedByUpdatedByPartial && count($collCommentsRelatedByUpdatedBy)) {
+                        $this->initCommentsRelatedByUpdatedBy(false);
+
+                        foreach ($collCommentsRelatedByUpdatedBy as $obj) {
+                            if (false == $this->collCommentsRelatedByUpdatedBy->contains($obj)) {
+                                $this->collCommentsRelatedByUpdatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collCommentsRelatedByUpdatedByPartial = true;
+                    }
+
+                    return $collCommentsRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collCommentsRelatedByUpdatedBy) {
+                    foreach ($this->collCommentsRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collCommentsRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCommentsRelatedByUpdatedBy = $collCommentsRelatedByUpdatedBy;
+                $this->collCommentsRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collCommentsRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildComment objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $commentsRelatedByUpdatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setCommentsRelatedByUpdatedBy(Collection $commentsRelatedByUpdatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildComment[] $commentsRelatedByUpdatedByToDelete */
+        $commentsRelatedByUpdatedByToDelete = $this->getCommentsRelatedByUpdatedBy(new Criteria(), $con)->diff($commentsRelatedByUpdatedBy);
+
+
+        $this->commentsRelatedByUpdatedByScheduledForDeletion = $commentsRelatedByUpdatedByToDelete;
+
+        foreach ($commentsRelatedByUpdatedByToDelete as $commentRelatedByUpdatedByRemoved) {
+            $commentRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collCommentsRelatedByUpdatedBy = null;
+        foreach ($commentsRelatedByUpdatedBy as $commentRelatedByUpdatedBy) {
+            $this->addCommentRelatedByUpdatedBy($commentRelatedByUpdatedBy);
+        }
+
+        $this->collCommentsRelatedByUpdatedBy = $commentsRelatedByUpdatedBy;
+        $this->collCommentsRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Comment objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Comment objects.
+     * @throws PropelException
+     */
+    public function countCommentsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCommentsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collCommentsRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCommentsRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCommentsRelatedByUpdatedBy());
+            }
+
+            $query = ChildCommentQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collCommentsRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildComment object to this object
+     * through the ChildComment foreign key attribute.
+     *
+     * @param  ChildComment $l ChildComment
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addCommentRelatedByUpdatedBy(ChildComment $l)
+    {
+        if ($this->collCommentsRelatedByUpdatedBy === null) {
+            $this->initCommentsRelatedByUpdatedBy();
+            $this->collCommentsRelatedByUpdatedByPartial = true;
+        }
+
+        if (!$this->collCommentsRelatedByUpdatedBy->contains($l)) {
+            $this->doAddCommentRelatedByUpdatedBy($l);
+
+            if ($this->commentsRelatedByUpdatedByScheduledForDeletion and $this->commentsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->commentsRelatedByUpdatedByScheduledForDeletion->remove($this->commentsRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildComment $commentRelatedByUpdatedBy The ChildComment object to add.
+     */
+    protected function doAddCommentRelatedByUpdatedBy(ChildComment $commentRelatedByUpdatedBy)
+    {
+        $this->collCommentsRelatedByUpdatedBy[]= $commentRelatedByUpdatedBy;
+        $commentRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param  ChildComment $commentRelatedByUpdatedBy The ChildComment object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeCommentRelatedByUpdatedBy(ChildComment $commentRelatedByUpdatedBy)
+    {
+        if ($this->getCommentsRelatedByUpdatedBy()->contains($commentRelatedByUpdatedBy)) {
+            $pos = $this->collCommentsRelatedByUpdatedBy->search($commentRelatedByUpdatedBy);
+            $this->collCommentsRelatedByUpdatedBy->remove($pos);
+            if (null === $this->commentsRelatedByUpdatedByScheduledForDeletion) {
+                $this->commentsRelatedByUpdatedByScheduledForDeletion = clone $this->collCommentsRelatedByUpdatedBy;
+                $this->commentsRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->commentsRelatedByUpdatedByScheduledForDeletion[]= $commentRelatedByUpdatedBy;
+            $commentRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related CommentsRelatedByUpdatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     */
+    public function getCommentsRelatedByUpdatedByJoinCommentRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCommentQuery::create(null, $criteria);
+        $query->joinWith('CommentRelatedByParentId', $joinBehavior);
+
+        return $this->getCommentsRelatedByUpdatedBy($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related CommentsRelatedByUpdatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     */
+    public function getCommentsRelatedByUpdatedByJoinPublication(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCommentQuery::create(null, $criteria);
+        $query->joinWith('Publication', $joinBehavior);
+
+        return $this->getCommentsRelatedByUpdatedBy($query, $con);
+    }
+
+    /**
+     * Clears out the collCommentsRelatedByDeletedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addCommentsRelatedByDeletedBy()
+     */
+    public function clearCommentsRelatedByDeletedBy()
+    {
+        $this->collCommentsRelatedByDeletedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collCommentsRelatedByDeletedBy collection loaded partially.
+     */
+    public function resetPartialCommentsRelatedByDeletedBy($v = true)
+    {
+        $this->collCommentsRelatedByDeletedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collCommentsRelatedByDeletedBy collection.
+     *
+     * By default this just sets the collCommentsRelatedByDeletedBy collection to an empty array (like clearcollCommentsRelatedByDeletedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCommentsRelatedByDeletedBy($overrideExisting = true)
+    {
+        if (null !== $this->collCommentsRelatedByDeletedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = CommentTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collCommentsRelatedByDeletedBy = new $collectionClassName;
+        $this->collCommentsRelatedByDeletedBy->setModel('\Propel\Models\Comment');
+    }
+
+    /**
+     * Gets an array of ChildComment objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     * @throws PropelException
+     */
+    public function getCommentsRelatedByDeletedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCommentsRelatedByDeletedByPartial && !$this->isNew();
+        if (null === $this->collCommentsRelatedByDeletedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCommentsRelatedByDeletedBy) {
+                // return empty collection
+                $this->initCommentsRelatedByDeletedBy();
+            } else {
+                $collCommentsRelatedByDeletedBy = ChildCommentQuery::create(null, $criteria)
+                    ->filterByUserRelatedByDeletedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collCommentsRelatedByDeletedByPartial && count($collCommentsRelatedByDeletedBy)) {
+                        $this->initCommentsRelatedByDeletedBy(false);
+
+                        foreach ($collCommentsRelatedByDeletedBy as $obj) {
+                            if (false == $this->collCommentsRelatedByDeletedBy->contains($obj)) {
+                                $this->collCommentsRelatedByDeletedBy->append($obj);
+                            }
+                        }
+
+                        $this->collCommentsRelatedByDeletedByPartial = true;
+                    }
+
+                    return $collCommentsRelatedByDeletedBy;
+                }
+
+                if ($partial && $this->collCommentsRelatedByDeletedBy) {
+                    foreach ($this->collCommentsRelatedByDeletedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collCommentsRelatedByDeletedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCommentsRelatedByDeletedBy = $collCommentsRelatedByDeletedBy;
+                $this->collCommentsRelatedByDeletedByPartial = false;
+            }
+        }
+
+        return $this->collCommentsRelatedByDeletedBy;
+    }
+
+    /**
+     * Sets a collection of ChildComment objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $commentsRelatedByDeletedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setCommentsRelatedByDeletedBy(Collection $commentsRelatedByDeletedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildComment[] $commentsRelatedByDeletedByToDelete */
+        $commentsRelatedByDeletedByToDelete = $this->getCommentsRelatedByDeletedBy(new Criteria(), $con)->diff($commentsRelatedByDeletedBy);
+
+
+        $this->commentsRelatedByDeletedByScheduledForDeletion = $commentsRelatedByDeletedByToDelete;
+
+        foreach ($commentsRelatedByDeletedByToDelete as $commentRelatedByDeletedByRemoved) {
+            $commentRelatedByDeletedByRemoved->setUserRelatedByDeletedBy(null);
+        }
+
+        $this->collCommentsRelatedByDeletedBy = null;
+        foreach ($commentsRelatedByDeletedBy as $commentRelatedByDeletedBy) {
+            $this->addCommentRelatedByDeletedBy($commentRelatedByDeletedBy);
+        }
+
+        $this->collCommentsRelatedByDeletedBy = $commentsRelatedByDeletedBy;
+        $this->collCommentsRelatedByDeletedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Comment objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Comment objects.
+     * @throws PropelException
+     */
+    public function countCommentsRelatedByDeletedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCommentsRelatedByDeletedByPartial && !$this->isNew();
+        if (null === $this->collCommentsRelatedByDeletedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCommentsRelatedByDeletedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCommentsRelatedByDeletedBy());
+            }
+
+            $query = ChildCommentQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByDeletedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collCommentsRelatedByDeletedBy);
+    }
+
+    /**
+     * Method called to associate a ChildComment object to this object
+     * through the ChildComment foreign key attribute.
+     *
+     * @param  ChildComment $l ChildComment
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addCommentRelatedByDeletedBy(ChildComment $l)
+    {
+        if ($this->collCommentsRelatedByDeletedBy === null) {
+            $this->initCommentsRelatedByDeletedBy();
+            $this->collCommentsRelatedByDeletedByPartial = true;
+        }
+
+        if (!$this->collCommentsRelatedByDeletedBy->contains($l)) {
+            $this->doAddCommentRelatedByDeletedBy($l);
+
+            if ($this->commentsRelatedByDeletedByScheduledForDeletion and $this->commentsRelatedByDeletedByScheduledForDeletion->contains($l)) {
+                $this->commentsRelatedByDeletedByScheduledForDeletion->remove($this->commentsRelatedByDeletedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildComment $commentRelatedByDeletedBy The ChildComment object to add.
+     */
+    protected function doAddCommentRelatedByDeletedBy(ChildComment $commentRelatedByDeletedBy)
+    {
+        $this->collCommentsRelatedByDeletedBy[]= $commentRelatedByDeletedBy;
+        $commentRelatedByDeletedBy->setUserRelatedByDeletedBy($this);
+    }
+
+    /**
+     * @param  ChildComment $commentRelatedByDeletedBy The ChildComment object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeCommentRelatedByDeletedBy(ChildComment $commentRelatedByDeletedBy)
+    {
+        if ($this->getCommentsRelatedByDeletedBy()->contains($commentRelatedByDeletedBy)) {
+            $pos = $this->collCommentsRelatedByDeletedBy->search($commentRelatedByDeletedBy);
+            $this->collCommentsRelatedByDeletedBy->remove($pos);
+            if (null === $this->commentsRelatedByDeletedByScheduledForDeletion) {
+                $this->commentsRelatedByDeletedByScheduledForDeletion = clone $this->collCommentsRelatedByDeletedBy;
+                $this->commentsRelatedByDeletedByScheduledForDeletion->clear();
+            }
+            $this->commentsRelatedByDeletedByScheduledForDeletion[]= $commentRelatedByDeletedBy;
+            $commentRelatedByDeletedBy->setUserRelatedByDeletedBy(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related CommentsRelatedByDeletedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     */
+    public function getCommentsRelatedByDeletedByJoinCommentRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCommentQuery::create(null, $criteria);
+        $query->joinWith('CommentRelatedByParentId', $joinBehavior);
+
+        return $this->getCommentsRelatedByDeletedBy($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related CommentsRelatedByDeletedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     */
+    public function getCommentsRelatedByDeletedByJoinPublication(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCommentQuery::create(null, $criteria);
+        $query->joinWith('Publication', $joinBehavior);
+
+        return $this->getCommentsRelatedByDeletedBy($query, $con);
     }
 
     /**
@@ -7116,6 +8112,21 @@ abstract class User implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collCommentsRelatedByCreatedBy) {
+                foreach ($this->collCommentsRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collCommentsRelatedByUpdatedBy) {
+                foreach ($this->collCommentsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collCommentsRelatedByDeletedBy) {
+                foreach ($this->collCommentsRelatedByDeletedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collFieldsRelatedByCreatedBy) {
                 foreach ($this->collFieldsRelatedByCreatedBy as $o) {
                     $o->clearAllReferences($deep);
@@ -7183,6 +8194,9 @@ abstract class User implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collCommentsRelatedByCreatedBy = null;
+        $this->collCommentsRelatedByUpdatedBy = null;
+        $this->collCommentsRelatedByDeletedBy = null;
         $this->collFieldsRelatedByCreatedBy = null;
         $this->collFieldsRelatedByUpdatedBy = null;
         $this->collSectionsRelatedByCreatedBy = null;
@@ -7261,6 +8275,33 @@ abstract class User implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
+            if (null !== $this->collCommentsRelatedByCreatedBy) {
+                foreach ($this->collCommentsRelatedByCreatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collCommentsRelatedByUpdatedBy) {
+                foreach ($this->collCommentsRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collCommentsRelatedByDeletedBy) {
+                foreach ($this->collCommentsRelatedByDeletedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
             if (null !== $this->collFieldsRelatedByCreatedBy) {
                 foreach ($this->collFieldsRelatedByCreatedBy as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {

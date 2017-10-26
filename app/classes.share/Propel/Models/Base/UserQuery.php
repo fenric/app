@@ -92,6 +92,36 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildUserQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
+ * @method     ChildUserQuery leftJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the CommentRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CommentRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the CommentRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery joinWithCommentRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CommentRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithCommentRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the CommentRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinWithCommentRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the CommentRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinWithCommentRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the CommentRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinCommentRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the CommentRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinCommentRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CommentRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinCommentRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the CommentRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery joinWithCommentRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CommentRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithCommentRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the CommentRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinWithCommentRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the CommentRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinWithCommentRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the CommentRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinCommentRelatedByDeletedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the CommentRelatedByDeletedBy relation
+ * @method     ChildUserQuery rightJoinCommentRelatedByDeletedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CommentRelatedByDeletedBy relation
+ * @method     ChildUserQuery innerJoinCommentRelatedByDeletedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the CommentRelatedByDeletedBy relation
+ *
+ * @method     ChildUserQuery joinWithCommentRelatedByDeletedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CommentRelatedByDeletedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithCommentRelatedByDeletedBy() Adds a LEFT JOIN clause and with to the query using the CommentRelatedByDeletedBy relation
+ * @method     ChildUserQuery rightJoinWithCommentRelatedByDeletedBy() Adds a RIGHT JOIN clause and with to the query using the CommentRelatedByDeletedBy relation
+ * @method     ChildUserQuery innerJoinWithCommentRelatedByDeletedBy() Adds a INNER JOIN clause and with to the query using the CommentRelatedByDeletedBy relation
+ *
  * @method     ChildUserQuery leftJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the FieldRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FieldRelatedByCreatedBy relation
  * @method     ChildUserQuery innerJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the FieldRelatedByCreatedBy relation
@@ -222,7 +252,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithUserFavorite() Adds a RIGHT JOIN clause and with to the query using the UserFavorite relation
  * @method     ChildUserQuery innerJoinWithUserFavorite() Adds a INNER JOIN clause and with to the query using the UserFavorite relation
  *
- * @method     \Propel\Models\FieldQuery|\Propel\Models\SectionQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\CommentQuery|\Propel\Models\FieldQuery|\Propel\Models\SectionQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -1465,6 +1495,225 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_BAN_REASON, $banReason, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Comment object
+     *
+     * @param \Propel\Models\Comment|ObjectCollection $comment the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByCommentRelatedByCreatedBy($comment, $comparison = null)
+    {
+        if ($comment instanceof \Propel\Models\Comment) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $comment->getCreatedBy(), $comparison);
+        } elseif ($comment instanceof ObjectCollection) {
+            return $this
+                ->useCommentRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($comment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCommentRelatedByCreatedBy() only accepts arguments of type \Propel\Models\Comment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CommentRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinCommentRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CommentRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CommentRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CommentRelatedByCreatedBy relation Comment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\CommentQuery A secondary query class using the current class as primary query
+     */
+    public function useCommentRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinCommentRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CommentRelatedByCreatedBy', '\Propel\Models\CommentQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Comment object
+     *
+     * @param \Propel\Models\Comment|ObjectCollection $comment the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByCommentRelatedByUpdatedBy($comment, $comparison = null)
+    {
+        if ($comment instanceof \Propel\Models\Comment) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $comment->getUpdatedBy(), $comparison);
+        } elseif ($comment instanceof ObjectCollection) {
+            return $this
+                ->useCommentRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($comment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCommentRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\Comment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CommentRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinCommentRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CommentRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CommentRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CommentRelatedByUpdatedBy relation Comment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\CommentQuery A secondary query class using the current class as primary query
+     */
+    public function useCommentRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinCommentRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CommentRelatedByUpdatedBy', '\Propel\Models\CommentQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Comment object
+     *
+     * @param \Propel\Models\Comment|ObjectCollection $comment the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByCommentRelatedByDeletedBy($comment, $comparison = null)
+    {
+        if ($comment instanceof \Propel\Models\Comment) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $comment->getDeletedBy(), $comparison);
+        } elseif ($comment instanceof ObjectCollection) {
+            return $this
+                ->useCommentRelatedByDeletedByQuery()
+                ->filterByPrimaryKeys($comment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCommentRelatedByDeletedBy() only accepts arguments of type \Propel\Models\Comment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CommentRelatedByDeletedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinCommentRelatedByDeletedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CommentRelatedByDeletedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CommentRelatedByDeletedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CommentRelatedByDeletedBy relation Comment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\CommentQuery A secondary query class using the current class as primary query
+     */
+    public function useCommentRelatedByDeletedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinCommentRelatedByDeletedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CommentRelatedByDeletedBy', '\Propel\Models\CommentQuery');
     }
 
     /**
