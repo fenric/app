@@ -304,6 +304,13 @@ class PublicationTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', 'PublicationTags', false);
+        $this->addRelation('UserFavorite', '\\Propel\\Models\\UserFavorite', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':publication_id',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'UserFavorites', false);
     } // buildRelations()
 
     /**
@@ -331,6 +338,7 @@ class PublicationTableMap extends TableMap
         PublicationPhotoTableMap::clearInstancePool();
         PublicationRelationTableMap::clearInstancePool();
         PublicationTagTableMap::clearInstancePool();
+        UserFavoriteTableMap::clearInstancePool();
     }
 
     /**

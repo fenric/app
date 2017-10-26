@@ -142,7 +142,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationQuery rightJoinWithPublicationTag() Adds a RIGHT JOIN clause and with to the query using the PublicationTag relation
  * @method     ChildPublicationQuery innerJoinWithPublicationTag() Adds a INNER JOIN clause and with to the query using the PublicationTag relation
  *
- * @method     \Propel\Models\SectionQuery|\Propel\Models\UserQuery|\Propel\Models\PublicationFieldQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\PublicationRelationQuery|\Propel\Models\PublicationTagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildPublicationQuery leftJoinUserFavorite($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserFavorite relation
+ * @method     ChildPublicationQuery rightJoinUserFavorite($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserFavorite relation
+ * @method     ChildPublicationQuery innerJoinUserFavorite($relationAlias = null) Adds a INNER JOIN clause to the query using the UserFavorite relation
+ *
+ * @method     ChildPublicationQuery joinWithUserFavorite($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the UserFavorite relation
+ *
+ * @method     ChildPublicationQuery leftJoinWithUserFavorite() Adds a LEFT JOIN clause and with to the query using the UserFavorite relation
+ * @method     ChildPublicationQuery rightJoinWithUserFavorite() Adds a RIGHT JOIN clause and with to the query using the UserFavorite relation
+ * @method     ChildPublicationQuery innerJoinWithUserFavorite() Adds a INNER JOIN clause and with to the query using the UserFavorite relation
+ *
+ * @method     \Propel\Models\SectionQuery|\Propel\Models\UserQuery|\Propel\Models\PublicationFieldQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\PublicationRelationQuery|\Propel\Models\PublicationTagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPublication findOne(ConnectionInterface $con = null) Return the first ChildPublication matching the query
  * @method     ChildPublication findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPublication matching the query, or a new ChildPublication object populated from the query conditions when no match is found
@@ -1608,6 +1618,79 @@ abstract class PublicationQuery extends ModelCriteria
         return $this
             ->joinPublicationTag($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'PublicationTag', '\Propel\Models\PublicationTagQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\UserFavorite object
+     *
+     * @param \Propel\Models\UserFavorite|ObjectCollection $userFavorite the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPublicationQuery The current query, for fluid interface
+     */
+    public function filterByUserFavorite($userFavorite, $comparison = null)
+    {
+        if ($userFavorite instanceof \Propel\Models\UserFavorite) {
+            return $this
+                ->addUsingAlias(PublicationTableMap::COL_ID, $userFavorite->getPublicationId(), $comparison);
+        } elseif ($userFavorite instanceof ObjectCollection) {
+            return $this
+                ->useUserFavoriteQuery()
+                ->filterByPrimaryKeys($userFavorite->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByUserFavorite() only accepts arguments of type \Propel\Models\UserFavorite or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the UserFavorite relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPublicationQuery The current query, for fluid interface
+     */
+    public function joinUserFavorite($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('UserFavorite');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'UserFavorite');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the UserFavorite relation UserFavorite object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\UserFavoriteQuery A secondary query class using the current class as primary query
+     */
+    public function useUserFavoriteQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinUserFavorite($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserFavorite', '\Propel\Models\UserFavoriteQuery');
     }
 
     /**

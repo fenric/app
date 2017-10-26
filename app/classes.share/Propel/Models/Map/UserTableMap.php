@@ -399,6 +399,13 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', 'TagsRelatedByUpdatedBy', false);
+        $this->addRelation('UserFavorite', '\\Propel\\Models\\UserFavorite', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':user_id',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'UserFavorites', false);
     } // buildRelations()
 
     /**
@@ -426,6 +433,7 @@ class UserTableMap extends TableMap
         PublicationPhotoTableMap::clearInstancePool();
         SnippetTableMap::clearInstancePool();
         TagTableMap::clearInstancePool();
+        UserFavoriteTableMap::clearInstancePool();
     }
 
     /**

@@ -105,4 +105,35 @@
 			<parameter name="bc8f3a10-55a1-4081-8112-300abdd78a1d" value="{column: password, validator: Length, options: {min: 6, max: 256, minMessage: 'Минимально возможная длина пароля 6 символов.', maxMessage: 'Максимально допустимая длина пароля 256 символов.'}}" />
 		</behavior>
 	</table>
+
+	<table name="user_favorite">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+
+		<column name="user_id" type="integer" />
+		<column name="publication_id" type="integer" />
+
+		<foreign-key
+			name="bfb5ad3b-4aec-4734-9313-9ad48ee49c82"
+			foreignTable="user"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="user_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="bd7b1c11-7962-4092-a450-7f33eb02e0fa"
+			foreignTable="publication"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="publication_id" foreign="id" />
+		</foreign-key>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+	</table>
 </database>
