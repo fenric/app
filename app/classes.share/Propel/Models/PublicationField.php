@@ -17,11 +17,6 @@ class PublicationField extends BasePublicationField
 
 	/**
 	 * Установка значения
-	 *
-	 * @param   mixed   $value
-	 *
-	 * @access  public
-	 * @return  void
 	 */
 	public function setValue($value)
 	{
@@ -96,9 +91,6 @@ class PublicationField extends BasePublicationField
 
 	/**
 	 * Получение значения
-	 *
-	 * @access  public
-	 * @return  mixed
 	 */
 	public function getValue()
 	{

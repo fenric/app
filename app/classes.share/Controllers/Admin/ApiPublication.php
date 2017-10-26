@@ -169,13 +169,13 @@ class ApiPublication extends CRUD
 			$json['relations'] = [];
 			$json['tags'] = [];
 
-			if ($publication->getSortablePhotos() instanceof ObjectCollection)
+			if ($publication->getSortedPhotos() instanceof ObjectCollection)
 			{
-				if ($publication->getSortablePhotos()->count() > 0)
+				if ($publication->getSortedPhotos()->count() > 0)
 				{
 					$i = 0;
 
-					foreach ($publication->getSortablePhotos() as $photo)
+					foreach ($publication->getSortedPhotos() as $photo)
 					{
 						$json['photos'][$i]['id'] = $photo->getId();
 						$json['photos'][$i]['file'] = $photo->getFile();

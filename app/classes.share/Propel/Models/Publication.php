@@ -129,9 +129,9 @@ class Publication extends BasePublication
 	/**
 	 * Форматирование сниппетов в содержимом публикации
 	 */
-	public function getSnippetableContent() : string
+	public function getSnippetableContent(ConnectionInterface $connection = null) : string
 	{
-		return snippetable(parent::getContent());
+		return snippetable(parent::getContent($connection));
 	}
 
 	/**
@@ -164,7 +164,7 @@ class Publication extends BasePublication
 	/**
 	 * Получение отсортированной коллекции с фотографиями публикации
 	 */
-	public function getSortablePhotos() : ObjectCollection
+	public function getSortedPhotos() : ObjectCollection
 	{
 		$query = PublicationPhotoQuery::create();
 
@@ -178,7 +178,7 @@ class Publication extends BasePublication
 	/**
 	 * Получение отсортированной коллекции с отображаемыми фотографиями публикации
 	 */
-	public function getDisplayableSortablePhotos() : ObjectCollection
+	public function getDisplayedSortedPhotos() : ObjectCollection
 	{
 		$query = PublicationPhotoQuery::create();
 
@@ -193,7 +193,7 @@ class Publication extends BasePublication
 	/**
 	 * Получение отсортированной коллекции с отображаемыми фотографиями публикации без обложки (первой фотографии)
 	 */
-	public function getDisplayableSortablePhotosWithoutCover() : ObjectCollection
+	public function getDisplayedSortedPhotosWithoutCover() : ObjectCollection
 	{
 		$query = PublicationPhotoQuery::create();
 
@@ -209,7 +209,7 @@ class Publication extends BasePublication
 	/**
 	 * Получение отсортированной коллекции с отображаемыми фотографиями публикации без обложки (первой фотографии) если не существует основной фотографии
 	 */
-	public function getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist() : ObjectCollection
+	public function getDisplayedSortedPhotosWithoutCoverWhenPictureDoesNotExist() : ObjectCollection
 	{
 		$query = PublicationPhotoQuery::create();
 
@@ -568,13 +568,7 @@ class Publication extends BasePublication
 			{
 				foreach ($this->getPublicationPhotos() as $photo)
 				{
-					if (is_file($photo->getPath()))
-					{
-						if (is_readable($photo->getPath()))
-						{
-							unlink($photo->getPath());
-						}
-					}
+					$photo->delete();
 				}
 			}
 		}

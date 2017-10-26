@@ -20,10 +20,6 @@ use Propel\Models\SectionField;
 use Propel\Models\SectionFieldQuery;
 use Propel\Models\Map\SectionFieldTableMap;
 
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
-
 /**
  * Skeleton subclass for representing a row from the 'field' table.
  *
@@ -56,10 +52,9 @@ class Field extends BaseField
 	{
 		if (parent::isUnique())
 		{
-			if ($this->isUniqueness())
-			{
-				return true;
-			}
+			$types = ['number', 'string', 'year', 'date', 'datetime', 'time', 'ip', 'url', 'email'];
+
+			return in_array($this->getType(), $types, true);
 		}
 
 		return false;
@@ -72,13 +67,32 @@ class Field extends BaseField
 	{
 		if (parent::isSearchable())
 		{
-			if ($this->isSearchness())
-			{
-				return true;
-			}
+			$types = ['flag', 'number', 'string', 'year', 'date', 'datetime', 'time', 'ip', 'url', 'email'];
+
+			return in_array($this->getType(), $types, true);
 		}
 
 		return false;
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isStringable() : bool
+	{
+		$types = ['string', 'ip', 'url', 'email'];
+
+		return in_array($this->getType(), $types, true);
+	}
+
+	/**
+	 * {@description}
+	 */
+	public function isTimestampable() : bool
+	{
+		$types = ['year', 'date', 'datetime', 'time'];
+
+		return in_array($this->getType(), $types, true);
 	}
 
 	/**
@@ -183,46 +197,6 @@ class Field extends BaseField
 	public function isImage() : bool
 	{
 		return 0 === strcmp($this->getType(), 'image');
-	}
-
-	/**
-	 * {@description}
-	 */
-	public function isSearchness() : bool
-	{
-		$types = ['flag', 'number', 'string', 'year', 'date', 'datetime', 'time', 'ip', 'url', 'email'];
-
-		return in_array($this->getType(), $types, true);
-	}
-
-	/**
-	 * {@description}
-	 */
-	public function isUniqueness() : bool
-	{
-		$types = ['number', 'string', 'year', 'date', 'datetime', 'time', 'ip', 'url', 'email'];
-
-		return in_array($this->getType(), $types, true);
-	}
-
-	/**
-	 * {@description}
-	 */
-	public function isStringable() : bool
-	{
-		$types = ['string', 'ip', 'url', 'email'];
-
-		return in_array($this->getType(), $types, true);
-	}
-
-	/**
-	 * {@description}
-	 */
-	public function isTimestampable() : bool
-	{
-		$types = ['year', 'date', 'datetime', 'time'];
-
-		return in_array($this->getType(), $types, true);
 	}
 
 	/**
@@ -675,17 +649,4 @@ class Field extends BaseField
 				break;
 		}
 	}
-
-	/**
-	 * Configure validators constraints.
-	 *
-	 * The Validator object uses this method to perform object validation
-	 *
-	 * @param   ClassMetadata   $metadata
-	 *
-	 * @access  public
-	 * @return  void
-	 */
-	public static function loadValidatorMetadata(ClassMetadata $metadata)
-	{}
 }

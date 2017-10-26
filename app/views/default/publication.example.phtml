@@ -82,11 +82,11 @@
 	<div class="container mt-4">
 		<div id="publication_gallery" class="carousel slide" data-interval="false">
 
-			<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
+			<?php if ($publication->getDisplayedSortedPhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
 				<ol class="carousel-indicators">
 					<li data-target="#publication_gallery" data-slide-to="0" class="active"></li>
 
-					<?php for ($i = 1; $i <= $publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist()->count(); $i++) : ?>
+					<?php for ($i = 1; $i <= $publication->getDisplayedSortedPhotosWithoutCoverWhenPictureDoesNotExist()->count(); $i++) : ?>
 						<li data-target="#publication_gallery" data-slide-to="<?= $i ?>"></li>
 					<?php endfor; ?>
 				</ol>
@@ -107,8 +107,8 @@
 					<?php endif; ?>
 				</div>
 
-				<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
-					<?php foreach ($publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist() as $photo) : ?>
+				<?php if ($publication->getDisplayedSortedPhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
+					<?php foreach ($publication->getDisplayedSortedPhotosWithoutCoverWhenPictureDoesNotExist() as $photo) : ?>
 						<div class="carousel-item">
 							<a href="/upload/<?= $photo->getFile() ?>" target="_blank" data-fancybox="publication_gallery">
 								<img class="d-block img-fluid" src="/upload/1200x675/<?= $photo->getFile() ?>" alt="" />
@@ -118,7 +118,7 @@
 				<?php endif; ?>
 			</div>
 
-			<?php if ($publication->getDisplayedSortablePhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
+			<?php if ($publication->getDisplayedSortedPhotosWithoutCoverWhenPictureDoesNotExist()->count() > 0) : ?>
 				<a class="carousel-control-prev" href="#publication_gallery" role="button" data-slide="prev">
 					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 					<span class="sr-only">Назад</span>

@@ -64,7 +64,7 @@ class Section extends BaseSection
 	/**
 	 * Получение отсортированной коллекции с дополнительными полями раздела
 	 */
-	public function getSortableSectionFields() : ObjectCollection
+	public function getSortedSectionFields() : ObjectCollection
 	{
 		$query = SectionFieldQuery::create();
 
@@ -73,5 +73,37 @@ class Section extends BaseSection
 		$query->orderBySequence(Criteria::ASC);
 
 		return $query->find();
+	}
+
+	/**
+	 * Code to be run before deleting the object in database
+	 *
+	 * @param   ConnectionInterface   $connection
+	 *
+	 * @access  public
+	 * @return  bool
+	 */
+	public function preDelete(ConnectionInterface $connection = null)
+	{
+		if (is_file(\Fenric\Upload::path($this->getPicture())))
+		{
+			if (is_readable(\Fenric\Upload::path($this->getPicture())))
+			{
+				unlink(\Fenric\Upload::path($this->getPicture()));
+			}
+		}
+
+		if ($this->getPublications() instanceof ObjectCollection)
+		{
+			if ($this->getPublications()->count() > 0)
+			{
+				foreach ($this->getPublications() as $publication)
+				{
+					$publication->delete();
+				}
+			}
+		}
+
+		return true;
 	}
 }

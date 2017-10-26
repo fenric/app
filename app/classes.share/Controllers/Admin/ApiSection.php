@@ -93,9 +93,9 @@ class ApiSection extends CRUD
 		{
 			$json['fields'] = [];
 
-			if ($section->getSortableSectionFields()->count() > 0)
+			if ($section->getSortedSectionFields()->count() > 0)
 			{
-				foreach ($section->getSortableSectionFields() as $i => $sfield)
+				foreach ($section->getSortedSectionFields() as $i => $sfield)
 				{
 					$json['fields'][$i]['id'] = $sfield->getId();
 					$json['fields'][$i]['parent']['id'] = $sfield->getField()->getId();

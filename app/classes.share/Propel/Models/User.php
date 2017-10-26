@@ -121,6 +121,14 @@ class User extends BaseUser
 	}
 
 	/**
+	 * Имеет ли учетная запись разрешение на загрузку видео
+	 */
+	public function haveAccessToUploadVideos() : bool
+	{
+		return $this->checkAccess('upload.videos');
+	}
+
+	/**
 	 * Имеет ли учетная запись разрешение на загрузку PDF
 	 */
 	public function haveAccessToUploadPDF() : bool
@@ -393,6 +401,27 @@ class User extends BaseUser
 	public function postInsert(ConnectionInterface $connection = null)
 	{
 		fenric('event::user.created')->run([$this, $connection]);
+	}
+
+	/**
+	 * Code to be run before deleting the object in database
+	 *
+	 * @param   ConnectionInterface   $connection
+	 *
+	 * @access  public
+	 * @return  bool
+	 */
+	public function preDelete(ConnectionInterface $connection = null)
+	{
+		if (is_file(\Fenric\Upload::path($this->getPhoto())))
+		{
+			if (is_readable(\Fenric\Upload::path($this->getPhoto())))
+			{
+				unlink(\Fenric\Upload::path($this->getPhoto()));
+			}
+		}
+
+		return true;
 	}
 
 	/**
