@@ -74,34 +74,22 @@ class PublicationQuery extends BasePublicationQuery
 	/**
 	 * Поиск объектов
 	 */
-	public static function search(string $searchQuery, int $searchFilter = self::SEARCH_FILTER_MAX, int $maxWords = 8, int $minWordLength = 2, int $maxWordLength = 32) : ?self
+	public static function search(string $searchQuery, int $searchFilter = self::SEARCH_FILTER_MAX, int $searchLength = 64) : ?self
 	{
 		if (strlen($searchQuery) > 0)
 		{
-			$searchWords = explode(' ', $searchQuery);
+			$searchString = searchable($searchQuery, $searchLength, '%');
 
-			$searchWords = array_map(function($searchWord) use($maxWordLength) : string
+			if (strlen($searchString) > 0)
 			{
-				return searchable($searchWord, $maxWordLength, '%');
-
-			}, $searchWords);
-
-			$searchWords = array_filter($searchWords, function($searchWord) use($minWordLength) : bool
-			{
-				return mb_strlen($searchWord, 'UTF-8') >= $minWordLength;
-			});
-
-			if (count($searchWords) > 0)
-			{
-				$searchWords = array_unique($searchWords);
-
-				$searchWords = array_slice($searchWords, 0, $maxWords);
-
 				$tagsSubquery = fenric('query')->distinct(true)
 				->select(PublicationTagTableMap::COL_PUBLICATION_ID)
 				->from(PublicationTagTableMap::TABLE_NAME)
 				->inner()->join(TagTableMap::TABLE_NAME)
-				->on(PublicationTagTableMap::COL_TAG_ID, '=', TagTableMap::COL_ID);
+				->on(PublicationTagTableMap::COL_TAG_ID, '=', TagTableMap::COL_ID)
+				->where(TagTableMap::COL_HEADER, 'like', function() use($searchString) : string {
+					return sprintf("'%%%s%%'", $searchString);
+				});
 
 				$fieldsSubquery = fenric('query')->distinct(true)
 				->select(PublicationFieldTableMap::COL_PUBLICATION_ID)
@@ -111,50 +99,26 @@ class PublicationQuery extends BasePublicationQuery
 				->inner()->join(FieldTableMap::TABLE_NAME)
 				->on(FieldTableMap::COL_ID, '=', SectionFieldTableMap::COL_FIELD_ID)
 				->where(FieldTableMap::COL_IS_SEARCHABLE, '=', true)
-				->where(FieldTableMap::COL_TYPE, '=', function() : string
-				{
+				->where(FieldTableMap::COL_TYPE, '=', function() : string {
 					return sprintf("'%s'", 'string');
 				})
-				->and_open();
+				->where(PublicationFieldTableMap::COL_STRING_VALUE, 'like', function() use($searchString) : string {
+					return sprintf("'%%%s%%'", $searchString);
+				});
 
 				$publications = PublicationQuery::create();
+				$publications->_or()->filterByCode(sprintf('%%%s%%', $searchString), Criteria::LIKE);
+				$publications->_or()->filterByHeader(sprintf('%%%s%%', $searchString), Criteria::LIKE);
 
-				foreach ($searchWords as $searchWord)
-				{
-					$tagsSubquery->where(TagTableMap::COL_CODE, 'like', function() use($searchWord) : string
-					{
-						return sprintf("'%%%s%%'", $searchWord);
-
-					})->or_();
-
-					$tagsSubquery->where(TagTableMap::COL_HEADER, 'like', function() use($searchWord) : string
-					{
-						return sprintf("'%%%s%%'", $searchWord);
-
-					})->or_();
-
-					$fieldsSubquery->where(PublicationFieldTableMap::COL_STRING_VALUE, 'like', function() use($searchWord) : string
-					{
-						return sprintf("'%%%s%%'", $searchWord);
-
-					})->or_();
-
-					$publications->_or()->filterByCode(sprintf('%%%s%%', $searchWord), Criteria::LIKE);
-					$publications->_or()->filterByHeader(sprintf('%%%s%%', $searchWord), Criteria::LIKE);
-				}
-
-				if ($searchFilter & self::SEARCH_FILTER_TAGS)
-				{
+				if ($searchFilter & self::SEARCH_FILTER_TAGS) {
 					$publications->_or()->filterById(sprintf('%s IN (%s)', PublicationTableMap::COL_ID, $tagsSubquery->getSql()), Criteria::CUSTOM);
 				}
 
-				if ($searchFilter & self::SEARCH_FILTER_FIELDS)
-				{
+				if ($searchFilter & self::SEARCH_FILTER_FIELDS) {
 					$publications->_or()->filterById(sprintf('%s IN (%s)', PublicationTableMap::COL_ID, $fieldsSubquery->getSql()), Criteria::CUSTOM);
 				}
 
-				if ($searchFilter & self::SEARCH_FILTER_DISPLAY)
-				{
+				if ($searchFilter & self::SEARCH_FILTER_DISPLAY) {
 					$publications->filterByShowAt(null)->_or()->filterByShowAt(new DateTime('now'), Criteria::LESS_EQUAL);
 					$publications->filterByHideAt(null)->_or()->filterByHideAt(new DateTime('now'), Criteria::GREATER_EQUAL);
 				}
