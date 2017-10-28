@@ -15,6 +15,7 @@ use Propel\Models\Map\PublicationPhotoTableMap;
 use Propel\Models\Map\PublicationRelationTableMap;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
@@ -317,15 +318,45 @@ class Publication extends BasePublication
 	}
 
 	/**
+	 * Получение упомянутых публикаций
+	 */
+	public function getMentions(\Closure $binder = null) : ObjectCollection
+	{
+		$query = PublicationQuery::create();
+		$subquery = fenric('query');
+
+		if ($binder instanceof \Closure) {
+			$binder($this, $query, $subquery);
+		}
+
+		$query->filterById(sprintf('%s IN (%s)', PublicationTableMap::COL_ID, $subquery->distinct(true)
+			->select(PublicationRelationTableMap::COL_PUBLICATION_ID)
+			->from(PublicationRelationTableMap::TABLE_NAME)
+			->where(PublicationRelationTableMap::COL_RELATION_ID, '=', $this->getId())
+		->getSql()), Criteria::CUSTOM);
+
+		return $query->find();
+	}
+
+	/**
 	 * Получение связанных публикаций
 	 */
-	public function getRelations() : ObjectCollection
+	public function getRelations(\Closure $binder = null) : ObjectCollection
 	{
-		return PublicationQuery::create()->findPks(fenric('query')
+		$query = PublicationQuery::create();
+		$subquery = fenric('query');
+
+		if ($binder instanceof \Closure) {
+			$binder($this, $query, $subquery);
+		}
+
+		$query->filterById(sprintf('%s IN (%s)', PublicationTableMap::COL_ID, $subquery->distinct(true)
 			->select(PublicationRelationTableMap::COL_RELATION_ID)
 			->from(PublicationRelationTableMap::TABLE_NAME)
 			->where(PublicationRelationTableMap::COL_PUBLICATION_ID, '=', $this->getId())
-		->readCol());
+		->getSql()), Criteria::CUSTOM);
+
+		return $query->find();
 	}
 
 	/**
@@ -363,10 +394,7 @@ class Publication extends BasePublication
 				foreach ($tags as $tag)
 				{
 					$ptag = new PublicationTag();
-
-					$ptag->setPublication($this);
-					$ptag->setTag($tag);
-
+					$ptag->setTagId($tag->getId());
 					$this->addPublicationTag($ptag);
 				}
 			}
@@ -410,10 +438,7 @@ class Publication extends BasePublication
 					if ($publication->getId() <> $this->getId())
 					{
 						$relation = new PublicationRelation();
-
-						$relation->setPublication($this);
 						$relation->setRelationId($publication->getId());
-
 						$this->addPublicationRelation($relation);
 					}
 				}
@@ -514,8 +539,7 @@ class Publication extends BasePublication
 							$uniqueness->where(PublicationFieldTableMap::COL_PUBLICATION_ID, '=', $this->getId());
 							$uniqueness->where(PublicationFieldTableMap::COL_SECTION_FIELD_ID, '=', $sfield->getId());
 
-							if ($uniqueness->readOne() > 0)
-							{
+							if ($uniqueness->readOne() > 0) {
 								continue;
 							}
 
@@ -559,6 +583,14 @@ class Publication extends BasePublication
 			if (is_readable(\Fenric\Upload::path($this->getPicture())))
 			{
 				unlink(\Fenric\Upload::path($this->getPicture()));
+			}
+		}
+
+		if (is_file(\Fenric\Upload::path($this->getPictureSource())))
+		{
+			if (is_readable(\Fenric\Upload::path($this->getPictureSource())))
+			{
+				unlink(\Fenric\Upload::path($this->getPictureSource()));
 			}
 		}
 
