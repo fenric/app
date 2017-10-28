@@ -47,23 +47,91 @@ class Api extends Actionable
 		{
 			$file = $upload->asImage();
 
+			$json['file'] = basename($file['location']);
+
+			if (isset($file['source']))
+			{
+				$json['source'] = basename($file['source']);
+			}
+
+			$this->response->setJsonContent($json);
+		}
+
+		catch (\RuntimeException $e)
+		{
+			$this->response->setStatus($e->getCode());
+
+			$this->response->setJsonContent([
+				'success' => false,
+				'message' => $e->getMessage(),
+			]);
+		}
+	}
+
+	/**
+	 * Загрузка аудиофайла
+	 */
+	protected function actionUploadAudioViaPUT() : void
+	{
+		if (! fenric('user')->haveAccessToUploadAudios())
+		{
+			$this->response->setStatus(403)->setJsonContent([
+				'success' => false,
+				'message' => 'Недостаточно прав.',
+			]);
+		}
+
+		$upload = new Upload($this->request->getBody());
+
+		try
+		{
+			$file = $upload->asAudio();
+
 			$this->response->setJsonContent([
 				'file' => basename($file['location']),
+				'cover' => basename($file['cover']),
 			]);
 		}
 
 		catch (\RuntimeException $e)
 		{
-			switch ($e->getCode())
-			{
-				case 1 :
-					$this->response->setStatus(400);
-					break;
+			$this->response->setStatus($e->getCode());
 
-				default :
-					$this->response->setStatus(503);
-					break;
-			}
+			$this->response->setJsonContent([
+				'success' => false,
+				'message' => $e->getMessage(),
+			]);
+		}
+	}
+
+	/**
+	 * Загрузка видеофайла
+	 */
+	protected function actionUploadVideoViaPUT() : void
+	{
+		if (! fenric('user')->haveAccessToUploadVideos())
+		{
+			$this->response->setStatus(403)->setJsonContent([
+				'success' => false,
+				'message' => 'Недостаточно прав.',
+			]);
+		}
+
+		$upload = new Upload($this->request->getBody());
+
+		try
+		{
+			$file = $upload->asVideo();
+
+			$this->response->setJsonContent([
+				'file' => basename($file['location']),
+				'cover' => basename($file['cover']),
+			]);
+		}
+
+		catch (\RuntimeException $e)
+		{
+			$this->response->setStatus($e->getCode());
 
 			$this->response->setJsonContent([
 				'success' => false,
@@ -77,7 +145,7 @@ class Api extends Actionable
 	 */
 	protected function actionUploadPdfViaPUT() : void
 	{
-		if (! fenric('user')->haveAccessToUploadPDF())
+		if (! fenric('user')->haveAccessToUploadPdf())
 		{
 			$this->response->setStatus(403)->setJsonContent([
 				'success' => false,
@@ -89,7 +157,7 @@ class Api extends Actionable
 
 		try
 		{
-			$file = $upload->asPDF();
+			$file = $upload->asPdf();
 
 			$this->response->setJsonContent([
 				'file' => basename($file['location']),
@@ -99,16 +167,7 @@ class Api extends Actionable
 
 		catch (\RuntimeException $e)
 		{
-			switch ($e->getCode())
-			{
-				case 1 :
-					$this->response->setStatus(400);
-					break;
-
-				default :
-					$this->response->setStatus(503);
-					break;
-			}
+			$this->response->setStatus($e->getCode());
 
 			$this->response->setJsonContent([
 				'success' => false,
