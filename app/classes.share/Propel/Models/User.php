@@ -105,14 +105,6 @@ class User extends BaseUser
 	}
 
 	/**
-	 * Имеет ли учетная запись разрешение на загрузку документов
-	 */
-	public function haveAccessToUploadDocuments() : bool
-	{
-		return $this->checkAccess('upload.documents');
-	}
-
-	/**
 	 * Имеет ли учетная запись разрешение на загрузку изображений
 	 */
 	public function haveAccessToUploadImages() : bool
@@ -121,7 +113,15 @@ class User extends BaseUser
 	}
 
 	/**
-	 * Имеет ли учетная запись разрешение на загрузку видео
+	 * Имеет ли учетная запись разрешение на загрузку аудиофайлов
+	 */
+	public function haveAccessToUploadAudios() : bool
+	{
+		return $this->checkAccess('upload.audios');
+	}
+
+	/**
+	 * Имеет ли учетная запись разрешение на загрузку видеофайлов
 	 */
 	public function haveAccessToUploadVideos() : bool
 	{
@@ -129,9 +129,9 @@ class User extends BaseUser
 	}
 
 	/**
-	 * Имеет ли учетная запись разрешение на загрузку PDF
+	 * Имеет ли учетная запись разрешение на загрузку PDF документов
 	 */
-	public function haveAccessToUploadPDF() : bool
+	public function haveAccessToUploadPdf() : bool
 	{
 		return $this->checkAccess('upload.pdf');
 	}

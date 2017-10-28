@@ -8,4 +8,10 @@ $environments['php'] = '/usr/bin/php';
 
 $environments['composer'] = '/usr/local/bin/composer';
 
+$environments['imagemagick'] = '/usr/local/bin/convert';
+
+$environments['ffmpegthumbnailer'] = '/usr/local/bin/ffmpegthumbnailer';
+
+$environments['ffmpeg'] = '/usr/local/bin/ffmpeg';
+
 return $environments;
