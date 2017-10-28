@@ -132,7 +132,7 @@
 
 		<div class="field-image-container" style="margin-top: 10px; margin-bottom: 10px;" data-field-id="{{field.id}}">
 			{{when field.value is not empty}}
-				<img class="img-thumbnail" src="/upload/150x150/{{field.value}}" />
+				<img class="img-thumbnail" src="/upload/150x0/{{field.value}}" />
 				<input type="hidden" name="field_{{field.parent.name}}" value="{{field.value}}" />
 			{{endwhen field.value}}
 		</div>

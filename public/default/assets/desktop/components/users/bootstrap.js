@@ -285,12 +285,10 @@
 
 					$desktop.component('uploader').image(element.files[0], function(response)
 					{
-						element.value = null;
-
 						container = document.createDocumentFragment();
 
 						container.appendChild($desktop.createElement('img', {
-							class: 'img-thumbnail', src: '/upload/150x150/' + response.file,
+							class: 'img-thumbnail', src: '/upload/150x0/' + response.file,
 						}));
 
 						container.appendChild($desktop.createElement('input', {
@@ -298,6 +296,10 @@
 						}));
 
 						modal.replace('div.photo-container', container);
+
+					}).complete(function()
+					{
+						element.value = null;
 
 						modal.unblock();
 					});

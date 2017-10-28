@@ -431,19 +431,27 @@
 
 								$desktop.component('uploader').image(element.files[0], function(response)
 								{
-									element.value = null;
-
 									fragment = document.createDocumentFragment();
 
 									fragment.appendChild($desktop.createElement('img', {
-										class: 'img-thumbnail', src: '/upload/150x150/' + response.file,
+										class: 'img-thumbnail', src: '/upload/150x0/' + response.file,
 									}));
 
 									fragment.appendChild($desktop.createElement('input', {
 										type: 'hidden', name: 'picture', value: response.file,
 									}));
 
+									if (response.source !== void(0)) {
+										fragment.appendChild($desktop.createElement('input', {
+											type: 'hidden', name: 'picture_source', value: response.source,
+										}));
+									}
+
 									modal.replace('div.picture-container', fragment);
+
+								}).complete(function()
+								{
+									element.value = null;
 
 									modal.unblock();
 								});
@@ -516,7 +524,7 @@
 								});
 							});
 
-							modal.find('div.relations', function(container)
+							modal.find('.relations', function(container)
 							{
 								var finder;
 
@@ -541,7 +549,7 @@
 														return;
 													}
 
-													if (modal.exists('div.relations > div.relation[data-id="{id}"]', {id: value.id})) {
+													if (modal.exists('.relations > .relation[data-id="{id}"]', {id: value.id})) {
 														return;
 													}
 
@@ -650,13 +658,10 @@
 
 						$desktop.component('uploader').image(element.files[0], function(response)
 						{
-							element.value = null;
-
 							fragment = document.createDocumentFragment();
 
 							fragment.appendChild($desktop.createElement('img', {
-								class: 'img-thumbnail',
-								src: '/upload/150x150/' + response.file,
+								class: 'img-thumbnail', src: '/upload/150x0/' + response.file,
 							}));
 
 							fragment.appendChild($desktop.createElement('input', {
@@ -668,6 +673,10 @@
 							modal.replace('.field-image-container[data-field-id="{id}"]', fragment, {
 								id: element.getAttribute('data-field-id'),
 							});
+
+						}).complete(function()
+						{
+							element.value = null;
 
 							modal.unblock();
 						});

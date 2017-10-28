@@ -75,11 +75,12 @@
 
 			<div class="form-group" data-name="picture">
 				<label>Изображение публикации</label>
-				<input class="form-control picture-upload" type="file" accept="image/*" />
+				<input class="form-control picture-upload" type="file" />
 				<div class="picture-container" style="margin: 10px 0;">
 					{{when picture is not empty}}
-						<img class="img-thumbnail" src="/upload/150x150/{{picture}}" />
+						<img class="img-thumbnail" src="/upload/150x0/{{picture}}" />
 						<input type="hidden" name="picture" value="{{picture}}" />
+						<input type="hidden" name="picture_source" value="{{picture_source}}" />
 					{{endwhen picture}}
 				</div>
 				<button type="button" class="btn btn-sm btn-danger picture-reset">
@@ -165,14 +166,21 @@
 				</div>
 				<input class="form-control search-relations" type="text" />
 			</div>
-			<div class="relations" style="margin-top: 25px;">
+			<div class="relations list-group" style="margin-top: 20px;">
 				{{when relations is not empty}}
 					{{repeat relations}}
-						<div class="relation" style="margin-bottom: 5px;" data-id="{{id}}">
-							<label style="cursor: pointer;">
-								<input type="checkbox" name="relations[]" value="{{id}}" checked="true" /> &nbsp;<span>{{header}}</span>
-							</label>
-						</div>
+						<label class="relation list-group-item" style="cursor: pointer;" data-id="{{id}}">
+							<div class="row">
+								<div class="col-sm-8">
+									<input type="checkbox" name="relations[]" value="{{id}}" checked="true" /> &nbsp; <span class="text-muted">{{header}}</span>
+								</div>
+								<div class="col-sm-4 text-right">
+									<span class="label label-primary">
+										{{section.header}}
+									</span>
+								</div>
+							</div>
+						</label>
 					{{endrepeat relations}}
 				{{endwhen relations}}
 			</div>

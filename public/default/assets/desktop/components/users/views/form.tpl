@@ -55,7 +55,7 @@
 		<input class="form-control photo-upload" type="file" accept="image/*" />
 		<div class="photo-container" style="margin: 10px 0;">
 			{{when photo is not empty}}
-				<img class="img-thumbnail" src="/upload/150x150/{{photo}}" />
+				<img class="img-thumbnail" src="/upload/150x0/{{photo}}" />
 				<input type="hidden" name="photo" value="{{photo}}" />
 			{{endwhen photo}}
 		</div>
