@@ -24,6 +24,32 @@
 	};
 
 	/**
+	 * Загрузка аудиофайла
+	 */
+	$component.prototype.audio = function(file, onSuccess)
+	{
+		return this.xhr.put('/user/api/upload-audio/', file, {repeat: true, success: function(response)
+		{
+			if (onSuccess instanceof Function) {
+				onSuccess.call(this, response, this);
+			}
+		}});
+	};
+
+	/**
+	 * Загрузка видеофайла
+	 */
+	$component.prototype.video = function(file, onSuccess)
+	{
+		return this.xhr.put('/user/api/upload-video/', file, {repeat: true, success: function(response)
+		{
+			if (onSuccess instanceof Function) {
+				onSuccess.call(this, response, this);
+			}
+		}});
+	};
+
+	/**
 	 * Загрузка PDF
 	 */
 	$component.prototype.pdf = function(file, onSuccess)
