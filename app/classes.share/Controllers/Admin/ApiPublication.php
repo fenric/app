@@ -110,6 +110,7 @@ class ApiPublication extends CRUD
 			PublicationTableMap::COL_CODE => $this->request->post->get('code'),
 			PublicationTableMap::COL_HEADER => $this->request->post->get('header'),
 			PublicationTableMap::COL_PICTURE => $this->request->post->get('picture'),
+			PublicationTableMap::COL_PICTURE_SOURCE => $this->request->post->get('picture_source'),
 			PublicationTableMap::COL_PICTURE_SIGNATURE => $this->request->post->get('picture_signature'),
 			PublicationTableMap::COL_ANONS => $this->request->post->get('anons'),
 			PublicationTableMap::COL_CONTENT => $this->request->post->get('content'),
@@ -134,6 +135,7 @@ class ApiPublication extends CRUD
 			PublicationTableMap::COL_CODE => $this->request->post->get('code'),
 			PublicationTableMap::COL_HEADER => $this->request->post->get('header'),
 			PublicationTableMap::COL_PICTURE => $this->request->post->get('picture'),
+			PublicationTableMap::COL_PICTURE_SOURCE => $this->request->post->get('picture_source'),
 			PublicationTableMap::COL_PICTURE_SIGNATURE => $this->request->post->get('picture_signature'),
 			PublicationTableMap::COL_ANONS => $this->request->post->get('anons'),
 			PublicationTableMap::COL_CONTENT => $this->request->post->get('content'),
@@ -195,10 +197,23 @@ class ApiPublication extends CRUD
 					foreach ($publication->getRelations() as $relation)
 					{
 						$json['relations'][$i]['id'] = $relation->getId();
+						$json['relations'][$i]['code'] = $relation->getCode();
 						$json['relations'][$i]['header'] = $relation->getHeader();
+
+						$json['relations'][$i]['section']['id'] = $relation->getSection()->getId();
+						$json['relations'][$i]['section']['code'] = $relation->getSection()->getCode();
+						$json['relations'][$i]['section']['header'] = $relation->getSection()->getHeader();
 
 						$i++;
 					}
+
+					usort($json['relations'], function($a, $b)
+					{
+						$h1 = $a['section']['header'];
+						$h2 = $b['section']['header'];
+
+						return $h1 <=> $h2;
+					});
 				}
 			}
 
@@ -227,6 +242,7 @@ class ApiPublication extends CRUD
 			PublicationTableMap::COL_CODE,
 			PublicationTableMap::COL_HEADER,
 			PublicationTableMap::COL_PICTURE,
+			PublicationTableMap::COL_PICTURE_SOURCE,
 			PublicationTableMap::COL_PICTURE_SIGNATURE,
 			PublicationTableMap::COL_ANONS,
 			PublicationTableMap::COL_CONTENT,
@@ -371,6 +387,10 @@ class ApiPublication extends CRUD
 					$found[$i]['id'] = $p->getId();
 					$found[$i]['code'] = $p->getCode();
 					$found[$i]['header'] = $p->getHeader();
+
+					$found[$i]['section']['id'] = $p->getSection()->getId();
+					$found[$i]['section']['code'] = $p->getSection()->getCode();
+					$found[$i]['section']['header'] = $p->getSection()->getHeader();
 				}
 			}
 		}

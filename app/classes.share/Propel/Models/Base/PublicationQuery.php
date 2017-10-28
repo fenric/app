@@ -25,6 +25,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationQuery orderByCode($order = Criteria::ASC) Order by the code column
  * @method     ChildPublicationQuery orderByHeader($order = Criteria::ASC) Order by the header column
  * @method     ChildPublicationQuery orderByPicture($order = Criteria::ASC) Order by the picture column
+ * @method     ChildPublicationQuery orderByPictureSource($order = Criteria::ASC) Order by the picture_source column
  * @method     ChildPublicationQuery orderByPictureSignature($order = Criteria::ASC) Order by the picture_signature column
  * @method     ChildPublicationQuery orderByAnons($order = Criteria::ASC) Order by the anons column
  * @method     ChildPublicationQuery orderByContent($order = Criteria::ASC) Order by the content column
@@ -47,6 +48,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublicationQuery groupByCode() Group by the code column
  * @method     ChildPublicationQuery groupByHeader() Group by the header column
  * @method     ChildPublicationQuery groupByPicture() Group by the picture column
+ * @method     ChildPublicationQuery groupByPictureSource() Group by the picture_source column
  * @method     ChildPublicationQuery groupByPictureSignature() Group by the picture_signature column
  * @method     ChildPublicationQuery groupByAnons() Group by the anons column
  * @method     ChildPublicationQuery groupByContent() Group by the content column
@@ -172,6 +174,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublication findOneByCode(string $code) Return the first ChildPublication filtered by the code column
  * @method     ChildPublication findOneByHeader(string $header) Return the first ChildPublication filtered by the header column
  * @method     ChildPublication findOneByPicture(string $picture) Return the first ChildPublication filtered by the picture column
+ * @method     ChildPublication findOneByPictureSource(string $picture_source) Return the first ChildPublication filtered by the picture_source column
  * @method     ChildPublication findOneByPictureSignature(string $picture_signature) Return the first ChildPublication filtered by the picture_signature column
  * @method     ChildPublication findOneByAnons(string $anons) Return the first ChildPublication filtered by the anons column
  * @method     ChildPublication findOneByContent(string $content) Return the first ChildPublication filtered by the content column
@@ -197,6 +200,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublication requireOneByCode(string $code) Return the first ChildPublication filtered by the code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublication requireOneByHeader(string $header) Return the first ChildPublication filtered by the header column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublication requireOneByPicture(string $picture) Return the first ChildPublication filtered by the picture column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPublication requireOneByPictureSource(string $picture_source) Return the first ChildPublication filtered by the picture_source column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublication requireOneByPictureSignature(string $picture_signature) Return the first ChildPublication filtered by the picture_signature column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublication requireOneByAnons(string $anons) Return the first ChildPublication filtered by the anons column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPublication requireOneByContent(string $content) Return the first ChildPublication filtered by the content column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -220,6 +224,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPublication[]|ObjectCollection findByCode(string $code) Return ChildPublication objects filtered by the code column
  * @method     ChildPublication[]|ObjectCollection findByHeader(string $header) Return ChildPublication objects filtered by the header column
  * @method     ChildPublication[]|ObjectCollection findByPicture(string $picture) Return ChildPublication objects filtered by the picture column
+ * @method     ChildPublication[]|ObjectCollection findByPictureSource(string $picture_source) Return ChildPublication objects filtered by the picture_source column
  * @method     ChildPublication[]|ObjectCollection findByPictureSignature(string $picture_signature) Return ChildPublication objects filtered by the picture_signature column
  * @method     ChildPublication[]|ObjectCollection findByAnons(string $anons) Return ChildPublication objects filtered by the anons column
  * @method     ChildPublication[]|ObjectCollection findByContent(string $content) Return ChildPublication objects filtered by the content column
@@ -334,7 +339,7 @@ abstract class PublicationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, section_id, code, header, picture, picture_signature, anons, meta_title, meta_author, meta_keywords, meta_description, meta_canonical, meta_robots, created_at, created_by, updated_at, updated_by, show_at, hide_at, hits FROM fenric_publication WHERE id = :p0';
+        $sql = 'SELECT id, section_id, code, header, picture, picture_source, picture_signature, anons, meta_title, meta_author, meta_keywords, meta_description, meta_canonical, meta_robots, created_at, created_by, updated_at, updated_by, show_at, hide_at, hits FROM fenric_publication WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -581,6 +586,31 @@ abstract class PublicationQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PublicationTableMap::COL_PICTURE, $picture, $comparison);
+    }
+
+    /**
+     * Filter the query on the picture_source column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPictureSource('fooValue');   // WHERE picture_source = 'fooValue'
+     * $query->filterByPictureSource('%fooValue%', Criteria::LIKE); // WHERE picture_source LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $pictureSource The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPublicationQuery The current query, for fluid interface
+     */
+    public function filterByPictureSource($pictureSource = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($pictureSource)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PublicationTableMap::COL_PICTURE_SOURCE, $pictureSource, $comparison);
     }
 
     /**

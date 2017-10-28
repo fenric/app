@@ -59,7 +59,7 @@ class PublicationTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 21;
+    const NUM_COLUMNS = 22;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class PublicationTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 20;
+    const NUM_HYDRATE_COLUMNS = 21;
 
     /**
      * the column name for the id field
@@ -95,6 +95,11 @@ class PublicationTableMap extends TableMap
      * the column name for the picture field
      */
     const COL_PICTURE = 'fenric_publication.picture';
+
+    /**
+     * the column name for the picture_source field
+     */
+    const COL_PICTURE_SOURCE = 'fenric_publication.picture_source';
 
     /**
      * the column name for the picture_signature field
@@ -188,11 +193,11 @@ class PublicationTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'SectionId', 'Code', 'Header', 'Picture', 'PictureSignature', 'Anons', 'Content', 'MetaTitle', 'MetaAuthor', 'MetaKeywords', 'MetaDescription', 'MetaCanonical', 'MetaRobots', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', 'ShowAt', 'HideAt', 'Hits', ),
-        self::TYPE_CAMELNAME     => array('id', 'sectionId', 'code', 'header', 'picture', 'pictureSignature', 'anons', 'content', 'metaTitle', 'metaAuthor', 'metaKeywords', 'metaDescription', 'metaCanonical', 'metaRobots', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'showAt', 'hideAt', 'hits', ),
-        self::TYPE_COLNAME       => array(PublicationTableMap::COL_ID, PublicationTableMap::COL_SECTION_ID, PublicationTableMap::COL_CODE, PublicationTableMap::COL_HEADER, PublicationTableMap::COL_PICTURE, PublicationTableMap::COL_PICTURE_SIGNATURE, PublicationTableMap::COL_ANONS, PublicationTableMap::COL_CONTENT, PublicationTableMap::COL_META_TITLE, PublicationTableMap::COL_META_AUTHOR, PublicationTableMap::COL_META_KEYWORDS, PublicationTableMap::COL_META_DESCRIPTION, PublicationTableMap::COL_META_CANONICAL, PublicationTableMap::COL_META_ROBOTS, PublicationTableMap::COL_CREATED_AT, PublicationTableMap::COL_CREATED_BY, PublicationTableMap::COL_UPDATED_AT, PublicationTableMap::COL_UPDATED_BY, PublicationTableMap::COL_SHOW_AT, PublicationTableMap::COL_HIDE_AT, PublicationTableMap::COL_HITS, ),
-        self::TYPE_FIELDNAME     => array('id', 'section_id', 'code', 'header', 'picture', 'picture_signature', 'anons', 'content', 'meta_title', 'meta_author', 'meta_keywords', 'meta_description', 'meta_canonical', 'meta_robots', 'created_at', 'created_by', 'updated_at', 'updated_by', 'show_at', 'hide_at', 'hits', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, )
+        self::TYPE_PHPNAME       => array('Id', 'SectionId', 'Code', 'Header', 'Picture', 'PictureSource', 'PictureSignature', 'Anons', 'Content', 'MetaTitle', 'MetaAuthor', 'MetaKeywords', 'MetaDescription', 'MetaCanonical', 'MetaRobots', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', 'ShowAt', 'HideAt', 'Hits', ),
+        self::TYPE_CAMELNAME     => array('id', 'sectionId', 'code', 'header', 'picture', 'pictureSource', 'pictureSignature', 'anons', 'content', 'metaTitle', 'metaAuthor', 'metaKeywords', 'metaDescription', 'metaCanonical', 'metaRobots', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'showAt', 'hideAt', 'hits', ),
+        self::TYPE_COLNAME       => array(PublicationTableMap::COL_ID, PublicationTableMap::COL_SECTION_ID, PublicationTableMap::COL_CODE, PublicationTableMap::COL_HEADER, PublicationTableMap::COL_PICTURE, PublicationTableMap::COL_PICTURE_SOURCE, PublicationTableMap::COL_PICTURE_SIGNATURE, PublicationTableMap::COL_ANONS, PublicationTableMap::COL_CONTENT, PublicationTableMap::COL_META_TITLE, PublicationTableMap::COL_META_AUTHOR, PublicationTableMap::COL_META_KEYWORDS, PublicationTableMap::COL_META_DESCRIPTION, PublicationTableMap::COL_META_CANONICAL, PublicationTableMap::COL_META_ROBOTS, PublicationTableMap::COL_CREATED_AT, PublicationTableMap::COL_CREATED_BY, PublicationTableMap::COL_UPDATED_AT, PublicationTableMap::COL_UPDATED_BY, PublicationTableMap::COL_SHOW_AT, PublicationTableMap::COL_HIDE_AT, PublicationTableMap::COL_HITS, ),
+        self::TYPE_FIELDNAME     => array('id', 'section_id', 'code', 'header', 'picture', 'picture_source', 'picture_signature', 'anons', 'content', 'meta_title', 'meta_author', 'meta_keywords', 'meta_description', 'meta_canonical', 'meta_robots', 'created_at', 'created_by', 'updated_at', 'updated_by', 'show_at', 'hide_at', 'hits', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, )
     );
 
     /**
@@ -202,11 +207,11 @@ class PublicationTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'SectionId' => 1, 'Code' => 2, 'Header' => 3, 'Picture' => 4, 'PictureSignature' => 5, 'Anons' => 6, 'Content' => 7, 'MetaTitle' => 8, 'MetaAuthor' => 9, 'MetaKeywords' => 10, 'MetaDescription' => 11, 'MetaCanonical' => 12, 'MetaRobots' => 13, 'CreatedAt' => 14, 'CreatedBy' => 15, 'UpdatedAt' => 16, 'UpdatedBy' => 17, 'ShowAt' => 18, 'HideAt' => 19, 'Hits' => 20, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'sectionId' => 1, 'code' => 2, 'header' => 3, 'picture' => 4, 'pictureSignature' => 5, 'anons' => 6, 'content' => 7, 'metaTitle' => 8, 'metaAuthor' => 9, 'metaKeywords' => 10, 'metaDescription' => 11, 'metaCanonical' => 12, 'metaRobots' => 13, 'createdAt' => 14, 'createdBy' => 15, 'updatedAt' => 16, 'updatedBy' => 17, 'showAt' => 18, 'hideAt' => 19, 'hits' => 20, ),
-        self::TYPE_COLNAME       => array(PublicationTableMap::COL_ID => 0, PublicationTableMap::COL_SECTION_ID => 1, PublicationTableMap::COL_CODE => 2, PublicationTableMap::COL_HEADER => 3, PublicationTableMap::COL_PICTURE => 4, PublicationTableMap::COL_PICTURE_SIGNATURE => 5, PublicationTableMap::COL_ANONS => 6, PublicationTableMap::COL_CONTENT => 7, PublicationTableMap::COL_META_TITLE => 8, PublicationTableMap::COL_META_AUTHOR => 9, PublicationTableMap::COL_META_KEYWORDS => 10, PublicationTableMap::COL_META_DESCRIPTION => 11, PublicationTableMap::COL_META_CANONICAL => 12, PublicationTableMap::COL_META_ROBOTS => 13, PublicationTableMap::COL_CREATED_AT => 14, PublicationTableMap::COL_CREATED_BY => 15, PublicationTableMap::COL_UPDATED_AT => 16, PublicationTableMap::COL_UPDATED_BY => 17, PublicationTableMap::COL_SHOW_AT => 18, PublicationTableMap::COL_HIDE_AT => 19, PublicationTableMap::COL_HITS => 20, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'section_id' => 1, 'code' => 2, 'header' => 3, 'picture' => 4, 'picture_signature' => 5, 'anons' => 6, 'content' => 7, 'meta_title' => 8, 'meta_author' => 9, 'meta_keywords' => 10, 'meta_description' => 11, 'meta_canonical' => 12, 'meta_robots' => 13, 'created_at' => 14, 'created_by' => 15, 'updated_at' => 16, 'updated_by' => 17, 'show_at' => 18, 'hide_at' => 19, 'hits' => 20, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'SectionId' => 1, 'Code' => 2, 'Header' => 3, 'Picture' => 4, 'PictureSource' => 5, 'PictureSignature' => 6, 'Anons' => 7, 'Content' => 8, 'MetaTitle' => 9, 'MetaAuthor' => 10, 'MetaKeywords' => 11, 'MetaDescription' => 12, 'MetaCanonical' => 13, 'MetaRobots' => 14, 'CreatedAt' => 15, 'CreatedBy' => 16, 'UpdatedAt' => 17, 'UpdatedBy' => 18, 'ShowAt' => 19, 'HideAt' => 20, 'Hits' => 21, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'sectionId' => 1, 'code' => 2, 'header' => 3, 'picture' => 4, 'pictureSource' => 5, 'pictureSignature' => 6, 'anons' => 7, 'content' => 8, 'metaTitle' => 9, 'metaAuthor' => 10, 'metaKeywords' => 11, 'metaDescription' => 12, 'metaCanonical' => 13, 'metaRobots' => 14, 'createdAt' => 15, 'createdBy' => 16, 'updatedAt' => 17, 'updatedBy' => 18, 'showAt' => 19, 'hideAt' => 20, 'hits' => 21, ),
+        self::TYPE_COLNAME       => array(PublicationTableMap::COL_ID => 0, PublicationTableMap::COL_SECTION_ID => 1, PublicationTableMap::COL_CODE => 2, PublicationTableMap::COL_HEADER => 3, PublicationTableMap::COL_PICTURE => 4, PublicationTableMap::COL_PICTURE_SOURCE => 5, PublicationTableMap::COL_PICTURE_SIGNATURE => 6, PublicationTableMap::COL_ANONS => 7, PublicationTableMap::COL_CONTENT => 8, PublicationTableMap::COL_META_TITLE => 9, PublicationTableMap::COL_META_AUTHOR => 10, PublicationTableMap::COL_META_KEYWORDS => 11, PublicationTableMap::COL_META_DESCRIPTION => 12, PublicationTableMap::COL_META_CANONICAL => 13, PublicationTableMap::COL_META_ROBOTS => 14, PublicationTableMap::COL_CREATED_AT => 15, PublicationTableMap::COL_CREATED_BY => 16, PublicationTableMap::COL_UPDATED_AT => 17, PublicationTableMap::COL_UPDATED_BY => 18, PublicationTableMap::COL_SHOW_AT => 19, PublicationTableMap::COL_HIDE_AT => 20, PublicationTableMap::COL_HITS => 21, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'section_id' => 1, 'code' => 2, 'header' => 3, 'picture' => 4, 'picture_source' => 5, 'picture_signature' => 6, 'anons' => 7, 'content' => 8, 'meta_title' => 9, 'meta_author' => 10, 'meta_keywords' => 11, 'meta_description' => 12, 'meta_canonical' => 13, 'meta_robots' => 14, 'created_at' => 15, 'created_by' => 16, 'updated_at' => 17, 'updated_by' => 18, 'show_at' => 19, 'hide_at' => 20, 'hits' => 21, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, )
     );
 
     /**
@@ -232,6 +237,7 @@ class PublicationTableMap extends TableMap
         $this->addColumn('header', 'Header', 'VARCHAR', true, 255, null);
         $this->getColumn('header')->setPrimaryString(true);
         $this->addColumn('picture', 'Picture', 'VARCHAR', false, 255, null);
+        $this->addColumn('picture_source', 'PictureSource', 'VARCHAR', false, 255, null);
         $this->addColumn('picture_signature', 'PictureSignature', 'VARCHAR', false, 255, null);
         $this->addColumn('anons', 'Anons', 'LONGVARCHAR', true, null, null);
         $this->addColumn('content', 'Content', 'LONGVARCHAR', false, null, null);
@@ -495,6 +501,7 @@ class PublicationTableMap extends TableMap
             $criteria->addSelectColumn(PublicationTableMap::COL_CODE);
             $criteria->addSelectColumn(PublicationTableMap::COL_HEADER);
             $criteria->addSelectColumn(PublicationTableMap::COL_PICTURE);
+            $criteria->addSelectColumn(PublicationTableMap::COL_PICTURE_SOURCE);
             $criteria->addSelectColumn(PublicationTableMap::COL_PICTURE_SIGNATURE);
             $criteria->addSelectColumn(PublicationTableMap::COL_ANONS);
             $criteria->addSelectColumn(PublicationTableMap::COL_META_TITLE);
@@ -516,6 +523,7 @@ class PublicationTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.code');
             $criteria->addSelectColumn($alias . '.header');
             $criteria->addSelectColumn($alias . '.picture');
+            $criteria->addSelectColumn($alias . '.picture_source');
             $criteria->addSelectColumn($alias . '.picture_signature');
             $criteria->addSelectColumn($alias . '.anons');
             $criteria->addSelectColumn($alias . '.meta_title');

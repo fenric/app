@@ -135,6 +135,13 @@ abstract class Publication implements ActiveRecordInterface
     protected $picture;
 
     /**
+     * The value for the picture_source field.
+     *
+     * @var        string
+     */
+    protected $picture_source;
+
+    /**
      * The value for the picture_signature field.
      *
      * @var        string
@@ -655,6 +662,16 @@ abstract class Publication implements ActiveRecordInterface
     }
 
     /**
+     * Get the [picture_source] column value.
+     *
+     * @return string
+     */
+    public function getPictureSource()
+    {
+        return $this->picture_source;
+    }
+
+    /**
      * Get the [picture_signature] column value.
      *
      * @return string
@@ -990,6 +1007,26 @@ abstract class Publication implements ActiveRecordInterface
 
         return $this;
     } // setPicture()
+
+    /**
+     * Set the value of [picture_source] column.
+     *
+     * @param string $v new value
+     * @return $this|\Propel\Models\Publication The current object (for fluent API support)
+     */
+    public function setPictureSource($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->picture_source !== $v) {
+            $this->picture_source = $v;
+            $this->modifiedColumns[PublicationTableMap::COL_PICTURE_SOURCE] = true;
+        }
+
+        return $this;
+    } // setPictureSource()
 
     /**
      * Set the value of [picture_signature] column.
@@ -1380,61 +1417,64 @@ abstract class Publication implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PublicationTableMap::translateFieldName('Picture', TableMap::TYPE_PHPNAME, $indexType)];
             $this->picture = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PublicationTableMap::translateFieldName('PictureSignature', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PublicationTableMap::translateFieldName('PictureSource', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->picture_source = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PublicationTableMap::translateFieldName('PictureSignature', TableMap::TYPE_PHPNAME, $indexType)];
             $this->picture_signature = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PublicationTableMap::translateFieldName('Anons', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PublicationTableMap::translateFieldName('Anons', TableMap::TYPE_PHPNAME, $indexType)];
             $this->anons = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PublicationTableMap::translateFieldName('MetaTitle', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : PublicationTableMap::translateFieldName('MetaTitle', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : PublicationTableMap::translateFieldName('MetaAuthor', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : PublicationTableMap::translateFieldName('MetaAuthor', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_author = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : PublicationTableMap::translateFieldName('MetaKeywords', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : PublicationTableMap::translateFieldName('MetaKeywords', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_keywords = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : PublicationTableMap::translateFieldName('MetaDescription', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : PublicationTableMap::translateFieldName('MetaDescription', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_description = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : PublicationTableMap::translateFieldName('MetaCanonical', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : PublicationTableMap::translateFieldName('MetaCanonical', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_canonical = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : PublicationTableMap::translateFieldName('MetaRobots', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : PublicationTableMap::translateFieldName('MetaRobots', TableMap::TYPE_PHPNAME, $indexType)];
             $this->meta_robots = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : PublicationTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : PublicationTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : PublicationTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : PublicationTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->created_by = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : PublicationTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : PublicationTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : PublicationTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : PublicationTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->updated_by = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : PublicationTableMap::translateFieldName('ShowAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : PublicationTableMap::translateFieldName('ShowAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->show_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : PublicationTableMap::translateFieldName('HideAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : PublicationTableMap::translateFieldName('HideAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->hide_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : PublicationTableMap::translateFieldName('Hits', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 20 + $startcol : PublicationTableMap::translateFieldName('Hits', TableMap::TYPE_PHPNAME, $indexType)];
             $this->hits = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -1444,7 +1484,7 @@ abstract class Publication implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 20; // 20 = PublicationTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 21; // 21 = PublicationTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Models\\Publication'), 0, $e);
@@ -1848,6 +1888,9 @@ abstract class Publication implements ActiveRecordInterface
         if ($this->isColumnModified(PublicationTableMap::COL_PICTURE)) {
             $modifiedColumns[':p' . $index++]  = 'picture';
         }
+        if ($this->isColumnModified(PublicationTableMap::COL_PICTURE_SOURCE)) {
+            $modifiedColumns[':p' . $index++]  = 'picture_source';
+        }
         if ($this->isColumnModified(PublicationTableMap::COL_PICTURE_SIGNATURE)) {
             $modifiedColumns[':p' . $index++]  = 'picture_signature';
         }
@@ -1921,6 +1964,9 @@ abstract class Publication implements ActiveRecordInterface
                         break;
                     case 'picture':
                         $stmt->bindValue($identifier, $this->picture, PDO::PARAM_STR);
+                        break;
+                    case 'picture_source':
+                        $stmt->bindValue($identifier, $this->picture_source, PDO::PARAM_STR);
                         break;
                     case 'picture_signature':
                         $stmt->bindValue($identifier, $this->picture_signature, PDO::PARAM_STR);
@@ -2048,51 +2094,54 @@ abstract class Publication implements ActiveRecordInterface
                 return $this->getPicture();
                 break;
             case 5:
-                return $this->getPictureSignature();
+                return $this->getPictureSource();
                 break;
             case 6:
-                return $this->getAnons();
+                return $this->getPictureSignature();
                 break;
             case 7:
-                return $this->getContent();
+                return $this->getAnons();
                 break;
             case 8:
-                return $this->getMetaTitle();
+                return $this->getContent();
                 break;
             case 9:
-                return $this->getMetaAuthor();
+                return $this->getMetaTitle();
                 break;
             case 10:
-                return $this->getMetaKeywords();
+                return $this->getMetaAuthor();
                 break;
             case 11:
-                return $this->getMetaDescription();
+                return $this->getMetaKeywords();
                 break;
             case 12:
-                return $this->getMetaCanonical();
+                return $this->getMetaDescription();
                 break;
             case 13:
-                return $this->getMetaRobots();
+                return $this->getMetaCanonical();
                 break;
             case 14:
-                return $this->getCreatedAt();
+                return $this->getMetaRobots();
                 break;
             case 15:
-                return $this->getCreatedBy();
+                return $this->getCreatedAt();
                 break;
             case 16:
-                return $this->getUpdatedAt();
+                return $this->getCreatedBy();
                 break;
             case 17:
-                return $this->getUpdatedBy();
+                return $this->getUpdatedAt();
                 break;
             case 18:
-                return $this->getShowAt();
+                return $this->getUpdatedBy();
                 break;
             case 19:
-                return $this->getHideAt();
+                return $this->getShowAt();
                 break;
             case 20:
+                return $this->getHideAt();
+                break;
+            case 21:
                 return $this->getHits();
                 break;
             default:
@@ -2130,37 +2179,38 @@ abstract class Publication implements ActiveRecordInterface
             $keys[2] => $this->getCode(),
             $keys[3] => $this->getHeader(),
             $keys[4] => $this->getPicture(),
-            $keys[5] => $this->getPictureSignature(),
-            $keys[6] => $this->getAnons(),
-            $keys[7] => ($includeLazyLoadColumns) ? $this->getContent() : null,
-            $keys[8] => $this->getMetaTitle(),
-            $keys[9] => $this->getMetaAuthor(),
-            $keys[10] => $this->getMetaKeywords(),
-            $keys[11] => $this->getMetaDescription(),
-            $keys[12] => $this->getMetaCanonical(),
-            $keys[13] => $this->getMetaRobots(),
-            $keys[14] => $this->getCreatedAt(),
-            $keys[15] => $this->getCreatedBy(),
-            $keys[16] => $this->getUpdatedAt(),
-            $keys[17] => $this->getUpdatedBy(),
-            $keys[18] => $this->getShowAt(),
-            $keys[19] => $this->getHideAt(),
-            $keys[20] => $this->getHits(),
+            $keys[5] => $this->getPictureSource(),
+            $keys[6] => $this->getPictureSignature(),
+            $keys[7] => $this->getAnons(),
+            $keys[8] => ($includeLazyLoadColumns) ? $this->getContent() : null,
+            $keys[9] => $this->getMetaTitle(),
+            $keys[10] => $this->getMetaAuthor(),
+            $keys[11] => $this->getMetaKeywords(),
+            $keys[12] => $this->getMetaDescription(),
+            $keys[13] => $this->getMetaCanonical(),
+            $keys[14] => $this->getMetaRobots(),
+            $keys[15] => $this->getCreatedAt(),
+            $keys[16] => $this->getCreatedBy(),
+            $keys[17] => $this->getUpdatedAt(),
+            $keys[18] => $this->getUpdatedBy(),
+            $keys[19] => $this->getShowAt(),
+            $keys[20] => $this->getHideAt(),
+            $keys[21] => $this->getHits(),
         );
-        if ($result[$keys[14]] instanceof \DateTimeInterface) {
-            $result[$keys[14]] = $result[$keys[14]]->format('c');
+        if ($result[$keys[15]] instanceof \DateTimeInterface) {
+            $result[$keys[15]] = $result[$keys[15]]->format('c');
         }
 
-        if ($result[$keys[16]] instanceof \DateTimeInterface) {
-            $result[$keys[16]] = $result[$keys[16]]->format('c');
-        }
-
-        if ($result[$keys[18]] instanceof \DateTimeInterface) {
-            $result[$keys[18]] = $result[$keys[18]]->format('c');
+        if ($result[$keys[17]] instanceof \DateTimeInterface) {
+            $result[$keys[17]] = $result[$keys[17]]->format('c');
         }
 
         if ($result[$keys[19]] instanceof \DateTimeInterface) {
             $result[$keys[19]] = $result[$keys[19]]->format('c');
+        }
+
+        if ($result[$keys[20]] instanceof \DateTimeInterface) {
+            $result[$keys[20]] = $result[$keys[20]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -2354,51 +2404,54 @@ abstract class Publication implements ActiveRecordInterface
                 $this->setPicture($value);
                 break;
             case 5:
-                $this->setPictureSignature($value);
+                $this->setPictureSource($value);
                 break;
             case 6:
-                $this->setAnons($value);
+                $this->setPictureSignature($value);
                 break;
             case 7:
-                $this->setContent($value);
+                $this->setAnons($value);
                 break;
             case 8:
-                $this->setMetaTitle($value);
+                $this->setContent($value);
                 break;
             case 9:
-                $this->setMetaAuthor($value);
+                $this->setMetaTitle($value);
                 break;
             case 10:
-                $this->setMetaKeywords($value);
+                $this->setMetaAuthor($value);
                 break;
             case 11:
-                $this->setMetaDescription($value);
+                $this->setMetaKeywords($value);
                 break;
             case 12:
-                $this->setMetaCanonical($value);
+                $this->setMetaDescription($value);
                 break;
             case 13:
-                $this->setMetaRobots($value);
+                $this->setMetaCanonical($value);
                 break;
             case 14:
-                $this->setCreatedAt($value);
+                $this->setMetaRobots($value);
                 break;
             case 15:
-                $this->setCreatedBy($value);
+                $this->setCreatedAt($value);
                 break;
             case 16:
-                $this->setUpdatedAt($value);
+                $this->setCreatedBy($value);
                 break;
             case 17:
-                $this->setUpdatedBy($value);
+                $this->setUpdatedAt($value);
                 break;
             case 18:
-                $this->setShowAt($value);
+                $this->setUpdatedBy($value);
                 break;
             case 19:
-                $this->setHideAt($value);
+                $this->setShowAt($value);
                 break;
             case 20:
+                $this->setHideAt($value);
+                break;
+            case 21:
                 $this->setHits($value);
                 break;
         } // switch()
@@ -2443,52 +2496,55 @@ abstract class Publication implements ActiveRecordInterface
             $this->setPicture($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setPictureSignature($arr[$keys[5]]);
+            $this->setPictureSource($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setAnons($arr[$keys[6]]);
+            $this->setPictureSignature($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setContent($arr[$keys[7]]);
+            $this->setAnons($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setMetaTitle($arr[$keys[8]]);
+            $this->setContent($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setMetaAuthor($arr[$keys[9]]);
+            $this->setMetaTitle($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setMetaKeywords($arr[$keys[10]]);
+            $this->setMetaAuthor($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setMetaDescription($arr[$keys[11]]);
+            $this->setMetaKeywords($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setMetaCanonical($arr[$keys[12]]);
+            $this->setMetaDescription($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setMetaRobots($arr[$keys[13]]);
+            $this->setMetaCanonical($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setCreatedAt($arr[$keys[14]]);
+            $this->setMetaRobots($arr[$keys[14]]);
         }
         if (array_key_exists($keys[15], $arr)) {
-            $this->setCreatedBy($arr[$keys[15]]);
+            $this->setCreatedAt($arr[$keys[15]]);
         }
         if (array_key_exists($keys[16], $arr)) {
-            $this->setUpdatedAt($arr[$keys[16]]);
+            $this->setCreatedBy($arr[$keys[16]]);
         }
         if (array_key_exists($keys[17], $arr)) {
-            $this->setUpdatedBy($arr[$keys[17]]);
+            $this->setUpdatedAt($arr[$keys[17]]);
         }
         if (array_key_exists($keys[18], $arr)) {
-            $this->setShowAt($arr[$keys[18]]);
+            $this->setUpdatedBy($arr[$keys[18]]);
         }
         if (array_key_exists($keys[19], $arr)) {
-            $this->setHideAt($arr[$keys[19]]);
+            $this->setShowAt($arr[$keys[19]]);
         }
         if (array_key_exists($keys[20], $arr)) {
-            $this->setHits($arr[$keys[20]]);
+            $this->setHideAt($arr[$keys[20]]);
+        }
+        if (array_key_exists($keys[21], $arr)) {
+            $this->setHits($arr[$keys[21]]);
         }
     }
 
@@ -2545,6 +2601,9 @@ abstract class Publication implements ActiveRecordInterface
         }
         if ($this->isColumnModified(PublicationTableMap::COL_PICTURE)) {
             $criteria->add(PublicationTableMap::COL_PICTURE, $this->picture);
+        }
+        if ($this->isColumnModified(PublicationTableMap::COL_PICTURE_SOURCE)) {
+            $criteria->add(PublicationTableMap::COL_PICTURE_SOURCE, $this->picture_source);
         }
         if ($this->isColumnModified(PublicationTableMap::COL_PICTURE_SIGNATURE)) {
             $criteria->add(PublicationTableMap::COL_PICTURE_SIGNATURE, $this->picture_signature);
@@ -2684,6 +2743,7 @@ abstract class Publication implements ActiveRecordInterface
         $copyObj->setCode($this->getCode());
         $copyObj->setHeader($this->getHeader());
         $copyObj->setPicture($this->getPicture());
+        $copyObj->setPictureSource($this->getPictureSource());
         $copyObj->setPictureSignature($this->getPictureSignature());
         $copyObj->setAnons($this->getAnons());
         $copyObj->setContent($this->getContent());
@@ -4558,6 +4618,7 @@ abstract class Publication implements ActiveRecordInterface
         $this->code = null;
         $this->header = null;
         $this->picture = null;
+        $this->picture_source = null;
         $this->picture_signature = null;
         $this->anons = null;
         $this->content = null;

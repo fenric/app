@@ -130,6 +130,7 @@
 		<column name="header" type="varchar" required="true" primaryString="true" />
 
 		<column name="picture" type="varchar" />
+		<column name="picture_source" type="varchar" />
 		<column name="picture_signature" type="varchar" />
 
 		<column name="anons" type="longvarchar" required="true" />
