@@ -6,13 +6,6 @@
 namespace Fenric;
 
 /**
- * Import classes
- */
-use finfo;
-use Imagick;
-use RuntimeException;
-
-/**
  * Upload
  */
 class Upload
@@ -29,6 +22,11 @@ class Upload
 	protected $size;
 
 	/**
+	 * Тип загружаемого файла
+	 */
+	protected $type;
+
+	/**
 	 * Конструктор класса
 	 */
 	public function __construct(string $blob)
@@ -36,6 +34,10 @@ class Upload
 		$this->blob = $blob;
 
 		$this->size = strlen($blob);
+
+		$this->type = (
+			new \finfo(FILEINFO_MIME_TYPE)
+		)->buffer($blob);
 	}
 
 	/**
@@ -55,108 +57,321 @@ class Upload
 	}
 
 	/**
-	 * Загрузка файла как изображения
+	 * Получение типа загружаемого файла
 	 */
-	public function asImage() : array
+	public function getType() : string
 	{
-		if ($this->getSize() > 0)
-		{
-			$info = new finfo(FILEINFO_MIME_TYPE);
-
-			if ($mime = $info->buffer($this->getBlob()))
-			{
-				if (in_array($mime, ['image/gif', 'image/jpeg', 'image/png']))
-				{
-					$file['name'] = hash('md5', uniqid($this->getBlob(), true));
-
-					$file['folder'] = fenric()->path('upload',
-						substr($file['name'], 0, 2),
-						substr($file['name'], 2, 2),
-						substr($file['name'], 4, 2)
-					);
-
-					$file['extension'] = pathinfo($mime, PATHINFO_BASENAME);
-
-					$file['location'] = "{$file['folder']}/{$file['name']}.{$file['extension']}";
-
-					if (is_dir($file['folder']) || mkdir($file['folder'], 0755, true))
-					{
-						if (file_put_contents($file['location'], $this->getBlob(), LOCK_EX))
-						{
-							return $file;
-						}
-						else throw new RuntimeException('Не удалось сохранить изображение на диске.', 2);
-					}
-					else throw new RuntimeException('Не удалось создать директорию для загрузки изображения.', 2);
-				}
-				else throw new RuntimeException('Файл не является изображением (finfo).', 1);
-			}
-			else throw new RuntimeException('Не удалось прочитать файл (finfo).', 2);
-		}
-		else throw new RuntimeException('Файл пустой.', 1);
+		return $this->type;
 	}
 
 	/**
-	 * Загрузка файла как PDF документа
+	 * Получение расширения загружаемого файла
 	 */
-	public function asPDF() : array
+	public function getExtension() : ?string
 	{
-		if ($this->getSize() > 0)
+		switch ($this->getType())
 		{
-			$info = new finfo(FILEINFO_MIME_TYPE);
+			case 'image/gif' :
+				return '.gif';
+				break;
 
-			if ($mime = $info->buffer($this->getBlob()))
-			{
-				if (in_array($mime, ['application/pdf']))
-				{
-					$file['name'] = hash('md5', uniqid($this->getBlob(), true));
+			case 'image/jpeg' :
+				return '.jpeg';
+				break;
 
-					$file['folder'] = fenric()->path('upload',
-						substr($file['name'], 0, 2),
-						substr($file['name'], 2, 2),
-						substr($file['name'], 4, 2)
-					);
+			case 'image/png' :
+				return '.png';
+				break;
 
-					$file['location'] = "{$file['folder']}/{$file['name']}.pdf";
+			case 'audio/mpeg' :
+				return '.mp3';
+				break;
 
-					$file['cover'] = "{$file['folder']}/{$file['name']}.png";
+			case 'video/mp4' :
+				return '.mp4';
+				break;
 
-					if (is_dir($file['folder']) || mkdir($file['folder'], 0755, true))
-					{
-						if (file_put_contents($file['location'], $this->getBlob(), LOCK_EX))
-						{
-							$imagick = new Imagick("{$file['location']}[0]");
-
-							$imagick->setResolution(300, 300);
-							$imagick->setImageFormat('png');
-
-							if (file_put_contents($file['cover'], $imagick->getImageBlob(), LOCK_EX))
-							{
-								return $file;
-							}
-							else throw new RuntimeException('Не удалось сохранить обложку PDF документа на диске.', 2);
-						}
-						else throw new RuntimeException('Не удалось сохранить PDF документ на диске.', 2);
-					}
-					else throw new RuntimeException('Не удалось создать директорию для загрузки PDF документа.', 2);
-				}
-				else throw new RuntimeException('Файл не является PDF документом (finfo).', 1);
-			}
-			else throw new RuntimeException('Не удалось прочитать файл (finfo).', 2);
+			case 'application/pdf' :
+				return '.pdf';
+				break;
 		}
-		else throw new RuntimeException('Файл пустой.', 1);
+
+		return null;
+	}
+
+	/**
+	 * Является ли загружаемый файл изображением
+	 */
+	public function isImage() : bool
+	{
+		$allow = ['image/gif', 'image/jpeg', 'image/png'];
+
+		return in_array($this->getType(), $allow, true);
+	}
+
+	/**
+	 * Является ли загружаемый файл аудиофайлом
+	 */
+	public function isAudio() : bool
+	{
+		$allow = ['audio/mpeg'];
+
+		return in_array($this->getType(), $allow, true);
+	}
+
+	/**
+	 * Является ли загружаемый файл видеофайлом
+	 */
+	public function isVideo() : bool
+	{
+		$allow = ['video/mp4'];
+
+		return in_array($this->getType(), $allow, true);
+	}
+
+	/**
+	 * Является ли загружаемый файл PDF документом
+	 */
+	public function isPdf() : bool
+	{
+		$allow = ['application/pdf'];
+
+		return in_array($this->getType(), $allow, true);
+	}
+
+	/**
+	 * Сохранение файла как изображения
+	 *
+	 * @throws  \RuntimeException
+	 */
+	public function asImage() : array
+	{
+		$file['filename'] = md5(uniqid($this->getBlob(), true));
+
+		$file['basename'] = $file['filename'] . $this->getExtension();
+
+		$file['location'] = self::path($file['basename']);
+
+		if ($this->isImage())
+		{
+			$this->save($file['location']);
+
+			return $file;
+		}
+
+		if ($this->isAudio())
+		{
+			$this->save($file['location']);
+
+			$file['source'] = $file['location'];
+
+			$file['location'] = $this->getCover($file['source']);
+
+			return $file;
+		}
+
+		if ($this->isVideo())
+		{
+			$this->save($file['location']);
+
+			$file['source'] = $file['location'];
+
+			$file['location'] = $this->getCover($file['source']);
+
+			return $file;
+		}
+
+		if ($this->isPdf())
+		{
+			$this->save($file['location']);
+
+			$file['source'] = $file['location'];
+
+			$file['location'] = $this->getCover($file['source']);
+
+			return $file;
+		}
+
+		throw new \RuntimeException(sprintf('Загружаемый файл не поддерживается (%s).', $this->getType()), 400);
+	}
+
+	/**
+	 * Сохранение файла как аудиофайла
+	 *
+	 * @throws  \RuntimeException
+	 */
+	public function asAudio() : array
+	{
+		$file['filename'] = md5(uniqid($this->getBlob(), true));
+
+		$file['basename'] = $file['filename'] . $this->getExtension();
+
+		$file['location'] = self::path($file['basename']);
+
+		if ($this->isAudio())
+		{
+			$this->save($file['location']);
+
+			$file['cover'] = $this->getCover($file['location']);
+
+			return $file;
+		}
+
+		throw new \RuntimeException('Загружаемый файл не поддерживается.', 400);
+	}
+
+	/**
+	 * Сохранение файла как видеофайла
+	 *
+	 * @throws  \RuntimeException
+	 */
+	public function asVideo() : array
+	{
+		$file['filename'] = md5(uniqid($this->getBlob(), true));
+
+		$file['basename'] = $file['filename'] . $this->getExtension();
+
+		$file['location'] = self::path($file['basename']);
+
+		if ($this->isVideo())
+		{
+			$this->save($file['location']);
+
+			$file['cover'] = $this->getCover($file['location']);
+
+			return $file;
+		}
+
+		throw new \RuntimeException('Загружаемый файл не поддерживается.', 400);
+	}
+
+	/**
+	 * Сохранение файла как PDF документа
+	 *
+	 * @throws  RuntimeException
+	 */
+	public function asPdf() : array
+	{
+		$file['filename'] = md5(uniqid($this->getBlob(), true));
+
+		$file['basename'] = $file['filename'] . $this->getExtension();
+
+		$file['location'] = self::path($file['basename']);
+
+		if ($this->isPdf())
+		{
+			$this->save($file['location']);
+
+			$file['cover'] = $this->getCover($file['location']);
+
+			return $file;
+		}
+
+		throw new \RuntimeException('Загружаемый файл не поддерживается.', 400);
+	}
+
+	/**
+	 * Получение обложки из медиафайла
+	 *
+	 * @throws  \RuntimeException
+	 */
+	protected function getCover(string $source) : string
+	{
+		$folder = pathinfo($source, PATHINFO_DIRNAME);
+
+		$filename = pathinfo($source, PATHINFO_FILENAME);
+
+		$target = $folder . DIRECTORY_SEPARATOR . $filename . '.png';
+
+		if ($this->isAudio())
+		{
+			if (fenric('config::environments')->exists('ffmpeg'))
+			{
+				if (is_file(fenric('config::environments')->get('ffmpeg')))
+				{
+					if (is_executable(fenric('config::environments')->get('ffmpeg')))
+					{
+						$cmd = fenric('config::environments')->get('ffmpeg');
+
+						exec(sprintf('%s -i "%s" "%s"', $cmd, $source, $target));
+					}
+				}
+			}
+		}
+
+		if ($this->isVideo())
+		{
+			if (fenric('config::environments')->exists('ffmpegthumbnailer'))
+			{
+				if (is_file(fenric('config::environments')->get('ffmpegthumbnailer')))
+				{
+					if (is_executable(fenric('config::environments')->get('ffmpegthumbnailer')))
+					{
+						$cmd = fenric('config::environments')->get('ffmpegthumbnailer');
+
+						exec(sprintf('%s -i "%s" -o "%s" -s 0 -t 15 -q 10', $cmd, $source, $target));
+					}
+				}
+			}
+		}
+
+		if ($this->isPdf())
+		{
+			if (fenric('config::environments')->exists('imagemagick'))
+			{
+				if (is_file(fenric('config::environments')->get('imagemagick')))
+				{
+					if (is_executable(fenric('config::environments')->get('imagemagick')))
+					{
+						$cmd = fenric('config::environments')->get('imagemagick');
+
+						exec(sprintf('%s -density 300 "%s[0]" "%s"', $cmd, $source, $target));
+					}
+				}
+			}
+		}
+
+		if (is_file($target))
+		{
+			if (is_readable($target))
+			{
+				return $target;
+			}
+		}
+
+		throw new \RuntimeException('Не удалось извлечь обложку из медиафайла.', 503);
+	}
+
+	/**
+	 * Сохранение файла на диске
+	 *
+	 * @throws  \RuntimeException
+	 */
+	public function save(string $target) : bool
+	{
+		$folder = pathinfo($target, PATHINFO_DIRNAME);
+
+		if (is_dir($folder) || mkdir($folder, 0755, true))
+		{
+			if (file_put_contents($target, $this->getBlob(), LOCK_EX))
+			{
+				return true;
+			}
+		}
+
+		throw new \RuntimeException('Не удалось сохранить файл на диске.', 503);
 	}
 
 	/**
 	 * Получение абсолютного пути загруженного файла
 	 */
-	public static function path(string $filename) : string
+	public static function path(string $basename) : string
 	{
 		return fenric()->path('upload',
-			substr($filename, 0, 2),
-			substr($filename, 2, 2),
-			substr($filename, 4, 2),
-			$filename
+			substr($basename, 0, 2),
+			substr($basename, 2, 2),
+			substr($basename, 4, 2),
+			$basename
 		);
 	}
 }
