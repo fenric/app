@@ -5,14 +5,24 @@ namespace Propel\Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use Propel\Models\Banner as ChildBanner;
+use Propel\Models\BannerGroup as ChildBannerGroup;
+use Propel\Models\BannerGroupQuery as ChildBannerGroupQuery;
+use Propel\Models\BannerQuery as ChildBannerQuery;
 use Propel\Models\Comment as ChildComment;
 use Propel\Models\CommentQuery as ChildCommentQuery;
 use Propel\Models\Field as ChildField;
 use Propel\Models\FieldQuery as ChildFieldQuery;
+use Propel\Models\Poll as ChildPoll;
+use Propel\Models\PollQuery as ChildPollQuery;
+use Propel\Models\PollVariant as ChildPollVariant;
+use Propel\Models\PollVariantQuery as ChildPollVariantQuery;
 use Propel\Models\Publication as ChildPublication;
 use Propel\Models\PublicationPhoto as ChildPublicationPhoto;
 use Propel\Models\PublicationPhotoQuery as ChildPublicationPhotoQuery;
 use Propel\Models\PublicationQuery as ChildPublicationQuery;
+use Propel\Models\Radio as ChildRadio;
+use Propel\Models\RadioQuery as ChildRadioQuery;
 use Propel\Models\Section as ChildSection;
 use Propel\Models\SectionQuery as ChildSectionQuery;
 use Propel\Models\Snippet as ChildSnippet;
@@ -23,10 +33,15 @@ use Propel\Models\User as ChildUser;
 use Propel\Models\UserFavorite as ChildUserFavorite;
 use Propel\Models\UserFavoriteQuery as ChildUserFavoriteQuery;
 use Propel\Models\UserQuery as ChildUserQuery;
+use Propel\Models\Map\BannerGroupTableMap;
+use Propel\Models\Map\BannerTableMap;
 use Propel\Models\Map\CommentTableMap;
 use Propel\Models\Map\FieldTableMap;
+use Propel\Models\Map\PollTableMap;
+use Propel\Models\Map\PollVariantTableMap;
 use Propel\Models\Map\PublicationPhotoTableMap;
 use Propel\Models\Map\PublicationTableMap;
+use Propel\Models\Map\RadioTableMap;
 use Propel\Models\Map\SectionTableMap;
 use Propel\Models\Map\SnippetTableMap;
 use Propel\Models\Map\TagTableMap;
@@ -364,6 +379,30 @@ abstract class User implements ActiveRecordInterface
     protected $ban_reason;
 
     /**
+     * @var        ObjectCollection|ChildBanner[] Collection to store aggregation of ChildBanner objects.
+     */
+    protected $collBannersRelatedByCreatedBy;
+    protected $collBannersRelatedByCreatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildBanner[] Collection to store aggregation of ChildBanner objects.
+     */
+    protected $collBannersRelatedByUpdatedBy;
+    protected $collBannersRelatedByUpdatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildBannerGroup[] Collection to store aggregation of ChildBannerGroup objects.
+     */
+    protected $collBannerGroupsRelatedByCreatedBy;
+    protected $collBannerGroupsRelatedByCreatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildBannerGroup[] Collection to store aggregation of ChildBannerGroup objects.
+     */
+    protected $collBannerGroupsRelatedByUpdatedBy;
+    protected $collBannerGroupsRelatedByUpdatedByPartial;
+
+    /**
      * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
      */
     protected $collCommentsRelatedByCreatedBy;
@@ -392,6 +431,30 @@ abstract class User implements ActiveRecordInterface
      */
     protected $collFieldsRelatedByUpdatedBy;
     protected $collFieldsRelatedByUpdatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPoll[] Collection to store aggregation of ChildPoll objects.
+     */
+    protected $collPollsRelatedByCreatedBy;
+    protected $collPollsRelatedByCreatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPoll[] Collection to store aggregation of ChildPoll objects.
+     */
+    protected $collPollsRelatedByUpdatedBy;
+    protected $collPollsRelatedByUpdatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPollVariant[] Collection to store aggregation of ChildPollVariant objects.
+     */
+    protected $collPollVariantsRelatedByCreatedBy;
+    protected $collPollVariantsRelatedByCreatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPollVariant[] Collection to store aggregation of ChildPollVariant objects.
+     */
+    protected $collPollVariantsRelatedByUpdatedBy;
+    protected $collPollVariantsRelatedByUpdatedByPartial;
 
     /**
      * @var        ObjectCollection|ChildSection[] Collection to store aggregation of ChildSection objects.
@@ -428,6 +491,18 @@ abstract class User implements ActiveRecordInterface
      */
     protected $collPublicationPhotosRelatedByUpdatedBy;
     protected $collPublicationPhotosRelatedByUpdatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildRadio[] Collection to store aggregation of ChildRadio objects.
+     */
+    protected $collRadiosRelatedByCreatedBy;
+    protected $collRadiosRelatedByCreatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildRadio[] Collection to store aggregation of ChildRadio objects.
+     */
+    protected $collRadiosRelatedByUpdatedBy;
+    protected $collRadiosRelatedByUpdatedByPartial;
 
     /**
      * @var        ObjectCollection|ChildSnippet[] Collection to store aggregation of ChildSnippet objects.
@@ -486,6 +561,30 @@ abstract class User implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBanner[]
+     */
+    protected $bannersRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBanner[]
+     */
+    protected $bannersRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBannerGroup[]
+     */
+    protected $bannerGroupsRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBannerGroup[]
+     */
+    protected $bannerGroupsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildComment[]
      */
     protected $commentsRelatedByCreatedByScheduledForDeletion = null;
@@ -513,6 +612,30 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildField[]
      */
     protected $fieldsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPoll[]
+     */
+    protected $pollsRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPoll[]
+     */
+    protected $pollsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPollVariant[]
+     */
+    protected $pollVariantsRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPollVariant[]
+     */
+    protected $pollVariantsRelatedByUpdatedByScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -549,6 +672,18 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildPublicationPhoto[]
      */
     protected $publicationPhotosRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildRadio[]
+     */
+    protected $radiosRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildRadio[]
+     */
+    protected $radiosRelatedByUpdatedByScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -2321,6 +2456,14 @@ abstract class User implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collBannersRelatedByCreatedBy = null;
+
+            $this->collBannersRelatedByUpdatedBy = null;
+
+            $this->collBannerGroupsRelatedByCreatedBy = null;
+
+            $this->collBannerGroupsRelatedByUpdatedBy = null;
+
             $this->collCommentsRelatedByCreatedBy = null;
 
             $this->collCommentsRelatedByUpdatedBy = null;
@@ -2330,6 +2473,14 @@ abstract class User implements ActiveRecordInterface
             $this->collFieldsRelatedByCreatedBy = null;
 
             $this->collFieldsRelatedByUpdatedBy = null;
+
+            $this->collPollsRelatedByCreatedBy = null;
+
+            $this->collPollsRelatedByUpdatedBy = null;
+
+            $this->collPollVariantsRelatedByCreatedBy = null;
+
+            $this->collPollVariantsRelatedByUpdatedBy = null;
 
             $this->collSectionsRelatedByCreatedBy = null;
 
@@ -2342,6 +2493,10 @@ abstract class User implements ActiveRecordInterface
             $this->collPublicationPhotosRelatedByCreatedBy = null;
 
             $this->collPublicationPhotosRelatedByUpdatedBy = null;
+
+            $this->collRadiosRelatedByCreatedBy = null;
+
+            $this->collRadiosRelatedByUpdatedBy = null;
 
             $this->collSnippetsRelatedByCreatedBy = null;
 
@@ -2467,6 +2622,78 @@ abstract class User implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->bannersRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->bannersRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->bannersRelatedByCreatedByScheduledForDeletion as $bannerRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $bannerRelatedByCreatedBy->save($con);
+                    }
+                    $this->bannersRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBannersRelatedByCreatedBy !== null) {
+                foreach ($this->collBannersRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->bannersRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->bannersRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->bannersRelatedByUpdatedByScheduledForDeletion as $bannerRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $bannerRelatedByUpdatedBy->save($con);
+                    }
+                    $this->bannersRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBannersRelatedByUpdatedBy !== null) {
+                foreach ($this->collBannersRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->bannerGroupsRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->bannerGroupsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->bannerGroupsRelatedByCreatedByScheduledForDeletion as $bannerGroupRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $bannerGroupRelatedByCreatedBy->save($con);
+                    }
+                    $this->bannerGroupsRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBannerGroupsRelatedByCreatedBy !== null) {
+                foreach ($this->collBannerGroupsRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->bannerGroupsRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->bannerGroupsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->bannerGroupsRelatedByUpdatedByScheduledForDeletion as $bannerGroupRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $bannerGroupRelatedByUpdatedBy->save($con);
+                    }
+                    $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBannerGroupsRelatedByUpdatedBy !== null) {
+                foreach ($this->collBannerGroupsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->commentsRelatedByCreatedByScheduledForDeletion !== null) {
                 if (!$this->commentsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
                     \Propel\Models\CommentQuery::create()
@@ -2548,6 +2775,78 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collFieldsRelatedByUpdatedBy !== null) {
                 foreach ($this->collFieldsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->pollsRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->pollsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->pollsRelatedByCreatedByScheduledForDeletion as $pollRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $pollRelatedByCreatedBy->save($con);
+                    }
+                    $this->pollsRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPollsRelatedByCreatedBy !== null) {
+                foreach ($this->collPollsRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->pollsRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->pollsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->pollsRelatedByUpdatedByScheduledForDeletion as $pollRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $pollRelatedByUpdatedBy->save($con);
+                    }
+                    $this->pollsRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPollsRelatedByUpdatedBy !== null) {
+                foreach ($this->collPollsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->pollVariantsRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->pollVariantsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->pollVariantsRelatedByCreatedByScheduledForDeletion as $pollVariantRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $pollVariantRelatedByCreatedBy->save($con);
+                    }
+                    $this->pollVariantsRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPollVariantsRelatedByCreatedBy !== null) {
+                foreach ($this->collPollVariantsRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->pollVariantsRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->pollVariantsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->pollVariantsRelatedByUpdatedByScheduledForDeletion as $pollVariantRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $pollVariantRelatedByUpdatedBy->save($con);
+                    }
+                    $this->pollVariantsRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPollVariantsRelatedByUpdatedBy !== null) {
+                foreach ($this->collPollVariantsRelatedByUpdatedBy as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -2656,6 +2955,42 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collPublicationPhotosRelatedByUpdatedBy !== null) {
                 foreach ($this->collPublicationPhotosRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->radiosRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->radiosRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->radiosRelatedByCreatedByScheduledForDeletion as $radioRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $radioRelatedByCreatedBy->save($con);
+                    }
+                    $this->radiosRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collRadiosRelatedByCreatedBy !== null) {
+                foreach ($this->collRadiosRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->radiosRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->radiosRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->radiosRelatedByUpdatedByScheduledForDeletion as $radioRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $radioRelatedByUpdatedBy->save($con);
+                    }
+                    $this->radiosRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collRadiosRelatedByUpdatedBy !== null) {
+                foreach ($this->collRadiosRelatedByUpdatedBy as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -3229,6 +3564,66 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->collBannersRelatedByCreatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'banners';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_banners';
+                        break;
+                    default:
+                        $key = 'Banners';
+                }
+
+                $result[$key] = $this->collBannersRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collBannersRelatedByUpdatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'banners';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_banners';
+                        break;
+                    default:
+                        $key = 'Banners';
+                }
+
+                $result[$key] = $this->collBannersRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collBannerGroupsRelatedByCreatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'bannerGroups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_banner_groups';
+                        break;
+                    default:
+                        $key = 'BannerGroups';
+                }
+
+                $result[$key] = $this->collBannerGroupsRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collBannerGroupsRelatedByUpdatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'bannerGroups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_banner_groups';
+                        break;
+                    default:
+                        $key = 'BannerGroups';
+                }
+
+                $result[$key] = $this->collBannerGroupsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collCommentsRelatedByCreatedBy) {
 
                 switch ($keyType) {
@@ -3303,6 +3698,66 @@ abstract class User implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collFieldsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPollsRelatedByCreatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'polls';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_polls';
+                        break;
+                    default:
+                        $key = 'Polls';
+                }
+
+                $result[$key] = $this->collPollsRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPollsRelatedByUpdatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'polls';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_polls';
+                        break;
+                    default:
+                        $key = 'Polls';
+                }
+
+                $result[$key] = $this->collPollsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPollVariantsRelatedByCreatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'pollVariants';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_poll_variants';
+                        break;
+                    default:
+                        $key = 'PollVariants';
+                }
+
+                $result[$key] = $this->collPollVariantsRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPollVariantsRelatedByUpdatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'pollVariants';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_poll_variants';
+                        break;
+                    default:
+                        $key = 'PollVariants';
+                }
+
+                $result[$key] = $this->collPollVariantsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collSectionsRelatedByCreatedBy) {
 
@@ -3393,6 +3848,36 @@ abstract class User implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collPublicationPhotosRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collRadiosRelatedByCreatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'radios';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_radios';
+                        break;
+                    default:
+                        $key = 'Radios';
+                }
+
+                $result[$key] = $this->collRadiosRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collRadiosRelatedByUpdatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'radios';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_radios';
+                        break;
+                    default:
+                        $key = 'Radios';
+                }
+
+                $result[$key] = $this->collRadiosRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collSnippetsRelatedByCreatedBy) {
 
@@ -3971,6 +4456,30 @@ abstract class User implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getBannersRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBannerRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getBannersRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBannerRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getBannerGroupsRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBannerGroupRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getBannerGroupsRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBannerGroupRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getCommentsRelatedByCreatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addCommentRelatedByCreatedBy($relObj->copy($deepCopy));
@@ -3998,6 +4507,30 @@ abstract class User implements ActiveRecordInterface
             foreach ($this->getFieldsRelatedByUpdatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addFieldRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPollsRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPollRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPollsRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPollRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPollVariantsRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPollVariantRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPollVariantsRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPollVariantRelatedByUpdatedBy($relObj->copy($deepCopy));
                 }
             }
 
@@ -4034,6 +4567,18 @@ abstract class User implements ActiveRecordInterface
             foreach ($this->getPublicationPhotosRelatedByUpdatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPublicationPhotoRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getRadiosRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addRadioRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getRadiosRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addRadioRelatedByUpdatedBy($relObj->copy($deepCopy));
                 }
             }
 
@@ -4108,6 +4653,22 @@ abstract class User implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('BannerRelatedByCreatedBy' == $relationName) {
+            $this->initBannersRelatedByCreatedBy();
+            return;
+        }
+        if ('BannerRelatedByUpdatedBy' == $relationName) {
+            $this->initBannersRelatedByUpdatedBy();
+            return;
+        }
+        if ('BannerGroupRelatedByCreatedBy' == $relationName) {
+            $this->initBannerGroupsRelatedByCreatedBy();
+            return;
+        }
+        if ('BannerGroupRelatedByUpdatedBy' == $relationName) {
+            $this->initBannerGroupsRelatedByUpdatedBy();
+            return;
+        }
         if ('CommentRelatedByCreatedBy' == $relationName) {
             $this->initCommentsRelatedByCreatedBy();
             return;
@@ -4126,6 +4687,22 @@ abstract class User implements ActiveRecordInterface
         }
         if ('FieldRelatedByUpdatedBy' == $relationName) {
             $this->initFieldsRelatedByUpdatedBy();
+            return;
+        }
+        if ('PollRelatedByCreatedBy' == $relationName) {
+            $this->initPollsRelatedByCreatedBy();
+            return;
+        }
+        if ('PollRelatedByUpdatedBy' == $relationName) {
+            $this->initPollsRelatedByUpdatedBy();
+            return;
+        }
+        if ('PollVariantRelatedByCreatedBy' == $relationName) {
+            $this->initPollVariantsRelatedByCreatedBy();
+            return;
+        }
+        if ('PollVariantRelatedByUpdatedBy' == $relationName) {
+            $this->initPollVariantsRelatedByUpdatedBy();
             return;
         }
         if ('SectionRelatedByCreatedBy' == $relationName) {
@@ -4152,6 +4729,14 @@ abstract class User implements ActiveRecordInterface
             $this->initPublicationPhotosRelatedByUpdatedBy();
             return;
         }
+        if ('RadioRelatedByCreatedBy' == $relationName) {
+            $this->initRadiosRelatedByCreatedBy();
+            return;
+        }
+        if ('RadioRelatedByUpdatedBy' == $relationName) {
+            $this->initRadiosRelatedByUpdatedBy();
+            return;
+        }
         if ('SnippetRelatedByCreatedBy' == $relationName) {
             $this->initSnippetsRelatedByCreatedBy();
             return;
@@ -4172,6 +4757,956 @@ abstract class User implements ActiveRecordInterface
             $this->initUserFavorites();
             return;
         }
+    }
+
+    /**
+     * Clears out the collBannersRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBannersRelatedByCreatedBy()
+     */
+    public function clearBannersRelatedByCreatedBy()
+    {
+        $this->collBannersRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBannersRelatedByCreatedBy collection loaded partially.
+     */
+    public function resetPartialBannersRelatedByCreatedBy($v = true)
+    {
+        $this->collBannersRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collBannersRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collBannersRelatedByCreatedBy collection to an empty array (like clearcollBannersRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBannersRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collBannersRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BannerTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBannersRelatedByCreatedBy = new $collectionClassName;
+        $this->collBannersRelatedByCreatedBy->setModel('\Propel\Models\Banner');
+    }
+
+    /**
+     * Gets an array of ChildBanner objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBanner[] List of ChildBanner objects
+     * @throws PropelException
+     */
+    public function getBannersRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannersRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collBannersRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBannersRelatedByCreatedBy) {
+                // return empty collection
+                $this->initBannersRelatedByCreatedBy();
+            } else {
+                $collBannersRelatedByCreatedBy = ChildBannerQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBannersRelatedByCreatedByPartial && count($collBannersRelatedByCreatedBy)) {
+                        $this->initBannersRelatedByCreatedBy(false);
+
+                        foreach ($collBannersRelatedByCreatedBy as $obj) {
+                            if (false == $this->collBannersRelatedByCreatedBy->contains($obj)) {
+                                $this->collBannersRelatedByCreatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collBannersRelatedByCreatedByPartial = true;
+                    }
+
+                    return $collBannersRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collBannersRelatedByCreatedBy) {
+                    foreach ($this->collBannersRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collBannersRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBannersRelatedByCreatedBy = $collBannersRelatedByCreatedBy;
+                $this->collBannersRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collBannersRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildBanner objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bannersRelatedByCreatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setBannersRelatedByCreatedBy(Collection $bannersRelatedByCreatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildBanner[] $bannersRelatedByCreatedByToDelete */
+        $bannersRelatedByCreatedByToDelete = $this->getBannersRelatedByCreatedBy(new Criteria(), $con)->diff($bannersRelatedByCreatedBy);
+
+
+        $this->bannersRelatedByCreatedByScheduledForDeletion = $bannersRelatedByCreatedByToDelete;
+
+        foreach ($bannersRelatedByCreatedByToDelete as $bannerRelatedByCreatedByRemoved) {
+            $bannerRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collBannersRelatedByCreatedBy = null;
+        foreach ($bannersRelatedByCreatedBy as $bannerRelatedByCreatedBy) {
+            $this->addBannerRelatedByCreatedBy($bannerRelatedByCreatedBy);
+        }
+
+        $this->collBannersRelatedByCreatedBy = $bannersRelatedByCreatedBy;
+        $this->collBannersRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Banner objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Banner objects.
+     * @throws PropelException
+     */
+    public function countBannersRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannersRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collBannersRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBannersRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBannersRelatedByCreatedBy());
+            }
+
+            $query = ChildBannerQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collBannersRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildBanner object to this object
+     * through the ChildBanner foreign key attribute.
+     *
+     * @param  ChildBanner $l ChildBanner
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addBannerRelatedByCreatedBy(ChildBanner $l)
+    {
+        if ($this->collBannersRelatedByCreatedBy === null) {
+            $this->initBannersRelatedByCreatedBy();
+            $this->collBannersRelatedByCreatedByPartial = true;
+        }
+
+        if (!$this->collBannersRelatedByCreatedBy->contains($l)) {
+            $this->doAddBannerRelatedByCreatedBy($l);
+
+            if ($this->bannersRelatedByCreatedByScheduledForDeletion and $this->bannersRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->bannersRelatedByCreatedByScheduledForDeletion->remove($this->bannersRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBanner $bannerRelatedByCreatedBy The ChildBanner object to add.
+     */
+    protected function doAddBannerRelatedByCreatedBy(ChildBanner $bannerRelatedByCreatedBy)
+    {
+        $this->collBannersRelatedByCreatedBy[]= $bannerRelatedByCreatedBy;
+        $bannerRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param  ChildBanner $bannerRelatedByCreatedBy The ChildBanner object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeBannerRelatedByCreatedBy(ChildBanner $bannerRelatedByCreatedBy)
+    {
+        if ($this->getBannersRelatedByCreatedBy()->contains($bannerRelatedByCreatedBy)) {
+            $pos = $this->collBannersRelatedByCreatedBy->search($bannerRelatedByCreatedBy);
+            $this->collBannersRelatedByCreatedBy->remove($pos);
+            if (null === $this->bannersRelatedByCreatedByScheduledForDeletion) {
+                $this->bannersRelatedByCreatedByScheduledForDeletion = clone $this->collBannersRelatedByCreatedBy;
+                $this->bannersRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->bannersRelatedByCreatedByScheduledForDeletion[]= $bannerRelatedByCreatedBy;
+            $bannerRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related BannersRelatedByCreatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildBanner[] List of ChildBanner objects
+     */
+    public function getBannersRelatedByCreatedByJoinBannerGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildBannerQuery::create(null, $criteria);
+        $query->joinWith('BannerGroup', $joinBehavior);
+
+        return $this->getBannersRelatedByCreatedBy($query, $con);
+    }
+
+    /**
+     * Clears out the collBannersRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBannersRelatedByUpdatedBy()
+     */
+    public function clearBannersRelatedByUpdatedBy()
+    {
+        $this->collBannersRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBannersRelatedByUpdatedBy collection loaded partially.
+     */
+    public function resetPartialBannersRelatedByUpdatedBy($v = true)
+    {
+        $this->collBannersRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collBannersRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collBannersRelatedByUpdatedBy collection to an empty array (like clearcollBannersRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBannersRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collBannersRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BannerTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBannersRelatedByUpdatedBy = new $collectionClassName;
+        $this->collBannersRelatedByUpdatedBy->setModel('\Propel\Models\Banner');
+    }
+
+    /**
+     * Gets an array of ChildBanner objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBanner[] List of ChildBanner objects
+     * @throws PropelException
+     */
+    public function getBannersRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannersRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collBannersRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBannersRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initBannersRelatedByUpdatedBy();
+            } else {
+                $collBannersRelatedByUpdatedBy = ChildBannerQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBannersRelatedByUpdatedByPartial && count($collBannersRelatedByUpdatedBy)) {
+                        $this->initBannersRelatedByUpdatedBy(false);
+
+                        foreach ($collBannersRelatedByUpdatedBy as $obj) {
+                            if (false == $this->collBannersRelatedByUpdatedBy->contains($obj)) {
+                                $this->collBannersRelatedByUpdatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collBannersRelatedByUpdatedByPartial = true;
+                    }
+
+                    return $collBannersRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collBannersRelatedByUpdatedBy) {
+                    foreach ($this->collBannersRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collBannersRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBannersRelatedByUpdatedBy = $collBannersRelatedByUpdatedBy;
+                $this->collBannersRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collBannersRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildBanner objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bannersRelatedByUpdatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setBannersRelatedByUpdatedBy(Collection $bannersRelatedByUpdatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildBanner[] $bannersRelatedByUpdatedByToDelete */
+        $bannersRelatedByUpdatedByToDelete = $this->getBannersRelatedByUpdatedBy(new Criteria(), $con)->diff($bannersRelatedByUpdatedBy);
+
+
+        $this->bannersRelatedByUpdatedByScheduledForDeletion = $bannersRelatedByUpdatedByToDelete;
+
+        foreach ($bannersRelatedByUpdatedByToDelete as $bannerRelatedByUpdatedByRemoved) {
+            $bannerRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collBannersRelatedByUpdatedBy = null;
+        foreach ($bannersRelatedByUpdatedBy as $bannerRelatedByUpdatedBy) {
+            $this->addBannerRelatedByUpdatedBy($bannerRelatedByUpdatedBy);
+        }
+
+        $this->collBannersRelatedByUpdatedBy = $bannersRelatedByUpdatedBy;
+        $this->collBannersRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Banner objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Banner objects.
+     * @throws PropelException
+     */
+    public function countBannersRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannersRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collBannersRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBannersRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBannersRelatedByUpdatedBy());
+            }
+
+            $query = ChildBannerQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collBannersRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildBanner object to this object
+     * through the ChildBanner foreign key attribute.
+     *
+     * @param  ChildBanner $l ChildBanner
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addBannerRelatedByUpdatedBy(ChildBanner $l)
+    {
+        if ($this->collBannersRelatedByUpdatedBy === null) {
+            $this->initBannersRelatedByUpdatedBy();
+            $this->collBannersRelatedByUpdatedByPartial = true;
+        }
+
+        if (!$this->collBannersRelatedByUpdatedBy->contains($l)) {
+            $this->doAddBannerRelatedByUpdatedBy($l);
+
+            if ($this->bannersRelatedByUpdatedByScheduledForDeletion and $this->bannersRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->bannersRelatedByUpdatedByScheduledForDeletion->remove($this->bannersRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBanner $bannerRelatedByUpdatedBy The ChildBanner object to add.
+     */
+    protected function doAddBannerRelatedByUpdatedBy(ChildBanner $bannerRelatedByUpdatedBy)
+    {
+        $this->collBannersRelatedByUpdatedBy[]= $bannerRelatedByUpdatedBy;
+        $bannerRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param  ChildBanner $bannerRelatedByUpdatedBy The ChildBanner object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeBannerRelatedByUpdatedBy(ChildBanner $bannerRelatedByUpdatedBy)
+    {
+        if ($this->getBannersRelatedByUpdatedBy()->contains($bannerRelatedByUpdatedBy)) {
+            $pos = $this->collBannersRelatedByUpdatedBy->search($bannerRelatedByUpdatedBy);
+            $this->collBannersRelatedByUpdatedBy->remove($pos);
+            if (null === $this->bannersRelatedByUpdatedByScheduledForDeletion) {
+                $this->bannersRelatedByUpdatedByScheduledForDeletion = clone $this->collBannersRelatedByUpdatedBy;
+                $this->bannersRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->bannersRelatedByUpdatedByScheduledForDeletion[]= $bannerRelatedByUpdatedBy;
+            $bannerRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related BannersRelatedByUpdatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildBanner[] List of ChildBanner objects
+     */
+    public function getBannersRelatedByUpdatedByJoinBannerGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildBannerQuery::create(null, $criteria);
+        $query->joinWith('BannerGroup', $joinBehavior);
+
+        return $this->getBannersRelatedByUpdatedBy($query, $con);
+    }
+
+    /**
+     * Clears out the collBannerGroupsRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBannerGroupsRelatedByCreatedBy()
+     */
+    public function clearBannerGroupsRelatedByCreatedBy()
+    {
+        $this->collBannerGroupsRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBannerGroupsRelatedByCreatedBy collection loaded partially.
+     */
+    public function resetPartialBannerGroupsRelatedByCreatedBy($v = true)
+    {
+        $this->collBannerGroupsRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collBannerGroupsRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collBannerGroupsRelatedByCreatedBy collection to an empty array (like clearcollBannerGroupsRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBannerGroupsRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collBannerGroupsRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BannerGroupTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBannerGroupsRelatedByCreatedBy = new $collectionClassName;
+        $this->collBannerGroupsRelatedByCreatedBy->setModel('\Propel\Models\BannerGroup');
+    }
+
+    /**
+     * Gets an array of ChildBannerGroup objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBannerGroup[] List of ChildBannerGroup objects
+     * @throws PropelException
+     */
+    public function getBannerGroupsRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannerGroupsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collBannerGroupsRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBannerGroupsRelatedByCreatedBy) {
+                // return empty collection
+                $this->initBannerGroupsRelatedByCreatedBy();
+            } else {
+                $collBannerGroupsRelatedByCreatedBy = ChildBannerGroupQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBannerGroupsRelatedByCreatedByPartial && count($collBannerGroupsRelatedByCreatedBy)) {
+                        $this->initBannerGroupsRelatedByCreatedBy(false);
+
+                        foreach ($collBannerGroupsRelatedByCreatedBy as $obj) {
+                            if (false == $this->collBannerGroupsRelatedByCreatedBy->contains($obj)) {
+                                $this->collBannerGroupsRelatedByCreatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collBannerGroupsRelatedByCreatedByPartial = true;
+                    }
+
+                    return $collBannerGroupsRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collBannerGroupsRelatedByCreatedBy) {
+                    foreach ($this->collBannerGroupsRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collBannerGroupsRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBannerGroupsRelatedByCreatedBy = $collBannerGroupsRelatedByCreatedBy;
+                $this->collBannerGroupsRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collBannerGroupsRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildBannerGroup objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bannerGroupsRelatedByCreatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setBannerGroupsRelatedByCreatedBy(Collection $bannerGroupsRelatedByCreatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildBannerGroup[] $bannerGroupsRelatedByCreatedByToDelete */
+        $bannerGroupsRelatedByCreatedByToDelete = $this->getBannerGroupsRelatedByCreatedBy(new Criteria(), $con)->diff($bannerGroupsRelatedByCreatedBy);
+
+
+        $this->bannerGroupsRelatedByCreatedByScheduledForDeletion = $bannerGroupsRelatedByCreatedByToDelete;
+
+        foreach ($bannerGroupsRelatedByCreatedByToDelete as $bannerGroupRelatedByCreatedByRemoved) {
+            $bannerGroupRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collBannerGroupsRelatedByCreatedBy = null;
+        foreach ($bannerGroupsRelatedByCreatedBy as $bannerGroupRelatedByCreatedBy) {
+            $this->addBannerGroupRelatedByCreatedBy($bannerGroupRelatedByCreatedBy);
+        }
+
+        $this->collBannerGroupsRelatedByCreatedBy = $bannerGroupsRelatedByCreatedBy;
+        $this->collBannerGroupsRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BannerGroup objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related BannerGroup objects.
+     * @throws PropelException
+     */
+    public function countBannerGroupsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannerGroupsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collBannerGroupsRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBannerGroupsRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBannerGroupsRelatedByCreatedBy());
+            }
+
+            $query = ChildBannerGroupQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collBannerGroupsRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildBannerGroup object to this object
+     * through the ChildBannerGroup foreign key attribute.
+     *
+     * @param  ChildBannerGroup $l ChildBannerGroup
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addBannerGroupRelatedByCreatedBy(ChildBannerGroup $l)
+    {
+        if ($this->collBannerGroupsRelatedByCreatedBy === null) {
+            $this->initBannerGroupsRelatedByCreatedBy();
+            $this->collBannerGroupsRelatedByCreatedByPartial = true;
+        }
+
+        if (!$this->collBannerGroupsRelatedByCreatedBy->contains($l)) {
+            $this->doAddBannerGroupRelatedByCreatedBy($l);
+
+            if ($this->bannerGroupsRelatedByCreatedByScheduledForDeletion and $this->bannerGroupsRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->bannerGroupsRelatedByCreatedByScheduledForDeletion->remove($this->bannerGroupsRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBannerGroup $bannerGroupRelatedByCreatedBy The ChildBannerGroup object to add.
+     */
+    protected function doAddBannerGroupRelatedByCreatedBy(ChildBannerGroup $bannerGroupRelatedByCreatedBy)
+    {
+        $this->collBannerGroupsRelatedByCreatedBy[]= $bannerGroupRelatedByCreatedBy;
+        $bannerGroupRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param  ChildBannerGroup $bannerGroupRelatedByCreatedBy The ChildBannerGroup object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeBannerGroupRelatedByCreatedBy(ChildBannerGroup $bannerGroupRelatedByCreatedBy)
+    {
+        if ($this->getBannerGroupsRelatedByCreatedBy()->contains($bannerGroupRelatedByCreatedBy)) {
+            $pos = $this->collBannerGroupsRelatedByCreatedBy->search($bannerGroupRelatedByCreatedBy);
+            $this->collBannerGroupsRelatedByCreatedBy->remove($pos);
+            if (null === $this->bannerGroupsRelatedByCreatedByScheduledForDeletion) {
+                $this->bannerGroupsRelatedByCreatedByScheduledForDeletion = clone $this->collBannerGroupsRelatedByCreatedBy;
+                $this->bannerGroupsRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->bannerGroupsRelatedByCreatedByScheduledForDeletion[]= $bannerGroupRelatedByCreatedBy;
+            $bannerGroupRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collBannerGroupsRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBannerGroupsRelatedByUpdatedBy()
+     */
+    public function clearBannerGroupsRelatedByUpdatedBy()
+    {
+        $this->collBannerGroupsRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBannerGroupsRelatedByUpdatedBy collection loaded partially.
+     */
+    public function resetPartialBannerGroupsRelatedByUpdatedBy($v = true)
+    {
+        $this->collBannerGroupsRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collBannerGroupsRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collBannerGroupsRelatedByUpdatedBy collection to an empty array (like clearcollBannerGroupsRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBannerGroupsRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collBannerGroupsRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BannerGroupTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBannerGroupsRelatedByUpdatedBy = new $collectionClassName;
+        $this->collBannerGroupsRelatedByUpdatedBy->setModel('\Propel\Models\BannerGroup');
+    }
+
+    /**
+     * Gets an array of ChildBannerGroup objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBannerGroup[] List of ChildBannerGroup objects
+     * @throws PropelException
+     */
+    public function getBannerGroupsRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannerGroupsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collBannerGroupsRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBannerGroupsRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initBannerGroupsRelatedByUpdatedBy();
+            } else {
+                $collBannerGroupsRelatedByUpdatedBy = ChildBannerGroupQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBannerGroupsRelatedByUpdatedByPartial && count($collBannerGroupsRelatedByUpdatedBy)) {
+                        $this->initBannerGroupsRelatedByUpdatedBy(false);
+
+                        foreach ($collBannerGroupsRelatedByUpdatedBy as $obj) {
+                            if (false == $this->collBannerGroupsRelatedByUpdatedBy->contains($obj)) {
+                                $this->collBannerGroupsRelatedByUpdatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collBannerGroupsRelatedByUpdatedByPartial = true;
+                    }
+
+                    return $collBannerGroupsRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collBannerGroupsRelatedByUpdatedBy) {
+                    foreach ($this->collBannerGroupsRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collBannerGroupsRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBannerGroupsRelatedByUpdatedBy = $collBannerGroupsRelatedByUpdatedBy;
+                $this->collBannerGroupsRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collBannerGroupsRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildBannerGroup objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bannerGroupsRelatedByUpdatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setBannerGroupsRelatedByUpdatedBy(Collection $bannerGroupsRelatedByUpdatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildBannerGroup[] $bannerGroupsRelatedByUpdatedByToDelete */
+        $bannerGroupsRelatedByUpdatedByToDelete = $this->getBannerGroupsRelatedByUpdatedBy(new Criteria(), $con)->diff($bannerGroupsRelatedByUpdatedBy);
+
+
+        $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion = $bannerGroupsRelatedByUpdatedByToDelete;
+
+        foreach ($bannerGroupsRelatedByUpdatedByToDelete as $bannerGroupRelatedByUpdatedByRemoved) {
+            $bannerGroupRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collBannerGroupsRelatedByUpdatedBy = null;
+        foreach ($bannerGroupsRelatedByUpdatedBy as $bannerGroupRelatedByUpdatedBy) {
+            $this->addBannerGroupRelatedByUpdatedBy($bannerGroupRelatedByUpdatedBy);
+        }
+
+        $this->collBannerGroupsRelatedByUpdatedBy = $bannerGroupsRelatedByUpdatedBy;
+        $this->collBannerGroupsRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BannerGroup objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related BannerGroup objects.
+     * @throws PropelException
+     */
+    public function countBannerGroupsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannerGroupsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collBannerGroupsRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBannerGroupsRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBannerGroupsRelatedByUpdatedBy());
+            }
+
+            $query = ChildBannerGroupQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collBannerGroupsRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildBannerGroup object to this object
+     * through the ChildBannerGroup foreign key attribute.
+     *
+     * @param  ChildBannerGroup $l ChildBannerGroup
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addBannerGroupRelatedByUpdatedBy(ChildBannerGroup $l)
+    {
+        if ($this->collBannerGroupsRelatedByUpdatedBy === null) {
+            $this->initBannerGroupsRelatedByUpdatedBy();
+            $this->collBannerGroupsRelatedByUpdatedByPartial = true;
+        }
+
+        if (!$this->collBannerGroupsRelatedByUpdatedBy->contains($l)) {
+            $this->doAddBannerGroupRelatedByUpdatedBy($l);
+
+            if ($this->bannerGroupsRelatedByUpdatedByScheduledForDeletion and $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion->remove($this->bannerGroupsRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBannerGroup $bannerGroupRelatedByUpdatedBy The ChildBannerGroup object to add.
+     */
+    protected function doAddBannerGroupRelatedByUpdatedBy(ChildBannerGroup $bannerGroupRelatedByUpdatedBy)
+    {
+        $this->collBannerGroupsRelatedByUpdatedBy[]= $bannerGroupRelatedByUpdatedBy;
+        $bannerGroupRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param  ChildBannerGroup $bannerGroupRelatedByUpdatedBy The ChildBannerGroup object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeBannerGroupRelatedByUpdatedBy(ChildBannerGroup $bannerGroupRelatedByUpdatedBy)
+    {
+        if ($this->getBannerGroupsRelatedByUpdatedBy()->contains($bannerGroupRelatedByUpdatedBy)) {
+            $pos = $this->collBannerGroupsRelatedByUpdatedBy->search($bannerGroupRelatedByUpdatedBy);
+            $this->collBannerGroupsRelatedByUpdatedBy->remove($pos);
+            if (null === $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion) {
+                $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion = clone $this->collBannerGroupsRelatedByUpdatedBy;
+                $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion[]= $bannerGroupRelatedByUpdatedBy;
+            $bannerGroupRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -5447,6 +6982,956 @@ abstract class User implements ActiveRecordInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Clears out the collPollsRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPollsRelatedByCreatedBy()
+     */
+    public function clearPollsRelatedByCreatedBy()
+    {
+        $this->collPollsRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPollsRelatedByCreatedBy collection loaded partially.
+     */
+    public function resetPartialPollsRelatedByCreatedBy($v = true)
+    {
+        $this->collPollsRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collPollsRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collPollsRelatedByCreatedBy collection to an empty array (like clearcollPollsRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPollsRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collPollsRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = PollTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collPollsRelatedByCreatedBy = new $collectionClassName;
+        $this->collPollsRelatedByCreatedBy->setModel('\Propel\Models\Poll');
+    }
+
+    /**
+     * Gets an array of ChildPoll objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPoll[] List of ChildPoll objects
+     * @throws PropelException
+     */
+    public function getPollsRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPollsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collPollsRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPollsRelatedByCreatedBy) {
+                // return empty collection
+                $this->initPollsRelatedByCreatedBy();
+            } else {
+                $collPollsRelatedByCreatedBy = ChildPollQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPollsRelatedByCreatedByPartial && count($collPollsRelatedByCreatedBy)) {
+                        $this->initPollsRelatedByCreatedBy(false);
+
+                        foreach ($collPollsRelatedByCreatedBy as $obj) {
+                            if (false == $this->collPollsRelatedByCreatedBy->contains($obj)) {
+                                $this->collPollsRelatedByCreatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collPollsRelatedByCreatedByPartial = true;
+                    }
+
+                    return $collPollsRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collPollsRelatedByCreatedBy) {
+                    foreach ($this->collPollsRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collPollsRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPollsRelatedByCreatedBy = $collPollsRelatedByCreatedBy;
+                $this->collPollsRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collPollsRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildPoll objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $pollsRelatedByCreatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setPollsRelatedByCreatedBy(Collection $pollsRelatedByCreatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildPoll[] $pollsRelatedByCreatedByToDelete */
+        $pollsRelatedByCreatedByToDelete = $this->getPollsRelatedByCreatedBy(new Criteria(), $con)->diff($pollsRelatedByCreatedBy);
+
+
+        $this->pollsRelatedByCreatedByScheduledForDeletion = $pollsRelatedByCreatedByToDelete;
+
+        foreach ($pollsRelatedByCreatedByToDelete as $pollRelatedByCreatedByRemoved) {
+            $pollRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collPollsRelatedByCreatedBy = null;
+        foreach ($pollsRelatedByCreatedBy as $pollRelatedByCreatedBy) {
+            $this->addPollRelatedByCreatedBy($pollRelatedByCreatedBy);
+        }
+
+        $this->collPollsRelatedByCreatedBy = $pollsRelatedByCreatedBy;
+        $this->collPollsRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Poll objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Poll objects.
+     * @throws PropelException
+     */
+    public function countPollsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPollsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collPollsRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPollsRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPollsRelatedByCreatedBy());
+            }
+
+            $query = ChildPollQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collPollsRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildPoll object to this object
+     * through the ChildPoll foreign key attribute.
+     *
+     * @param  ChildPoll $l ChildPoll
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addPollRelatedByCreatedBy(ChildPoll $l)
+    {
+        if ($this->collPollsRelatedByCreatedBy === null) {
+            $this->initPollsRelatedByCreatedBy();
+            $this->collPollsRelatedByCreatedByPartial = true;
+        }
+
+        if (!$this->collPollsRelatedByCreatedBy->contains($l)) {
+            $this->doAddPollRelatedByCreatedBy($l);
+
+            if ($this->pollsRelatedByCreatedByScheduledForDeletion and $this->pollsRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->pollsRelatedByCreatedByScheduledForDeletion->remove($this->pollsRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPoll $pollRelatedByCreatedBy The ChildPoll object to add.
+     */
+    protected function doAddPollRelatedByCreatedBy(ChildPoll $pollRelatedByCreatedBy)
+    {
+        $this->collPollsRelatedByCreatedBy[]= $pollRelatedByCreatedBy;
+        $pollRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param  ChildPoll $pollRelatedByCreatedBy The ChildPoll object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removePollRelatedByCreatedBy(ChildPoll $pollRelatedByCreatedBy)
+    {
+        if ($this->getPollsRelatedByCreatedBy()->contains($pollRelatedByCreatedBy)) {
+            $pos = $this->collPollsRelatedByCreatedBy->search($pollRelatedByCreatedBy);
+            $this->collPollsRelatedByCreatedBy->remove($pos);
+            if (null === $this->pollsRelatedByCreatedByScheduledForDeletion) {
+                $this->pollsRelatedByCreatedByScheduledForDeletion = clone $this->collPollsRelatedByCreatedBy;
+                $this->pollsRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->pollsRelatedByCreatedByScheduledForDeletion[]= $pollRelatedByCreatedBy;
+            $pollRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collPollsRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPollsRelatedByUpdatedBy()
+     */
+    public function clearPollsRelatedByUpdatedBy()
+    {
+        $this->collPollsRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPollsRelatedByUpdatedBy collection loaded partially.
+     */
+    public function resetPartialPollsRelatedByUpdatedBy($v = true)
+    {
+        $this->collPollsRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collPollsRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collPollsRelatedByUpdatedBy collection to an empty array (like clearcollPollsRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPollsRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collPollsRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = PollTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collPollsRelatedByUpdatedBy = new $collectionClassName;
+        $this->collPollsRelatedByUpdatedBy->setModel('\Propel\Models\Poll');
+    }
+
+    /**
+     * Gets an array of ChildPoll objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPoll[] List of ChildPoll objects
+     * @throws PropelException
+     */
+    public function getPollsRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPollsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collPollsRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPollsRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initPollsRelatedByUpdatedBy();
+            } else {
+                $collPollsRelatedByUpdatedBy = ChildPollQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPollsRelatedByUpdatedByPartial && count($collPollsRelatedByUpdatedBy)) {
+                        $this->initPollsRelatedByUpdatedBy(false);
+
+                        foreach ($collPollsRelatedByUpdatedBy as $obj) {
+                            if (false == $this->collPollsRelatedByUpdatedBy->contains($obj)) {
+                                $this->collPollsRelatedByUpdatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collPollsRelatedByUpdatedByPartial = true;
+                    }
+
+                    return $collPollsRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collPollsRelatedByUpdatedBy) {
+                    foreach ($this->collPollsRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collPollsRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPollsRelatedByUpdatedBy = $collPollsRelatedByUpdatedBy;
+                $this->collPollsRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collPollsRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildPoll objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $pollsRelatedByUpdatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setPollsRelatedByUpdatedBy(Collection $pollsRelatedByUpdatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildPoll[] $pollsRelatedByUpdatedByToDelete */
+        $pollsRelatedByUpdatedByToDelete = $this->getPollsRelatedByUpdatedBy(new Criteria(), $con)->diff($pollsRelatedByUpdatedBy);
+
+
+        $this->pollsRelatedByUpdatedByScheduledForDeletion = $pollsRelatedByUpdatedByToDelete;
+
+        foreach ($pollsRelatedByUpdatedByToDelete as $pollRelatedByUpdatedByRemoved) {
+            $pollRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collPollsRelatedByUpdatedBy = null;
+        foreach ($pollsRelatedByUpdatedBy as $pollRelatedByUpdatedBy) {
+            $this->addPollRelatedByUpdatedBy($pollRelatedByUpdatedBy);
+        }
+
+        $this->collPollsRelatedByUpdatedBy = $pollsRelatedByUpdatedBy;
+        $this->collPollsRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Poll objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Poll objects.
+     * @throws PropelException
+     */
+    public function countPollsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPollsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collPollsRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPollsRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPollsRelatedByUpdatedBy());
+            }
+
+            $query = ChildPollQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collPollsRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildPoll object to this object
+     * through the ChildPoll foreign key attribute.
+     *
+     * @param  ChildPoll $l ChildPoll
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addPollRelatedByUpdatedBy(ChildPoll $l)
+    {
+        if ($this->collPollsRelatedByUpdatedBy === null) {
+            $this->initPollsRelatedByUpdatedBy();
+            $this->collPollsRelatedByUpdatedByPartial = true;
+        }
+
+        if (!$this->collPollsRelatedByUpdatedBy->contains($l)) {
+            $this->doAddPollRelatedByUpdatedBy($l);
+
+            if ($this->pollsRelatedByUpdatedByScheduledForDeletion and $this->pollsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->pollsRelatedByUpdatedByScheduledForDeletion->remove($this->pollsRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPoll $pollRelatedByUpdatedBy The ChildPoll object to add.
+     */
+    protected function doAddPollRelatedByUpdatedBy(ChildPoll $pollRelatedByUpdatedBy)
+    {
+        $this->collPollsRelatedByUpdatedBy[]= $pollRelatedByUpdatedBy;
+        $pollRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param  ChildPoll $pollRelatedByUpdatedBy The ChildPoll object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removePollRelatedByUpdatedBy(ChildPoll $pollRelatedByUpdatedBy)
+    {
+        if ($this->getPollsRelatedByUpdatedBy()->contains($pollRelatedByUpdatedBy)) {
+            $pos = $this->collPollsRelatedByUpdatedBy->search($pollRelatedByUpdatedBy);
+            $this->collPollsRelatedByUpdatedBy->remove($pos);
+            if (null === $this->pollsRelatedByUpdatedByScheduledForDeletion) {
+                $this->pollsRelatedByUpdatedByScheduledForDeletion = clone $this->collPollsRelatedByUpdatedBy;
+                $this->pollsRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->pollsRelatedByUpdatedByScheduledForDeletion[]= $pollRelatedByUpdatedBy;
+            $pollRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collPollVariantsRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPollVariantsRelatedByCreatedBy()
+     */
+    public function clearPollVariantsRelatedByCreatedBy()
+    {
+        $this->collPollVariantsRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPollVariantsRelatedByCreatedBy collection loaded partially.
+     */
+    public function resetPartialPollVariantsRelatedByCreatedBy($v = true)
+    {
+        $this->collPollVariantsRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collPollVariantsRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collPollVariantsRelatedByCreatedBy collection to an empty array (like clearcollPollVariantsRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPollVariantsRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collPollVariantsRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = PollVariantTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collPollVariantsRelatedByCreatedBy = new $collectionClassName;
+        $this->collPollVariantsRelatedByCreatedBy->setModel('\Propel\Models\PollVariant');
+    }
+
+    /**
+     * Gets an array of ChildPollVariant objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPollVariant[] List of ChildPollVariant objects
+     * @throws PropelException
+     */
+    public function getPollVariantsRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPollVariantsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collPollVariantsRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPollVariantsRelatedByCreatedBy) {
+                // return empty collection
+                $this->initPollVariantsRelatedByCreatedBy();
+            } else {
+                $collPollVariantsRelatedByCreatedBy = ChildPollVariantQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPollVariantsRelatedByCreatedByPartial && count($collPollVariantsRelatedByCreatedBy)) {
+                        $this->initPollVariantsRelatedByCreatedBy(false);
+
+                        foreach ($collPollVariantsRelatedByCreatedBy as $obj) {
+                            if (false == $this->collPollVariantsRelatedByCreatedBy->contains($obj)) {
+                                $this->collPollVariantsRelatedByCreatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collPollVariantsRelatedByCreatedByPartial = true;
+                    }
+
+                    return $collPollVariantsRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collPollVariantsRelatedByCreatedBy) {
+                    foreach ($this->collPollVariantsRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collPollVariantsRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPollVariantsRelatedByCreatedBy = $collPollVariantsRelatedByCreatedBy;
+                $this->collPollVariantsRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collPollVariantsRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildPollVariant objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $pollVariantsRelatedByCreatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setPollVariantsRelatedByCreatedBy(Collection $pollVariantsRelatedByCreatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildPollVariant[] $pollVariantsRelatedByCreatedByToDelete */
+        $pollVariantsRelatedByCreatedByToDelete = $this->getPollVariantsRelatedByCreatedBy(new Criteria(), $con)->diff($pollVariantsRelatedByCreatedBy);
+
+
+        $this->pollVariantsRelatedByCreatedByScheduledForDeletion = $pollVariantsRelatedByCreatedByToDelete;
+
+        foreach ($pollVariantsRelatedByCreatedByToDelete as $pollVariantRelatedByCreatedByRemoved) {
+            $pollVariantRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collPollVariantsRelatedByCreatedBy = null;
+        foreach ($pollVariantsRelatedByCreatedBy as $pollVariantRelatedByCreatedBy) {
+            $this->addPollVariantRelatedByCreatedBy($pollVariantRelatedByCreatedBy);
+        }
+
+        $this->collPollVariantsRelatedByCreatedBy = $pollVariantsRelatedByCreatedBy;
+        $this->collPollVariantsRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PollVariant objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related PollVariant objects.
+     * @throws PropelException
+     */
+    public function countPollVariantsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPollVariantsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collPollVariantsRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPollVariantsRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPollVariantsRelatedByCreatedBy());
+            }
+
+            $query = ChildPollVariantQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collPollVariantsRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildPollVariant object to this object
+     * through the ChildPollVariant foreign key attribute.
+     *
+     * @param  ChildPollVariant $l ChildPollVariant
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addPollVariantRelatedByCreatedBy(ChildPollVariant $l)
+    {
+        if ($this->collPollVariantsRelatedByCreatedBy === null) {
+            $this->initPollVariantsRelatedByCreatedBy();
+            $this->collPollVariantsRelatedByCreatedByPartial = true;
+        }
+
+        if (!$this->collPollVariantsRelatedByCreatedBy->contains($l)) {
+            $this->doAddPollVariantRelatedByCreatedBy($l);
+
+            if ($this->pollVariantsRelatedByCreatedByScheduledForDeletion and $this->pollVariantsRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->pollVariantsRelatedByCreatedByScheduledForDeletion->remove($this->pollVariantsRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPollVariant $pollVariantRelatedByCreatedBy The ChildPollVariant object to add.
+     */
+    protected function doAddPollVariantRelatedByCreatedBy(ChildPollVariant $pollVariantRelatedByCreatedBy)
+    {
+        $this->collPollVariantsRelatedByCreatedBy[]= $pollVariantRelatedByCreatedBy;
+        $pollVariantRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param  ChildPollVariant $pollVariantRelatedByCreatedBy The ChildPollVariant object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removePollVariantRelatedByCreatedBy(ChildPollVariant $pollVariantRelatedByCreatedBy)
+    {
+        if ($this->getPollVariantsRelatedByCreatedBy()->contains($pollVariantRelatedByCreatedBy)) {
+            $pos = $this->collPollVariantsRelatedByCreatedBy->search($pollVariantRelatedByCreatedBy);
+            $this->collPollVariantsRelatedByCreatedBy->remove($pos);
+            if (null === $this->pollVariantsRelatedByCreatedByScheduledForDeletion) {
+                $this->pollVariantsRelatedByCreatedByScheduledForDeletion = clone $this->collPollVariantsRelatedByCreatedBy;
+                $this->pollVariantsRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->pollVariantsRelatedByCreatedByScheduledForDeletion[]= $pollVariantRelatedByCreatedBy;
+            $pollVariantRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related PollVariantsRelatedByCreatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPollVariant[] List of ChildPollVariant objects
+     */
+    public function getPollVariantsRelatedByCreatedByJoinPoll(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPollVariantQuery::create(null, $criteria);
+        $query->joinWith('Poll', $joinBehavior);
+
+        return $this->getPollVariantsRelatedByCreatedBy($query, $con);
+    }
+
+    /**
+     * Clears out the collPollVariantsRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPollVariantsRelatedByUpdatedBy()
+     */
+    public function clearPollVariantsRelatedByUpdatedBy()
+    {
+        $this->collPollVariantsRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPollVariantsRelatedByUpdatedBy collection loaded partially.
+     */
+    public function resetPartialPollVariantsRelatedByUpdatedBy($v = true)
+    {
+        $this->collPollVariantsRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collPollVariantsRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collPollVariantsRelatedByUpdatedBy collection to an empty array (like clearcollPollVariantsRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPollVariantsRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collPollVariantsRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = PollVariantTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collPollVariantsRelatedByUpdatedBy = new $collectionClassName;
+        $this->collPollVariantsRelatedByUpdatedBy->setModel('\Propel\Models\PollVariant');
+    }
+
+    /**
+     * Gets an array of ChildPollVariant objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPollVariant[] List of ChildPollVariant objects
+     * @throws PropelException
+     */
+    public function getPollVariantsRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPollVariantsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collPollVariantsRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPollVariantsRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initPollVariantsRelatedByUpdatedBy();
+            } else {
+                $collPollVariantsRelatedByUpdatedBy = ChildPollVariantQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPollVariantsRelatedByUpdatedByPartial && count($collPollVariantsRelatedByUpdatedBy)) {
+                        $this->initPollVariantsRelatedByUpdatedBy(false);
+
+                        foreach ($collPollVariantsRelatedByUpdatedBy as $obj) {
+                            if (false == $this->collPollVariantsRelatedByUpdatedBy->contains($obj)) {
+                                $this->collPollVariantsRelatedByUpdatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collPollVariantsRelatedByUpdatedByPartial = true;
+                    }
+
+                    return $collPollVariantsRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collPollVariantsRelatedByUpdatedBy) {
+                    foreach ($this->collPollVariantsRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collPollVariantsRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPollVariantsRelatedByUpdatedBy = $collPollVariantsRelatedByUpdatedBy;
+                $this->collPollVariantsRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collPollVariantsRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildPollVariant objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $pollVariantsRelatedByUpdatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setPollVariantsRelatedByUpdatedBy(Collection $pollVariantsRelatedByUpdatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildPollVariant[] $pollVariantsRelatedByUpdatedByToDelete */
+        $pollVariantsRelatedByUpdatedByToDelete = $this->getPollVariantsRelatedByUpdatedBy(new Criteria(), $con)->diff($pollVariantsRelatedByUpdatedBy);
+
+
+        $this->pollVariantsRelatedByUpdatedByScheduledForDeletion = $pollVariantsRelatedByUpdatedByToDelete;
+
+        foreach ($pollVariantsRelatedByUpdatedByToDelete as $pollVariantRelatedByUpdatedByRemoved) {
+            $pollVariantRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collPollVariantsRelatedByUpdatedBy = null;
+        foreach ($pollVariantsRelatedByUpdatedBy as $pollVariantRelatedByUpdatedBy) {
+            $this->addPollVariantRelatedByUpdatedBy($pollVariantRelatedByUpdatedBy);
+        }
+
+        $this->collPollVariantsRelatedByUpdatedBy = $pollVariantsRelatedByUpdatedBy;
+        $this->collPollVariantsRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PollVariant objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related PollVariant objects.
+     * @throws PropelException
+     */
+    public function countPollVariantsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPollVariantsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collPollVariantsRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPollVariantsRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPollVariantsRelatedByUpdatedBy());
+            }
+
+            $query = ChildPollVariantQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collPollVariantsRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildPollVariant object to this object
+     * through the ChildPollVariant foreign key attribute.
+     *
+     * @param  ChildPollVariant $l ChildPollVariant
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addPollVariantRelatedByUpdatedBy(ChildPollVariant $l)
+    {
+        if ($this->collPollVariantsRelatedByUpdatedBy === null) {
+            $this->initPollVariantsRelatedByUpdatedBy();
+            $this->collPollVariantsRelatedByUpdatedByPartial = true;
+        }
+
+        if (!$this->collPollVariantsRelatedByUpdatedBy->contains($l)) {
+            $this->doAddPollVariantRelatedByUpdatedBy($l);
+
+            if ($this->pollVariantsRelatedByUpdatedByScheduledForDeletion and $this->pollVariantsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->pollVariantsRelatedByUpdatedByScheduledForDeletion->remove($this->pollVariantsRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPollVariant $pollVariantRelatedByUpdatedBy The ChildPollVariant object to add.
+     */
+    protected function doAddPollVariantRelatedByUpdatedBy(ChildPollVariant $pollVariantRelatedByUpdatedBy)
+    {
+        $this->collPollVariantsRelatedByUpdatedBy[]= $pollVariantRelatedByUpdatedBy;
+        $pollVariantRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param  ChildPollVariant $pollVariantRelatedByUpdatedBy The ChildPollVariant object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removePollVariantRelatedByUpdatedBy(ChildPollVariant $pollVariantRelatedByUpdatedBy)
+    {
+        if ($this->getPollVariantsRelatedByUpdatedBy()->contains($pollVariantRelatedByUpdatedBy)) {
+            $pos = $this->collPollVariantsRelatedByUpdatedBy->search($pollVariantRelatedByUpdatedBy);
+            $this->collPollVariantsRelatedByUpdatedBy->remove($pos);
+            if (null === $this->pollVariantsRelatedByUpdatedByScheduledForDeletion) {
+                $this->pollVariantsRelatedByUpdatedByScheduledForDeletion = clone $this->collPollVariantsRelatedByUpdatedBy;
+                $this->pollVariantsRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->pollVariantsRelatedByUpdatedByScheduledForDeletion[]= $pollVariantRelatedByUpdatedBy;
+            $pollVariantRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related PollVariantsRelatedByUpdatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPollVariant[] List of ChildPollVariant objects
+     */
+    public function getPollVariantsRelatedByUpdatedByJoinPoll(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPollVariantQuery::create(null, $criteria);
+        $query->joinWith('Poll', $joinBehavior);
+
+        return $this->getPollVariantsRelatedByUpdatedBy($query, $con);
     }
 
     /**
@@ -6900,6 +9385,456 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collRadiosRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addRadiosRelatedByCreatedBy()
+     */
+    public function clearRadiosRelatedByCreatedBy()
+    {
+        $this->collRadiosRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collRadiosRelatedByCreatedBy collection loaded partially.
+     */
+    public function resetPartialRadiosRelatedByCreatedBy($v = true)
+    {
+        $this->collRadiosRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collRadiosRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collRadiosRelatedByCreatedBy collection to an empty array (like clearcollRadiosRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initRadiosRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collRadiosRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = RadioTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRadiosRelatedByCreatedBy = new $collectionClassName;
+        $this->collRadiosRelatedByCreatedBy->setModel('\Propel\Models\Radio');
+    }
+
+    /**
+     * Gets an array of ChildRadio objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildRadio[] List of ChildRadio objects
+     * @throws PropelException
+     */
+    public function getRadiosRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRadiosRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collRadiosRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collRadiosRelatedByCreatedBy) {
+                // return empty collection
+                $this->initRadiosRelatedByCreatedBy();
+            } else {
+                $collRadiosRelatedByCreatedBy = ChildRadioQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collRadiosRelatedByCreatedByPartial && count($collRadiosRelatedByCreatedBy)) {
+                        $this->initRadiosRelatedByCreatedBy(false);
+
+                        foreach ($collRadiosRelatedByCreatedBy as $obj) {
+                            if (false == $this->collRadiosRelatedByCreatedBy->contains($obj)) {
+                                $this->collRadiosRelatedByCreatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collRadiosRelatedByCreatedByPartial = true;
+                    }
+
+                    return $collRadiosRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collRadiosRelatedByCreatedBy) {
+                    foreach ($this->collRadiosRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collRadiosRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRadiosRelatedByCreatedBy = $collRadiosRelatedByCreatedBy;
+                $this->collRadiosRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collRadiosRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildRadio objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $radiosRelatedByCreatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setRadiosRelatedByCreatedBy(Collection $radiosRelatedByCreatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildRadio[] $radiosRelatedByCreatedByToDelete */
+        $radiosRelatedByCreatedByToDelete = $this->getRadiosRelatedByCreatedBy(new Criteria(), $con)->diff($radiosRelatedByCreatedBy);
+
+
+        $this->radiosRelatedByCreatedByScheduledForDeletion = $radiosRelatedByCreatedByToDelete;
+
+        foreach ($radiosRelatedByCreatedByToDelete as $radioRelatedByCreatedByRemoved) {
+            $radioRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collRadiosRelatedByCreatedBy = null;
+        foreach ($radiosRelatedByCreatedBy as $radioRelatedByCreatedBy) {
+            $this->addRadioRelatedByCreatedBy($radioRelatedByCreatedBy);
+        }
+
+        $this->collRadiosRelatedByCreatedBy = $radiosRelatedByCreatedBy;
+        $this->collRadiosRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Radio objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Radio objects.
+     * @throws PropelException
+     */
+    public function countRadiosRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRadiosRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collRadiosRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRadiosRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getRadiosRelatedByCreatedBy());
+            }
+
+            $query = ChildRadioQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collRadiosRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildRadio object to this object
+     * through the ChildRadio foreign key attribute.
+     *
+     * @param  ChildRadio $l ChildRadio
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addRadioRelatedByCreatedBy(ChildRadio $l)
+    {
+        if ($this->collRadiosRelatedByCreatedBy === null) {
+            $this->initRadiosRelatedByCreatedBy();
+            $this->collRadiosRelatedByCreatedByPartial = true;
+        }
+
+        if (!$this->collRadiosRelatedByCreatedBy->contains($l)) {
+            $this->doAddRadioRelatedByCreatedBy($l);
+
+            if ($this->radiosRelatedByCreatedByScheduledForDeletion and $this->radiosRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->radiosRelatedByCreatedByScheduledForDeletion->remove($this->radiosRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildRadio $radioRelatedByCreatedBy The ChildRadio object to add.
+     */
+    protected function doAddRadioRelatedByCreatedBy(ChildRadio $radioRelatedByCreatedBy)
+    {
+        $this->collRadiosRelatedByCreatedBy[]= $radioRelatedByCreatedBy;
+        $radioRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param  ChildRadio $radioRelatedByCreatedBy The ChildRadio object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeRadioRelatedByCreatedBy(ChildRadio $radioRelatedByCreatedBy)
+    {
+        if ($this->getRadiosRelatedByCreatedBy()->contains($radioRelatedByCreatedBy)) {
+            $pos = $this->collRadiosRelatedByCreatedBy->search($radioRelatedByCreatedBy);
+            $this->collRadiosRelatedByCreatedBy->remove($pos);
+            if (null === $this->radiosRelatedByCreatedByScheduledForDeletion) {
+                $this->radiosRelatedByCreatedByScheduledForDeletion = clone $this->collRadiosRelatedByCreatedBy;
+                $this->radiosRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->radiosRelatedByCreatedByScheduledForDeletion[]= $radioRelatedByCreatedBy;
+            $radioRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collRadiosRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addRadiosRelatedByUpdatedBy()
+     */
+    public function clearRadiosRelatedByUpdatedBy()
+    {
+        $this->collRadiosRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collRadiosRelatedByUpdatedBy collection loaded partially.
+     */
+    public function resetPartialRadiosRelatedByUpdatedBy($v = true)
+    {
+        $this->collRadiosRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collRadiosRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collRadiosRelatedByUpdatedBy collection to an empty array (like clearcollRadiosRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initRadiosRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collRadiosRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = RadioTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRadiosRelatedByUpdatedBy = new $collectionClassName;
+        $this->collRadiosRelatedByUpdatedBy->setModel('\Propel\Models\Radio');
+    }
+
+    /**
+     * Gets an array of ChildRadio objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildRadio[] List of ChildRadio objects
+     * @throws PropelException
+     */
+    public function getRadiosRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRadiosRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collRadiosRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collRadiosRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initRadiosRelatedByUpdatedBy();
+            } else {
+                $collRadiosRelatedByUpdatedBy = ChildRadioQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collRadiosRelatedByUpdatedByPartial && count($collRadiosRelatedByUpdatedBy)) {
+                        $this->initRadiosRelatedByUpdatedBy(false);
+
+                        foreach ($collRadiosRelatedByUpdatedBy as $obj) {
+                            if (false == $this->collRadiosRelatedByUpdatedBy->contains($obj)) {
+                                $this->collRadiosRelatedByUpdatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collRadiosRelatedByUpdatedByPartial = true;
+                    }
+
+                    return $collRadiosRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collRadiosRelatedByUpdatedBy) {
+                    foreach ($this->collRadiosRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collRadiosRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRadiosRelatedByUpdatedBy = $collRadiosRelatedByUpdatedBy;
+                $this->collRadiosRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collRadiosRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildRadio objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $radiosRelatedByUpdatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setRadiosRelatedByUpdatedBy(Collection $radiosRelatedByUpdatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildRadio[] $radiosRelatedByUpdatedByToDelete */
+        $radiosRelatedByUpdatedByToDelete = $this->getRadiosRelatedByUpdatedBy(new Criteria(), $con)->diff($radiosRelatedByUpdatedBy);
+
+
+        $this->radiosRelatedByUpdatedByScheduledForDeletion = $radiosRelatedByUpdatedByToDelete;
+
+        foreach ($radiosRelatedByUpdatedByToDelete as $radioRelatedByUpdatedByRemoved) {
+            $radioRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collRadiosRelatedByUpdatedBy = null;
+        foreach ($radiosRelatedByUpdatedBy as $radioRelatedByUpdatedBy) {
+            $this->addRadioRelatedByUpdatedBy($radioRelatedByUpdatedBy);
+        }
+
+        $this->collRadiosRelatedByUpdatedBy = $radiosRelatedByUpdatedBy;
+        $this->collRadiosRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Radio objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Radio objects.
+     * @throws PropelException
+     */
+    public function countRadiosRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRadiosRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collRadiosRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRadiosRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getRadiosRelatedByUpdatedBy());
+            }
+
+            $query = ChildRadioQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collRadiosRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildRadio object to this object
+     * through the ChildRadio foreign key attribute.
+     *
+     * @param  ChildRadio $l ChildRadio
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addRadioRelatedByUpdatedBy(ChildRadio $l)
+    {
+        if ($this->collRadiosRelatedByUpdatedBy === null) {
+            $this->initRadiosRelatedByUpdatedBy();
+            $this->collRadiosRelatedByUpdatedByPartial = true;
+        }
+
+        if (!$this->collRadiosRelatedByUpdatedBy->contains($l)) {
+            $this->doAddRadioRelatedByUpdatedBy($l);
+
+            if ($this->radiosRelatedByUpdatedByScheduledForDeletion and $this->radiosRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->radiosRelatedByUpdatedByScheduledForDeletion->remove($this->radiosRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildRadio $radioRelatedByUpdatedBy The ChildRadio object to add.
+     */
+    protected function doAddRadioRelatedByUpdatedBy(ChildRadio $radioRelatedByUpdatedBy)
+    {
+        $this->collRadiosRelatedByUpdatedBy[]= $radioRelatedByUpdatedBy;
+        $radioRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param  ChildRadio $radioRelatedByUpdatedBy The ChildRadio object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeRadioRelatedByUpdatedBy(ChildRadio $radioRelatedByUpdatedBy)
+    {
+        if ($this->getRadiosRelatedByUpdatedBy()->contains($radioRelatedByUpdatedBy)) {
+            $pos = $this->collRadiosRelatedByUpdatedBy->search($radioRelatedByUpdatedBy);
+            $this->collRadiosRelatedByUpdatedBy->remove($pos);
+            if (null === $this->radiosRelatedByUpdatedByScheduledForDeletion) {
+                $this->radiosRelatedByUpdatedByScheduledForDeletion = clone $this->collRadiosRelatedByUpdatedBy;
+                $this->radiosRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->radiosRelatedByUpdatedByScheduledForDeletion[]= $radioRelatedByUpdatedBy;
+            $radioRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears out the collSnippetsRelatedByCreatedBy collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -8112,6 +11047,26 @@ abstract class User implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collBannersRelatedByCreatedBy) {
+                foreach ($this->collBannersRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collBannersRelatedByUpdatedBy) {
+                foreach ($this->collBannersRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collBannerGroupsRelatedByCreatedBy) {
+                foreach ($this->collBannerGroupsRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collBannerGroupsRelatedByUpdatedBy) {
+                foreach ($this->collBannerGroupsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collCommentsRelatedByCreatedBy) {
                 foreach ($this->collCommentsRelatedByCreatedBy as $o) {
                     $o->clearAllReferences($deep);
@@ -8134,6 +11089,26 @@ abstract class User implements ActiveRecordInterface
             }
             if ($this->collFieldsRelatedByUpdatedBy) {
                 foreach ($this->collFieldsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPollsRelatedByCreatedBy) {
+                foreach ($this->collPollsRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPollsRelatedByUpdatedBy) {
+                foreach ($this->collPollsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPollVariantsRelatedByCreatedBy) {
+                foreach ($this->collPollVariantsRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPollVariantsRelatedByUpdatedBy) {
+                foreach ($this->collPollVariantsRelatedByUpdatedBy as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -8167,6 +11142,16 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collRadiosRelatedByCreatedBy) {
+                foreach ($this->collRadiosRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collRadiosRelatedByUpdatedBy) {
+                foreach ($this->collRadiosRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collSnippetsRelatedByCreatedBy) {
                 foreach ($this->collSnippetsRelatedByCreatedBy as $o) {
                     $o->clearAllReferences($deep);
@@ -8194,17 +11179,27 @@ abstract class User implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collBannersRelatedByCreatedBy = null;
+        $this->collBannersRelatedByUpdatedBy = null;
+        $this->collBannerGroupsRelatedByCreatedBy = null;
+        $this->collBannerGroupsRelatedByUpdatedBy = null;
         $this->collCommentsRelatedByCreatedBy = null;
         $this->collCommentsRelatedByUpdatedBy = null;
         $this->collCommentsRelatedByDeletedBy = null;
         $this->collFieldsRelatedByCreatedBy = null;
         $this->collFieldsRelatedByUpdatedBy = null;
+        $this->collPollsRelatedByCreatedBy = null;
+        $this->collPollsRelatedByUpdatedBy = null;
+        $this->collPollVariantsRelatedByCreatedBy = null;
+        $this->collPollVariantsRelatedByUpdatedBy = null;
         $this->collSectionsRelatedByCreatedBy = null;
         $this->collSectionsRelatedByUpdatedBy = null;
         $this->collPublicationsRelatedByCreatedBy = null;
         $this->collPublicationsRelatedByUpdatedBy = null;
         $this->collPublicationPhotosRelatedByCreatedBy = null;
         $this->collPublicationPhotosRelatedByUpdatedBy = null;
+        $this->collRadiosRelatedByCreatedBy = null;
+        $this->collRadiosRelatedByUpdatedBy = null;
         $this->collSnippetsRelatedByCreatedBy = null;
         $this->collSnippetsRelatedByUpdatedBy = null;
         $this->collTagsRelatedByCreatedBy = null;
@@ -8275,6 +11270,42 @@ abstract class User implements ActiveRecordInterface
                 $failureMap->addAll($retval);
             }
 
+            if (null !== $this->collBannersRelatedByCreatedBy) {
+                foreach ($this->collBannersRelatedByCreatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collBannersRelatedByUpdatedBy) {
+                foreach ($this->collBannersRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collBannerGroupsRelatedByCreatedBy) {
+                foreach ($this->collBannerGroupsRelatedByCreatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collBannerGroupsRelatedByUpdatedBy) {
+                foreach ($this->collBannerGroupsRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
             if (null !== $this->collCommentsRelatedByCreatedBy) {
                 foreach ($this->collCommentsRelatedByCreatedBy as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
@@ -8313,6 +11344,42 @@ abstract class User implements ActiveRecordInterface
             }
             if (null !== $this->collFieldsRelatedByUpdatedBy) {
                 foreach ($this->collFieldsRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collPollsRelatedByCreatedBy) {
+                foreach ($this->collPollsRelatedByCreatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collPollsRelatedByUpdatedBy) {
+                foreach ($this->collPollsRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collPollVariantsRelatedByCreatedBy) {
+                foreach ($this->collPollVariantsRelatedByCreatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collPollVariantsRelatedByUpdatedBy) {
+                foreach ($this->collPollVariantsRelatedByUpdatedBy as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());
@@ -8367,6 +11434,24 @@ abstract class User implements ActiveRecordInterface
             }
             if (null !== $this->collPublicationPhotosRelatedByUpdatedBy) {
                 foreach ($this->collPublicationPhotosRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collRadiosRelatedByCreatedBy) {
+                foreach ($this->collRadiosRelatedByCreatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collRadiosRelatedByUpdatedBy) {
+                foreach ($this->collRadiosRelatedByUpdatedBy as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());

@@ -92,6 +92,46 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildUserQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
+ * @method     ChildUserQuery leftJoinBannerRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the BannerRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinBannerRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BannerRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinBannerRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the BannerRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery joinWithBannerRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BannerRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithBannerRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the BannerRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinWithBannerRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the BannerRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinWithBannerRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the BannerRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinBannerRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the BannerRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinBannerRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BannerRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinBannerRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the BannerRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery joinWithBannerRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BannerRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithBannerRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the BannerRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinWithBannerRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the BannerRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinWithBannerRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the BannerRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinBannerGroupRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the BannerGroupRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinBannerGroupRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BannerGroupRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinBannerGroupRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the BannerGroupRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery joinWithBannerGroupRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BannerGroupRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithBannerGroupRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the BannerGroupRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinWithBannerGroupRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the BannerGroupRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinWithBannerGroupRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the BannerGroupRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinBannerGroupRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the BannerGroupRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinBannerGroupRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BannerGroupRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinBannerGroupRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the BannerGroupRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery joinWithBannerGroupRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BannerGroupRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithBannerGroupRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the BannerGroupRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinWithBannerGroupRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the BannerGroupRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinWithBannerGroupRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the BannerGroupRelatedByUpdatedBy relation
+ *
  * @method     ChildUserQuery leftJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the CommentRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CommentRelatedByCreatedBy relation
  * @method     ChildUserQuery innerJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the CommentRelatedByCreatedBy relation
@@ -141,6 +181,46 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery leftJoinWithFieldRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the FieldRelatedByUpdatedBy relation
  * @method     ChildUserQuery rightJoinWithFieldRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the FieldRelatedByUpdatedBy relation
  * @method     ChildUserQuery innerJoinWithFieldRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the FieldRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinPollRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PollRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinPollRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PollRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinPollRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PollRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery joinWithPollRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PollRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithPollRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the PollRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinWithPollRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the PollRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinWithPollRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the PollRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinPollRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PollRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinPollRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PollRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinPollRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PollRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery joinWithPollRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PollRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithPollRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the PollRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinWithPollRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the PollRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinWithPollRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the PollRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinPollVariantRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PollVariantRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinPollVariantRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PollVariantRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinPollVariantRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PollVariantRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery joinWithPollVariantRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PollVariantRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithPollVariantRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the PollVariantRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinWithPollVariantRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the PollVariantRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinWithPollVariantRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the PollVariantRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinPollVariantRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PollVariantRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinPollVariantRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PollVariantRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinPollVariantRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PollVariantRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery joinWithPollVariantRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PollVariantRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithPollVariantRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the PollVariantRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinWithPollVariantRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the PollVariantRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinWithPollVariantRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the PollVariantRelatedByUpdatedBy relation
  *
  * @method     ChildUserQuery leftJoinSectionRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the SectionRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinSectionRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SectionRelatedByCreatedBy relation
@@ -202,6 +282,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithPublicationPhotoRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the PublicationPhotoRelatedByUpdatedBy relation
  * @method     ChildUserQuery innerJoinWithPublicationPhotoRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the PublicationPhotoRelatedByUpdatedBy relation
  *
+ * @method     ChildUserQuery leftJoinRadioRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the RadioRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinRadioRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the RadioRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinRadioRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the RadioRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery joinWithRadioRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the RadioRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithRadioRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the RadioRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinWithRadioRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the RadioRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinWithRadioRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the RadioRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinRadioRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the RadioRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinRadioRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the RadioRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinRadioRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the RadioRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery joinWithRadioRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the RadioRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithRadioRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the RadioRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinWithRadioRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the RadioRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinWithRadioRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the RadioRelatedByUpdatedBy relation
+ *
  * @method     ChildUserQuery leftJoinSnippetRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the SnippetRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinSnippetRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SnippetRelatedByCreatedBy relation
  * @method     ChildUserQuery innerJoinSnippetRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the SnippetRelatedByCreatedBy relation
@@ -252,7 +352,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithUserFavorite() Adds a RIGHT JOIN clause and with to the query using the UserFavorite relation
  * @method     ChildUserQuery innerJoinWithUserFavorite() Adds a INNER JOIN clause and with to the query using the UserFavorite relation
  *
- * @method     \Propel\Models\CommentQuery|\Propel\Models\FieldQuery|\Propel\Models\SectionQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\BannerQuery|\Propel\Models\BannerGroupQuery|\Propel\Models\CommentQuery|\Propel\Models\FieldQuery|\Propel\Models\PollQuery|\Propel\Models\PollVariantQuery|\Propel\Models\SectionQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\RadioQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -1498,6 +1598,298 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \Propel\Models\Banner object
+     *
+     * @param \Propel\Models\Banner|ObjectCollection $banner the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBannerRelatedByCreatedBy($banner, $comparison = null)
+    {
+        if ($banner instanceof \Propel\Models\Banner) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $banner->getCreatedBy(), $comparison);
+        } elseif ($banner instanceof ObjectCollection) {
+            return $this
+                ->useBannerRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($banner->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBannerRelatedByCreatedBy() only accepts arguments of type \Propel\Models\Banner or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BannerRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBannerRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BannerRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BannerRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BannerRelatedByCreatedBy relation Banner object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\BannerQuery A secondary query class using the current class as primary query
+     */
+    public function useBannerRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinBannerRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BannerRelatedByCreatedBy', '\Propel\Models\BannerQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Banner object
+     *
+     * @param \Propel\Models\Banner|ObjectCollection $banner the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBannerRelatedByUpdatedBy($banner, $comparison = null)
+    {
+        if ($banner instanceof \Propel\Models\Banner) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $banner->getUpdatedBy(), $comparison);
+        } elseif ($banner instanceof ObjectCollection) {
+            return $this
+                ->useBannerRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($banner->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBannerRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\Banner or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BannerRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBannerRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BannerRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BannerRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BannerRelatedByUpdatedBy relation Banner object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\BannerQuery A secondary query class using the current class as primary query
+     */
+    public function useBannerRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinBannerRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BannerRelatedByUpdatedBy', '\Propel\Models\BannerQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\BannerGroup object
+     *
+     * @param \Propel\Models\BannerGroup|ObjectCollection $bannerGroup the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBannerGroupRelatedByCreatedBy($bannerGroup, $comparison = null)
+    {
+        if ($bannerGroup instanceof \Propel\Models\BannerGroup) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $bannerGroup->getCreatedBy(), $comparison);
+        } elseif ($bannerGroup instanceof ObjectCollection) {
+            return $this
+                ->useBannerGroupRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($bannerGroup->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBannerGroupRelatedByCreatedBy() only accepts arguments of type \Propel\Models\BannerGroup or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BannerGroupRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBannerGroupRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BannerGroupRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BannerGroupRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BannerGroupRelatedByCreatedBy relation BannerGroup object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\BannerGroupQuery A secondary query class using the current class as primary query
+     */
+    public function useBannerGroupRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinBannerGroupRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BannerGroupRelatedByCreatedBy', '\Propel\Models\BannerGroupQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\BannerGroup object
+     *
+     * @param \Propel\Models\BannerGroup|ObjectCollection $bannerGroup the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBannerGroupRelatedByUpdatedBy($bannerGroup, $comparison = null)
+    {
+        if ($bannerGroup instanceof \Propel\Models\BannerGroup) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $bannerGroup->getUpdatedBy(), $comparison);
+        } elseif ($bannerGroup instanceof ObjectCollection) {
+            return $this
+                ->useBannerGroupRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($bannerGroup->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBannerGroupRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\BannerGroup or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BannerGroupRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBannerGroupRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BannerGroupRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BannerGroupRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BannerGroupRelatedByUpdatedBy relation BannerGroup object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\BannerGroupQuery A secondary query class using the current class as primary query
+     */
+    public function useBannerGroupRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinBannerGroupRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BannerGroupRelatedByUpdatedBy', '\Propel\Models\BannerGroupQuery');
+    }
+
+    /**
      * Filter the query by a related \Propel\Models\Comment object
      *
      * @param \Propel\Models\Comment|ObjectCollection $comment the related object to use as filter
@@ -1860,6 +2252,298 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinFieldRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'FieldRelatedByUpdatedBy', '\Propel\Models\FieldQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Poll object
+     *
+     * @param \Propel\Models\Poll|ObjectCollection $poll the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByPollRelatedByCreatedBy($poll, $comparison = null)
+    {
+        if ($poll instanceof \Propel\Models\Poll) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $poll->getCreatedBy(), $comparison);
+        } elseif ($poll instanceof ObjectCollection) {
+            return $this
+                ->usePollRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($poll->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPollRelatedByCreatedBy() only accepts arguments of type \Propel\Models\Poll or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PollRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinPollRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PollRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PollRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PollRelatedByCreatedBy relation Poll object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\PollQuery A secondary query class using the current class as primary query
+     */
+    public function usePollRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinPollRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PollRelatedByCreatedBy', '\Propel\Models\PollQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Poll object
+     *
+     * @param \Propel\Models\Poll|ObjectCollection $poll the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByPollRelatedByUpdatedBy($poll, $comparison = null)
+    {
+        if ($poll instanceof \Propel\Models\Poll) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $poll->getUpdatedBy(), $comparison);
+        } elseif ($poll instanceof ObjectCollection) {
+            return $this
+                ->usePollRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($poll->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPollRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\Poll or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PollRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinPollRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PollRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PollRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PollRelatedByUpdatedBy relation Poll object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\PollQuery A secondary query class using the current class as primary query
+     */
+    public function usePollRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinPollRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PollRelatedByUpdatedBy', '\Propel\Models\PollQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\PollVariant object
+     *
+     * @param \Propel\Models\PollVariant|ObjectCollection $pollVariant the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByPollVariantRelatedByCreatedBy($pollVariant, $comparison = null)
+    {
+        if ($pollVariant instanceof \Propel\Models\PollVariant) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $pollVariant->getCreatedBy(), $comparison);
+        } elseif ($pollVariant instanceof ObjectCollection) {
+            return $this
+                ->usePollVariantRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($pollVariant->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPollVariantRelatedByCreatedBy() only accepts arguments of type \Propel\Models\PollVariant or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PollVariantRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinPollVariantRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PollVariantRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PollVariantRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PollVariantRelatedByCreatedBy relation PollVariant object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\PollVariantQuery A secondary query class using the current class as primary query
+     */
+    public function usePollVariantRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinPollVariantRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PollVariantRelatedByCreatedBy', '\Propel\Models\PollVariantQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\PollVariant object
+     *
+     * @param \Propel\Models\PollVariant|ObjectCollection $pollVariant the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByPollVariantRelatedByUpdatedBy($pollVariant, $comparison = null)
+    {
+        if ($pollVariant instanceof \Propel\Models\PollVariant) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $pollVariant->getUpdatedBy(), $comparison);
+        } elseif ($pollVariant instanceof ObjectCollection) {
+            return $this
+                ->usePollVariantRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($pollVariant->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPollVariantRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\PollVariant or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PollVariantRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinPollVariantRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PollVariantRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PollVariantRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PollVariantRelatedByUpdatedBy relation PollVariant object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\PollVariantQuery A secondary query class using the current class as primary query
+     */
+    public function usePollVariantRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinPollVariantRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PollVariantRelatedByUpdatedBy', '\Propel\Models\PollVariantQuery');
     }
 
     /**
@@ -2298,6 +2982,152 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinPublicationPhotoRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'PublicationPhotoRelatedByUpdatedBy', '\Propel\Models\PublicationPhotoQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Radio object
+     *
+     * @param \Propel\Models\Radio|ObjectCollection $radio the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByRadioRelatedByCreatedBy($radio, $comparison = null)
+    {
+        if ($radio instanceof \Propel\Models\Radio) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $radio->getCreatedBy(), $comparison);
+        } elseif ($radio instanceof ObjectCollection) {
+            return $this
+                ->useRadioRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($radio->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByRadioRelatedByCreatedBy() only accepts arguments of type \Propel\Models\Radio or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the RadioRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinRadioRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('RadioRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'RadioRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the RadioRelatedByCreatedBy relation Radio object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\RadioQuery A secondary query class using the current class as primary query
+     */
+    public function useRadioRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinRadioRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'RadioRelatedByCreatedBy', '\Propel\Models\RadioQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Radio object
+     *
+     * @param \Propel\Models\Radio|ObjectCollection $radio the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByRadioRelatedByUpdatedBy($radio, $comparison = null)
+    {
+        if ($radio instanceof \Propel\Models\Radio) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $radio->getUpdatedBy(), $comparison);
+        } elseif ($radio instanceof ObjectCollection) {
+            return $this
+                ->useRadioRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($radio->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByRadioRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\Radio or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the RadioRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinRadioRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('RadioRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'RadioRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the RadioRelatedByUpdatedBy relation Radio object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\RadioQuery A secondary query class using the current class as primary query
+     */
+    public function useRadioRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinRadioRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'RadioRelatedByUpdatedBy', '\Propel\Models\RadioQuery');
     }
 
     /**

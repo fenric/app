@@ -315,6 +315,34 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('BannerRelatedByCreatedBy', '\\Propel\\Models\\Banner', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'BannersRelatedByCreatedBy', false);
+        $this->addRelation('BannerRelatedByUpdatedBy', '\\Propel\\Models\\Banner', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':updated_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'BannersRelatedByUpdatedBy', false);
+        $this->addRelation('BannerGroupRelatedByCreatedBy', '\\Propel\\Models\\BannerGroup', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'BannerGroupsRelatedByCreatedBy', false);
+        $this->addRelation('BannerGroupRelatedByUpdatedBy', '\\Propel\\Models\\BannerGroup', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':updated_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'BannerGroupsRelatedByUpdatedBy', false);
         $this->addRelation('CommentRelatedByCreatedBy', '\\Propel\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -350,6 +378,34 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', 'FieldsRelatedByUpdatedBy', false);
+        $this->addRelation('PollRelatedByCreatedBy', '\\Propel\\Models\\Poll', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'PollsRelatedByCreatedBy', false);
+        $this->addRelation('PollRelatedByUpdatedBy', '\\Propel\\Models\\Poll', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':updated_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'PollsRelatedByUpdatedBy', false);
+        $this->addRelation('PollVariantRelatedByCreatedBy', '\\Propel\\Models\\PollVariant', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'PollVariantsRelatedByCreatedBy', false);
+        $this->addRelation('PollVariantRelatedByUpdatedBy', '\\Propel\\Models\\PollVariant', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':updated_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'PollVariantsRelatedByUpdatedBy', false);
         $this->addRelation('SectionRelatedByCreatedBy', '\\Propel\\Models\\Section', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -392,6 +448,20 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', 'PublicationPhotosRelatedByUpdatedBy', false);
+        $this->addRelation('RadioRelatedByCreatedBy', '\\Propel\\Models\\Radio', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'RadiosRelatedByCreatedBy', false);
+        $this->addRelation('RadioRelatedByUpdatedBy', '\\Propel\\Models\\Radio', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':updated_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'RadiosRelatedByUpdatedBy', false);
         $this->addRelation('SnippetRelatedByCreatedBy', '\\Propel\\Models\\Snippet', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -448,11 +518,16 @@ class UserTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        BannerTableMap::clearInstancePool();
+        BannerGroupTableMap::clearInstancePool();
         CommentTableMap::clearInstancePool();
         FieldTableMap::clearInstancePool();
+        PollTableMap::clearInstancePool();
+        PollVariantTableMap::clearInstancePool();
         SectionTableMap::clearInstancePool();
         PublicationTableMap::clearInstancePool();
         PublicationPhotoTableMap::clearInstancePool();
+        RadioTableMap::clearInstancePool();
         SnippetTableMap::clearInstancePool();
         TagTableMap::clearInstancePool();
         UserFavoriteTableMap::clearInstancePool();
