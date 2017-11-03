@@ -288,6 +288,11 @@ $desktop.prototype.regcom = function(name, component)
 		}
 	};
 
+	component.prototype.view = function(name, complete)
+	{
+		$bugaboo.load(this.root + '/views/' + name + '.tpl', complete);
+	};
+
 	component.prototype.with = function(callback)
 	{
 		return callback.call(this, this);
