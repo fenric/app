@@ -208,6 +208,9 @@ final class App
 			$router->any('/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\User\Api::class);
 		});
 
+		// Общее API сайта
+		fenric('router')->any('/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Api::class);
+
 		// Регистрация клика по баннеру
 		fenric('router')->get('/click/<id:[1-9][0-9]{0,10}>(/)', \Fenric\Controllers\Banner::class, function(Router $router, Request $request, Response $response, Controller $controller)
 		{
