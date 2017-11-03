@@ -1,0 +1,195 @@
+<database name="default" namespace="Propel\Models" tablePrefix="fenric_">
+	<behavior name="auto_add_pk" />
+
+	<table name="poll">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="code" type="varchar" required="true" />
+		<column name="title" type="varchar" required="true" primaryString="true" />
+		<column name="multiple" type="boolean" required="true" defaultValue="0" />
+
+		<column name="open_at" type="timestamp" />
+		<column name="close_at" type="timestamp" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="a2b4e638-486c-47f9-90b7-601b6a3a434f"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="a3adfb67-bd15-49f0-9788-478277d56822"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<unique>
+			<unique-column name="code" />
+		</unique>
+
+		<index name="f7672061-23aa-43ea-8717-a0d2dd9987ad">
+			<index-column name="title" />
+		</index>
+
+		<index name="eaf3f736-8303-4362-9aa9-3ea9e686243f">
+			<index-column name="open_at" />
+			<index-column name="close_at" />
+		</index>
+
+		<index name="c4334586-8a95-40e0-bece-8795a3b6c884">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="296e0b77-6202-40ee-90db-d4292fd859e2" value="{column: code, validator: NotBlank}" />
+			<parameter name="25ee34a4-9a6c-4157-972e-309a52f79604" value="{column: code, validator: Length, options: {max: 255}}" />
+			<parameter name="20820086-0d66-42b2-b893-7149271e1c79" value="{column: code, validator: Regex, options: {pattern: '/^[a-z0-9-]+$/'}}" />
+			<parameter name="24389c91-ca39-4d76-8f98-352146fbaf3f" value="{column: code, validator: Unique}" />
+
+			<parameter name="86209d73-e13f-484a-9e9d-7ae4adf97158" value="{column: title, validator: NotBlank}" />
+			<parameter name="8d226aa2-fe9f-4c7c-a7e9-fe0b244be7ad" value="{column: title, validator: Length, options: {max: 255}}" />
+		</behavior>
+	</table>
+
+	<table name="poll_variant">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="poll_id" type="integer" />
+
+		<column name="title" type="varchar" required="true" primaryString="true" />
+		<column name="sequence" type="numeric" required="true" defaultValue="0" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="e36ef4d3-e9be-4896-a67a-063e5b679338"
+			foreignTable="poll"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="poll_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="dccd73fa-4116-4695-b907-8f6e34e73fd3"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="ff7c1963-0424-4cb2-9550-0a7407247317"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<index name="cf40dbec-2694-401d-bc1c-128aab0a9063">
+			<index-column name="title" />
+		</index>
+
+		<index name="e3502bd2-3804-4258-a5ad-df2ec5650beb">
+			<index-column name="sequence" />
+		</index>
+
+		<index name="dcaf06a3-90e4-4af1-ac61-eec35f4aca22">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="818abaed-2418-4b62-9357-d5fa025c02a1" value="{column: title, validator: NotBlank}" />
+			<parameter name="855d54e4-e8bc-427f-9de5-6873ef45db95" value="{column: title, validator: Length, options: {max: 255}}" />
+		</behavior>
+	</table>
+
+	<table name="poll_vote">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="poll_variant_id" type="integer" />
+
+		<column name="respondent_user_agent" type="varchar" required="true" />
+		<column name="respondent_remote_address" type="varchar" required="true" />
+		<column name="respondent_session_id" type="varchar" required="true" />
+		<column name="respondent_vote_id" type="varchar" required="true" />
+		<column name="respondent_id" type="varchar" required="true" />
+
+		<column name="vote_at" type="timestamp" />
+
+		<foreign-key
+			name="eeb11937-8db9-4d02-b08b-c1e611538b89"
+			foreignTable="poll_variant"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="poll_variant_id" foreign="id" />
+		</foreign-key>
+
+		<index name="a755383b-302c-4d3c-814f-3378e9dadc89">
+			<index-column name="respondent_remote_address" />
+			<index-column name="respondent_session_id" />
+			<index-column name="respondent_vote_id" />
+			<index-column name="respondent_id" />
+		</index>
+
+		<index name="a771f0ee-2ec1-4a1c-a103-7aaaf0cd22ea">
+			<index-column name="vote_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+	</table>
+</database>

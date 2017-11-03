@@ -1,0 +1,30 @@
+<div class="poll poll-chart poll-<?= $poll->getId() ?> poll-<?= $poll->getCode() ?>">
+	<h5 class="mb-2"><?= $poll->getTitle() ?></h5>
+
+	<?php foreach ($variants as $variant) : ?>
+
+		<?php
+			$percentage = 0;
+			if ($poll->getCountVotes() > 0) {
+				if ($variant->getCountVotes() > 0) {
+					$percentage = floor($variant->getCountVotes() * 100 / $poll->getCountVotes());
+				}
+			}
+		?>
+
+		<div class="mb-2">
+			<div class="mb-1" style="line-height: 1;">
+				<small><?= $variant->getTitle() ?></small>
+			</div>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped" role="progressbar" style="width: <?= $percentage ?>%" aria-valuenow="<?= $percentage ?>" aria-valuemin="0" aria-valuemax="100">
+					<span><?= $percentage ?>%</span>
+				</div>
+			</div>
+		</div>
+	<?php endforeach; ?>
+
+	<div class="text-muted">
+		<small>Всего голосов: <?= $poll->getCountVotes() ?></small>
+	</div>
+</div>
