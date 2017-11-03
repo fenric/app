@@ -280,6 +280,14 @@ $desktop.prototype.regcom = function(name, component)
 		return this.modals[key];
 	};
 
+	component.prototype.icon = function(id)
+	{
+		if ($desktop.module('icon').elements[id || this.id] !== void(0))
+		{
+			return $desktop.module('icon').elements[id || this.id]['element'];
+		}
+	};
+
 	component.prototype.with = function(callback)
 	{
 		return callback.call(this, this);
@@ -479,6 +487,31 @@ $desktop.prototype.initializationComponents = function(complete)
 
 		})(key));
 	}
+};
+
+/**
+ * {description}
+ *
+ * @param   string     location
+ * @param   callback   complete
+ *
+ * @access  public
+ * @return  void
+ */
+$desktop.prototype.include = function(location, complete)
+{
+	var script = document.createElement('script');
+
+	script.setAttribute('src', location + '?' + Math.random());
+
+	script.addEventListener('load', function(event)
+	{
+		if (complete instanceof Function) {
+			complete.call(this, event);
+		}
+	});
+
+	document.body.appendChild(script);
 };
 
 /**
