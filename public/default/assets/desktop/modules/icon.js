@@ -61,6 +61,7 @@
 
 		var imageframe = document.createElement('div');
 		var labelframe = document.createElement('div');
+		var badgeframe = document.createElement('div');
 
 		var imageelement = document.createElement('img');
 		var labelelement = document.createElement('span');
@@ -68,6 +69,7 @@
 		container.classList.add('desktop-icon');
 		imageframe.classList.add('desktop-icon-image');
 		labelframe.classList.add('desktop-icon-label');
+		badgeframe.classList.add('desktop-icon-badge');
 
 		imageelement.src = params.image;
 		labelelement.textContent = params.label;
@@ -77,6 +79,7 @@
 
 		container.appendChild(imageframe);
 		container.appendChild(labelframe);
+		container.appendChild(badgeframe);
 
 		container.addEventListener('mousedown', function(event)
 		{
