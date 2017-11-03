@@ -81,6 +81,45 @@ fenric()->registerDisposableSharedService('user', function()
 });
 
 /**
+ * Регистрация в контейнере фреймворка именованной службы для вывода опроса
+ */
+fenric()->registerResolvableSharedService('poll', function(string $resolver, string $default = null)
+{
+	$query = \Propel\Models\PollQuery::create();
+
+	if (0 === strcmp($resolver, 'random'))
+	{
+		$resolver = \Propel\Models\PollQuery::getRandomCode();
+	}
+
+	$model = $query->findOneByCode($resolver);
+
+	if ($model instanceof \Propel\Models\Poll)
+	{
+		return $model->render();
+	}
+
+	return $default;
+});
+
+/**
+ * Регистрация в контейнере фреймворка именованной службы для вывода баннера
+ */
+fenric()->registerResolvableSharedService('banner', function(string $resolver, string $default = null)
+{
+	$query = \Propel\Models\BannerGroupQuery::create();
+
+	$model = $query->findOneByCode($resolver);
+
+	if ($model instanceof \Propel\Models\BannerGroup)
+	{
+		return $model->render(true);
+	}
+
+	return $default;
+});
+
+/**
  * Регистрация в контейнере фреймворка именованной службы для вывода сниппета
  */
 fenric()->registerResolvableSharedService('snippet', function(string $resolver, string $default = null)
@@ -327,15 +366,15 @@ function searchable(string $value, int $maxLength = 64, string $wordSeparator = 
  */
 function snippetable(string $value = null) : string
 {
-	$expression = '/{#snippet:([a-zA-Z0-9-\.]{1,255})(?:\050({[^\050\051]+})\051)?#}/';
+	$expression = '/{#(?<type>(?:poll|banner|snippet)):(?<code>[a-zA-Z0-9-\.]{1,255})(?:\050(?<json>{[^\050\051]+})\051)?#}/su';
 
 	return preg_replace_callback($expression, function($matches)
 	{
-		$options = json_decode($matches[2] ?? '{}', true);
+		$options = json_decode($matches['json'] ?? '{}', true);
 
-		$parameters = [$matches[1], $options['default'] ?? null];
+		$parameters = [$matches['code'], $options['default'] ?? null];
 
-		return fenric()->callSharedService('snippet', $parameters);
+		return fenric()->callSharedService($matches['type'], $parameters);
 
 	}, $value);
 }
