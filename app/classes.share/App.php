@@ -120,6 +120,18 @@ final class App
 				$router->any('/snippet/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiSnippet::class);
 				$router->any('/snippet/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiSnippet::class);
 
+				// Управление опросами
+				$router->any('/poll/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiPoll::class);
+				$router->any('/poll/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiPoll::class);
+
+				// Управление баннерами
+				$router->any('/banner/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiBanner::class);
+				$router->any('/banner/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiBanner::class);
+
+				// Управление радио
+				$router->any('/radio/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiRadio::class);
+				$router->any('/radio/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiRadio::class);
+
 				// Управление параметрами
 				$router->any('/parameter/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Admin\ApiParameter::class);
 				$router->any('/parameter/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Admin\ApiParameter::class);
@@ -196,8 +208,26 @@ final class App
 			$router->any('/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\User\Api::class);
 		});
 
+		// Регистрация клика по баннеру
+		fenric('router')->get('/click/<id:[1-9][0-9]{0,10}>(/)', \Fenric\Controllers\Banner::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			$controller->trailingSlashes();
+		});
+
 		// Поиск по сайту
 		fenric('router')->get('/search(/)', \Fenric\Controllers\Search::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			$controller->trailingSlashes();
+		});
+
+		// Список тегов
+		fenric('router')->get('/tags(/)', \Fenric\Controllers\Tags::class, function(Router $router, Request $request, Response $response, Controller $controller)
+		{
+			$controller->trailingSlashes();
+		});
+
+		// Список публикаций тега
+		fenric('router')->get('/tags/<code:[a-z0-9-]+>(/)', \Fenric\Controllers\Tag::class, function(Router $router, Request $request, Response $response, Controller $controller)
 		{
 			$controller->trailingSlashes();
 		});
