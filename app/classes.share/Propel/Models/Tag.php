@@ -4,6 +4,9 @@ namespace Propel\Models;
 
 use Propel\Models\Base\Tag as BaseTag;
 use Propel\Models\Map\PublicationTagTableMap;
+use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 
 /**
@@ -41,5 +44,31 @@ class Tag extends BaseTag
 	public function getSnippetableContent(ConnectionInterface $connection = null)
 	{
 		return snippetable(parent::getContent($connection));
+	}
+
+	/**
+	 * Выгрузка связанных с тегом публикаций
+	 */
+	public function getPublications(Criteria $criteria = null, ConnectionInterface $connection = null) : ObjectCollection
+	{
+		$criteria = $criteria ?: new Criteria();
+
+		$collection = new ObjectCollection();
+
+		if ($this->getPublicationTags($criteria, $connection) instanceof ObjectCollection)
+		{
+			if ($this->getPublicationTags($criteria, $connection)->count() > 0)
+			{
+				foreach ($this->getPublicationTags($criteria, $connection) as $ptag)
+				{
+					if ($ptag->getPublication() instanceof ActiveRecordInterface)
+					{
+						$collection->push($ptag->getPublication());
+					}
+				}
+			}
+		}
+
+		return $collection;
 	}
 }
