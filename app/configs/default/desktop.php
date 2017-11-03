@@ -22,6 +22,7 @@ $options['components'] = [
 	'snippets',
 	'parameters',
 	'uploader',
+	'cropper',
 	'ckeditor',
 	'formhandle',
 	'settings',
