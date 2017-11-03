@@ -1,0 +1,184 @@
+<database name="default" namespace="Propel\Models" tablePrefix="fenric_">
+	<behavior name="auto_add_pk" />
+
+	<table name="banner">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="banner_group_id" type="integer" />
+
+		<column name="title" type="varchar" required="true" primaryString="true" />
+		<column name="description" type="longvarchar" />
+
+		<column name="picture" type="varchar" required="true" />
+		<column name="picture_alt" type="varchar" />
+		<column name="picture_title" type="varchar" />
+
+		<column name="hyperlink_url" type="varchar" required="true" />
+		<column name="hyperlink_title" type="varchar" />
+		<column name="hyperlink_target" type="varchar" />
+
+		<column name="show_start" type="timestamp" />
+		<column name="show_end" type="timestamp" />
+
+		<column name="shows" type="numeric" defaultValue="0" />
+		<column name="shows_limit" type="numeric"  />
+
+		<column name="clicks" type="numeric" defaultValue="0" />
+		<column name="clicks_limit" type="numeric"  />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="b5427a35-da36-4175-933a-551a69b9e323"
+			foreignTable="banner_group"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="banner_group_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="b7b546e3-4d2f-4307-8722-d98513c2a672"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="b0a55358-115f-4707-9a36-b5ec1927d2b4"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<index name="c24e86a3-9bc4-4a1a-8457-83d814395977">
+			<index-column name="title" />
+		</index>
+
+		<index name="cea2b0f0-7eb5-40aa-b1ff-db4f43bdb76b">
+			<index-column name="show_start" />
+			<index-column name="show_end" />
+
+			<index-column name="shows" />
+			<index-column name="shows_limit" />
+
+			<index-column name="clicks" />
+			<index-column name="clicks_limit" />
+		</index>
+
+		<index name="cd570d28-3899-4452-ae47-625514659c91">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="1d3cf254-bf5c-11e7-a782-6f777aef7709" value="{column: banner_group_id, validator: NotBlank}" />
+
+			<parameter name="1d3dc652-bf5c-11e7-ac3d-47555fd33204" value="{column: title, validator: NotBlank}" />
+			<parameter name="1d4377c8-bf5c-11e7-84fa-bb42a22d1de0" value="{column: title, validator: Length, options: {max: 255}}" />
+
+			<parameter name="1d3e9d02-bf5c-11e7-93f9-974d7c705bad" value="{column: picture, validator: NotBlank}" />
+			<parameter name="1d4488de-bf5c-11e7-98b4-c3783a0b48eb" value="{column: picture, validator: Length, options: {max: 255}}" />
+
+			<parameter name="1d3f77e0-bf5c-11e7-ab38-7f1c828bf35a" value="{column: hyperlink_url, validator: NotBlank}" />
+			<parameter name="1d455944-bf5c-11e7-957d-c7614bf20b11" value="{column: hyperlink_url, validator: Length, options: {max: 255}}" />
+			<parameter name="1d40771c-bf5c-11e7-9ac6-eb1cbef867b4" value="{column: hyperlink_url, validator: Url}" />
+
+			<parameter name="1d415ca4-bf5c-11e7-afd6-f751a5797087" value="{column: shows_limit, validator: Range, options: {min: 1}}" />
+			<parameter name="1d42490c-bf5c-11e7-8e24-c7aeabc5ebe1" value="{column: clicks_limit, validator: Range, options: {min: 1}}" />
+		</behavior>
+	</table>
+
+	<table name="banner_group">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+
+		<column name="code" type="varchar" required="true" />
+		<column name="title" type="varchar" required="true" primaryString="true" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="af75a508-5cd1-413a-a68a-cc47faaf27fe"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="a47e35d2-7640-4773-979d-84a630688e6c"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<unique>
+			<unique-column name="code" />
+		</unique>
+
+		<index name="b6da494e-4bf3-4a72-8dad-f4d1b14f9589">
+			<index-column name="title" />
+		</index>
+
+		<index name="b799d919-f812-401a-8601-62a7271ae341">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="1d46277a-bf5c-11e7-bd0e-2b86cb806a6a" value="{column: code, validator: NotBlank}" />
+			<parameter name="1d46f876-bf5c-11e7-8c5b-d39bae1c7247" value="{column: code, validator: Length, options: {max: 255}}" />
+			<parameter name="1d480ad6-bf5c-11e7-9b8b-c3f7d691a5b1" value="{column: code, validator: Regex, options: {pattern: '/^[a-z0-9-]+$/'}}" />
+			<parameter name="1d494ba8-bf5c-11e7-8fbd-7f5457ebecc4" value="{column: code, validator: Unique}" />
+
+			<parameter name="1d4d0964-bf5c-11e7-bbde-7fae13bc21c4" value="{column: title, validator: NotBlank}" />
+			<parameter name="1d4c3c00-bf5c-11e7-bd97-9348d134984b" value="{column: title, validator: Length, options: {max: 255}}" />
+		</behavior>
+	</table>
+</database>
