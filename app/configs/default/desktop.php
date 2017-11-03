@@ -17,6 +17,8 @@ $options['components'] = [
 	'publications',
 	'fields',
 	'tags',
+	'polls',
+	'banners',
 	'snippets',
 	'parameters',
 	'uploader',
@@ -24,6 +26,7 @@ $options['components'] = [
 	'formhandle',
 	'settings',
 	'update',
+	'radio',
 ];
 
 return $options;
