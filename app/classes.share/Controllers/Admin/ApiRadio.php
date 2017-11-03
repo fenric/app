@@ -171,7 +171,7 @@ class ApiRadio extends CRUD
 
 													if (preg_match($expression, $subject, $matches))
 													{
-														$result['title'] = trim($matches['title']);
+														$result['title'] = trim(urldecode($matches['title']));
 													}
 												}
 											}
