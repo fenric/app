@@ -93,6 +93,9 @@
 						</td>
 						<td>
 							<div class="btn-group-vertical btn-block">
+								<a class="btn btn-block btn-sm btn-default" href="{{uri}}" target="_blank">
+									<small>На сайте</small>
+								</a>
 								<button class="btn btn-block btn-sm btn-warning" type="button" onclick="$desktop.component('tags').edit({{id}})">
 									<small>Редактировать</small>
 								</button>

@@ -1,0 +1,38 @@
+<?php $this->layout('layouts/main') ?>
+
+<?php $this->start('metadata') ?>
+<title>Теги</title>
+<?php $this->stop() ?>
+
+<?php $this->start('stylesheets') ?>
+<?php $this->stop() ?>
+
+<?php $this->start('javascripts') ?>
+<?php $this->stop() ?>
+
+<div class="container mt-3">
+	<nav class="breadcrumb">
+		<a class="breadcrumb-item" href="/">Главная</a>
+		<span class="breadcrumb-item active">Теги</span>
+	</nav>
+</div>
+
+<div class="container mt-4">
+	<h1 class="display-1">Теги</h1>
+</div>
+
+<?php if ($tags->count() > 0) : ?>
+	<div class="container mt-4">
+		<?php foreach ($tags as $tag) : ?>
+			<a class="btn btn-light" href="<?= $tag->getUri() ?>" style="display: inline-block; margin: 0 10px 10px 0;">
+				<?= e($tag->getHeader()) ?>
+
+				<?php if ($tag->getCountPublications() > 0) : ?>
+					<span class="badge badge-success"><?= $tag->getCountPublications() ?></span>
+				<?php else : ?>
+					<span class="badge badge-danger"><?= $tag->getCountPublications() ?></span>
+				<?php endif; ?>
+			</a>
+		<?php endforeach; ?>
+	</div>
+<?php endif; ?>

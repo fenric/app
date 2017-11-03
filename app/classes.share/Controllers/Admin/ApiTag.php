@@ -102,6 +102,7 @@ class ApiTag extends CRUD
 	{
 		fenric()->callSharedService('event', [self::EVENT_PREPARE_ITEM])->subscribe(function(Tag $tag, array & $json)
 		{
+			$json['uri'] = $tag->getUri();
 			$json['publications'] = $tag->getCountPublications();
 
 			if ($tag->getUserRelatedByCreatedBy() instanceof ActiveRecordInterface)

@@ -16,6 +16,14 @@ class Tag extends BaseTag
 {
 
 	/**
+	 * Получение адреса тега
+	 */
+	public function getUri() : string
+	{
+		return sprintf('/tags/%s/', $this->getCode());
+	}
+
+	/**
 	 * Получение количества связанных с объектом публикаций
 	 */
 	public function getCountPublications() : int
