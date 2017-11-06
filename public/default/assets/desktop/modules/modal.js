@@ -672,6 +672,31 @@
 	};
 
 	/**
+	 * Замена узла внутри модального окна новым содержимым
+	 *
+	 * @param   string   selector
+	 * @param   Node     content
+	 * @param   object   context
+	 *
+	 * @access  public
+	 * @return  void
+	 */
+	$modal.prototype.substitute = function(selector, contents, context)
+	{
+		var element = this.bodyNode.querySelector(
+			$desktop.interpolate(selector, context)
+		);
+
+		if (typeof contents === 'string') {
+			contents = document.createTextNode(contents);
+		}
+
+		if (element instanceof Node) {
+			element.parentNode.replaceChild(contents, element);
+		}
+	};
+
+	/**
 	 * Замена содержимого узла внутри модального окна
 	 *
 	 * @param   string   selector
