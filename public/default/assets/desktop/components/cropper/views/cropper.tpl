@@ -80,21 +80,24 @@
 				<button type="button" class="btn btn-sm btn-default cropper-command" data-command="aspect-ratio" data-value="21/9">
 					<span>21:9</span>
 				</button>
-				<button type="button" class="btn btn-sm btn-default cropper-command" data-command="aspect-ratio" data-value="NaN">
-					<span>OFF</span>
+				<button type="button" class="btn btn-sm btn-default cropper-command" data-command="aspect-ratio-off">
+					<span>Off</span>
 				</button>
 			</div>
 		</div>
 		<div class="pull-left" style="margin: 0 10px 10px 0;">
 			<div class="btn-group">
-				<button type="button" class="btn btn-sm btn-default cropper-command" data-command="reset">
+				<button type="button" class="btn btn-sm btn-danger cropper-command" data-command="reset">
 					<i class="fa fa-refresh" aria-hidden="true"></i>
 				</button>
-				<button type="button" class="btn btn-sm btn-default cropper-command" data-command="save">
+				<button type="button" class="btn btn-sm btn-success cropper-command" data-command="save">
 					<i class="fa fa-floppy-o" aria-hidden="true"></i>
 				</button>
+				<a class="btn btn-sm btn-default" href="{{photo}}" target="_blank" download>
+					<i class="fa fa-download" aria-hidden="true"></i>
+				</a>
 			</div>
 		</div>
 	</div>
-	<img class="photo w-100 h-100" src="/upload/{{photo}}" alt="" />
+	<img class="photo w-100 h-100" src="{{photo}}" alt="" />
 </div>
