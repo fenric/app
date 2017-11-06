@@ -619,15 +619,54 @@ $desktop.prototype.iterate = function(object, iterator)
  */
 $desktop.prototype.createElement = function(tag, attributes)
 {
+	var name;
 	var element = window.document.createElement(tag);
 
 	if (attributes instanceof Object)
 	{
-		for (var name in attributes)
+		for (name in attributes)
 		{
+			if (attributes[name] instanceof Array)
+			{
+				attributes[name] = attributes[name].join(' ');
+			}
+
 			element.setAttribute(name, attributes[name]);
 		}
 	}
 
 	return element;
+};
+
+/**
+ * {description}
+ *
+ * @param   mixed      value
+ * @param   callback   callback
+ *
+ * @access  public
+ * @return  mixed
+ */
+$desktop.prototype.with = function(value, callback)
+{
+	callback.call(value, value);
+
+	return value;
+};
+
+/**
+ * {description}
+ *
+ * @param   callback   callback
+ *
+ * @access  public
+ * @return  DocumentFragment
+ */
+$desktop.prototype.fragment = function(callback)
+{
+	var fragment = document.createDocumentFragment();
+
+	callback.call(fragment, fragment);
+
+	return fragment;
 };
