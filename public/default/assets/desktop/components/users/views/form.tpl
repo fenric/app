@@ -52,16 +52,29 @@
 
 	<div class="form-group" data-name="photo">
 		<label>Фото пользователя</label>
-		<input class="form-control photo-upload" type="file" accept="image/*" />
-		<div class="photo-container" style="margin: 10px 0;">
+		<div class="photo-container">
 			{{when photo is not empty}}
-				<img class="img-thumbnail" src="/upload/150x0/{{photo}}" />
-				<input type="hidden" name="photo" value="{{photo}}" />
+				<img
+					class="img-thumbnail form-element"
+					style="margin-bottom: 10px;"
+					src="/upload/150x0/{{photo}}"
+					data-name="photo"
+					data-value="{{photo}}"
+				/>
 			{{endwhen photo}}
 		</div>
-		<button type="button" class="btn btn-sm btn-danger photo-reset">
-			<i class="fa fa-trash-o" aria-hidden="true"></i> Удалить фото
-		</button>
+		<div class="btn-group">
+			<label class="btn btn-sm btn-default" title="Загрузить фотографию">
+				<i class="fa fa-upload" aria-hidden="true"></i>
+				<input class="photo-upload hidden" type="file" />
+			</label>
+			<button type="button" class="btn btn-sm btn-default photo-edit" title="Редактировать фотографию">
+				<i class="fa fa-magic" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="btn btn-sm btn-danger photo-delete" title="Удалить фотографию">
+				<i class="fa fa-trash-o" aria-hidden="true"></i>
+			</button>
+		</div>
 		<div class="help-block error"></div>
 	</div>
 

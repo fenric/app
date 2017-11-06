@@ -54,16 +54,29 @@
 
 	<div class="form-group" data-name="picture">
 		<label>Изображение баннера</label>
-		<input class="form-control picture-upload" type="file" accept="image/*" />
-		<div class="picture-container" style="margin: 10px 0;">
+		<div class="picture-container">
 			{{when picture is not empty}}
-				<img class="img-thumbnail" src="/upload/{{picture}}" />
-				<input type="hidden" name="picture" value="{{picture}}" />
+				<img
+					class="img-thumbnail form-element"
+					style="margin-bottom: 10px;"
+					src="/upload/{{picture}}"
+					data-name="picture"
+					data-value="{{picture}}"
+				/>
 			{{endwhen picture}}
 		</div>
-		<button type="button" class="btn btn-sm btn-danger picture-reset">
-			<i class="fa fa-trash-o" aria-hidden="true"></i> Удалить изображение
-		</button>
+		<div class="btn-group">
+			<label class="btn btn-sm btn-default" title="Загрузить изображение">
+				<i class="fa fa-upload" aria-hidden="true"></i>
+				<input class="picture-upload hidden" type="file" />
+			</label>
+			<button type="button" class="btn btn-sm btn-default picture-edit" title="Редактировать изображение">
+				<i class="fa fa-magic" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="btn btn-sm btn-danger picture-delete" title="Удалить изображение">
+				<i class="fa fa-trash-o" aria-hidden="true"></i>
+			</button>
+		</div>
 		<div class="help-block error"></div>
 	</div>
 	<div class="form-group" data-name="picture_alt">

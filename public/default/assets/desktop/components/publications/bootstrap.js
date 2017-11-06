@@ -30,6 +30,7 @@
 
 		this.routes.photos = {};
 		this.routes.photos.create  = '{root}/api/publication/{id}/create-photo/';
+		this.routes.photos.replace = '{root}/api/publication/replace-photo/{id}/';
 		this.routes.photos.delete  = '{root}/api/publication/delete-photo/{id}/';
 		this.routes.photos.show    = '{root}/api/publication/show-photo/{id}/';
 		this.routes.photos.hide    = '{root}/api/publication/hide-photo/{id}/';
@@ -325,6 +326,19 @@
 								}});
 							});
 
+							modal.click('.edit', function(event, element)
+							{
+								$desktop.component('cropper').edit('/upload/' + element.getAttribute('data-value'), function(response)
+								{
+									self.xhr.patch(self.routes.photos.replace, {file: response.file}, {repeat: true, id: element.getAttribute('data-id'), success: function(response)
+									{
+										self.photos(publication.id);
+									}});
+
+									return false;
+								});
+							});
+
 							modal.search('.delete', function(element)
 							{
 								jQuery(element).confirmation({onConfirm: function(event)
@@ -381,11 +395,11 @@
 								tplForm.format(params)
 							).unblock();
 
-							modal.search('select.fetch-fields', function(element)
+							modal.search('.fetch-fields', function(element)
 							{
-								modal.search('div.fields-container', function(container)
+								modal.search('.fields-container', function(container)
 								{
-									modal.clear('div.fields-container');
+									modal.clear('.fields-container');
 
 									if (element.value.length > 0)
 									{
@@ -402,11 +416,11 @@
 								});
 							});
 
-							modal.change('select.fetch-fields', function(event, element)
+							modal.change('.fetch-fields', function(event, element)
 							{
-								modal.search('div.fields-container', function(container)
+								modal.search('.fields-container', function(container)
 								{
-									modal.clear('div.fields-container');
+									modal.clear('.fields-container');
 
 									if (element.value.length > 0)
 									{
@@ -423,31 +437,31 @@
 								});
 							});
 
-							modal.change('input.picture-upload', function(event, element)
+							modal.change('.picture-upload', function(event, element)
 							{
-								var fragment;
-
 								modal.block();
 
 								$desktop.component('uploader').image(element.files[0], function(response)
 								{
-									fragment = document.createDocumentFragment();
-
-									fragment.appendChild($desktop.createElement('img', {
-										class: 'img-thumbnail', src: '/upload/150x0/' + response.file,
-									}));
-
-									fragment.appendChild($desktop.createElement('input', {
-										type: 'hidden', name: 'picture', value: response.file,
-									}));
-
-									if (response.source !== void(0)) {
-										fragment.appendChild($desktop.createElement('input', {
-											type: 'hidden', name: 'picture_source', value: response.source,
+									modal.replace('.picture-container', $desktop.fragment(function(container)
+									{
+										container.appendChild($desktop.createElement('img', {
+											'class': ['img-thumbnail', 'form-element'],
+											'style': 'margin-bottom: 10px;',
+											'src': '/upload/150x0/' + response.file,
+											'data-name': 'picture',
+											'data-value': response.file,
 										}));
-									}
 
-									modal.replace('div.picture-container', fragment);
+										if (response.source !== void(0))
+										{
+											container.appendChild($desktop.createElement('input', {
+												'type': 'hidden',
+												'name': 'picture_source',
+												'value': response.source,
+											}));
+										}
+									}));
 
 								}).complete(function()
 								{
@@ -457,12 +471,31 @@
 								});
 							});
 
-							modal.click('button.picture-reset', function(event)
+							modal.click('.picture-edit', function(event, element)
+							{
+								modal.find('.picture-container > img', function(element)
+								{
+									$desktop.component('cropper').edit('/upload/' + element.getAttribute('data-value'), function(response)
+									{
+										modal.substitute('.picture-container > img', $desktop.createElement('img', {
+											'class': ['img-thumbnail', 'form-element'],
+											'style': 'margin-bottom: 10px;',
+											'src': '/upload/150x0/' + response.file,
+											'data-name': 'picture',
+											'data-value': response.file,
+										}));
+
+										return false;
+									});
+								});
+							});
+
+							modal.click('.picture-delete', function(event)
 							{
 								modal.clear('.picture-container');
 							});
 
-							modal.search('textarea.ckeditor', function(element)
+							modal.search('.ckeditor', function(element)
 							{
 								$desktop.component('ckeditor').init(element);
 
@@ -471,7 +504,7 @@
 								});
 							});
 
-							modal.search('select.select-picker', function(element)
+							modal.search('.select-picker', function(element)
 							{
 								jQuery(element).selectpicker({
 									// @continue
@@ -482,7 +515,7 @@
 								});
 							});
 
-							modal.search('input.date-picker', function(element)
+							modal.search('.date-picker', function(element)
 							{
 								jQuery(element).datetimepicker({
 									format: 'Y-m-d',
@@ -496,7 +529,7 @@
 								});
 							});
 
-							modal.search('input.date-time-picker', function(element)
+							modal.search('.date-time-picker', function(element)
 							{
 								jQuery(element).datetimepicker({
 									format: 'Y-m-d H:i',
@@ -510,7 +543,7 @@
 								});
 							});
 
-							modal.search('input.time-picker', function(element)
+							modal.search('.time-picker', function(element)
 							{
 								jQuery(element).datetimepicker({
 									format: 'H:i',
@@ -528,7 +561,7 @@
 							{
 								var finder;
 
-								modal.keyup('input.search-relations', function(event, element)
+								modal.keyup('.search-relations', function(event, element)
 								{
 									clearTimeout(finder);
 
@@ -599,7 +632,7 @@
 						container.appendChild(tpl.format({field: field}));
 					});
 
-					modal.search('textarea.field-ckeditor', function(element)
+					modal.search('.field-ckeditor', function(element)
 					{
 						$desktop.component('ckeditor').init(element);
 
@@ -608,7 +641,7 @@
 						});
 					});
 
-					modal.search('input.field-date-picker', function(element)
+					modal.search('.field-date-picker', function(element)
 					{
 						jQuery(element).datetimepicker({
 							format: 'Y-m-d',
@@ -622,7 +655,7 @@
 						});
 					});
 
-					modal.search('input.field-date-time-picker', function(element)
+					modal.search('.field-date-time-picker', function(element)
 					{
 						jQuery(element).datetimepicker({
 							format: 'Y-m-d H:i',
@@ -636,7 +669,7 @@
 						});
 					});
 
-					modal.search('input.field-time-picker', function(element)
+					modal.search('.field-time-picker', function(element)
 					{
 						jQuery(element).datetimepicker({
 							format: 'H:i',
@@ -650,42 +683,69 @@
 						});
 					});
 
-					modal.change('input.field-image-attach[type="file"]', function(event, element)
-					{
-						var fragment;
-
-						modal.block();
-
-						$desktop.component('uploader').image(element.files[0], function(response)
-						{
-							fragment = document.createDocumentFragment();
-
-							fragment.appendChild($desktop.createElement('img', {
-								class: 'img-thumbnail', src: '/upload/150x0/' + response.file,
-							}));
-
-							fragment.appendChild($desktop.createElement('input', {
-								type: 'hidden',
-								name: element.getAttribute('data-field-name'),
-								value: response.file,
-							}));
-
-							modal.replace('.field-image-container[data-field-id="{id}"]', fragment, {
-								id: element.getAttribute('data-field-id'),
-							});
-
-						}).complete(function()
-						{
-							element.value = null;
-
-							modal.unblock();
-						});
-					});
-
-					modal.click('.field-image-detach', function(event, element)
+					modal.click('.field-image-delete', function(event, element)
 					{
 						modal.clear('.field-image-container[data-field-id="{id}"]', {
 							id: element.getAttribute('data-field-id'),
+						});
+					});
+
+					modal.change('.field-image-upload', function(event, element)
+					{
+						var selector = $desktop.interpolate('.field-image-container[data-field-id="{id}"]', {
+							id: element.getAttribute('data-field-id'),
+						});
+
+						modal.find(selector, function(container)
+						{
+							modal.block();
+
+							$desktop.component('uploader').image(element.files[0], function(response)
+							{
+								modal.replace(selector, $desktop.createElement('img', {
+									'class': ['img-thumbnail', 'form-element'],
+									'style': 'margin-bottom: 10px;',
+									'src': '/upload/150x0/' + response.file,
+									'data-name': container.getAttribute('data-field-name'),
+									'data-value': response.file,
+								}));
+
+							}).complete(function()
+							{
+								element.value = null;
+
+								modal.unblock();
+							});
+						});
+					});
+
+					modal.click('.field-image-edit', function(event, element)
+					{
+						var selector = $desktop.interpolate('.field-image-container[data-field-id="{id}"]', {
+							id: element.getAttribute('data-field-id'),
+						});
+
+						modal.find(selector, function(container)
+						{
+							var selector = $desktop.interpolate('.field-image-container[data-field-id="{id}"] > img', {
+								id: element.getAttribute('data-field-id'),
+							});
+
+							modal.find(selector, function(element)
+							{
+								$desktop.component('cropper').edit('/upload/' + element.getAttribute('data-value'), function(response)
+								{
+									modal.substitute(selector, $desktop.createElement('img', {
+										'class': ['img-thumbnail', 'form-element'],
+										'style': 'margin-bottom: 10px;',
+										'src': '/upload/150x0/' + response.file,
+										'data-name': container.getAttribute('data-field-name'),
+										'data-value': response.file,
+									}));
+
+									return false;
+								});
+							});
 						});
 					});
 				}

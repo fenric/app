@@ -122,24 +122,34 @@
 	{{when field.parent.type is equal | image}}
 		<label>{{field.parent.label}}</label>
 
-		<input
-			class="form-control field-image-attach"
-			type="file"
-			accept="image/*"
-			data-field-id="{{field.id}}"
-			data-field-name="field_{{field.parent.name}}"
-		/>
-
-		<div class="field-image-container" style="margin-top: 10px; margin-bottom: 10px;" data-field-id="{{field.id}}">
+		<!-- container -->
+		<div class="field-image-container" data-field-id="{{field.id}}" data-field-name="field_{{field.parent.name}}">
 			{{when field.value is not empty}}
-				<img class="img-thumbnail" src="/upload/150x0/{{field.value}}" />
-				<input type="hidden" name="field_{{field.parent.name}}" value="{{field.value}}" />
+				<img
+					class="img-thumbnail form-element"
+					style="margin-bottom: 10px;"
+					src="/upload/150x0/{{field.value}}"
+					data-name="field_{{field.parent.name}}"
+					data-value="{{field.value}}"
+				/>
 			{{endwhen field.value}}
 		</div>
+		<!-- /container -->
 
-		<button type="button" class="btn btn-sm btn-danger field-image-detach" data-field-id="{{field.id}}">
-			<i class="fa fa-trash-o" aria-hidden="true"></i> Удалить изображение
-		</button>
+		<!-- control -->
+		<div class="btn-group">
+			<label class="btn btn-sm btn-default" title="Загрузить изображение">
+				<i class="fa fa-upload" aria-hidden="true"></i>
+				<input class="field-image-upload hidden" type="file" data-field-id="{{field.id}}" />
+			</label>
+			<button type="button" class="btn btn-sm btn-default field-image-edit" data-field-id="{{field.id}}" title="Редактировать изображение">
+				<i class="fa fa-magic" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="btn btn-sm btn-danger field-image-delete" data-field-id="{{field.id}}" title="Удалить изображение">
+				<i class="fa fa-trash-o" aria-hidden="true"></i>
+			</button>
+		</div>
+		<!-- /control -->
 
 		<div class="help-block error"></div>
 	{{endwhen field.parent.type}}

@@ -346,7 +346,7 @@
 					tpl.format(params)
 				).unblock();
 
-				modal.search('textarea.ckeditor', function(element)
+				modal.search('.ckeditor', function(element)
 				{
 					$desktop.component('ckeditor').init(element);
 
@@ -355,7 +355,7 @@
 					});
 				});
 
-				modal.search('select.select-picker', function(element)
+				modal.search('.select-picker', function(element)
 				{
 					jQuery(element).selectpicker({
 						// @continue
@@ -366,36 +366,49 @@
 					});
 				});
 
-				modal.click('button.picture-reset', function(event)
+				modal.click('.picture-delete', function(event)
 				{
 					modal.clear('.picture-container');
 				});
 
-				modal.change('input.picture-upload', function(event, element)
+				modal.change('.picture-upload', function(event, element)
 				{
-					var container;
-
 					modal.block();
 
 					$desktop.component('uploader').image(element.files[0], function(response)
 					{
-						container = document.createDocumentFragment();
-
-						container.appendChild($desktop.createElement('img', {
-							class: 'img-thumbnail', src: '/upload/150x0/' + response.file,
+						modal.replace('.picture-container', $desktop.createElement('img', {
+							'class': ['img-thumbnail', 'form-element'],
+							'style': 'margin-bottom: 10px;',
+							'src': '/upload/150x0/' + response.file,
+							'data-name': 'picture',
+							'data-value': response.file,
 						}));
-
-						container.appendChild($desktop.createElement('input', {
-							type: 'hidden', name: 'picture', value: response.file,
-						}));
-
-						modal.replace('div.picture-container', container);
 
 					}).complete(function()
 					{
 						element.value = null;
 
 						modal.unblock();
+					});
+				});
+
+				modal.click('.picture-edit', function(event, element)
+				{
+					modal.find('.picture-container > img', function(element)
+					{
+						$desktop.component('cropper').edit('/upload/' + element.getAttribute('data-value'), function(response)
+						{
+							modal.substitute('.picture-container > img', $desktop.createElement('img', {
+								'class': ['img-thumbnail', 'form-element'],
+								'style': 'margin-bottom: 10px;',
+								'src': '/upload/150x0/' + response.file,
+								'data-name': 'picture',
+								'data-value': response.file,
+							}));
+
+							return false;
+						});
 					});
 				});
 

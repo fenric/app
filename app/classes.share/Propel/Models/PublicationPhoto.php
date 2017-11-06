@@ -16,11 +16,26 @@ class PublicationPhoto extends BasePublicationPhoto
 {
 
 	/**
+	 * {@description}
+	 */
+	protected $pfiles = [];
+
+	/**
 	 * Получение абсолютного пути фотографии
 	 */
 	public function getPath() : string
 	{
 		return \Fenric\Upload::path($this->getFile());
+	}
+
+	/**
+	 * Set the value of [file] column
+	 */
+	public function setFile($value)
+	{
+		$this->pfiles[] = $this->getFile();
+
+		return parent::setFile($value);
 	}
 
 	/**
@@ -52,4 +67,24 @@ class PublicationPhoto extends BasePublicationPhoto
 
 		return true;
 	}
+
+    /**
+     * Code to be run after updating the object in database
+     */
+    public function postUpdate(ConnectionInterface $connection = null)
+    {
+    	if (count($this->pfiles) > 0)
+    	{
+    		foreach ($this->pfiles as $file)
+    		{
+    			if (is_file(\Fenric\Upload::path($file)))
+				{
+					if (is_readable(\Fenric\Upload::path($file)))
+					{
+						unlink(\Fenric\Upload::path($file));
+					}
+				}
+    		}
+    	}
+    }
 }

@@ -254,7 +254,7 @@
 					tpl.format(params)
 				).unblock();
 
-				modal.search('input.date-picker', function(element)
+				modal.search('.date-picker', function(element)
 				{
 					jQuery(element).datetimepicker({
 						format: 'Y-m-d',
@@ -263,7 +263,7 @@
 					});
 				});
 
-				modal.search('input.date-time-picker', function(element)
+				modal.search('.date-time-picker', function(element)
 				{
 					jQuery(element).datetimepicker({
 						format: 'Y-m-d H:i',
@@ -272,36 +272,49 @@
 					});
 				});
 
-				modal.click('button.photo-reset', function(event)
+				modal.click('.photo-delete', function(event)
 				{
 					modal.clear('.photo-container');
 				});
 
-				modal.change('input.photo-upload', function(event, element)
+				modal.change('.photo-upload', function(event, element)
 				{
-					var container;
-
 					modal.block();
 
 					$desktop.component('uploader').image(element.files[0], function(response)
 					{
-						container = document.createDocumentFragment();
-
-						container.appendChild($desktop.createElement('img', {
-							class: 'img-thumbnail', src: '/upload/150x0/' + response.file,
+						modal.replace('.photo-container', $desktop.createElement('img', {
+							'class': ['img-thumbnail', 'form-element'],
+							'style': 'margin-bottom: 10px;',
+							'src': '/upload/150x0/' + response.file,
+							'data-name': 'photo',
+							'data-value': response.file,
 						}));
-
-						container.appendChild($desktop.createElement('input', {
-							type: 'hidden', name: 'photo', value: response.file,
-						}));
-
-						modal.replace('div.photo-container', container);
 
 					}).complete(function()
 					{
 						element.value = null;
 
 						modal.unblock();
+					});
+				});
+
+				modal.click('.photo-edit', function(event, element)
+				{
+					modal.find('.photo-container > img', function(element)
+					{
+						$desktop.component('cropper').edit('/upload/' + element.getAttribute('data-value'), function(response)
+						{
+							modal.substitute('.photo-container > img', $desktop.createElement('img', {
+								'class': ['img-thumbnail', 'form-element'],
+								'style': 'margin-bottom: 10px;',
+								'src': '/upload/150x0/' + response.file,
+								'data-name': 'photo',
+								'data-value': response.file,
+							}));
+
+							return false;
+						});
 					});
 				});
 

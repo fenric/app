@@ -418,6 +418,16 @@ class ApiPublication extends CRUD
 	}
 
 	/**
+	 * Замена фотографии объекта
+	 */
+	protected function actionReplacePhotoViaPATCH() : void
+	{
+		parent::update(PublicationPhotoQuery::create(), [
+			PublicationPhotoTableMap::COL_FILE => $this->request->post->get('file'),
+		]);
+	}
+
+	/**
 	 * Включение фотографии объекта
 	 */
 	protected function actionShowPhotoViaPATCH() : void

@@ -75,17 +75,42 @@
 
 			<div class="form-group" data-name="picture">
 				<label>Изображение публикации</label>
-				<input class="form-control picture-upload" type="file" />
-				<div class="picture-container" style="margin: 10px 0;">
+
+				<!-- container -->
+				<div class="picture-container">
 					{{when picture is not empty}}
-						<img class="img-thumbnail" src="/upload/150x0/{{picture}}" />
-						<input type="hidden" name="picture" value="{{picture}}" />
-						<input type="hidden" name="picture_source" value="{{picture_source}}" />
+						<img
+							class="img-thumbnail form-element"
+							style="margin-bottom: 10px;"
+							src="/upload/150x0/{{picture}}"
+							data-name="picture"
+							data-value="{{picture}}"
+						/>
+
+						<input
+							type="hidden"
+							name="picture_source"
+							value="{{picture_source}}"
+						/>
 					{{endwhen picture}}
 				</div>
-				<button type="button" class="btn btn-sm btn-danger picture-reset">
-					<i class="fa fa-trash-o" aria-hidden="true"></i> Удалить изображение
-				</button>
+				<!-- /container -->
+
+				<!-- control -->
+				<div class="btn-group">
+					<label class="btn btn-sm btn-default" title="Загрузить изображение">
+						<i class="fa fa-upload" aria-hidden="true"></i>
+						<input class="picture-upload hidden" type="file" />
+					</label>
+					<button type="button" class="btn btn-sm btn-default picture-edit" title="Редактировать изображение">
+						<i class="fa fa-magic" aria-hidden="true"></i>
+					</button>
+					<button type="button" class="btn btn-sm btn-danger picture-delete" title="Удалить изображение">
+						<i class="fa fa-trash-o" aria-hidden="true"></i>
+					</button>
+				</div>
+				<!-- /control -->
+
 				<div class="help-block error"></div>
 			</div>
 			<div class="form-group" data-name="picture_signature">

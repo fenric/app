@@ -266,25 +266,24 @@
 							});
 						});
 
+						modal.click('.picture-delete', function(event)
+						{
+							modal.clear('.picture-container');
+						});
+
 						modal.change('.picture-upload', function(event, element)
 						{
-							var fragment;
-
 							modal.block();
 
 							$desktop.component('uploader').image(element.files[0], function(response)
 							{
-								fragment = document.createDocumentFragment();
-
-								fragment.appendChild($desktop.createElement('img', {
-									class: 'img-thumbnail', src: '/upload/' + response.file,
+								modal.replace('.picture-container', $desktop.createElement('img', {
+									'class': ['img-thumbnail', 'form-element'],
+									'style': 'margin-bottom: 10px;',
+									'src': '/upload/' + response.file,
+									'data-name': 'picture',
+									'data-value': response.file,
 								}));
-
-								fragment.appendChild($desktop.createElement('input', {
-									type: 'hidden', name: 'picture', value: response.file,
-								}));
-
-								modal.replace('.picture-container', fragment);
 
 							}).complete(function()
 							{
@@ -294,9 +293,23 @@
 							});
 						});
 
-						modal.click('.picture-reset', function(event)
+						modal.click('.picture-edit', function(event, element)
 						{
-							modal.clear('.picture-container');
+							modal.find('.picture-container > img', function(element)
+							{
+								$desktop.component('cropper').edit('/upload/' + element.getAttribute('data-value'), function(response)
+								{
+									modal.substitute('.picture-container > img', $desktop.createElement('img', {
+										'class': ['img-thumbnail', 'form-element'],
+										'style': 'margin-bottom: 10px;',
+										'src': '/upload/' + response.file,
+										'data-name': 'picture',
+										'data-value': response.file,
+									}));
+
+									return false;
+								});
+							});
 						});
 
 						modal.submit(function(event)

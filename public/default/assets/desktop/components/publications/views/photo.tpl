@@ -3,7 +3,7 @@
 	<a href="/upload/{{photo.file}}" target="_blank" data-fancybox="publication:{{publication.id}}:photo">
 		<img
 			class="img-thumbnail"
-			src="/upload/160x90/{{photo.file}}"
+			src="/upload/160x100/{{photo.file}}"
 			width="160"
 			height="90"
 			{{when photo.display is not true}}
@@ -29,6 +29,10 @@
 					<i class="fa fa-eye" aria-hidden="true"></i>
 				</button>
 			{{endwhen photo.display}}
+
+			<button class="btn btn-xs btn-default edit" type="button" data-id="{{photo.id}}" data-value="{{photo.file}}">
+				<i class="fa fa-magic" aria-hidden="true"></i>
+			</button>
 
 			<button class="btn btn-xs btn-danger delete" type="button" data-id="{{photo.id}}" data-toggle="confirmation" data-placement="bottom" data-title="Уверены?" data-btn-ok-label="Да" data-btn-cancel-label="Отмена">
 				<i class="fa fa-times" aria-hidden="true"></i>

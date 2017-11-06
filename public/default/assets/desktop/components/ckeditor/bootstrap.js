@@ -21,19 +21,61 @@
 
 			area.ckeditor = CKEDITOR.instances[area.getAttribute('name')];
 
-			CKEDITOR.instances[area.getAttribute('name')].ui.addButton('btn-upload-image', {
+			area.ckeditor.on('instanceReady', function(event)
+			{
+				area.ckeditor.contextMenu.addListener(function(element, selection)
+				{
+					return {cropping : CKEDITOR.TRISTATE_OFF};
+				});
+
+				area.ckeditor.addMenuItems({cropping : {
+					group : 'image',
+					label : 'Редактировать изображение',
+					command : 'cropping',
+					order : 10,
+				}});
+			});
+
+			area.ckeditor.ui.addButton('btn-upload-image', {
 				icon: self.root + '/res/icons/image@16.png',
 				label: 'Загрузить изображение',
 				command: 'cmd-upload-image',
 			});
 
-			CKEDITOR.instances[area.getAttribute('name')].ui.addButton('btn-upload-pdf', {
+			area.ckeditor.ui.addButton('btn-upload-pdf', {
 				icon: self.root + '/res/icons/pdf@16.png',
 				label: 'Загрузить PDF документ',
 				command: 'cmd-upload-pdf',
 			});
 
-			CKEDITOR.instances[area.getAttribute('name')].addCommand('cmd-upload-image', {exec: function(editor)
+			area.ckeditor.addCommand('cropping', {exec: function(editor)
+			{
+				if (editor.getSelection())
+				{
+					if (editor.getSelection().getSelectedElement())
+					{
+						if (editor.getSelection().getSelectedElement().is('img'))
+						{
+							var source = editor.getSelection().getSelectedElement().getAttribute('src');
+
+							if (editor.getSelection().getSelectedElement().hasAttribute('data-original'))
+							{
+								source = editor.getSelection().getSelectedElement().getAttribute('data-original');
+							}
+
+							$desktop.component('cropper').edit(source, function(response)
+							{
+								editor.getSelection().getSelectedElement().setAttribute('src', '/upload/' + response.file);
+								editor.getSelection().getSelectedElement().removeAttribute('data-original');
+
+								return false;
+							});
+						}
+					}
+				}
+			}});
+
+			area.ckeditor.addCommand('cmd-upload-image', {exec: function(editor)
 			{
 				var width, height, resolution, linkable, files, i, html;
 
@@ -62,13 +104,13 @@
 							{
 								$desktop.module('request').put('/user/api/upload-image/', files[i], {repeat: true, success: function(response)
 								{
-									html = '<img src="/upload' + (resolution ? ('/' + resolution + '/') : '/') + response.file + '" />';
+									html = '<img src="/upload' + (resolution ? ('/' + resolution + '/') : '/') + response.file + '" data-original="/upload/' + response.file + '" />';
 
 									if (linkable) {
 										html = '<a data-fancybox="group" href="/upload/' + response.file + '">' + html + '</a>';
 									}
 
-									editor.insertHtml(html);
+									editor.insertElement(CKEDITOR.dom.element.createFromHtml(html));
 									modal.close();
 
 								}}).complete(function() {
@@ -80,7 +122,7 @@
 				});
 			}});
 
-			CKEDITOR.instances[area.getAttribute('name')].addCommand('cmd-upload-pdf', {exec: function(editor)
+			area.ckeditor.addCommand('cmd-upload-pdf', {exec: function(editor)
 			{
 				var width, height, resolution, files, html;
 
@@ -110,7 +152,7 @@
 									html = '<img src="/upload' + (resolution ? ('/' + resolution + '/') : '/') + response.cover + '" />';
 									html = '<a href="/upload/' + response.file + '" target="_blank">' + html + '</a>';
 
-									editor.insertHtml(html);
+									editor.insertElement(CKEDITOR.dom.element.createFromHtml(html));
 									modal.close();
 
 								}}).complete(function() {
@@ -124,11 +166,11 @@
 
 			area.form.addEventListener('submit', function(event)
 			{
-				area.value = CKEDITOR.instances[area.getAttribute('name')].getData();
+				area.value = area.ckeditor.getData();
 			});
 		});
 
-		return CKEDITOR.instances[area.getAttribute('name')];
+		return area.ckeditor;
 	};
 
 	/**
