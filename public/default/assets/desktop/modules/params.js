@@ -166,51 +166,72 @@
 
 	$params.prototype.fromForm = function(form)
 	{
-		for (var i = 0; i < form.elements.length; i++)
+		var felements = Array.prototype.slice.call(form.elements);
+		var uelements = Array.prototype.slice.call(form.querySelectorAll('.form-element'));
+
+		for (var i = 0; i < uelements.length; i++)
 		{
-			if (form.elements[i].disabled)
+			if (uelements[i].hasAttribute('data-name'))
 			{
-				continue;
-			}
-
-			if (form.elements[i].name.length === 0)
-			{
-				continue;
-			}
-
-			form.elements[i].dump = {};
-			form.elements[i].dump.name = form.elements[i].name;
-			form.elements[i].dump.value = null;
-			form.elements[i].dump.values = [];
-			form.elements[i].dump.arrayable = false;
-
-			if (form.elements[i].dump.name.indexOf('[]') === form.elements[i].dump.name.length - 2)
-			{
-				form.elements[i].dump.name = form.elements[i].dump.name.substring(0, form.elements[i].dump.name.length - 2);
-				form.elements[i].dump.value = [];
-				form.elements[i].dump.arrayable = true;
-
-				if (this.exists(form.elements[i].dump.name))
+				if (uelements[i].hasAttribute('data-value'))
 				{
-					form.elements[i].dump.value = (this.get(form.elements[i].dump.name) instanceof Array) ? this.get(form.elements[i].dump.name) : [this.get(form.elements[i].dump.name)];
+					felements.push((function(element)
+					{
+						element.name = uelements[i].getAttribute('data-name');
+						element.value = uelements[i].getAttribute('data-value');
+
+						return element;
+
+					})(document.createElement('input')));
+				}
+			}
+		}
+
+		for (var i = 0; i < felements.length; i++)
+		{
+			if (felements[i].disabled)
+			{
+				continue;
+			}
+
+			if (felements[i].name.length === 0)
+			{
+				continue;
+			}
+
+			felements[i].dump = {};
+			felements[i].dump.name = felements[i].name;
+			felements[i].dump.value = null;
+			felements[i].dump.values = [];
+			felements[i].dump.arrayable = false;
+
+			if (felements[i].dump.name.indexOf('[]') === felements[i].dump.name.length - 2)
+			{
+				felements[i].dump.name = felements[i].dump.name.substring(0, felements[i].dump.name.length - 2);
+				felements[i].dump.value = [];
+				felements[i].dump.arrayable = true;
+
+				if (this.exists(felements[i].dump.name))
+				{
+					felements[i].dump.value = (this.get(felements[i].dump.name) instanceof Array) ? this.get(felements[i].dump.name) : [this.get(felements[i].dump.name)];
 				}
 			}
 
 			/**
 			 * Обработка текстовых полей...
 			 */
-			if (((form.elements[i] instanceof HTMLInputElement) && (! /(?:radio|checkbox|submit|button|reset|image|file)/i.test(form.elements[i].type))) || (form.elements[i] instanceof HTMLTextAreaElement))
+			if (((felements[i] instanceof HTMLInputElement) && (! /(?:radio|checkbox|submit|button|reset|image|file)/i.test(felements[i].type))) || (felements[i] instanceof HTMLTextAreaElement))
 			{
-				if (form.elements[i].dump.arrayable)
+				if (felements[i].dump.arrayable)
 				{
-					form.elements[i].dump.value.push(form.elements[i].value.trim());
+					felements[i].dump.value.push(felements[i].value.trim());
 
-					this.set(form.elements[i].dump.name, form.elements[i].dump.value);
+					this.set(felements[i].dump.name, felements[i].dump.value);
 
 					continue;
 				}
 
-				this.set(form.elements[i].dump.name, form.elements[i].value.trim());
+				this.set(felements[i].dump.name, felements[i].value.trim());
 
 				continue;
 			}
@@ -218,50 +239,50 @@
 			/**
 			 * Обработка флажков и радиокнопок...
 			 */
-			if ((form.elements[i] instanceof HTMLInputElement) && (/(?:radio|checkbox)/i.test(form.elements[i].type)))
+			if ((felements[i] instanceof HTMLInputElement) && (/(?:radio|checkbox)/i.test(felements[i].type)))
 			{
-				if (form.elements[i].dump.arrayable)
+				if (felements[i].dump.arrayable)
 				{
-					if (form.elements[i].checked)
+					if (felements[i].checked)
 					{
-						form.elements[i].dump.value.push(form.elements[i].value.trim());
+						felements[i].dump.value.push(felements[i].value.trim());
 
-						this.set(form.elements[i].dump.name, form.elements[i].dump.value);
+						this.set(felements[i].dump.name, felements[i].dump.value);
 					}
 
-					else if (form.elements[i].hasAttribute('data-unchecked-value'))
+					else if (felements[i].hasAttribute('data-unchecked-value'))
 					{
-						form.elements[i].dump.value.push(form.elements[i].getAttribute('data-unchecked-value').trim());
+						felements[i].dump.value.push(felements[i].getAttribute('data-unchecked-value').trim());
 
-						this.set(form.elements[i].dump.name, form.elements[i].dump.value);
+						this.set(felements[i].dump.name, felements[i].dump.value);
 					}
 
-					else if (this.exists(form.elements[i].dump.name) && (form.elements[i].type === 'checkbox'))
+					else if (this.exists(felements[i].dump.name) && (felements[i].type === 'checkbox'))
 					{
 						var index;
 
-						if ((index = form.elements[i].dump.value.indexOf(form.elements[i].value.trim())) >= 0)
+						if ((index = felements[i].dump.value.indexOf(felements[i].value.trim())) >= 0)
 						{
-							form.elements[i].dump.value.splice(index, 1);
+							felements[i].dump.value.splice(index, 1);
 
-							this.set(form.elements[i].dump.name, form.elements[i].dump.value);
+							this.set(felements[i].dump.name, felements[i].dump.value);
 						}
 					}
 				}
 
-				else if (form.elements[i].checked)
+				else if (felements[i].checked)
 				{
-					this.set(form.elements[i].dump.name, form.elements[i].value.trim());
+					this.set(felements[i].dump.name, felements[i].value.trim());
 				}
 
-				else if (form.elements[i].hasAttribute('data-unchecked-value'))
+				else if (felements[i].hasAttribute('data-unchecked-value'))
 				{
-					this.set(form.elements[i].dump.name, form.elements[i].getAttribute('data-unchecked-value').trim());
+					this.set(felements[i].dump.name, felements[i].getAttribute('data-unchecked-value').trim());
 				}
 
-				else if (this.exists(form.elements[i].dump.name) && (form.elements[i].type === 'checkbox'))
+				else if (this.exists(felements[i].dump.name) && (felements[i].type === 'checkbox'))
 				{
-					this.remove(form.elements[i].dump.name);
+					this.remove(felements[i].dump.name);
 				}
 
 				continue;
@@ -270,29 +291,29 @@
 			/**
 			 * Обработка выпадающего меню...
 			 */
-			if (form.elements[i] instanceof HTMLSelectElement)
+			if (felements[i] instanceof HTMLSelectElement)
 			{
-				for (var o = 0; o < form.elements[i].options.length; o++)
+				for (var o = 0; o < felements[i].options.length; o++)
 				{
-					if (form.elements[i].options[o].selected)
+					if (felements[i].options[o].selected)
 					{
-						form.elements[i].dump.values.push(form.elements[i].options[o].value.trim());
+						felements[i].dump.values.push(felements[i].options[o].value.trim());
 					}
 				}
 
-				if (form.elements[i].dump.arrayable || form.elements[i].multiple || form.elements[i].dump.values.length > 1)
+				if (felements[i].dump.arrayable || felements[i].multiple || felements[i].dump.values.length > 1)
 				{
-					this.set(form.elements[i].dump.name, form.elements[i].dump.values);
+					this.set(felements[i].dump.name, felements[i].dump.values);
 				}
 
-				else if (form.elements[i].dump.values.length > 0)
+				else if (felements[i].dump.values.length > 0)
 				{
-					this.set(form.elements[i].dump.name, form.elements[i].dump.values[0]);
+					this.set(felements[i].dump.name, felements[i].dump.values[0]);
 				}
 
-				else if (this.exists(form.elements[i].dump.name))
+				else if (this.exists(felements[i].dump.name))
 				{
-					this.remove(form.elements[i].dump.name);
+					this.remove(felements[i].dump.name);
 				}
 
 				continue;
