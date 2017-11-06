@@ -6,12 +6,12 @@ use \DateTime;
 use \Exception;
 use \PDO;
 use Propel\Models\Banner as ChildBanner;
-use Propel\Models\BannerGroup as ChildBannerGroup;
-use Propel\Models\BannerGroupQuery as ChildBannerGroupQuery;
+use Propel\Models\BannerClient as ChildBannerClient;
+use Propel\Models\BannerClientQuery as ChildBannerClientQuery;
 use Propel\Models\BannerQuery as ChildBannerQuery;
 use Propel\Models\User as ChildUser;
 use Propel\Models\UserQuery as ChildUserQuery;
-use Propel\Models\Map\BannerGroupTableMap;
+use Propel\Models\Map\BannerClientTableMap;
 use Propel\Models\Map\BannerTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -30,9 +30,9 @@ use Propel\Runtime\Validator\Constraints\Unique;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Context\ExecutionContextFactory;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Mapping\Factory\LazyLoadingMetadataFactory;
@@ -41,18 +41,18 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Base class that represents a row from the 'fenric_banner_group' table.
+ * Base class that represents a row from the 'fenric_banner_client' table.
  *
  *
  *
  * @package    propel.generator.Propel.Models.Base
  */
-abstract class BannerGroup implements ActiveRecordInterface
+abstract class BannerClient implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Propel\\Models\\Map\\BannerGroupTableMap';
+    const TABLE_MAP = '\\Propel\\Models\\Map\\BannerClientTableMap';
 
 
     /**
@@ -89,18 +89,25 @@ abstract class BannerGroup implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the code field.
+     * The value for the contact_name field.
      *
      * @var        string
      */
-    protected $code;
+    protected $contact_name;
 
     /**
-     * The value for the title field.
+     * The value for the contact_email field.
      *
      * @var        string
      */
-    protected $title;
+    protected $contact_email;
+
+    /**
+     * The value for the description field.
+     *
+     * @var        string
+     */
+    protected $description;
 
     /**
      * The value for the created_at field.
@@ -178,7 +185,7 @@ abstract class BannerGroup implements ActiveRecordInterface
     protected $bannersScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of Propel\Models\Base\BannerGroup object.
+     * Initializes internal state of Propel\Models\Base\BannerClient object.
      */
     public function __construct()
     {
@@ -273,9 +280,9 @@ abstract class BannerGroup implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>BannerGroup</code> instance.  If
-     * <code>obj</code> is an instance of <code>BannerGroup</code>, delegates to
-     * <code>equals(BannerGroup)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>BannerClient</code> instance.  If
+     * <code>obj</code> is an instance of <code>BannerClient</code>, delegates to
+     * <code>equals(BannerClient)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -341,7 +348,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|BannerGroup The current object, for fluid interface
+     * @return $this|BannerClient The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -413,23 +420,33 @@ abstract class BannerGroup implements ActiveRecordInterface
     }
 
     /**
-     * Get the [code] column value.
+     * Get the [contact_name] column value.
      *
      * @return string
      */
-    public function getCode()
+    public function getContactName()
     {
-        return $this->code;
+        return $this->contact_name;
     }
 
     /**
-     * Get the [title] column value.
+     * Get the [contact_email] column value.
      *
      * @return string
      */
-    public function getTitle()
+    public function getContactEmail()
     {
-        return $this->title;
+        return $this->contact_email;
+    }
+
+    /**
+     * Get the [description] column value.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -496,7 +513,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -506,58 +523,78 @@ abstract class BannerGroup implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[BannerGroupTableMap::COL_ID] = true;
+            $this->modifiedColumns[BannerClientTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Set the value of [code] column.
+     * Set the value of [contact_name] column.
      *
      * @param string $v new value
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      */
-    public function setCode($v)
+    public function setContactName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->code !== $v) {
-            $this->code = $v;
-            $this->modifiedColumns[BannerGroupTableMap::COL_CODE] = true;
+        if ($this->contact_name !== $v) {
+            $this->contact_name = $v;
+            $this->modifiedColumns[BannerClientTableMap::COL_CONTACT_NAME] = true;
         }
 
         return $this;
-    } // setCode()
+    } // setContactName()
 
     /**
-     * Set the value of [title] column.
+     * Set the value of [contact_email] column.
      *
      * @param string $v new value
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      */
-    public function setTitle($v)
+    public function setContactEmail($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->title !== $v) {
-            $this->title = $v;
-            $this->modifiedColumns[BannerGroupTableMap::COL_TITLE] = true;
+        if ($this->contact_email !== $v) {
+            $this->contact_email = $v;
+            $this->modifiedColumns[BannerClientTableMap::COL_CONTACT_EMAIL] = true;
         }
 
         return $this;
-    } // setTitle()
+    } // setContactEmail()
+
+    /**
+     * Set the value of [description] column.
+     *
+     * @param string $v new value
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
+     */
+    public function setDescription($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->description !== $v) {
+            $this->description = $v;
+            $this->modifiedColumns[BannerClientTableMap::COL_DESCRIPTION] = true;
+        }
+
+        return $this;
+    } // setDescription()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      */
     public function setCreatedAt($v)
     {
@@ -565,7 +602,7 @@ abstract class BannerGroup implements ActiveRecordInterface
         if ($this->created_at !== null || $dt !== null) {
             if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created_at->format("Y-m-d H:i:s.u")) {
                 $this->created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[BannerGroupTableMap::COL_CREATED_AT] = true;
+                $this->modifiedColumns[BannerClientTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
 
@@ -576,7 +613,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * Set the value of [created_by] column.
      *
      * @param int $v new value
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      */
     public function setCreatedBy($v)
     {
@@ -586,7 +623,7 @@ abstract class BannerGroup implements ActiveRecordInterface
 
         if ($this->created_by !== $v) {
             $this->created_by = $v;
-            $this->modifiedColumns[BannerGroupTableMap::COL_CREATED_BY] = true;
+            $this->modifiedColumns[BannerClientTableMap::COL_CREATED_BY] = true;
         }
 
         if ($this->aUserRelatedByCreatedBy !== null && $this->aUserRelatedByCreatedBy->getId() !== $v) {
@@ -601,7 +638,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      */
     public function setUpdatedAt($v)
     {
@@ -609,7 +646,7 @@ abstract class BannerGroup implements ActiveRecordInterface
         if ($this->updated_at !== null || $dt !== null) {
             if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->updated_at->format("Y-m-d H:i:s.u")) {
                 $this->updated_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[BannerGroupTableMap::COL_UPDATED_AT] = true;
+                $this->modifiedColumns[BannerClientTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
 
@@ -620,7 +657,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * Set the value of [updated_by] column.
      *
      * @param int $v new value
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      */
     public function setUpdatedBy($v)
     {
@@ -630,7 +667,7 @@ abstract class BannerGroup implements ActiveRecordInterface
 
         if ($this->updated_by !== $v) {
             $this->updated_by = $v;
-            $this->modifiedColumns[BannerGroupTableMap::COL_UPDATED_BY] = true;
+            $this->modifiedColumns[BannerClientTableMap::COL_UPDATED_BY] = true;
         }
 
         if ($this->aUserRelatedByUpdatedBy !== null && $this->aUserRelatedByUpdatedBy->getId() !== $v) {
@@ -676,31 +713,34 @@ abstract class BannerGroup implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : BannerGroupTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : BannerClientTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : BannerGroupTableMap::translateFieldName('Code', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->code = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : BannerClientTableMap::translateFieldName('ContactName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->contact_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : BannerGroupTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->title = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : BannerClientTableMap::translateFieldName('ContactEmail', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->contact_email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : BannerGroupTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : BannerClientTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->description = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : BannerClientTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : BannerGroupTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : BannerClientTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->created_by = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : BannerGroupTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : BannerClientTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : BannerGroupTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : BannerClientTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->updated_by = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -710,10 +750,10 @@ abstract class BannerGroup implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = BannerGroupTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = BannerClientTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Models\\BannerGroup'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Models\\BannerClient'), 0, $e);
         }
     }
 
@@ -761,13 +801,13 @@ abstract class BannerGroup implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(BannerGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(BannerClientTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildBannerGroupQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildBannerClientQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -790,8 +830,8 @@ abstract class BannerGroup implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see BannerGroup::setDeleted()
-     * @see BannerGroup::isDeleted()
+     * @see BannerClient::setDeleted()
+     * @see BannerClient::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -800,11 +840,11 @@ abstract class BannerGroup implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildBannerGroupQuery::create()
+            $deleteQuery = ChildBannerClientQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -839,7 +879,7 @@ abstract class BannerGroup implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -848,13 +888,13 @@ abstract class BannerGroup implements ActiveRecordInterface
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
-                    if (! $this->isColumnModified(BannerGroupTableMap::COL_CREATED_BY)) {
+                    if (! $this->isColumnModified(BannerClientTableMap::COL_CREATED_BY)) {
                         if (fenric()->existsSharedService('user')) {
                             if (fenric('user')->isLogged()) {
                                 $this->setCreatedBy(fenric('user')->getId());
                             }
                         }
-                    }	if (! $this->isColumnModified(BannerGroupTableMap::COL_UPDATED_BY)) {
+                    }	if (! $this->isColumnModified(BannerClientTableMap::COL_UPDATED_BY)) {
                         if (fenric()->existsSharedService('user')) {
                             if (fenric('user')->isLogged()) {
                                 $this->setUpdatedBy(fenric('user')->getId());
@@ -862,15 +902,15 @@ abstract class BannerGroup implements ActiveRecordInterface
                         }
                     }
                 // Fenric\Propel\Behaviors\Timestampable behavior
-                    if (! $this->isColumnModified(BannerGroupTableMap::COL_CREATED_AT)) {
+                    if (! $this->isColumnModified(BannerClientTableMap::COL_CREATED_AT)) {
                         $this->setCreatedAt(new \DateTime('now'));
-                    }	if (! $this->isColumnModified(BannerGroupTableMap::COL_UPDATED_AT)) {
+                    }	if (! $this->isColumnModified(BannerClientTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
-                    if (! $this->isColumnModified(BannerGroupTableMap::COL_UPDATED_BY)) {
+                    if (! $this->isColumnModified(BannerClientTableMap::COL_UPDATED_BY)) {
                         if (fenric()->existsSharedService('user')) {
                             if (fenric('user')->isLogged()) {
                                 $this->setUpdatedBy(fenric('user')->getId());
@@ -878,7 +918,7 @@ abstract class BannerGroup implements ActiveRecordInterface
                         }
                     }
                 // Fenric\Propel\Behaviors\Timestampable behavior
-                    if (! $this->isColumnModified(BannerGroupTableMap::COL_UPDATED_AT)) {
+                    if (! $this->isColumnModified(BannerClientTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
             }
@@ -890,7 +930,7 @@ abstract class BannerGroup implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                BannerGroupTableMap::addInstanceToPool($this);
+                BannerClientTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -983,36 +1023,39 @@ abstract class BannerGroup implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[BannerGroupTableMap::COL_ID] = true;
+        $this->modifiedColumns[BannerClientTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . BannerGroupTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . BannerClientTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(BannerGroupTableMap::COL_ID)) {
+        if ($this->isColumnModified(BannerClientTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_CODE)) {
-            $modifiedColumns[':p' . $index++]  = 'code';
+        if ($this->isColumnModified(BannerClientTableMap::COL_CONTACT_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'contact_name';
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_TITLE)) {
-            $modifiedColumns[':p' . $index++]  = 'title';
+        if ($this->isColumnModified(BannerClientTableMap::COL_CONTACT_EMAIL)) {
+            $modifiedColumns[':p' . $index++]  = 'contact_email';
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_CREATED_AT)) {
+        if ($this->isColumnModified(BannerClientTableMap::COL_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = 'description';
+        }
+        if ($this->isColumnModified(BannerClientTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_CREATED_BY)) {
+        if ($this->isColumnModified(BannerClientTableMap::COL_CREATED_BY)) {
             $modifiedColumns[':p' . $index++]  = 'created_by';
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_UPDATED_AT)) {
+        if ($this->isColumnModified(BannerClientTableMap::COL_UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'updated_at';
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_UPDATED_BY)) {
+        if ($this->isColumnModified(BannerClientTableMap::COL_UPDATED_BY)) {
             $modifiedColumns[':p' . $index++]  = 'updated_by';
         }
 
         $sql = sprintf(
-            'INSERT INTO fenric_banner_group (%s) VALUES (%s)',
+            'INSERT INTO fenric_banner_client (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1024,11 +1067,14 @@ abstract class BannerGroup implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'code':
-                        $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
+                    case 'contact_name':
+                        $stmt->bindValue($identifier, $this->contact_name, PDO::PARAM_STR);
                         break;
-                    case 'title':
-                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                    case 'contact_email':
+                        $stmt->bindValue($identifier, $this->contact_email, PDO::PARAM_STR);
+                        break;
+                    case 'description':
+                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -1088,7 +1134,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = BannerGroupTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = BannerClientTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1108,21 +1154,24 @@ abstract class BannerGroup implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getCode();
+                return $this->getContactName();
                 break;
             case 2:
-                return $this->getTitle();
+                return $this->getContactEmail();
                 break;
             case 3:
-                return $this->getCreatedAt();
+                return $this->getDescription();
                 break;
             case 4:
-                return $this->getCreatedBy();
+                return $this->getCreatedAt();
                 break;
             case 5:
-                return $this->getUpdatedAt();
+                return $this->getCreatedBy();
                 break;
             case 6:
+                return $this->getUpdatedAt();
+                break;
+            case 7:
                 return $this->getUpdatedBy();
                 break;
             default:
@@ -1149,26 +1198,27 @@ abstract class BannerGroup implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['BannerGroup'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['BannerClient'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['BannerGroup'][$this->hashCode()] = true;
-        $keys = BannerGroupTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['BannerClient'][$this->hashCode()] = true;
+        $keys = BannerClientTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getCode(),
-            $keys[2] => $this->getTitle(),
-            $keys[3] => $this->getCreatedAt(),
-            $keys[4] => $this->getCreatedBy(),
-            $keys[5] => $this->getUpdatedAt(),
-            $keys[6] => $this->getUpdatedBy(),
+            $keys[1] => $this->getContactName(),
+            $keys[2] => $this->getContactEmail(),
+            $keys[3] => $this->getDescription(),
+            $keys[4] => $this->getCreatedAt(),
+            $keys[5] => $this->getCreatedBy(),
+            $keys[6] => $this->getUpdatedAt(),
+            $keys[7] => $this->getUpdatedBy(),
         );
-        if ($result[$keys[3]] instanceof \DateTimeInterface) {
-            $result[$keys[3]] = $result[$keys[3]]->format('c');
+        if ($result[$keys[4]] instanceof \DateTimeInterface) {
+            $result[$keys[4]] = $result[$keys[4]]->format('c');
         }
 
-        if ($result[$keys[5]] instanceof \DateTimeInterface) {
-            $result[$keys[5]] = $result[$keys[5]]->format('c');
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1236,11 +1286,11 @@ abstract class BannerGroup implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Propel\Models\BannerGroup
+     * @return $this|\Propel\Models\BannerClient
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = BannerGroupTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = BannerClientTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1251,7 +1301,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Propel\Models\BannerGroup
+     * @return $this|\Propel\Models\BannerClient
      */
     public function setByPosition($pos, $value)
     {
@@ -1260,21 +1310,24 @@ abstract class BannerGroup implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setCode($value);
+                $this->setContactName($value);
                 break;
             case 2:
-                $this->setTitle($value);
+                $this->setContactEmail($value);
                 break;
             case 3:
-                $this->setCreatedAt($value);
+                $this->setDescription($value);
                 break;
             case 4:
-                $this->setCreatedBy($value);
+                $this->setCreatedAt($value);
                 break;
             case 5:
-                $this->setUpdatedAt($value);
+                $this->setCreatedBy($value);
                 break;
             case 6:
+                $this->setUpdatedAt($value);
+                break;
+            case 7:
                 $this->setUpdatedBy($value);
                 break;
         } // switch()
@@ -1301,28 +1354,31 @@ abstract class BannerGroup implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = BannerGroupTableMap::getFieldNames($keyType);
+        $keys = BannerClientTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCode($arr[$keys[1]]);
+            $this->setContactName($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setTitle($arr[$keys[2]]);
+            $this->setContactEmail($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCreatedAt($arr[$keys[3]]);
+            $this->setDescription($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCreatedBy($arr[$keys[4]]);
+            $this->setCreatedAt($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUpdatedAt($arr[$keys[5]]);
+            $this->setCreatedBy($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUpdatedBy($arr[$keys[6]]);
+            $this->setUpdatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setUpdatedBy($arr[$keys[7]]);
         }
     }
 
@@ -1343,7 +1399,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\Propel\Models\BannerGroup The current object, for fluid interface
+     * @return $this|\Propel\Models\BannerClient The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1363,28 +1419,31 @@ abstract class BannerGroup implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(BannerGroupTableMap::DATABASE_NAME);
+        $criteria = new Criteria(BannerClientTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(BannerGroupTableMap::COL_ID)) {
-            $criteria->add(BannerGroupTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(BannerClientTableMap::COL_ID)) {
+            $criteria->add(BannerClientTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_CODE)) {
-            $criteria->add(BannerGroupTableMap::COL_CODE, $this->code);
+        if ($this->isColumnModified(BannerClientTableMap::COL_CONTACT_NAME)) {
+            $criteria->add(BannerClientTableMap::COL_CONTACT_NAME, $this->contact_name);
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_TITLE)) {
-            $criteria->add(BannerGroupTableMap::COL_TITLE, $this->title);
+        if ($this->isColumnModified(BannerClientTableMap::COL_CONTACT_EMAIL)) {
+            $criteria->add(BannerClientTableMap::COL_CONTACT_EMAIL, $this->contact_email);
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_CREATED_AT)) {
-            $criteria->add(BannerGroupTableMap::COL_CREATED_AT, $this->created_at);
+        if ($this->isColumnModified(BannerClientTableMap::COL_DESCRIPTION)) {
+            $criteria->add(BannerClientTableMap::COL_DESCRIPTION, $this->description);
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_CREATED_BY)) {
-            $criteria->add(BannerGroupTableMap::COL_CREATED_BY, $this->created_by);
+        if ($this->isColumnModified(BannerClientTableMap::COL_CREATED_AT)) {
+            $criteria->add(BannerClientTableMap::COL_CREATED_AT, $this->created_at);
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_UPDATED_AT)) {
-            $criteria->add(BannerGroupTableMap::COL_UPDATED_AT, $this->updated_at);
+        if ($this->isColumnModified(BannerClientTableMap::COL_CREATED_BY)) {
+            $criteria->add(BannerClientTableMap::COL_CREATED_BY, $this->created_by);
         }
-        if ($this->isColumnModified(BannerGroupTableMap::COL_UPDATED_BY)) {
-            $criteria->add(BannerGroupTableMap::COL_UPDATED_BY, $this->updated_by);
+        if ($this->isColumnModified(BannerClientTableMap::COL_UPDATED_AT)) {
+            $criteria->add(BannerClientTableMap::COL_UPDATED_AT, $this->updated_at);
+        }
+        if ($this->isColumnModified(BannerClientTableMap::COL_UPDATED_BY)) {
+            $criteria->add(BannerClientTableMap::COL_UPDATED_BY, $this->updated_by);
         }
 
         return $criteria;
@@ -1402,8 +1461,8 @@ abstract class BannerGroup implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildBannerGroupQuery::create();
-        $criteria->add(BannerGroupTableMap::COL_ID, $this->id);
+        $criteria = ChildBannerClientQuery::create();
+        $criteria->add(BannerClientTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1465,15 +1524,16 @@ abstract class BannerGroup implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Propel\Models\BannerGroup (or compatible) type.
+     * @param      object $copyObj An object of \Propel\Models\BannerClient (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setCode($this->getCode());
-        $copyObj->setTitle($this->getTitle());
+        $copyObj->setContactName($this->getContactName());
+        $copyObj->setContactEmail($this->getContactEmail());
+        $copyObj->setDescription($this->getDescription());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setCreatedBy($this->getCreatedBy());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -1507,7 +1567,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Propel\Models\BannerGroup Clone of current object.
+     * @return \Propel\Models\BannerClient Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1524,7 +1584,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * Declares an association between this object and a ChildUser object.
      *
      * @param  ChildUser $v
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      * @throws PropelException
      */
     public function setUserRelatedByCreatedBy(ChildUser $v = null)
@@ -1540,7 +1600,7 @@ abstract class BannerGroup implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildUser object, it will not be re-added.
         if ($v !== null) {
-            $v->addBannerGroupRelatedByCreatedBy($this);
+            $v->addBannerClientRelatedByCreatedBy($this);
         }
 
 
@@ -1564,7 +1624,7 @@ abstract class BannerGroup implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUserRelatedByCreatedBy->addBannerGroupsRelatedByCreatedBy($this);
+                $this->aUserRelatedByCreatedBy->addBannerClientsRelatedByCreatedBy($this);
              */
         }
 
@@ -1575,7 +1635,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * Declares an association between this object and a ChildUser object.
      *
      * @param  ChildUser $v
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      * @throws PropelException
      */
     public function setUserRelatedByUpdatedBy(ChildUser $v = null)
@@ -1591,7 +1651,7 @@ abstract class BannerGroup implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildUser object, it will not be re-added.
         if ($v !== null) {
-            $v->addBannerGroupRelatedByUpdatedBy($this);
+            $v->addBannerClientRelatedByUpdatedBy($this);
         }
 
 
@@ -1615,7 +1675,7 @@ abstract class BannerGroup implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUserRelatedByUpdatedBy->addBannerGroupsRelatedByUpdatedBy($this);
+                $this->aUserRelatedByUpdatedBy->addBannerClientsRelatedByUpdatedBy($this);
              */
         }
 
@@ -1691,7 +1751,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildBannerGroup is new, it will return
+     * If this ChildBannerClient is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
@@ -1708,7 +1768,7 @@ abstract class BannerGroup implements ActiveRecordInterface
                 $this->initBanners();
             } else {
                 $collBanners = ChildBannerQuery::create(null, $criteria)
-                    ->filterByBannerGroup($this)
+                    ->filterByBannerClient($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -1751,7 +1811,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      *
      * @param      Collection $banners A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildBannerGroup The current object (for fluent API support)
+     * @return $this|ChildBannerClient The current object (for fluent API support)
      */
     public function setBanners(Collection $banners, ConnectionInterface $con = null)
     {
@@ -1762,7 +1822,7 @@ abstract class BannerGroup implements ActiveRecordInterface
         $this->bannersScheduledForDeletion = $bannersToDelete;
 
         foreach ($bannersToDelete as $bannerRemoved) {
-            $bannerRemoved->setBannerGroup(null);
+            $bannerRemoved->setBannerClient(null);
         }
 
         $this->collBanners = null;
@@ -1803,7 +1863,7 @@ abstract class BannerGroup implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByBannerGroup($this)
+                ->filterByBannerClient($this)
                 ->count($con);
         }
 
@@ -1815,7 +1875,7 @@ abstract class BannerGroup implements ActiveRecordInterface
      * through the ChildBanner foreign key attribute.
      *
      * @param  ChildBanner $l ChildBanner
-     * @return $this|\Propel\Models\BannerGroup The current object (for fluent API support)
+     * @return $this|\Propel\Models\BannerClient The current object (for fluent API support)
      */
     public function addBanner(ChildBanner $l)
     {
@@ -1841,12 +1901,12 @@ abstract class BannerGroup implements ActiveRecordInterface
     protected function doAddBanner(ChildBanner $banner)
     {
         $this->collBanners[]= $banner;
-        $banner->setBannerGroup($this);
+        $banner->setBannerClient($this);
     }
 
     /**
      * @param  ChildBanner $banner The ChildBanner object to remove.
-     * @return $this|ChildBannerGroup The current object (for fluent API support)
+     * @return $this|ChildBannerClient The current object (for fluent API support)
      */
     public function removeBanner(ChildBanner $banner)
     {
@@ -1858,7 +1918,7 @@ abstract class BannerGroup implements ActiveRecordInterface
                 $this->bannersScheduledForDeletion->clear();
             }
             $this->bannersScheduledForDeletion[]= $banner;
-            $banner->setBannerGroup(null);
+            $banner->setBannerClient(null);
         }
 
         return $this;
@@ -1868,23 +1928,23 @@ abstract class BannerGroup implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this BannerGroup is new, it will return
-     * an empty collection; or if this BannerGroup has previously
+     * Otherwise if this BannerClient is new, it will return
+     * an empty collection; or if this BannerClient has previously
      * been saved, it will retrieve related Banners from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in BannerGroup.
+     * actually need in BannerClient.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildBanner[] List of ChildBanner objects
      */
-    public function getBannersJoinBannerClient(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getBannersJoinBannerGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildBannerQuery::create(null, $criteria);
-        $query->joinWith('BannerClient', $joinBehavior);
+        $query->joinWith('BannerGroup', $joinBehavior);
 
         return $this->getBanners($query, $con);
     }
@@ -1893,13 +1953,13 @@ abstract class BannerGroup implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this BannerGroup is new, it will return
-     * an empty collection; or if this BannerGroup has previously
+     * Otherwise if this BannerClient is new, it will return
+     * an empty collection; or if this BannerClient has previously
      * been saved, it will retrieve related Banners from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in BannerGroup.
+     * actually need in BannerClient.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
@@ -1918,13 +1978,13 @@ abstract class BannerGroup implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this BannerGroup is new, it will return
-     * an empty collection; or if this BannerGroup has previously
+     * Otherwise if this BannerClient is new, it will return
+     * an empty collection; or if this BannerClient has previously
      * been saved, it will retrieve related Banners from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in BannerGroup.
+     * actually need in BannerClient.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
@@ -1947,14 +2007,15 @@ abstract class BannerGroup implements ActiveRecordInterface
     public function clear()
     {
         if (null !== $this->aUserRelatedByCreatedBy) {
-            $this->aUserRelatedByCreatedBy->removeBannerGroupRelatedByCreatedBy($this);
+            $this->aUserRelatedByCreatedBy->removeBannerClientRelatedByCreatedBy($this);
         }
         if (null !== $this->aUserRelatedByUpdatedBy) {
-            $this->aUserRelatedByUpdatedBy->removeBannerGroupRelatedByUpdatedBy($this);
+            $this->aUserRelatedByUpdatedBy->removeBannerClientRelatedByUpdatedBy($this);
         }
         $this->id = null;
-        $this->code = null;
-        $this->title = null;
+        $this->contact_name = null;
+        $this->contact_email = null;
+        $this->description = null;
         $this->created_at = null;
         $this->created_by = null;
         $this->updated_at = null;
@@ -1992,11 +2053,11 @@ abstract class BannerGroup implements ActiveRecordInterface
     /**
      * Return the string representation of this object
      *
-     * @return string The value of the 'title' column
+     * @return string The value of the 'contact_name' column
      */
     public function __toString()
     {
-        return (string) $this->getTitle();
+        return (string) $this->getContactName();
     }
 
     // Fenric\Propel\Behaviors\Timestampable behavior
@@ -2017,12 +2078,12 @@ abstract class BannerGroup implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
-        $metadata->addPropertyConstraint('code', new NotBlank());
-        $metadata->addPropertyConstraint('code', new Length(array ('max' => 255,)));
-        $metadata->addPropertyConstraint('code', new Regex(array ('pattern' => '/^[a-z0-9-]+$/',)));
-        $metadata->addPropertyConstraint('code', new Unique());
-        $metadata->addPropertyConstraint('title', new NotBlank());
-        $metadata->addPropertyConstraint('title', new Length(array ('max' => 255,)));
+        $metadata->addPropertyConstraint('contact_name', new NotBlank());
+        $metadata->addPropertyConstraint('contact_name', new Length(array ('max' => 255,)));
+        $metadata->addPropertyConstraint('contact_email', new NotBlank());
+        $metadata->addPropertyConstraint('contact_email', new Email());
+        $metadata->addPropertyConstraint('contact_email', new Length(array ('max' => 255,)));
+        $metadata->addPropertyConstraint('contact_email', new Unique());
     }
 
     /**

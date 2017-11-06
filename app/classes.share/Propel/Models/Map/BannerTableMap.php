@@ -59,7 +59,7 @@ class BannerTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 20;
+    const NUM_COLUMNS = 21;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class BannerTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 20;
+    const NUM_HYDRATE_COLUMNS = 21;
 
     /**
      * the column name for the id field
@@ -80,6 +80,11 @@ class BannerTableMap extends TableMap
      * the column name for the banner_group_id field
      */
     const COL_BANNER_GROUP_ID = 'fenric_banner.banner_group_id';
+
+    /**
+     * the column name for the banner_client_id field
+     */
+    const COL_BANNER_CLIENT_ID = 'fenric_banner.banner_client_id';
 
     /**
      * the column name for the title field
@@ -183,11 +188,11 @@ class BannerTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'BannerGroupId', 'Title', 'Description', 'Picture', 'PictureAlt', 'PictureTitle', 'HyperlinkUrl', 'HyperlinkTitle', 'HyperlinkTarget', 'ShowStart', 'ShowEnd', 'Shows', 'ShowsLimit', 'Clicks', 'ClicksLimit', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', ),
-        self::TYPE_CAMELNAME     => array('id', 'bannerGroupId', 'title', 'description', 'picture', 'pictureAlt', 'pictureTitle', 'hyperlinkUrl', 'hyperlinkTitle', 'hyperlinkTarget', 'showStart', 'showEnd', 'shows', 'showsLimit', 'clicks', 'clicksLimit', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', ),
-        self::TYPE_COLNAME       => array(BannerTableMap::COL_ID, BannerTableMap::COL_BANNER_GROUP_ID, BannerTableMap::COL_TITLE, BannerTableMap::COL_DESCRIPTION, BannerTableMap::COL_PICTURE, BannerTableMap::COL_PICTURE_ALT, BannerTableMap::COL_PICTURE_TITLE, BannerTableMap::COL_HYPERLINK_URL, BannerTableMap::COL_HYPERLINK_TITLE, BannerTableMap::COL_HYPERLINK_TARGET, BannerTableMap::COL_SHOW_START, BannerTableMap::COL_SHOW_END, BannerTableMap::COL_SHOWS, BannerTableMap::COL_SHOWS_LIMIT, BannerTableMap::COL_CLICKS, BannerTableMap::COL_CLICKS_LIMIT, BannerTableMap::COL_CREATED_AT, BannerTableMap::COL_CREATED_BY, BannerTableMap::COL_UPDATED_AT, BannerTableMap::COL_UPDATED_BY, ),
-        self::TYPE_FIELDNAME     => array('id', 'banner_group_id', 'title', 'description', 'picture', 'picture_alt', 'picture_title', 'hyperlink_url', 'hyperlink_title', 'hyperlink_target', 'show_start', 'show_end', 'shows', 'shows_limit', 'clicks', 'clicks_limit', 'created_at', 'created_by', 'updated_at', 'updated_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, )
+        self::TYPE_PHPNAME       => array('Id', 'BannerGroupId', 'BannerClientId', 'Title', 'Description', 'Picture', 'PictureAlt', 'PictureTitle', 'HyperlinkUrl', 'HyperlinkTitle', 'HyperlinkTarget', 'ShowStart', 'ShowEnd', 'Shows', 'ShowsLimit', 'Clicks', 'ClicksLimit', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', ),
+        self::TYPE_CAMELNAME     => array('id', 'bannerGroupId', 'bannerClientId', 'title', 'description', 'picture', 'pictureAlt', 'pictureTitle', 'hyperlinkUrl', 'hyperlinkTitle', 'hyperlinkTarget', 'showStart', 'showEnd', 'shows', 'showsLimit', 'clicks', 'clicksLimit', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', ),
+        self::TYPE_COLNAME       => array(BannerTableMap::COL_ID, BannerTableMap::COL_BANNER_GROUP_ID, BannerTableMap::COL_BANNER_CLIENT_ID, BannerTableMap::COL_TITLE, BannerTableMap::COL_DESCRIPTION, BannerTableMap::COL_PICTURE, BannerTableMap::COL_PICTURE_ALT, BannerTableMap::COL_PICTURE_TITLE, BannerTableMap::COL_HYPERLINK_URL, BannerTableMap::COL_HYPERLINK_TITLE, BannerTableMap::COL_HYPERLINK_TARGET, BannerTableMap::COL_SHOW_START, BannerTableMap::COL_SHOW_END, BannerTableMap::COL_SHOWS, BannerTableMap::COL_SHOWS_LIMIT, BannerTableMap::COL_CLICKS, BannerTableMap::COL_CLICKS_LIMIT, BannerTableMap::COL_CREATED_AT, BannerTableMap::COL_CREATED_BY, BannerTableMap::COL_UPDATED_AT, BannerTableMap::COL_UPDATED_BY, ),
+        self::TYPE_FIELDNAME     => array('id', 'banner_group_id', 'banner_client_id', 'title', 'description', 'picture', 'picture_alt', 'picture_title', 'hyperlink_url', 'hyperlink_title', 'hyperlink_target', 'show_start', 'show_end', 'shows', 'shows_limit', 'clicks', 'clicks_limit', 'created_at', 'created_by', 'updated_at', 'updated_by', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, )
     );
 
     /**
@@ -197,11 +202,11 @@ class BannerTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'BannerGroupId' => 1, 'Title' => 2, 'Description' => 3, 'Picture' => 4, 'PictureAlt' => 5, 'PictureTitle' => 6, 'HyperlinkUrl' => 7, 'HyperlinkTitle' => 8, 'HyperlinkTarget' => 9, 'ShowStart' => 10, 'ShowEnd' => 11, 'Shows' => 12, 'ShowsLimit' => 13, 'Clicks' => 14, 'ClicksLimit' => 15, 'CreatedAt' => 16, 'CreatedBy' => 17, 'UpdatedAt' => 18, 'UpdatedBy' => 19, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'bannerGroupId' => 1, 'title' => 2, 'description' => 3, 'picture' => 4, 'pictureAlt' => 5, 'pictureTitle' => 6, 'hyperlinkUrl' => 7, 'hyperlinkTitle' => 8, 'hyperlinkTarget' => 9, 'showStart' => 10, 'showEnd' => 11, 'shows' => 12, 'showsLimit' => 13, 'clicks' => 14, 'clicksLimit' => 15, 'createdAt' => 16, 'createdBy' => 17, 'updatedAt' => 18, 'updatedBy' => 19, ),
-        self::TYPE_COLNAME       => array(BannerTableMap::COL_ID => 0, BannerTableMap::COL_BANNER_GROUP_ID => 1, BannerTableMap::COL_TITLE => 2, BannerTableMap::COL_DESCRIPTION => 3, BannerTableMap::COL_PICTURE => 4, BannerTableMap::COL_PICTURE_ALT => 5, BannerTableMap::COL_PICTURE_TITLE => 6, BannerTableMap::COL_HYPERLINK_URL => 7, BannerTableMap::COL_HYPERLINK_TITLE => 8, BannerTableMap::COL_HYPERLINK_TARGET => 9, BannerTableMap::COL_SHOW_START => 10, BannerTableMap::COL_SHOW_END => 11, BannerTableMap::COL_SHOWS => 12, BannerTableMap::COL_SHOWS_LIMIT => 13, BannerTableMap::COL_CLICKS => 14, BannerTableMap::COL_CLICKS_LIMIT => 15, BannerTableMap::COL_CREATED_AT => 16, BannerTableMap::COL_CREATED_BY => 17, BannerTableMap::COL_UPDATED_AT => 18, BannerTableMap::COL_UPDATED_BY => 19, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'banner_group_id' => 1, 'title' => 2, 'description' => 3, 'picture' => 4, 'picture_alt' => 5, 'picture_title' => 6, 'hyperlink_url' => 7, 'hyperlink_title' => 8, 'hyperlink_target' => 9, 'show_start' => 10, 'show_end' => 11, 'shows' => 12, 'shows_limit' => 13, 'clicks' => 14, 'clicks_limit' => 15, 'created_at' => 16, 'created_by' => 17, 'updated_at' => 18, 'updated_by' => 19, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'BannerGroupId' => 1, 'BannerClientId' => 2, 'Title' => 3, 'Description' => 4, 'Picture' => 5, 'PictureAlt' => 6, 'PictureTitle' => 7, 'HyperlinkUrl' => 8, 'HyperlinkTitle' => 9, 'HyperlinkTarget' => 10, 'ShowStart' => 11, 'ShowEnd' => 12, 'Shows' => 13, 'ShowsLimit' => 14, 'Clicks' => 15, 'ClicksLimit' => 16, 'CreatedAt' => 17, 'CreatedBy' => 18, 'UpdatedAt' => 19, 'UpdatedBy' => 20, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'bannerGroupId' => 1, 'bannerClientId' => 2, 'title' => 3, 'description' => 4, 'picture' => 5, 'pictureAlt' => 6, 'pictureTitle' => 7, 'hyperlinkUrl' => 8, 'hyperlinkTitle' => 9, 'hyperlinkTarget' => 10, 'showStart' => 11, 'showEnd' => 12, 'shows' => 13, 'showsLimit' => 14, 'clicks' => 15, 'clicksLimit' => 16, 'createdAt' => 17, 'createdBy' => 18, 'updatedAt' => 19, 'updatedBy' => 20, ),
+        self::TYPE_COLNAME       => array(BannerTableMap::COL_ID => 0, BannerTableMap::COL_BANNER_GROUP_ID => 1, BannerTableMap::COL_BANNER_CLIENT_ID => 2, BannerTableMap::COL_TITLE => 3, BannerTableMap::COL_DESCRIPTION => 4, BannerTableMap::COL_PICTURE => 5, BannerTableMap::COL_PICTURE_ALT => 6, BannerTableMap::COL_PICTURE_TITLE => 7, BannerTableMap::COL_HYPERLINK_URL => 8, BannerTableMap::COL_HYPERLINK_TITLE => 9, BannerTableMap::COL_HYPERLINK_TARGET => 10, BannerTableMap::COL_SHOW_START => 11, BannerTableMap::COL_SHOW_END => 12, BannerTableMap::COL_SHOWS => 13, BannerTableMap::COL_SHOWS_LIMIT => 14, BannerTableMap::COL_CLICKS => 15, BannerTableMap::COL_CLICKS_LIMIT => 16, BannerTableMap::COL_CREATED_AT => 17, BannerTableMap::COL_CREATED_BY => 18, BannerTableMap::COL_UPDATED_AT => 19, BannerTableMap::COL_UPDATED_BY => 20, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'banner_group_id' => 1, 'banner_client_id' => 2, 'title' => 3, 'description' => 4, 'picture' => 5, 'picture_alt' => 6, 'picture_title' => 7, 'hyperlink_url' => 8, 'hyperlink_title' => 9, 'hyperlink_target' => 10, 'show_start' => 11, 'show_end' => 12, 'shows' => 13, 'shows_limit' => 14, 'clicks' => 15, 'clicks_limit' => 16, 'created_at' => 17, 'created_by' => 18, 'updated_at' => 19, 'updated_by' => 20, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, )
     );
 
     /**
@@ -223,6 +228,7 @@ class BannerTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('banner_group_id', 'BannerGroupId', 'INTEGER', 'fenric_banner_group', 'id', false, null, null);
+        $this->addForeignKey('banner_client_id', 'BannerClientId', 'INTEGER', 'fenric_banner_client', 'id', false, null, null);
         $this->addColumn('title', 'Title', 'VARCHAR', true, 255, null);
         $this->getColumn('title')->setPrimaryString(true);
         $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
@@ -256,6 +262,13 @@ class BannerTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', null, false);
+        $this->addRelation('BannerClient', '\\Propel\\Models\\BannerClient', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':banner_client_id',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', null, false);
         $this->addRelation('UserRelatedByCreatedBy', '\\Propel\\Models\\User', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
@@ -283,7 +296,7 @@ class BannerTableMap extends TableMap
         return array(
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
-            'validate' => array('1d3cf254-bf5c-11e7-a782-6f777aef7709' => array ('column' => 'banner_group_id','validator' => 'NotBlank',), '1d3dc652-bf5c-11e7-ac3d-47555fd33204' => array ('column' => 'title','validator' => 'NotBlank',), '1d4377c8-bf5c-11e7-84fa-bb42a22d1de0' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 255,),), '1d3e9d02-bf5c-11e7-93f9-974d7c705bad' => array ('column' => 'picture','validator' => 'NotBlank',), '1d4488de-bf5c-11e7-98b4-c3783a0b48eb' => array ('column' => 'picture','validator' => 'Length','options' => array ('max' => 255,),), '1d3f77e0-bf5c-11e7-ab38-7f1c828bf35a' => array ('column' => 'hyperlink_url','validator' => 'NotBlank',), '1d455944-bf5c-11e7-957d-c7614bf20b11' => array ('column' => 'hyperlink_url','validator' => 'Length','options' => array ('max' => 255,),), '1d40771c-bf5c-11e7-9ac6-eb1cbef867b4' => array ('column' => 'hyperlink_url','validator' => 'Url',), '1d415ca4-bf5c-11e7-afd6-f751a5797087' => array ('column' => 'shows_limit','validator' => 'Range','options' => array ('min' => 1,),), '1d42490c-bf5c-11e7-8e24-c7aeabc5ebe1' => array ('column' => 'clicks_limit','validator' => 'Range','options' => array ('min' => 1,),), ),
+            'validate' => array('1d3cf254-bf5c-11e7-a782-6f777aef7709' => array ('column' => 'banner_group_id','validator' => 'NotBlank',), '10f98111-cd18-47c4-8b76-04546df25031' => array ('column' => 'banner_client_id','validator' => 'NotBlank',), '1d3dc652-bf5c-11e7-ac3d-47555fd33204' => array ('column' => 'title','validator' => 'NotBlank',), '1d4377c8-bf5c-11e7-84fa-bb42a22d1de0' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 255,),), '1d3e9d02-bf5c-11e7-93f9-974d7c705bad' => array ('column' => 'picture','validator' => 'NotBlank',), '1d4488de-bf5c-11e7-98b4-c3783a0b48eb' => array ('column' => 'picture','validator' => 'Length','options' => array ('max' => 255,),), '1d3f77e0-bf5c-11e7-ab38-7f1c828bf35a' => array ('column' => 'hyperlink_url','validator' => 'NotBlank',), '1d455944-bf5c-11e7-957d-c7614bf20b11' => array ('column' => 'hyperlink_url','validator' => 'Length','options' => array ('max' => 255,),), '1d40771c-bf5c-11e7-9ac6-eb1cbef867b4' => array ('column' => 'hyperlink_url','validator' => 'Url',), '1d415ca4-bf5c-11e7-afd6-f751a5797087' => array ('column' => 'shows_limit','validator' => 'Range','options' => array ('min' => 1,),), '1d42490c-bf5c-11e7-8e24-c7aeabc5ebe1' => array ('column' => 'clicks_limit','validator' => 'Range','options' => array ('min' => 1,),), ),
         );
     } // getBehaviors()
 
@@ -430,6 +443,7 @@ class BannerTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(BannerTableMap::COL_ID);
             $criteria->addSelectColumn(BannerTableMap::COL_BANNER_GROUP_ID);
+            $criteria->addSelectColumn(BannerTableMap::COL_BANNER_CLIENT_ID);
             $criteria->addSelectColumn(BannerTableMap::COL_TITLE);
             $criteria->addSelectColumn(BannerTableMap::COL_DESCRIPTION);
             $criteria->addSelectColumn(BannerTableMap::COL_PICTURE);
@@ -451,6 +465,7 @@ class BannerTableMap extends TableMap
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.banner_group_id');
+            $criteria->addSelectColumn($alias . '.banner_client_id');
             $criteria->addSelectColumn($alias . '.title');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.picture');

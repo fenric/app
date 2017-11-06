@@ -5,6 +5,8 @@ namespace Propel\Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use Propel\Models\BannerClient as ChildBannerClient;
+use Propel\Models\BannerClientQuery as ChildBannerClientQuery;
 use Propel\Models\BannerGroup as ChildBannerGroup;
 use Propel\Models\BannerGroupQuery as ChildBannerGroupQuery;
 use Propel\Models\BannerQuery as ChildBannerQuery;
@@ -91,6 +93,13 @@ abstract class Banner implements ActiveRecordInterface
      * @var        int
      */
     protected $banner_group_id;
+
+    /**
+     * The value for the banner_client_id field.
+     *
+     * @var        int
+     */
+    protected $banner_client_id;
 
     /**
      * The value for the title field.
@@ -224,6 +233,11 @@ abstract class Banner implements ActiveRecordInterface
      * @var        ChildBannerGroup
      */
     protected $aBannerGroup;
+
+    /**
+     * @var        ChildBannerClient
+     */
+    protected $aBannerClient;
 
     /**
      * @var        ChildUser
@@ -520,6 +534,16 @@ abstract class Banner implements ActiveRecordInterface
     }
 
     /**
+     * Get the [banner_client_id] column value.
+     *
+     * @return int
+     */
+    public function getBannerClientId()
+    {
+        return $this->banner_client_id;
+    }
+
+    /**
      * Get the [title] column value.
      *
      * @return string
@@ -782,6 +806,30 @@ abstract class Banner implements ActiveRecordInterface
 
         return $this;
     } // setBannerGroupId()
+
+    /**
+     * Set the value of [banner_client_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\Propel\Models\Banner The current object (for fluent API support)
+     */
+    public function setBannerClientId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->banner_client_id !== $v) {
+            $this->banner_client_id = $v;
+            $this->modifiedColumns[BannerTableMap::COL_BANNER_CLIENT_ID] = true;
+        }
+
+        if ($this->aBannerClient !== null && $this->aBannerClient->getId() !== $v) {
+            $this->aBannerClient = null;
+        }
+
+        return $this;
+    } // setBannerClientId()
 
     /**
      * Set the value of [title] column.
@@ -1201,70 +1249,73 @@ abstract class Banner implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : BannerTableMap::translateFieldName('BannerGroupId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->banner_group_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : BannerTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : BannerTableMap::translateFieldName('BannerClientId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->banner_client_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : BannerTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
             $this->title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : BannerTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : BannerTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
             $this->description = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : BannerTableMap::translateFieldName('Picture', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : BannerTableMap::translateFieldName('Picture', TableMap::TYPE_PHPNAME, $indexType)];
             $this->picture = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : BannerTableMap::translateFieldName('PictureAlt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : BannerTableMap::translateFieldName('PictureAlt', TableMap::TYPE_PHPNAME, $indexType)];
             $this->picture_alt = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : BannerTableMap::translateFieldName('PictureTitle', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : BannerTableMap::translateFieldName('PictureTitle', TableMap::TYPE_PHPNAME, $indexType)];
             $this->picture_title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : BannerTableMap::translateFieldName('HyperlinkUrl', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : BannerTableMap::translateFieldName('HyperlinkUrl', TableMap::TYPE_PHPNAME, $indexType)];
             $this->hyperlink_url = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : BannerTableMap::translateFieldName('HyperlinkTitle', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : BannerTableMap::translateFieldName('HyperlinkTitle', TableMap::TYPE_PHPNAME, $indexType)];
             $this->hyperlink_title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : BannerTableMap::translateFieldName('HyperlinkTarget', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : BannerTableMap::translateFieldName('HyperlinkTarget', TableMap::TYPE_PHPNAME, $indexType)];
             $this->hyperlink_target = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : BannerTableMap::translateFieldName('ShowStart', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : BannerTableMap::translateFieldName('ShowStart', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->show_start = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : BannerTableMap::translateFieldName('ShowEnd', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : BannerTableMap::translateFieldName('ShowEnd', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->show_end = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : BannerTableMap::translateFieldName('Shows', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : BannerTableMap::translateFieldName('Shows', TableMap::TYPE_PHPNAME, $indexType)];
             $this->shows = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : BannerTableMap::translateFieldName('ShowsLimit', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : BannerTableMap::translateFieldName('ShowsLimit', TableMap::TYPE_PHPNAME, $indexType)];
             $this->shows_limit = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : BannerTableMap::translateFieldName('Clicks', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : BannerTableMap::translateFieldName('Clicks', TableMap::TYPE_PHPNAME, $indexType)];
             $this->clicks = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : BannerTableMap::translateFieldName('ClicksLimit', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : BannerTableMap::translateFieldName('ClicksLimit', TableMap::TYPE_PHPNAME, $indexType)];
             $this->clicks_limit = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : BannerTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : BannerTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : BannerTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : BannerTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->created_by = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : BannerTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : BannerTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : BannerTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 20 + $startcol : BannerTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->updated_by = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -1274,7 +1325,7 @@ abstract class Banner implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 20; // 20 = BannerTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 21; // 21 = BannerTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Models\\Banner'), 0, $e);
@@ -1298,6 +1349,9 @@ abstract class Banner implements ActiveRecordInterface
     {
         if ($this->aBannerGroup !== null && $this->banner_group_id !== $this->aBannerGroup->getId()) {
             $this->aBannerGroup = null;
+        }
+        if ($this->aBannerClient !== null && $this->banner_client_id !== $this->aBannerClient->getId()) {
+            $this->aBannerClient = null;
         }
         if ($this->aUserRelatedByCreatedBy !== null && $this->created_by !== $this->aUserRelatedByCreatedBy->getId()) {
             $this->aUserRelatedByCreatedBy = null;
@@ -1345,6 +1399,7 @@ abstract class Banner implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aBannerGroup = null;
+            $this->aBannerClient = null;
             $this->aUserRelatedByCreatedBy = null;
             $this->aUserRelatedByUpdatedBy = null;
         } // if (deep)
@@ -1494,6 +1549,13 @@ abstract class Banner implements ActiveRecordInterface
                 $this->setBannerGroup($this->aBannerGroup);
             }
 
+            if ($this->aBannerClient !== null) {
+                if ($this->aBannerClient->isModified() || $this->aBannerClient->isNew()) {
+                    $affectedRows += $this->aBannerClient->save($con);
+                }
+                $this->setBannerClient($this->aBannerClient);
+            }
+
             if ($this->aUserRelatedByCreatedBy !== null) {
                 if ($this->aUserRelatedByCreatedBy->isModified() || $this->aUserRelatedByCreatedBy->isNew()) {
                     $affectedRows += $this->aUserRelatedByCreatedBy->save($con);
@@ -1550,6 +1612,9 @@ abstract class Banner implements ActiveRecordInterface
         }
         if ($this->isColumnModified(BannerTableMap::COL_BANNER_GROUP_ID)) {
             $modifiedColumns[':p' . $index++]  = 'banner_group_id';
+        }
+        if ($this->isColumnModified(BannerTableMap::COL_BANNER_CLIENT_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'banner_client_id';
         }
         if ($this->isColumnModified(BannerTableMap::COL_TITLE)) {
             $modifiedColumns[':p' . $index++]  = 'title';
@@ -1621,6 +1686,9 @@ abstract class Banner implements ActiveRecordInterface
                         break;
                     case 'banner_group_id':
                         $stmt->bindValue($identifier, $this->banner_group_id, PDO::PARAM_INT);
+                        break;
+                    case 'banner_client_id':
+                        $stmt->bindValue($identifier, $this->banner_client_id, PDO::PARAM_INT);
                         break;
                     case 'title':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
@@ -1745,57 +1813,60 @@ abstract class Banner implements ActiveRecordInterface
                 return $this->getBannerGroupId();
                 break;
             case 2:
-                return $this->getTitle();
+                return $this->getBannerClientId();
                 break;
             case 3:
-                return $this->getDescription();
+                return $this->getTitle();
                 break;
             case 4:
-                return $this->getPicture();
+                return $this->getDescription();
                 break;
             case 5:
-                return $this->getPictureAlt();
+                return $this->getPicture();
                 break;
             case 6:
-                return $this->getPictureTitle();
+                return $this->getPictureAlt();
                 break;
             case 7:
-                return $this->getHyperlinkUrl();
+                return $this->getPictureTitle();
                 break;
             case 8:
-                return $this->getHyperlinkTitle();
+                return $this->getHyperlinkUrl();
                 break;
             case 9:
-                return $this->getHyperlinkTarget();
+                return $this->getHyperlinkTitle();
                 break;
             case 10:
-                return $this->getShowStart();
+                return $this->getHyperlinkTarget();
                 break;
             case 11:
-                return $this->getShowEnd();
+                return $this->getShowStart();
                 break;
             case 12:
-                return $this->getShows();
+                return $this->getShowEnd();
                 break;
             case 13:
-                return $this->getShowsLimit();
+                return $this->getShows();
                 break;
             case 14:
-                return $this->getClicks();
+                return $this->getShowsLimit();
                 break;
             case 15:
-                return $this->getClicksLimit();
+                return $this->getClicks();
                 break;
             case 16:
-                return $this->getCreatedAt();
+                return $this->getClicksLimit();
                 break;
             case 17:
-                return $this->getCreatedBy();
+                return $this->getCreatedAt();
                 break;
             case 18:
-                return $this->getUpdatedAt();
+                return $this->getCreatedBy();
                 break;
             case 19:
+                return $this->getUpdatedAt();
+                break;
+            case 20:
                 return $this->getUpdatedBy();
                 break;
             default:
@@ -1830,39 +1901,40 @@ abstract class Banner implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getBannerGroupId(),
-            $keys[2] => $this->getTitle(),
-            $keys[3] => $this->getDescription(),
-            $keys[4] => $this->getPicture(),
-            $keys[5] => $this->getPictureAlt(),
-            $keys[6] => $this->getPictureTitle(),
-            $keys[7] => $this->getHyperlinkUrl(),
-            $keys[8] => $this->getHyperlinkTitle(),
-            $keys[9] => $this->getHyperlinkTarget(),
-            $keys[10] => $this->getShowStart(),
-            $keys[11] => $this->getShowEnd(),
-            $keys[12] => $this->getShows(),
-            $keys[13] => $this->getShowsLimit(),
-            $keys[14] => $this->getClicks(),
-            $keys[15] => $this->getClicksLimit(),
-            $keys[16] => $this->getCreatedAt(),
-            $keys[17] => $this->getCreatedBy(),
-            $keys[18] => $this->getUpdatedAt(),
-            $keys[19] => $this->getUpdatedBy(),
+            $keys[2] => $this->getBannerClientId(),
+            $keys[3] => $this->getTitle(),
+            $keys[4] => $this->getDescription(),
+            $keys[5] => $this->getPicture(),
+            $keys[6] => $this->getPictureAlt(),
+            $keys[7] => $this->getPictureTitle(),
+            $keys[8] => $this->getHyperlinkUrl(),
+            $keys[9] => $this->getHyperlinkTitle(),
+            $keys[10] => $this->getHyperlinkTarget(),
+            $keys[11] => $this->getShowStart(),
+            $keys[12] => $this->getShowEnd(),
+            $keys[13] => $this->getShows(),
+            $keys[14] => $this->getShowsLimit(),
+            $keys[15] => $this->getClicks(),
+            $keys[16] => $this->getClicksLimit(),
+            $keys[17] => $this->getCreatedAt(),
+            $keys[18] => $this->getCreatedBy(),
+            $keys[19] => $this->getUpdatedAt(),
+            $keys[20] => $this->getUpdatedBy(),
         );
-        if ($result[$keys[10]] instanceof \DateTimeInterface) {
-            $result[$keys[10]] = $result[$keys[10]]->format('c');
-        }
-
         if ($result[$keys[11]] instanceof \DateTimeInterface) {
             $result[$keys[11]] = $result[$keys[11]]->format('c');
         }
 
-        if ($result[$keys[16]] instanceof \DateTimeInterface) {
-            $result[$keys[16]] = $result[$keys[16]]->format('c');
+        if ($result[$keys[12]] instanceof \DateTimeInterface) {
+            $result[$keys[12]] = $result[$keys[12]]->format('c');
         }
 
-        if ($result[$keys[18]] instanceof \DateTimeInterface) {
-            $result[$keys[18]] = $result[$keys[18]]->format('c');
+        if ($result[$keys[17]] instanceof \DateTimeInterface) {
+            $result[$keys[17]] = $result[$keys[17]]->format('c');
+        }
+
+        if ($result[$keys[19]] instanceof \DateTimeInterface) {
+            $result[$keys[19]] = $result[$keys[19]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1885,6 +1957,21 @@ abstract class Banner implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aBannerGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aBannerClient) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'bannerClient';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_banner_client';
+                        break;
+                    default:
+                        $key = 'BannerClient';
+                }
+
+                $result[$key] = $this->aBannerClient->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aUserRelatedByCreatedBy) {
 
@@ -1957,57 +2044,60 @@ abstract class Banner implements ActiveRecordInterface
                 $this->setBannerGroupId($value);
                 break;
             case 2:
-                $this->setTitle($value);
+                $this->setBannerClientId($value);
                 break;
             case 3:
-                $this->setDescription($value);
+                $this->setTitle($value);
                 break;
             case 4:
-                $this->setPicture($value);
+                $this->setDescription($value);
                 break;
             case 5:
-                $this->setPictureAlt($value);
+                $this->setPicture($value);
                 break;
             case 6:
-                $this->setPictureTitle($value);
+                $this->setPictureAlt($value);
                 break;
             case 7:
-                $this->setHyperlinkUrl($value);
+                $this->setPictureTitle($value);
                 break;
             case 8:
-                $this->setHyperlinkTitle($value);
+                $this->setHyperlinkUrl($value);
                 break;
             case 9:
-                $this->setHyperlinkTarget($value);
+                $this->setHyperlinkTitle($value);
                 break;
             case 10:
-                $this->setShowStart($value);
+                $this->setHyperlinkTarget($value);
                 break;
             case 11:
-                $this->setShowEnd($value);
+                $this->setShowStart($value);
                 break;
             case 12:
-                $this->setShows($value);
+                $this->setShowEnd($value);
                 break;
             case 13:
-                $this->setShowsLimit($value);
+                $this->setShows($value);
                 break;
             case 14:
-                $this->setClicks($value);
+                $this->setShowsLimit($value);
                 break;
             case 15:
-                $this->setClicksLimit($value);
+                $this->setClicks($value);
                 break;
             case 16:
-                $this->setCreatedAt($value);
+                $this->setClicksLimit($value);
                 break;
             case 17:
-                $this->setCreatedBy($value);
+                $this->setCreatedAt($value);
                 break;
             case 18:
-                $this->setUpdatedAt($value);
+                $this->setCreatedBy($value);
                 break;
             case 19:
+                $this->setUpdatedAt($value);
+                break;
+            case 20:
                 $this->setUpdatedBy($value);
                 break;
         } // switch()
@@ -2043,58 +2133,61 @@ abstract class Banner implements ActiveRecordInterface
             $this->setBannerGroupId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setTitle($arr[$keys[2]]);
+            $this->setBannerClientId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setDescription($arr[$keys[3]]);
+            $this->setTitle($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setPicture($arr[$keys[4]]);
+            $this->setDescription($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setPictureAlt($arr[$keys[5]]);
+            $this->setPicture($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setPictureTitle($arr[$keys[6]]);
+            $this->setPictureAlt($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setHyperlinkUrl($arr[$keys[7]]);
+            $this->setPictureTitle($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setHyperlinkTitle($arr[$keys[8]]);
+            $this->setHyperlinkUrl($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setHyperlinkTarget($arr[$keys[9]]);
+            $this->setHyperlinkTitle($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setShowStart($arr[$keys[10]]);
+            $this->setHyperlinkTarget($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setShowEnd($arr[$keys[11]]);
+            $this->setShowStart($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setShows($arr[$keys[12]]);
+            $this->setShowEnd($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setShowsLimit($arr[$keys[13]]);
+            $this->setShows($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setClicks($arr[$keys[14]]);
+            $this->setShowsLimit($arr[$keys[14]]);
         }
         if (array_key_exists($keys[15], $arr)) {
-            $this->setClicksLimit($arr[$keys[15]]);
+            $this->setClicks($arr[$keys[15]]);
         }
         if (array_key_exists($keys[16], $arr)) {
-            $this->setCreatedAt($arr[$keys[16]]);
+            $this->setClicksLimit($arr[$keys[16]]);
         }
         if (array_key_exists($keys[17], $arr)) {
-            $this->setCreatedBy($arr[$keys[17]]);
+            $this->setCreatedAt($arr[$keys[17]]);
         }
         if (array_key_exists($keys[18], $arr)) {
-            $this->setUpdatedAt($arr[$keys[18]]);
+            $this->setCreatedBy($arr[$keys[18]]);
         }
         if (array_key_exists($keys[19], $arr)) {
-            $this->setUpdatedBy($arr[$keys[19]]);
+            $this->setUpdatedAt($arr[$keys[19]]);
+        }
+        if (array_key_exists($keys[20], $arr)) {
+            $this->setUpdatedBy($arr[$keys[20]]);
         }
     }
 
@@ -2142,6 +2235,9 @@ abstract class Banner implements ActiveRecordInterface
         }
         if ($this->isColumnModified(BannerTableMap::COL_BANNER_GROUP_ID)) {
             $criteria->add(BannerTableMap::COL_BANNER_GROUP_ID, $this->banner_group_id);
+        }
+        if ($this->isColumnModified(BannerTableMap::COL_BANNER_CLIENT_ID)) {
+            $criteria->add(BannerTableMap::COL_BANNER_CLIENT_ID, $this->banner_client_id);
         }
         if ($this->isColumnModified(BannerTableMap::COL_TITLE)) {
             $criteria->add(BannerTableMap::COL_TITLE, $this->title);
@@ -2284,6 +2380,7 @@ abstract class Banner implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setBannerGroupId($this->getBannerGroupId());
+        $copyObj->setBannerClientId($this->getBannerClientId());
         $copyObj->setTitle($this->getTitle());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setPicture($this->getPicture());
@@ -2379,6 +2476,57 @@ abstract class Banner implements ActiveRecordInterface
         }
 
         return $this->aBannerGroup;
+    }
+
+    /**
+     * Declares an association between this object and a ChildBannerClient object.
+     *
+     * @param  ChildBannerClient $v
+     * @return $this|\Propel\Models\Banner The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setBannerClient(ChildBannerClient $v = null)
+    {
+        if ($v === null) {
+            $this->setBannerClientId(NULL);
+        } else {
+            $this->setBannerClientId($v->getId());
+        }
+
+        $this->aBannerClient = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildBannerClient object, it will not be re-added.
+        if ($v !== null) {
+            $v->addBanner($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildBannerClient object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildBannerClient The associated ChildBannerClient object.
+     * @throws PropelException
+     */
+    public function getBannerClient(ConnectionInterface $con = null)
+    {
+        if ($this->aBannerClient === null && ($this->banner_client_id != 0)) {
+            $this->aBannerClient = ChildBannerClientQuery::create()->findPk($this->banner_client_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aBannerClient->addBanners($this);
+             */
+        }
+
+        return $this->aBannerClient;
     }
 
     /**
@@ -2493,6 +2641,9 @@ abstract class Banner implements ActiveRecordInterface
         if (null !== $this->aBannerGroup) {
             $this->aBannerGroup->removeBanner($this);
         }
+        if (null !== $this->aBannerClient) {
+            $this->aBannerClient->removeBanner($this);
+        }
         if (null !== $this->aUserRelatedByCreatedBy) {
             $this->aUserRelatedByCreatedBy->removeBannerRelatedByCreatedBy($this);
         }
@@ -2501,6 +2652,7 @@ abstract class Banner implements ActiveRecordInterface
         }
         $this->id = null;
         $this->banner_group_id = null;
+        $this->banner_client_id = null;
         $this->title = null;
         $this->description = null;
         $this->picture = null;
@@ -2541,6 +2693,7 @@ abstract class Banner implements ActiveRecordInterface
         } // if ($deep)
 
         $this->aBannerGroup = null;
+        $this->aBannerClient = null;
         $this->aUserRelatedByCreatedBy = null;
         $this->aUserRelatedByUpdatedBy = null;
     }
@@ -2574,6 +2727,7 @@ abstract class Banner implements ActiveRecordInterface
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
         $metadata->addPropertyConstraint('banner_group_id', new NotBlank());
+        $metadata->addPropertyConstraint('banner_client_id', new NotBlank());
         $metadata->addPropertyConstraint('title', new NotBlank());
         $metadata->addPropertyConstraint('title', new Length(array ('max' => 255,)));
         $metadata->addPropertyConstraint('picture', new NotBlank());
@@ -2617,6 +2771,12 @@ abstract class Banner implements ActiveRecordInterface
             if (method_exists($this->aBannerGroup, 'validate')) {
                 if (!$this->aBannerGroup->validate($validator)) {
                     $failureMap->addAll($this->aBannerGroup->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aBannerClient, 'validate')) {
+                if (!$this->aBannerClient->validate($validator)) {
+                    $failureMap->addAll($this->aBannerClient->getValidationFailures());
                 }
             }
             // If validate() method exists, the validate-behavior is configured for related object

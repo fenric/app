@@ -28,16 +28,16 @@
 		</select>
 		<div class="help-block error"></div>
 	</div>
-	<!-- <div class="form-group" data-name="banner_client_id">
+	<div class="form-group" data-name="banner_client_id">
 		<label>Клиент баннера</label>
 		<select class="form-control select-picker" name="banner_client_id">
 			<option value=""></option>
 			{{repeat clients}}
-				<option value="{{id}}" {{when id is equal | this.__parent__.banner_client_id}}selected{{endwhen id}}>{{title}}</option>
+				<option value="{{id}}" {{when id is equal | this.__parent__.banner_client_id}}selected{{endwhen id}}>{{contact_name}}</option>
 			{{endrepeat clients}}
 		</select>
 		<div class="help-block error"></div>
-	</div> -->
+	</div>
 	<hr>
 
 	<div class="form-group" data-name="title">

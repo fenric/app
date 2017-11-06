@@ -132,6 +132,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithBannerGroupRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the BannerGroupRelatedByUpdatedBy relation
  * @method     ChildUserQuery innerJoinWithBannerGroupRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the BannerGroupRelatedByUpdatedBy relation
  *
+ * @method     ChildUserQuery leftJoinBannerClientRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the BannerClientRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinBannerClientRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BannerClientRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinBannerClientRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the BannerClientRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery joinWithBannerClientRelatedByCreatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BannerClientRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithBannerClientRelatedByCreatedBy() Adds a LEFT JOIN clause and with to the query using the BannerClientRelatedByCreatedBy relation
+ * @method     ChildUserQuery rightJoinWithBannerClientRelatedByCreatedBy() Adds a RIGHT JOIN clause and with to the query using the BannerClientRelatedByCreatedBy relation
+ * @method     ChildUserQuery innerJoinWithBannerClientRelatedByCreatedBy() Adds a INNER JOIN clause and with to the query using the BannerClientRelatedByCreatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinBannerClientRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the BannerClientRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinBannerClientRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BannerClientRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinBannerClientRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the BannerClientRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery joinWithBannerClientRelatedByUpdatedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BannerClientRelatedByUpdatedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithBannerClientRelatedByUpdatedBy() Adds a LEFT JOIN clause and with to the query using the BannerClientRelatedByUpdatedBy relation
+ * @method     ChildUserQuery rightJoinWithBannerClientRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the BannerClientRelatedByUpdatedBy relation
+ * @method     ChildUserQuery innerJoinWithBannerClientRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the BannerClientRelatedByUpdatedBy relation
+ *
  * @method     ChildUserQuery leftJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the CommentRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CommentRelatedByCreatedBy relation
  * @method     ChildUserQuery innerJoinCommentRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the CommentRelatedByCreatedBy relation
@@ -352,7 +372,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithUserFavorite() Adds a RIGHT JOIN clause and with to the query using the UserFavorite relation
  * @method     ChildUserQuery innerJoinWithUserFavorite() Adds a INNER JOIN clause and with to the query using the UserFavorite relation
  *
- * @method     \Propel\Models\BannerQuery|\Propel\Models\BannerGroupQuery|\Propel\Models\CommentQuery|\Propel\Models\FieldQuery|\Propel\Models\PollQuery|\Propel\Models\PollVariantQuery|\Propel\Models\SectionQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\RadioQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\BannerQuery|\Propel\Models\BannerGroupQuery|\Propel\Models\BannerClientQuery|\Propel\Models\CommentQuery|\Propel\Models\FieldQuery|\Propel\Models\PollQuery|\Propel\Models\PollVariantQuery|\Propel\Models\SectionQuery|\Propel\Models\PublicationQuery|\Propel\Models\PublicationPhotoQuery|\Propel\Models\RadioQuery|\Propel\Models\SnippetQuery|\Propel\Models\TagQuery|\Propel\Models\UserFavoriteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -1887,6 +1907,152 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinBannerGroupRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'BannerGroupRelatedByUpdatedBy', '\Propel\Models\BannerGroupQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\BannerClient object
+     *
+     * @param \Propel\Models\BannerClient|ObjectCollection $bannerClient the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBannerClientRelatedByCreatedBy($bannerClient, $comparison = null)
+    {
+        if ($bannerClient instanceof \Propel\Models\BannerClient) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $bannerClient->getCreatedBy(), $comparison);
+        } elseif ($bannerClient instanceof ObjectCollection) {
+            return $this
+                ->useBannerClientRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($bannerClient->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBannerClientRelatedByCreatedBy() only accepts arguments of type \Propel\Models\BannerClient or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BannerClientRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBannerClientRelatedByCreatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BannerClientRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BannerClientRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BannerClientRelatedByCreatedBy relation BannerClient object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\BannerClientQuery A secondary query class using the current class as primary query
+     */
+    public function useBannerClientRelatedByCreatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinBannerClientRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BannerClientRelatedByCreatedBy', '\Propel\Models\BannerClientQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\BannerClient object
+     *
+     * @param \Propel\Models\BannerClient|ObjectCollection $bannerClient the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBannerClientRelatedByUpdatedBy($bannerClient, $comparison = null)
+    {
+        if ($bannerClient instanceof \Propel\Models\BannerClient) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $bannerClient->getUpdatedBy(), $comparison);
+        } elseif ($bannerClient instanceof ObjectCollection) {
+            return $this
+                ->useBannerClientRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($bannerClient->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBannerClientRelatedByUpdatedBy() only accepts arguments of type \Propel\Models\BannerClient or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BannerClientRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBannerClientRelatedByUpdatedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BannerClientRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BannerClientRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BannerClientRelatedByUpdatedBy relation BannerClient object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\BannerClientQuery A secondary query class using the current class as primary query
+     */
+    public function useBannerClientRelatedByUpdatedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinBannerClientRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BannerClientRelatedByUpdatedBy', '\Propel\Models\BannerClientQuery');
     }
 
     /**

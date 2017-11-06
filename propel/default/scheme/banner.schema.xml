@@ -3,7 +3,9 @@
 
 	<table name="banner">
 		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+
 		<column name="banner_group_id" type="integer" />
+		<column name="banner_client_id" type="integer" />
 
 		<column name="title" type="varchar" required="true" primaryString="true" />
 		<column name="description" type="longvarchar" />
@@ -38,6 +40,15 @@
 			onUpdate="cascade"
 			defaultJoin="INNER JOIN">
 			<reference local="banner_group_id" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="ba745caa-f137-4de7-83c6-410fb898114b"
+			foreignTable="banner_client"
+			onDelete="cascade"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="banner_client_id" foreign="id" />
 		</foreign-key>
 
 		<foreign-key
@@ -96,6 +107,7 @@
 
 		<behavior name="validate">
 			<parameter name="1d3cf254-bf5c-11e7-a782-6f777aef7709" value="{column: banner_group_id, validator: NotBlank}" />
+			<parameter name="10f98111-cd18-47c4-8b76-04546df25031" value="{column: banner_client_id, validator: NotBlank}" />
 
 			<parameter name="1d3dc652-bf5c-11e7-ac3d-47555fd33204" value="{column: title, validator: NotBlank}" />
 			<parameter name="1d4377c8-bf5c-11e7-84fa-bb42a22d1de0" value="{column: title, validator: Length, options: {max: 255}}" />
@@ -179,6 +191,78 @@
 
 			<parameter name="1d4d0964-bf5c-11e7-bbde-7fae13bc21c4" value="{column: title, validator: NotBlank}" />
 			<parameter name="1d4c3c00-bf5c-11e7-bd97-9348d134984b" value="{column: title, validator: Length, options: {max: 255}}" />
+		</behavior>
+	</table>
+
+	<table name="banner_client">
+		<column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+
+		<column name="contact_name" type="varchar" required="true" primaryString="true" />
+		<column name="contact_email" type="varchar" required="true" />
+
+		<column name="description" type="longvarchar" />
+
+		<column name="created_at" type="timestamp" />
+		<column name="created_by" type="integer" />
+
+		<column name="updated_at" type="timestamp" />
+		<column name="updated_by" type="integer" />
+
+		<foreign-key
+			name="a53adea3-2561-4abc-bade-9932c7b6e7a8"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="created_by" foreign="id" />
+		</foreign-key>
+
+		<foreign-key
+			name="a839d390-8478-409a-8c23-8e21247a28ce"
+			foreignTable="user"
+			onDelete="setnull"
+			onUpdate="cascade"
+			defaultJoin="INNER JOIN">
+			<reference local="updated_by" foreign="id" />
+		</foreign-key>
+
+		<unique>
+			<unique-column name="contact_email" />
+		</unique>
+
+		<index name="bd5562e4-3c8b-4c20-9657-e688f975b6ac">
+			<index-column name="contact_name" />
+		</index>
+
+		<index name="b2890d49-6261-4896-b22d-0f8f676b9e77">
+			<index-column name="created_at" />
+			<index-column name="updated_at" />
+		</index>
+
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB" />
+			<parameter name="Charset" value="utf8" />
+			<parameter name="Collate" value="utf8_unicode_ci" />
+		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Authorable">
+			<parameter name="create_column" value="created_by" />
+			<parameter name="update_column" value="updated_by" />
+		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Timestampable">
+			<parameter name="create_column" value="created_at" />
+			<parameter name="update_column" value="updated_at" />
+		</behavior>
+
+		<behavior name="validate">
+			<parameter name="4c620812-c2e0-11e7-9e78-bbe4dc2aa351" value="{column: contact_name, validator: NotBlank}" />
+			<parameter name="4c62edea-c2e0-11e7-b240-73730e8304a9" value="{column: contact_name, validator: Length, options: {max: 255}}" />
+
+			<parameter name="4c636e3c-c2e0-11e7-a7d6-2f53cb3d1b38" value="{column: contact_email, validator: NotBlank}" />
+			<parameter name="4c63f5dc-c2e0-11e7-9c52-4b0773c3338e" value="{column: contact_email, validator: Email}" />
+			<parameter name="4c64e992-c2e0-11e7-861c-a3de0e5d9ed7" value="{column: contact_email, validator: Length, options: {max: 255}}" />
+			<parameter name="4b07a2bb-245c-4f2b-81cc-56e9725dcda7" value="{column: contact_email, validator: Unique}" />
 		</behavior>
 	</table>
 </database>

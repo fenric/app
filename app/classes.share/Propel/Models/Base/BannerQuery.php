@@ -22,6 +22,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildBannerQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildBannerQuery orderByBannerGroupId($order = Criteria::ASC) Order by the banner_group_id column
+ * @method     ChildBannerQuery orderByBannerClientId($order = Criteria::ASC) Order by the banner_client_id column
  * @method     ChildBannerQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method     ChildBannerQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method     ChildBannerQuery orderByPicture($order = Criteria::ASC) Order by the picture column
@@ -43,6 +44,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildBannerQuery groupById() Group by the id column
  * @method     ChildBannerQuery groupByBannerGroupId() Group by the banner_group_id column
+ * @method     ChildBannerQuery groupByBannerClientId() Group by the banner_client_id column
  * @method     ChildBannerQuery groupByTitle() Group by the title column
  * @method     ChildBannerQuery groupByDescription() Group by the description column
  * @method     ChildBannerQuery groupByPicture() Group by the picture column
@@ -80,6 +82,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBannerQuery rightJoinWithBannerGroup() Adds a RIGHT JOIN clause and with to the query using the BannerGroup relation
  * @method     ChildBannerQuery innerJoinWithBannerGroup() Adds a INNER JOIN clause and with to the query using the BannerGroup relation
  *
+ * @method     ChildBannerQuery leftJoinBannerClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the BannerClient relation
+ * @method     ChildBannerQuery rightJoinBannerClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BannerClient relation
+ * @method     ChildBannerQuery innerJoinBannerClient($relationAlias = null) Adds a INNER JOIN clause to the query using the BannerClient relation
+ *
+ * @method     ChildBannerQuery joinWithBannerClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BannerClient relation
+ *
+ * @method     ChildBannerQuery leftJoinWithBannerClient() Adds a LEFT JOIN clause and with to the query using the BannerClient relation
+ * @method     ChildBannerQuery rightJoinWithBannerClient() Adds a RIGHT JOIN clause and with to the query using the BannerClient relation
+ * @method     ChildBannerQuery innerJoinWithBannerClient() Adds a INNER JOIN clause and with to the query using the BannerClient relation
+ *
  * @method     ChildBannerQuery leftJoinUserRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByCreatedBy relation
  * @method     ChildBannerQuery rightJoinUserRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByCreatedBy relation
  * @method     ChildBannerQuery innerJoinUserRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByCreatedBy relation
@@ -100,13 +112,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBannerQuery rightJoinWithUserRelatedByUpdatedBy() Adds a RIGHT JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
  * @method     ChildBannerQuery innerJoinWithUserRelatedByUpdatedBy() Adds a INNER JOIN clause and with to the query using the UserRelatedByUpdatedBy relation
  *
- * @method     \Propel\Models\BannerGroupQuery|\Propel\Models\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Propel\Models\BannerGroupQuery|\Propel\Models\BannerClientQuery|\Propel\Models\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildBanner findOne(ConnectionInterface $con = null) Return the first ChildBanner matching the query
  * @method     ChildBanner findOneOrCreate(ConnectionInterface $con = null) Return the first ChildBanner matching the query, or a new ChildBanner object populated from the query conditions when no match is found
  *
  * @method     ChildBanner findOneById(int $id) Return the first ChildBanner filtered by the id column
  * @method     ChildBanner findOneByBannerGroupId(int $banner_group_id) Return the first ChildBanner filtered by the banner_group_id column
+ * @method     ChildBanner findOneByBannerClientId(int $banner_client_id) Return the first ChildBanner filtered by the banner_client_id column
  * @method     ChildBanner findOneByTitle(string $title) Return the first ChildBanner filtered by the title column
  * @method     ChildBanner findOneByDescription(string $description) Return the first ChildBanner filtered by the description column
  * @method     ChildBanner findOneByPicture(string $picture) Return the first ChildBanner filtered by the picture column
@@ -131,6 +144,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildBanner requireOneById(int $id) Return the first ChildBanner filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBanner requireOneByBannerGroupId(int $banner_group_id) Return the first ChildBanner filtered by the banner_group_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildBanner requireOneByBannerClientId(int $banner_client_id) Return the first ChildBanner filtered by the banner_client_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBanner requireOneByTitle(string $title) Return the first ChildBanner filtered by the title column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBanner requireOneByDescription(string $description) Return the first ChildBanner filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBanner requireOneByPicture(string $picture) Return the first ChildBanner filtered by the picture column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -153,6 +167,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBanner[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildBanner objects based on current ModelCriteria
  * @method     ChildBanner[]|ObjectCollection findById(int $id) Return ChildBanner objects filtered by the id column
  * @method     ChildBanner[]|ObjectCollection findByBannerGroupId(int $banner_group_id) Return ChildBanner objects filtered by the banner_group_id column
+ * @method     ChildBanner[]|ObjectCollection findByBannerClientId(int $banner_client_id) Return ChildBanner objects filtered by the banner_client_id column
  * @method     ChildBanner[]|ObjectCollection findByTitle(string $title) Return ChildBanner objects filtered by the title column
  * @method     ChildBanner[]|ObjectCollection findByDescription(string $description) Return ChildBanner objects filtered by the description column
  * @method     ChildBanner[]|ObjectCollection findByPicture(string $picture) Return ChildBanner objects filtered by the picture column
@@ -269,7 +284,7 @@ abstract class BannerQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, banner_group_id, title, description, picture, picture_alt, picture_title, hyperlink_url, hyperlink_title, hyperlink_target, show_start, show_end, shows, shows_limit, clicks, clicks_limit, created_at, created_by, updated_at, updated_by FROM fenric_banner WHERE id = :p0';
+        $sql = 'SELECT id, banner_group_id, banner_client_id, title, description, picture, picture_alt, picture_title, hyperlink_url, hyperlink_title, hyperlink_target, show_start, show_end, shows, shows_limit, clicks, clicks_limit, created_at, created_by, updated_at, updated_by FROM fenric_banner WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -441,6 +456,49 @@ abstract class BannerQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(BannerTableMap::COL_BANNER_GROUP_ID, $bannerGroupId, $comparison);
+    }
+
+    /**
+     * Filter the query on the banner_client_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByBannerClientId(1234); // WHERE banner_client_id = 1234
+     * $query->filterByBannerClientId(array(12, 34)); // WHERE banner_client_id IN (12, 34)
+     * $query->filterByBannerClientId(array('min' => 12)); // WHERE banner_client_id > 12
+     * </code>
+     *
+     * @see       filterByBannerClient()
+     *
+     * @param     mixed $bannerClientId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildBannerQuery The current query, for fluid interface
+     */
+    public function filterByBannerClientId($bannerClientId = null, $comparison = null)
+    {
+        if (is_array($bannerClientId)) {
+            $useMinMax = false;
+            if (isset($bannerClientId['min'])) {
+                $this->addUsingAlias(BannerTableMap::COL_BANNER_CLIENT_ID, $bannerClientId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($bannerClientId['max'])) {
+                $this->addUsingAlias(BannerTableMap::COL_BANNER_CLIENT_ID, $bannerClientId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(BannerTableMap::COL_BANNER_CLIENT_ID, $bannerClientId, $comparison);
     }
 
     /**
@@ -1140,6 +1198,83 @@ abstract class BannerQuery extends ModelCriteria
         return $this
             ->joinBannerGroup($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'BannerGroup', '\Propel\Models\BannerGroupQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\BannerClient object
+     *
+     * @param \Propel\Models\BannerClient|ObjectCollection $bannerClient The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildBannerQuery The current query, for fluid interface
+     */
+    public function filterByBannerClient($bannerClient, $comparison = null)
+    {
+        if ($bannerClient instanceof \Propel\Models\BannerClient) {
+            return $this
+                ->addUsingAlias(BannerTableMap::COL_BANNER_CLIENT_ID, $bannerClient->getId(), $comparison);
+        } elseif ($bannerClient instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(BannerTableMap::COL_BANNER_CLIENT_ID, $bannerClient->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByBannerClient() only accepts arguments of type \Propel\Models\BannerClient or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BannerClient relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildBannerQuery The current query, for fluid interface
+     */
+    public function joinBannerClient($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BannerClient');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BannerClient');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BannerClient relation BannerClient object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\BannerClientQuery A secondary query class using the current class as primary query
+     */
+    public function useBannerClientQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinBannerClient($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BannerClient', '\Propel\Models\BannerClientQuery');
     }
 
     /**

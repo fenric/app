@@ -13,6 +13,10 @@ use Propel\Models\BannerGroup;
 use Propel\Models\BannerGroupQuery;
 use Propel\Models\Map\BannerGroupTableMap;
 
+use Propel\Models\BannerClient;
+use Propel\Models\BannerClientQuery;
+use Propel\Models\Map\BannerClientTableMap;
+
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Fenric\Controllers\Abstractable\CRUD;
@@ -27,6 +31,110 @@ class ApiBanner extends CRUD
 	 * Доступ к контроллеру
 	 */
 	use Access;
+
+	/**
+	 * Создание клиента
+	 */
+	protected function actionCreateClientViaPOST() : void
+	{
+		parent::create(new BannerClient(), [
+			BannerClientTableMap::COL_CONTACT_NAME => $this->request->post->get('contact_name'),
+			BannerClientTableMap::COL_CONTACT_EMAIL => $this->request->post->get('contact_email'),
+			BannerClientTableMap::COL_DESCRIPTION => $this->request->post->get('description'),
+		]);
+	}
+
+	/**
+	 * Обновление клиента
+	 */
+	protected function actionUpdateClientViaPATCH() : void
+	{
+		parent::update(BannerClientQuery::create(), [
+			BannerClientTableMap::COL_CONTACT_NAME => $this->request->post->get('contact_name'),
+			BannerClientTableMap::COL_CONTACT_EMAIL => $this->request->post->get('contact_email'),
+			BannerClientTableMap::COL_DESCRIPTION => $this->request->post->get('description'),
+		]);
+	}
+
+	/**
+	 * Удаление клиента
+	 */
+	protected function actionDeleteClientViaDELETE() : void
+	{
+		parent::delete(BannerClientQuery::create());
+	}
+
+	/**
+	 * Чтение клиента
+	 */
+	protected function actionReadClientViaGET() : void
+	{
+		parent::read(BannerClientQuery::create(), [
+			BannerClientTableMap::COL_ID,
+			BannerClientTableMap::COL_CONTACT_NAME,
+			BannerClientTableMap::COL_CONTACT_EMAIL,
+			BannerClientTableMap::COL_DESCRIPTION,
+		]);
+	}
+
+	/**
+	 * Выгрузка групп
+	 */
+	protected function actionAllClientsViaGET() : void
+	{
+		fenric()->callSharedService('event', [self::EVENT_PREPARE_ITEM])->subscribe(function(BannerClient $client, array & $json)
+		{
+			$json['banners'] = $client->getCountBanners();
+
+			if ($client->getUserRelatedByCreatedBy() instanceof ActiveRecordInterface)
+			{
+				$json['creator'] = [];
+				$json['creator']['id'] = $client->getUserRelatedByCreatedBy()->getId();
+				$json['creator']['username'] = $client->getUserRelatedByCreatedBy()->getUsername();
+			}
+
+			if ($client->getUserRelatedByUpdatedBy() instanceof ActiveRecordInterface)
+			{
+				$json['updater'] = [];
+				$json['updater']['id'] = $client->getUserRelatedByUpdatedBy()->getId();
+				$json['updater']['username'] = $client->getUserRelatedByUpdatedBy()->getUsername();
+			}
+		});
+
+		$query = BannerClientQuery::create();
+		$query->orderById(Criteria::DESC);
+
+		if ($this->request->query->exists('q'))
+		{
+			$q = searchable($this->request->query->get('q'), 32, '%');
+
+			$query->_or()->filterById(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByContactName(sprintf('%%%s%%', $q), Criteria::LIKE);
+			$query->_or()->filterByContactEmail(sprintf('%%%s%%', $q), Criteria::LIKE);
+		}
+
+		parent::all($query, [
+			BannerClientTableMap::COL_ID,
+			BannerClientTableMap::COL_CONTACT_NAME,
+			BannerClientTableMap::COL_CONTACT_EMAIL,
+			BannerClientTableMap::COL_CREATED_AT,
+			BannerClientTableMap::COL_UPDATED_AT,
+		]);
+	}
+
+	/**
+	 * Простая выгрузка клиентов
+	 */
+	protected function actionUnloadClientsViaGET() : void
+	{
+		$this->response->setJsonContent(
+			fenric('query')
+				->select(BannerClientTableMap::COL_ID)
+				->select(BannerClientTableMap::COL_CONTACT_NAME)
+				->from(BannerClientTableMap::TABLE_NAME)
+			->toArray()
+		);
+	}
 
 	/**
 	 * Создание группы
@@ -144,6 +252,7 @@ class ApiBanner extends CRUD
 	{
 		parent::create(new Banner(), [
 			BannerTableMap::COL_BANNER_GROUP_ID => $this->request->post->get('banner_group_id'),
+			BannerTableMap::COL_BANNER_CLIENT_ID => $this->request->post->get('banner_client_id'),
 			BannerTableMap::COL_TITLE => $this->request->post->get('title'),
 			BannerTableMap::COL_DESCRIPTION => $this->request->post->get('description'),
 			BannerTableMap::COL_PICTURE => $this->request->post->get('picture'),
@@ -166,6 +275,7 @@ class ApiBanner extends CRUD
 	{
 		parent::update(BannerQuery::create(), [
 			BannerTableMap::COL_BANNER_GROUP_ID => $this->request->post->get('banner_group_id'),
+			BannerTableMap::COL_BANNER_CLIENT_ID => $this->request->post->get('banner_client_id'),
 			BannerTableMap::COL_TITLE => $this->request->post->get('title'),
 			BannerTableMap::COL_DESCRIPTION => $this->request->post->get('description'),
 			BannerTableMap::COL_PICTURE => $this->request->post->get('picture'),
@@ -197,6 +307,7 @@ class ApiBanner extends CRUD
 		parent::read(BannerQuery::create(), [
 			BannerTableMap::COL_ID,
 			BannerTableMap::COL_BANNER_GROUP_ID,
+			BannerTableMap::COL_BANNER_CLIENT_ID,
 			BannerTableMap::COL_TITLE,
 			BannerTableMap::COL_DESCRIPTION,
 			BannerTableMap::COL_PICTURE,
@@ -227,6 +338,14 @@ class ApiBanner extends CRUD
 				$json['group']['id'] = $banner->getBannerGroup()->getId();
 				$json['group']['code'] = $banner->getBannerGroup()->getCode();
 				$json['group']['title'] = $banner->getBannerGroup()->getTitle();
+			}
+
+			if ($banner->getBannerClient() instanceof ActiveRecordInterface)
+			{
+				$json['client'] = [];
+				$json['client']['id'] = $banner->getBannerClient()->getId();
+				$json['client']['contact_name'] = $banner->getBannerClient()->getContactName();
+				$json['client']['contact_email'] = $banner->getBannerClient()->getContactEmail();
 			}
 
 			if ($banner->getUserRelatedByCreatedBy() instanceof ActiveRecordInterface)

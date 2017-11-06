@@ -2,19 +2,11 @@
 	<nav class="top">
 		<div class="clearfix">
 			<div class="btn-group pull-left">
-				<button type="button" class="btn btn-sm btn-success" onclick="$desktop.component('banners').add()">
+				<button type="button" class="btn btn-sm btn-success" onclick="$desktop.component('banners.clients').add()">
 					<i class="fa fa-plus" aria-hidden="true"></i> Добавить
 				</button>
-				<button type="button" class="btn btn-sm btn-default" onclick="$desktop.component('banners').list()">
-					<i class="fa fa-refresh" aria-hidden="true"></i> Обновить
-				</button>
-			</div>
-			<div class="btn-group pull-left" style="margin-left: 10px;">
-				<button type="button" class="btn btn-sm btn-default" onclick="$desktop.component('banners.groups').list()">
-					<i class="fa fa-folder" aria-hidden="true"></i> Группы
-				</button>
 				<button type="button" class="btn btn-sm btn-default" onclick="$desktop.component('banners.clients').list()">
-					<i class="fa fa-users" aria-hidden="true"></i> Клиенты
+					<i class="fa fa-refresh" aria-hidden="true"></i> Обновить
 				</button>
 			</div>
 			<div class="btn-group pull-right">
@@ -27,11 +19,11 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<td width="30%">
+					<td width="35%">
 						<span class="text-muted">Основное</span>
 					</td>
-					<td width="30%">
-						<span class="text-muted">Статистика</span>
+					<td width="35%">
+						<span class="text-muted">Контакты</span>
 					</td>
 					<td width="20%">
 						<span class="text-muted">История изменений</span>
@@ -48,50 +40,15 @@
 							<p><strong>ID</strong>
 							<br><span>{{id}}</span></p>
 
-							<p><strong>Название</strong>
-							<br><span>{{title}}</span></p>
-
-							<p><strong>Описание</strong>
-							<br><span>{{description}}</span></p>
-
-							{{when group is not empty}}
-							<p><strong>Группа</strong>
-							<br><span>{{group.title}}</span></p>
-							{{endwhen group}}
-
-							{{when client is not empty}}
-							<p><strong>Клиент</strong>
-							<br><span>{{client.contact_name}}</span></p>
-							{{endwhen client}}
+							<p><strong>Количество баннеров</strong>
+							<br><span>{{banners|0}}</span></p>
 						</td>
 						<td>
-							{{when shows_limit is empty}}
-							<p><strong>Количество показов</strong>
-							<br><span>{{shows|0}}</span></p>
-							{{endwhen shows_limit}}
+							<p><strong>Имя контактного лица</strong>
+							<br><span>{{contact_name}}</span></p>
 
-							{{when shows_limit is not empty}}
-							<p><strong>Количество показов</strong>
-							<br><span>{{shows|0}} / {{shows_limit}}</span></p>
-							{{endwhen shows_limit}}
-
-							{{when clicks_limit is empty}}
-							<p><strong>Количество переходов</strong>
-							<br><span>{{clicks|0}}</span></p>
-							{{endwhen clicks_limit}}
-
-							{{when clicks_limit is not empty}}
-							<p><strong>Количество переходов</strong>
-							<br><span>{{clicks|0}} / {{clicks_limit}}</span></p>
-							{{endwhen clicks_limit}}
-
-							{{when actived is true}}
-							<p><span class="label label-success">Активен</span></p>
-							{{endwhen actived}}
-
-							{{when actived is false}}
-							<p><span class="label label-danger">Не активен</span></p>
-							{{endwhen actived}}
+							<p><strong>Электронный адрес контактного лица</strong>
+							<br><a href="mailto:{{contact_email}}">{{contact_email}}</a></p>
 						</td>
 						<td>
 							<p><strong>Создано</strong>
@@ -104,10 +61,7 @@
 						</td>
 						<td>
 							<div class="btn-group-vertical btn-block">
-								<a class="btn btn-block btn-sm btn-default" href="/upload/{{picture}}" target="_blank">
-									<small>Изображение</small>
-								</a>
-								<button class="btn btn-block btn-sm btn-warning" type="button" onclick="$desktop.component('banners').edit({{id}})">
+								<button class="btn btn-block btn-sm btn-warning" type="button" onclick="$desktop.component('banners.clients').edit({{id}})">
 									<small>Редактировать</small>
 								</button>
 								<button class="btn btn-block btn-sm btn-danger delete" type="button" data-id="{{id}}" data-toggle="confirmation" data-placement="left" data-title="Уверены?" data-btn-ok-label="Да" data-btn-cancel-label="Отмена">
@@ -126,12 +80,12 @@
 	<ul class="pagination">
 		{{when items.pagination.links.current is greater than | this.items.pagination.links.first}}
 			<li>
-				<a href="javascript:$desktop.component('banners').list({page: {{items.pagination.links.first}}})">
+				<a href="javascript:$desktop.component('banners.clients').list({page: {{items.pagination.links.first}}})">
 					<i class="fa fa-angle-double-left" aria-hidden="true"></i>
 				</a>
 			</li>
 			<li>
-				<a href="javascript:$desktop.component('banners').list({page: {{items.pagination.links.previous}}})">
+				<a href="javascript:$desktop.component('banners.clients').list({page: {{items.pagination.links.previous}}})">
 					<i class="fa fa-angle-left" aria-hidden="true"></i>
 				</a>
 			</li>
@@ -146,7 +100,7 @@
 
 			{{when page is not equal | this.__parent__.items.pagination.links.current}}
 				<li>
-					<a href="javascript:$desktop.component('banners').list({page: {{page}}})">
+					<a href="javascript:$desktop.component('banners.clients').list({page: {{page}}})">
 						<span>{{page}}</span>
 					</a>
 				</li>
@@ -155,12 +109,12 @@
 
 		{{when items.pagination.links.current is less than | this.items.pagination.links.last}}
 			<li>
-				<a href="javascript:$desktop.component('banners').list({page: {{items.pagination.links.next}}})">
+				<a href="javascript:$desktop.component('banners.clients').list({page: {{items.pagination.links.next}}})">
 					<i class="fa fa-angle-right" aria-hidden="true"></i>
 				</a>
 			</li>
 			<li>
-				<a href="javascript:$desktop.component('banners').list({page: {{items.pagination.links.last}}})">
+				<a href="javascript:$desktop.component('banners.clients').list({page: {{items.pagination.links.last}}})">
 					<i class="fa fa-angle-double-right" aria-hidden="true"></i>
 				</a>
 			</li>

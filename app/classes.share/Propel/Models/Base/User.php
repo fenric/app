@@ -6,6 +6,8 @@ use \DateTime;
 use \Exception;
 use \PDO;
 use Propel\Models\Banner as ChildBanner;
+use Propel\Models\BannerClient as ChildBannerClient;
+use Propel\Models\BannerClientQuery as ChildBannerClientQuery;
 use Propel\Models\BannerGroup as ChildBannerGroup;
 use Propel\Models\BannerGroupQuery as ChildBannerGroupQuery;
 use Propel\Models\BannerQuery as ChildBannerQuery;
@@ -33,6 +35,7 @@ use Propel\Models\User as ChildUser;
 use Propel\Models\UserFavorite as ChildUserFavorite;
 use Propel\Models\UserFavoriteQuery as ChildUserFavoriteQuery;
 use Propel\Models\UserQuery as ChildUserQuery;
+use Propel\Models\Map\BannerClientTableMap;
 use Propel\Models\Map\BannerGroupTableMap;
 use Propel\Models\Map\BannerTableMap;
 use Propel\Models\Map\CommentTableMap;
@@ -403,6 +406,18 @@ abstract class User implements ActiveRecordInterface
     protected $collBannerGroupsRelatedByUpdatedByPartial;
 
     /**
+     * @var        ObjectCollection|ChildBannerClient[] Collection to store aggregation of ChildBannerClient objects.
+     */
+    protected $collBannerClientsRelatedByCreatedBy;
+    protected $collBannerClientsRelatedByCreatedByPartial;
+
+    /**
+     * @var        ObjectCollection|ChildBannerClient[] Collection to store aggregation of ChildBannerClient objects.
+     */
+    protected $collBannerClientsRelatedByUpdatedBy;
+    protected $collBannerClientsRelatedByUpdatedByPartial;
+
+    /**
      * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
      */
     protected $collCommentsRelatedByCreatedBy;
@@ -582,6 +597,18 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildBannerGroup[]
      */
     protected $bannerGroupsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBannerClient[]
+     */
+    protected $bannerClientsRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBannerClient[]
+     */
+    protected $bannerClientsRelatedByUpdatedByScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -2464,6 +2491,10 @@ abstract class User implements ActiveRecordInterface
 
             $this->collBannerGroupsRelatedByUpdatedBy = null;
 
+            $this->collBannerClientsRelatedByCreatedBy = null;
+
+            $this->collBannerClientsRelatedByUpdatedBy = null;
+
             $this->collCommentsRelatedByCreatedBy = null;
 
             $this->collCommentsRelatedByUpdatedBy = null;
@@ -2688,6 +2719,42 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collBannerGroupsRelatedByUpdatedBy !== null) {
                 foreach ($this->collBannerGroupsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->bannerClientsRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->bannerClientsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->bannerClientsRelatedByCreatedByScheduledForDeletion as $bannerClientRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $bannerClientRelatedByCreatedBy->save($con);
+                    }
+                    $this->bannerClientsRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBannerClientsRelatedByCreatedBy !== null) {
+                foreach ($this->collBannerClientsRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->bannerClientsRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->bannerClientsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->bannerClientsRelatedByUpdatedByScheduledForDeletion as $bannerClientRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $bannerClientRelatedByUpdatedBy->save($con);
+                    }
+                    $this->bannerClientsRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBannerClientsRelatedByUpdatedBy !== null) {
+                foreach ($this->collBannerClientsRelatedByUpdatedBy as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -3624,6 +3691,36 @@ abstract class User implements ActiveRecordInterface
 
                 $result[$key] = $this->collBannerGroupsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collBannerClientsRelatedByCreatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'bannerClients';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_banner_clients';
+                        break;
+                    default:
+                        $key = 'BannerClients';
+                }
+
+                $result[$key] = $this->collBannerClientsRelatedByCreatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collBannerClientsRelatedByUpdatedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'bannerClients';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_banner_clients';
+                        break;
+                    default:
+                        $key = 'BannerClients';
+                }
+
+                $result[$key] = $this->collBannerClientsRelatedByUpdatedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collCommentsRelatedByCreatedBy) {
 
                 switch ($keyType) {
@@ -4480,6 +4577,18 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getBannerClientsRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBannerClientRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getBannerClientsRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBannerClientRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getCommentsRelatedByCreatedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addCommentRelatedByCreatedBy($relObj->copy($deepCopy));
@@ -4667,6 +4776,14 @@ abstract class User implements ActiveRecordInterface
         }
         if ('BannerGroupRelatedByUpdatedBy' == $relationName) {
             $this->initBannerGroupsRelatedByUpdatedBy();
+            return;
+        }
+        if ('BannerClientRelatedByCreatedBy' == $relationName) {
+            $this->initBannerClientsRelatedByCreatedBy();
+            return;
+        }
+        if ('BannerClientRelatedByUpdatedBy' == $relationName) {
+            $this->initBannerClientsRelatedByUpdatedBy();
             return;
         }
         if ('CommentRelatedByCreatedBy' == $relationName) {
@@ -5009,6 +5126,31 @@ abstract class User implements ActiveRecordInterface
         return $this->getBannersRelatedByCreatedBy($query, $con);
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related BannersRelatedByCreatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildBanner[] List of ChildBanner objects
+     */
+    public function getBannersRelatedByCreatedByJoinBannerClient(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildBannerQuery::create(null, $criteria);
+        $query->joinWith('BannerClient', $joinBehavior);
+
+        return $this->getBannersRelatedByCreatedBy($query, $con);
+    }
+
     /**
      * Clears out the collBannersRelatedByUpdatedBy collection
      *
@@ -5255,6 +5397,31 @@ abstract class User implements ActiveRecordInterface
     {
         $query = ChildBannerQuery::create(null, $criteria);
         $query->joinWith('BannerGroup', $joinBehavior);
+
+        return $this->getBannersRelatedByUpdatedBy($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related BannersRelatedByUpdatedBy from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildBanner[] List of ChildBanner objects
+     */
+    public function getBannersRelatedByUpdatedByJoinBannerClient(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildBannerQuery::create(null, $criteria);
+        $query->joinWith('BannerClient', $joinBehavior);
 
         return $this->getBannersRelatedByUpdatedBy($query, $con);
     }
@@ -5704,6 +5871,456 @@ abstract class User implements ActiveRecordInterface
             }
             $this->bannerGroupsRelatedByUpdatedByScheduledForDeletion[]= $bannerGroupRelatedByUpdatedBy;
             $bannerGroupRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collBannerClientsRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBannerClientsRelatedByCreatedBy()
+     */
+    public function clearBannerClientsRelatedByCreatedBy()
+    {
+        $this->collBannerClientsRelatedByCreatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBannerClientsRelatedByCreatedBy collection loaded partially.
+     */
+    public function resetPartialBannerClientsRelatedByCreatedBy($v = true)
+    {
+        $this->collBannerClientsRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collBannerClientsRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collBannerClientsRelatedByCreatedBy collection to an empty array (like clearcollBannerClientsRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBannerClientsRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collBannerClientsRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BannerClientTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBannerClientsRelatedByCreatedBy = new $collectionClassName;
+        $this->collBannerClientsRelatedByCreatedBy->setModel('\Propel\Models\BannerClient');
+    }
+
+    /**
+     * Gets an array of ChildBannerClient objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBannerClient[] List of ChildBannerClient objects
+     * @throws PropelException
+     */
+    public function getBannerClientsRelatedByCreatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannerClientsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collBannerClientsRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBannerClientsRelatedByCreatedBy) {
+                // return empty collection
+                $this->initBannerClientsRelatedByCreatedBy();
+            } else {
+                $collBannerClientsRelatedByCreatedBy = ChildBannerClientQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBannerClientsRelatedByCreatedByPartial && count($collBannerClientsRelatedByCreatedBy)) {
+                        $this->initBannerClientsRelatedByCreatedBy(false);
+
+                        foreach ($collBannerClientsRelatedByCreatedBy as $obj) {
+                            if (false == $this->collBannerClientsRelatedByCreatedBy->contains($obj)) {
+                                $this->collBannerClientsRelatedByCreatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collBannerClientsRelatedByCreatedByPartial = true;
+                    }
+
+                    return $collBannerClientsRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collBannerClientsRelatedByCreatedBy) {
+                    foreach ($this->collBannerClientsRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collBannerClientsRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBannerClientsRelatedByCreatedBy = $collBannerClientsRelatedByCreatedBy;
+                $this->collBannerClientsRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collBannerClientsRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildBannerClient objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bannerClientsRelatedByCreatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setBannerClientsRelatedByCreatedBy(Collection $bannerClientsRelatedByCreatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildBannerClient[] $bannerClientsRelatedByCreatedByToDelete */
+        $bannerClientsRelatedByCreatedByToDelete = $this->getBannerClientsRelatedByCreatedBy(new Criteria(), $con)->diff($bannerClientsRelatedByCreatedBy);
+
+
+        $this->bannerClientsRelatedByCreatedByScheduledForDeletion = $bannerClientsRelatedByCreatedByToDelete;
+
+        foreach ($bannerClientsRelatedByCreatedByToDelete as $bannerClientRelatedByCreatedByRemoved) {
+            $bannerClientRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collBannerClientsRelatedByCreatedBy = null;
+        foreach ($bannerClientsRelatedByCreatedBy as $bannerClientRelatedByCreatedBy) {
+            $this->addBannerClientRelatedByCreatedBy($bannerClientRelatedByCreatedBy);
+        }
+
+        $this->collBannerClientsRelatedByCreatedBy = $bannerClientsRelatedByCreatedBy;
+        $this->collBannerClientsRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BannerClient objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related BannerClient objects.
+     * @throws PropelException
+     */
+    public function countBannerClientsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannerClientsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collBannerClientsRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBannerClientsRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBannerClientsRelatedByCreatedBy());
+            }
+
+            $query = ChildBannerClientQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collBannerClientsRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildBannerClient object to this object
+     * through the ChildBannerClient foreign key attribute.
+     *
+     * @param  ChildBannerClient $l ChildBannerClient
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addBannerClientRelatedByCreatedBy(ChildBannerClient $l)
+    {
+        if ($this->collBannerClientsRelatedByCreatedBy === null) {
+            $this->initBannerClientsRelatedByCreatedBy();
+            $this->collBannerClientsRelatedByCreatedByPartial = true;
+        }
+
+        if (!$this->collBannerClientsRelatedByCreatedBy->contains($l)) {
+            $this->doAddBannerClientRelatedByCreatedBy($l);
+
+            if ($this->bannerClientsRelatedByCreatedByScheduledForDeletion and $this->bannerClientsRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->bannerClientsRelatedByCreatedByScheduledForDeletion->remove($this->bannerClientsRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBannerClient $bannerClientRelatedByCreatedBy The ChildBannerClient object to add.
+     */
+    protected function doAddBannerClientRelatedByCreatedBy(ChildBannerClient $bannerClientRelatedByCreatedBy)
+    {
+        $this->collBannerClientsRelatedByCreatedBy[]= $bannerClientRelatedByCreatedBy;
+        $bannerClientRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param  ChildBannerClient $bannerClientRelatedByCreatedBy The ChildBannerClient object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeBannerClientRelatedByCreatedBy(ChildBannerClient $bannerClientRelatedByCreatedBy)
+    {
+        if ($this->getBannerClientsRelatedByCreatedBy()->contains($bannerClientRelatedByCreatedBy)) {
+            $pos = $this->collBannerClientsRelatedByCreatedBy->search($bannerClientRelatedByCreatedBy);
+            $this->collBannerClientsRelatedByCreatedBy->remove($pos);
+            if (null === $this->bannerClientsRelatedByCreatedByScheduledForDeletion) {
+                $this->bannerClientsRelatedByCreatedByScheduledForDeletion = clone $this->collBannerClientsRelatedByCreatedBy;
+                $this->bannerClientsRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->bannerClientsRelatedByCreatedByScheduledForDeletion[]= $bannerClientRelatedByCreatedBy;
+            $bannerClientRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collBannerClientsRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBannerClientsRelatedByUpdatedBy()
+     */
+    public function clearBannerClientsRelatedByUpdatedBy()
+    {
+        $this->collBannerClientsRelatedByUpdatedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBannerClientsRelatedByUpdatedBy collection loaded partially.
+     */
+    public function resetPartialBannerClientsRelatedByUpdatedBy($v = true)
+    {
+        $this->collBannerClientsRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collBannerClientsRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collBannerClientsRelatedByUpdatedBy collection to an empty array (like clearcollBannerClientsRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBannerClientsRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collBannerClientsRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BannerClientTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBannerClientsRelatedByUpdatedBy = new $collectionClassName;
+        $this->collBannerClientsRelatedByUpdatedBy->setModel('\Propel\Models\BannerClient');
+    }
+
+    /**
+     * Gets an array of ChildBannerClient objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBannerClient[] List of ChildBannerClient objects
+     * @throws PropelException
+     */
+    public function getBannerClientsRelatedByUpdatedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannerClientsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collBannerClientsRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBannerClientsRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initBannerClientsRelatedByUpdatedBy();
+            } else {
+                $collBannerClientsRelatedByUpdatedBy = ChildBannerClientQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBannerClientsRelatedByUpdatedByPartial && count($collBannerClientsRelatedByUpdatedBy)) {
+                        $this->initBannerClientsRelatedByUpdatedBy(false);
+
+                        foreach ($collBannerClientsRelatedByUpdatedBy as $obj) {
+                            if (false == $this->collBannerClientsRelatedByUpdatedBy->contains($obj)) {
+                                $this->collBannerClientsRelatedByUpdatedBy->append($obj);
+                            }
+                        }
+
+                        $this->collBannerClientsRelatedByUpdatedByPartial = true;
+                    }
+
+                    return $collBannerClientsRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collBannerClientsRelatedByUpdatedBy) {
+                    foreach ($this->collBannerClientsRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collBannerClientsRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBannerClientsRelatedByUpdatedBy = $collBannerClientsRelatedByUpdatedBy;
+                $this->collBannerClientsRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collBannerClientsRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ChildBannerClient objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bannerClientsRelatedByUpdatedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setBannerClientsRelatedByUpdatedBy(Collection $bannerClientsRelatedByUpdatedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildBannerClient[] $bannerClientsRelatedByUpdatedByToDelete */
+        $bannerClientsRelatedByUpdatedByToDelete = $this->getBannerClientsRelatedByUpdatedBy(new Criteria(), $con)->diff($bannerClientsRelatedByUpdatedBy);
+
+
+        $this->bannerClientsRelatedByUpdatedByScheduledForDeletion = $bannerClientsRelatedByUpdatedByToDelete;
+
+        foreach ($bannerClientsRelatedByUpdatedByToDelete as $bannerClientRelatedByUpdatedByRemoved) {
+            $bannerClientRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collBannerClientsRelatedByUpdatedBy = null;
+        foreach ($bannerClientsRelatedByUpdatedBy as $bannerClientRelatedByUpdatedBy) {
+            $this->addBannerClientRelatedByUpdatedBy($bannerClientRelatedByUpdatedBy);
+        }
+
+        $this->collBannerClientsRelatedByUpdatedBy = $bannerClientsRelatedByUpdatedBy;
+        $this->collBannerClientsRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BannerClient objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related BannerClient objects.
+     * @throws PropelException
+     */
+    public function countBannerClientsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBannerClientsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collBannerClientsRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBannerClientsRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBannerClientsRelatedByUpdatedBy());
+            }
+
+            $query = ChildBannerClientQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collBannerClientsRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a ChildBannerClient object to this object
+     * through the ChildBannerClient foreign key attribute.
+     *
+     * @param  ChildBannerClient $l ChildBannerClient
+     * @return $this|\Propel\Models\User The current object (for fluent API support)
+     */
+    public function addBannerClientRelatedByUpdatedBy(ChildBannerClient $l)
+    {
+        if ($this->collBannerClientsRelatedByUpdatedBy === null) {
+            $this->initBannerClientsRelatedByUpdatedBy();
+            $this->collBannerClientsRelatedByUpdatedByPartial = true;
+        }
+
+        if (!$this->collBannerClientsRelatedByUpdatedBy->contains($l)) {
+            $this->doAddBannerClientRelatedByUpdatedBy($l);
+
+            if ($this->bannerClientsRelatedByUpdatedByScheduledForDeletion and $this->bannerClientsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->bannerClientsRelatedByUpdatedByScheduledForDeletion->remove($this->bannerClientsRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBannerClient $bannerClientRelatedByUpdatedBy The ChildBannerClient object to add.
+     */
+    protected function doAddBannerClientRelatedByUpdatedBy(ChildBannerClient $bannerClientRelatedByUpdatedBy)
+    {
+        $this->collBannerClientsRelatedByUpdatedBy[]= $bannerClientRelatedByUpdatedBy;
+        $bannerClientRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param  ChildBannerClient $bannerClientRelatedByUpdatedBy The ChildBannerClient object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeBannerClientRelatedByUpdatedBy(ChildBannerClient $bannerClientRelatedByUpdatedBy)
+    {
+        if ($this->getBannerClientsRelatedByUpdatedBy()->contains($bannerClientRelatedByUpdatedBy)) {
+            $pos = $this->collBannerClientsRelatedByUpdatedBy->search($bannerClientRelatedByUpdatedBy);
+            $this->collBannerClientsRelatedByUpdatedBy->remove($pos);
+            if (null === $this->bannerClientsRelatedByUpdatedByScheduledForDeletion) {
+                $this->bannerClientsRelatedByUpdatedByScheduledForDeletion = clone $this->collBannerClientsRelatedByUpdatedBy;
+                $this->bannerClientsRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->bannerClientsRelatedByUpdatedByScheduledForDeletion[]= $bannerClientRelatedByUpdatedBy;
+            $bannerClientRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
         }
 
         return $this;
@@ -11067,6 +11684,16 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collBannerClientsRelatedByCreatedBy) {
+                foreach ($this->collBannerClientsRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collBannerClientsRelatedByUpdatedBy) {
+                foreach ($this->collBannerClientsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collCommentsRelatedByCreatedBy) {
                 foreach ($this->collCommentsRelatedByCreatedBy as $o) {
                     $o->clearAllReferences($deep);
@@ -11183,6 +11810,8 @@ abstract class User implements ActiveRecordInterface
         $this->collBannersRelatedByUpdatedBy = null;
         $this->collBannerGroupsRelatedByCreatedBy = null;
         $this->collBannerGroupsRelatedByUpdatedBy = null;
+        $this->collBannerClientsRelatedByCreatedBy = null;
+        $this->collBannerClientsRelatedByUpdatedBy = null;
         $this->collCommentsRelatedByCreatedBy = null;
         $this->collCommentsRelatedByUpdatedBy = null;
         $this->collCommentsRelatedByDeletedBy = null;
@@ -11299,6 +11928,24 @@ abstract class User implements ActiveRecordInterface
             }
             if (null !== $this->collBannerGroupsRelatedByUpdatedBy) {
                 foreach ($this->collBannerGroupsRelatedByUpdatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collBannerClientsRelatedByCreatedBy) {
+                foreach ($this->collBannerClientsRelatedByCreatedBy as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collBannerClientsRelatedByUpdatedBy) {
+                foreach ($this->collBannerClientsRelatedByUpdatedBy as $referrerFK) {
                     if (method_exists($referrerFK, 'validate')) {
                         if (!$referrerFK->validate($validator)) {
                             $failureMap->addAll($referrerFK->getValidationFailures());

@@ -343,6 +343,20 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'SET NULL', 'CASCADE', 'BannerGroupsRelatedByUpdatedBy', false);
+        $this->addRelation('BannerClientRelatedByCreatedBy', '\\Propel\\Models\\BannerClient', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':created_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'BannerClientsRelatedByCreatedBy', false);
+        $this->addRelation('BannerClientRelatedByUpdatedBy', '\\Propel\\Models\\BannerClient', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':updated_by',
+    1 => ':id',
+  ),
+), 'SET NULL', 'CASCADE', 'BannerClientsRelatedByUpdatedBy', false);
         $this->addRelation('CommentRelatedByCreatedBy', '\\Propel\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -520,6 +534,7 @@ class UserTableMap extends TableMap
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         BannerTableMap::clearInstancePool();
         BannerGroupTableMap::clearInstancePool();
+        BannerClientTableMap::clearInstancePool();
         CommentTableMap::clearInstancePool();
         FieldTableMap::clearInstancePool();
         PollTableMap::clearInstancePool();
