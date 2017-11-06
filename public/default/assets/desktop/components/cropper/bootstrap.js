@@ -18,6 +18,10 @@
 	 */
 	$component.prototype.edit = function(photo, complete)
 	{
+		if (! photo) {
+			return;
+		}
+
 		var modal, cropper;
 
 		this.with(function(self)
@@ -76,37 +80,35 @@
 									break;
 
 								case 'aspect-ratio' :
+									cropper.crop();
 									cropper.setAspectRatio(eval(
 										element.getAttribute('data-value')
 									));
 									break;
 
+								case 'aspect-ratio-off' :
+									cropper.clear();
+									cropper.setAspectRatio(NaN);
+									break;
+
 								case 'reset' :
+									cropper.clear();
 									cropper.reset();
 									break;
 
 								case 'save' :
-									cropper.getCroppedCanvas().toBlob(function(blob)
-									{
-										modal.block();
-
-										$desktop.component('uploader').image(blob, function(response)
-										{
-											modal.close();
-
-											self.edit(response.file);
-
-											if (complete instanceof Function) {
-												complete.call(this, response);
-											}
-
-										}).complete(function()
-										{
-											modal.unblock();
-										});
-									});
+									self.save(modal, cropper, complete);
 									break;
 							}
+						});
+
+						modal.on('modal.content.save', function() {
+							self.save(modal, cropper, complete);
+						});
+
+						modal.on('modal.content.reload', function() {
+							cropper.clear();
+							cropper.reset();
 						});
 					});
 
@@ -119,13 +121,46 @@
 					});
 
 					cropper = new Cropper(element, {
-						autoCrop: true,
-						autoCropArea: 0.8,
+						viewMode: 1,
+						autoCrop: false,
 					});
 
 					modal.onclosing(function() {
 						cropper.destroy();
 					});
+				});
+			});
+		});
+	};
+
+	/**
+	 * Сохранение фотографии
+	 */
+	$component.prototype.save = function(modal, cropper, complete)
+	{
+		this.with(function(self)
+		{
+			modal.block();
+
+			cropper.getCroppedCanvas().toBlob(function(blob)
+			{
+				$desktop.component('uploader').image(blob, function(response)
+				{
+					modal.close();
+
+					if (complete instanceof Function)
+					{
+						if (complete.call(this, response) === false)
+						{
+							return;
+						}
+					}
+
+					self.edit('/upload/' + response.file);
+
+				}).complete(function()
+				{
+					modal.unblock();
 				});
 			});
 		});
