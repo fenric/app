@@ -87,6 +87,8 @@ fenric()->registerResolvableSharedService('poll', function(string $resolver, str
 {
 	$query = \Propel\Models\PollQuery::create();
 
+	$resolver = strtr($resolver, '.', '-');
+
 	if (0 === strcmp($resolver, 'random'))
 	{
 		$resolver = \Propel\Models\PollQuery::getRandomCode();
@@ -108,6 +110,8 @@ fenric()->registerResolvableSharedService('poll', function(string $resolver, str
 fenric()->registerResolvableSharedService('banner', function(string $resolver, string $default = null)
 {
 	$query = \Propel\Models\BannerGroupQuery::create();
+
+	$resolver = strtr($resolver, '.', '-');
 
 	$model = $query->findOneByCode($resolver);
 
@@ -366,7 +370,7 @@ function searchable(string $value, int $maxLength = 64, string $wordSeparator = 
  */
 function snippetable(string $value = null) : string
 {
-	$expression = '/{#(?<type>(?:poll|banner|snippet)):(?<code>[a-zA-Z0-9-\.]{1,255})(?:\050(?<json>{[^\050\051]+})\051)?#}/su';
+	$expression = '/{#(?<type>[a-z]+):(?<code>[a-zA-Z0-9-\.]{1,255})(?:\050(?<json>{[^\050\051]+})\051)?#}/su';
 
 	return preg_replace_callback($expression, function($matches)
 	{
@@ -374,7 +378,22 @@ function snippetable(string $value = null) : string
 
 		$parameters = [$matches['code'], $options['default'] ?? null];
 
-		return fenric()->callSharedService($matches['type'], $parameters);
+		switch ($matches['type'])
+		{
+			case 'poll' :
+				return fenric()->callSharedService('poll', $parameters);
+				break;
+
+			case 'banner' :
+				return fenric()->callSharedService('banner', $parameters);
+				break;
+
+			case 'snippet' :
+				return fenric()->callSharedService('snippet', $parameters);
+				break;
+		}
+
+		return $matches[0];
 
 	}, $value);
 }
