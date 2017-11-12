@@ -1,0 +1,98 @@
+.comments-reload {
+	cursor: pointer;
+
+	position: fixed;
+	top: 50%;
+	right: 0;
+
+	padding: 10px;
+	background-color: #fafafa;
+
+	color: #999;
+	font-size: 1.5em;
+	line-height: 1;
+
+	border-top: 1px solid #eaeaea;
+	border-left: 1px solid #eaeaea;
+	border-bottom: 1px solid #eaeaea;
+
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+.comments-reload.locked {
+	opacity: 0.25;
+}
+
+.comments-form {
+	position: relative;
+	padding: 10px;
+	background-color: #fafafa;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.comments-form.sending:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: rgba(255,255,255,0.75) url('/assets/i/spinner-blue.svg') center center no-repeat;
+}
+
+.comments-form textarea {
+	min-height: 100px;
+}
+.comments-form .btn:hover {
+	cursor: pointer;
+}
+.comments-form .btn:focus {
+	z-index: 0 !important;
+}
+
+.comments-form .comments-form-picture-preview:not(:empty) {
+	margin-top: 10px;
+}
+.comments-form .comments-form-picture-preview img:hover {
+	cursor: pointer;
+	background-color: red;
+}
+
+.comments-container ol {
+	list-style: none;
+}
+.comments-container > ol {
+	padding-left: 0;
+}
+.comments-container > ol ol {
+	padding-left: 20px;
+	border-left: 1px dotted #fafafa;
+}
+.comments-container ol.hoverable {
+	border-left-color: #bebebe;
+}
+
+.comments-container .comment {
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: #fafafa;
+	border: 1px solid #eaeaea;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+}
+.comments-container .comment .comment-control {
+	opacity: 0.2;
+}
+.comments-container .comment:hover .comment-control {
+	opacity: 1;
+}

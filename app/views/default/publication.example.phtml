@@ -25,13 +25,18 @@
 <?php $this->stop() ?>
 
 <?php $this->start('stylesheets') ?>
+<link type="text/css" href="<?= asset('/assets/app/components/comments/styles.css') ?>" rel="stylesheet" />
 <?php $this->stop() ?>
 
 <?php $this->start('javascripts') ?>
+<script src="<?= asset('/assets/app/components/comments/bootstrap.js') ?>"></script>
+
 <script>
-	jQuery('.carousel').carousel({
-		keyboard: false,
-	});
+	jQuery('.carousel').carousel({keyboard: false});
+</script>
+
+<script>
+	new $comments(<?= $publication->getId() ?>);
 </script>
 <?php $this->stop() ?>
 
@@ -200,3 +205,15 @@
 		</div>
 	</div>
 <?php endif; ?>
+
+<div class="container mt-5">
+	<div class="mb-3 display-4">Комментарии <small class="text-muted">(<?= $publication->getCountComments() ?>)</small></div>
+	<div class="comments">
+		<div class="comments-container"></div>
+		<div class="comments-form-container"></div>
+	</div>
+</div>
+
+<div class="comments-reload">
+	<i class="fa fa-refresh"></i>
+</div>

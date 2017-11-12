@@ -23,26 +23,38 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCommentQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildCommentQuery orderByParentId($order = Criteria::ASC) Order by the parent_id column
  * @method     ChildCommentQuery orderByPublicationId($order = Criteria::ASC) Order by the publication_id column
+ * @method     ChildCommentQuery orderByPicture($order = Criteria::ASC) Order by the picture column
  * @method     ChildCommentQuery orderByContent($order = Criteria::ASC) Order by the content column
  * @method     ChildCommentQuery orderByIsDeleted($order = Criteria::ASC) Order by the is_deleted column
+ * @method     ChildCommentQuery orderByIsVerified($order = Criteria::ASC) Order by the is_verified column
+ * @method     ChildCommentQuery orderByUpdatingReason($order = Criteria::ASC) Order by the updating_reason column
+ * @method     ChildCommentQuery orderByDeletingReason($order = Criteria::ASC) Order by the deleting_reason column
  * @method     ChildCommentQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildCommentQuery orderByCreatedBy($order = Criteria::ASC) Order by the created_by column
  * @method     ChildCommentQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method     ChildCommentQuery orderByUpdatedBy($order = Criteria::ASC) Order by the updated_by column
  * @method     ChildCommentQuery orderByDeletedAt($order = Criteria::ASC) Order by the deleted_at column
  * @method     ChildCommentQuery orderByDeletedBy($order = Criteria::ASC) Order by the deleted_by column
+ * @method     ChildCommentQuery orderByVerifiedAt($order = Criteria::ASC) Order by the verified_at column
+ * @method     ChildCommentQuery orderByVerifiedBy($order = Criteria::ASC) Order by the verified_by column
  *
  * @method     ChildCommentQuery groupById() Group by the id column
  * @method     ChildCommentQuery groupByParentId() Group by the parent_id column
  * @method     ChildCommentQuery groupByPublicationId() Group by the publication_id column
+ * @method     ChildCommentQuery groupByPicture() Group by the picture column
  * @method     ChildCommentQuery groupByContent() Group by the content column
  * @method     ChildCommentQuery groupByIsDeleted() Group by the is_deleted column
+ * @method     ChildCommentQuery groupByIsVerified() Group by the is_verified column
+ * @method     ChildCommentQuery groupByUpdatingReason() Group by the updating_reason column
+ * @method     ChildCommentQuery groupByDeletingReason() Group by the deleting_reason column
  * @method     ChildCommentQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildCommentQuery groupByCreatedBy() Group by the created_by column
  * @method     ChildCommentQuery groupByUpdatedAt() Group by the updated_at column
  * @method     ChildCommentQuery groupByUpdatedBy() Group by the updated_by column
  * @method     ChildCommentQuery groupByDeletedAt() Group by the deleted_at column
  * @method     ChildCommentQuery groupByDeletedBy() Group by the deleted_by column
+ * @method     ChildCommentQuery groupByVerifiedAt() Group by the verified_at column
+ * @method     ChildCommentQuery groupByVerifiedBy() Group by the verified_by column
  *
  * @method     ChildCommentQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildCommentQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -52,15 +64,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCommentQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildCommentQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildCommentQuery leftJoinCommentRelatedByParentId($relationAlias = null) Adds a LEFT JOIN clause to the query using the CommentRelatedByParentId relation
- * @method     ChildCommentQuery rightJoinCommentRelatedByParentId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CommentRelatedByParentId relation
- * @method     ChildCommentQuery innerJoinCommentRelatedByParentId($relationAlias = null) Adds a INNER JOIN clause to the query using the CommentRelatedByParentId relation
+ * @method     ChildCommentQuery leftJoinParent($relationAlias = null) Adds a LEFT JOIN clause to the query using the Parent relation
+ * @method     ChildCommentQuery rightJoinParent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Parent relation
+ * @method     ChildCommentQuery innerJoinParent($relationAlias = null) Adds a INNER JOIN clause to the query using the Parent relation
  *
- * @method     ChildCommentQuery joinWithCommentRelatedByParentId($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CommentRelatedByParentId relation
+ * @method     ChildCommentQuery joinWithParent($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Parent relation
  *
- * @method     ChildCommentQuery leftJoinWithCommentRelatedByParentId() Adds a LEFT JOIN clause and with to the query using the CommentRelatedByParentId relation
- * @method     ChildCommentQuery rightJoinWithCommentRelatedByParentId() Adds a RIGHT JOIN clause and with to the query using the CommentRelatedByParentId relation
- * @method     ChildCommentQuery innerJoinWithCommentRelatedByParentId() Adds a INNER JOIN clause and with to the query using the CommentRelatedByParentId relation
+ * @method     ChildCommentQuery leftJoinWithParent() Adds a LEFT JOIN clause and with to the query using the Parent relation
+ * @method     ChildCommentQuery rightJoinWithParent() Adds a RIGHT JOIN clause and with to the query using the Parent relation
+ * @method     ChildCommentQuery innerJoinWithParent() Adds a INNER JOIN clause and with to the query using the Parent relation
  *
  * @method     ChildCommentQuery leftJoinPublication($relationAlias = null) Adds a LEFT JOIN clause to the query using the Publication relation
  * @method     ChildCommentQuery rightJoinPublication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Publication relation
@@ -102,6 +114,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCommentQuery rightJoinWithUserRelatedByDeletedBy() Adds a RIGHT JOIN clause and with to the query using the UserRelatedByDeletedBy relation
  * @method     ChildCommentQuery innerJoinWithUserRelatedByDeletedBy() Adds a INNER JOIN clause and with to the query using the UserRelatedByDeletedBy relation
  *
+ * @method     ChildCommentQuery leftJoinUserRelatedByVerifiedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByVerifiedBy relation
+ * @method     ChildCommentQuery rightJoinUserRelatedByVerifiedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByVerifiedBy relation
+ * @method     ChildCommentQuery innerJoinUserRelatedByVerifiedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByVerifiedBy relation
+ *
+ * @method     ChildCommentQuery joinWithUserRelatedByVerifiedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the UserRelatedByVerifiedBy relation
+ *
+ * @method     ChildCommentQuery leftJoinWithUserRelatedByVerifiedBy() Adds a LEFT JOIN clause and with to the query using the UserRelatedByVerifiedBy relation
+ * @method     ChildCommentQuery rightJoinWithUserRelatedByVerifiedBy() Adds a RIGHT JOIN clause and with to the query using the UserRelatedByVerifiedBy relation
+ * @method     ChildCommentQuery innerJoinWithUserRelatedByVerifiedBy() Adds a INNER JOIN clause and with to the query using the UserRelatedByVerifiedBy relation
+ *
  * @method     ChildCommentQuery leftJoinCommentRelatedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the CommentRelatedById relation
  * @method     ChildCommentQuery rightJoinCommentRelatedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CommentRelatedById relation
  * @method     ChildCommentQuery innerJoinCommentRelatedById($relationAlias = null) Adds a INNER JOIN clause to the query using the CommentRelatedById relation
@@ -120,14 +142,20 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildComment findOneById(int $id) Return the first ChildComment filtered by the id column
  * @method     ChildComment findOneByParentId(int $parent_id) Return the first ChildComment filtered by the parent_id column
  * @method     ChildComment findOneByPublicationId(int $publication_id) Return the first ChildComment filtered by the publication_id column
+ * @method     ChildComment findOneByPicture(string $picture) Return the first ChildComment filtered by the picture column
  * @method     ChildComment findOneByContent(string $content) Return the first ChildComment filtered by the content column
  * @method     ChildComment findOneByIsDeleted(boolean $is_deleted) Return the first ChildComment filtered by the is_deleted column
+ * @method     ChildComment findOneByIsVerified(boolean $is_verified) Return the first ChildComment filtered by the is_verified column
+ * @method     ChildComment findOneByUpdatingReason(string $updating_reason) Return the first ChildComment filtered by the updating_reason column
+ * @method     ChildComment findOneByDeletingReason(string $deleting_reason) Return the first ChildComment filtered by the deleting_reason column
  * @method     ChildComment findOneByCreatedAt(string $created_at) Return the first ChildComment filtered by the created_at column
  * @method     ChildComment findOneByCreatedBy(int $created_by) Return the first ChildComment filtered by the created_by column
  * @method     ChildComment findOneByUpdatedAt(string $updated_at) Return the first ChildComment filtered by the updated_at column
  * @method     ChildComment findOneByUpdatedBy(int $updated_by) Return the first ChildComment filtered by the updated_by column
  * @method     ChildComment findOneByDeletedAt(string $deleted_at) Return the first ChildComment filtered by the deleted_at column
- * @method     ChildComment findOneByDeletedBy(int $deleted_by) Return the first ChildComment filtered by the deleted_by column *
+ * @method     ChildComment findOneByDeletedBy(int $deleted_by) Return the first ChildComment filtered by the deleted_by column
+ * @method     ChildComment findOneByVerifiedAt(string $verified_at) Return the first ChildComment filtered by the verified_at column
+ * @method     ChildComment findOneByVerifiedBy(int $verified_by) Return the first ChildComment filtered by the verified_by column *
 
  * @method     ChildComment requirePk($key, ConnectionInterface $con = null) Return the ChildComment by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOne(ConnectionInterface $con = null) Return the first ChildComment matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -135,27 +163,39 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildComment requireOneById(int $id) Return the first ChildComment filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByParentId(int $parent_id) Return the first ChildComment filtered by the parent_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByPublicationId(int $publication_id) Return the first ChildComment filtered by the publication_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildComment requireOneByPicture(string $picture) Return the first ChildComment filtered by the picture column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByContent(string $content) Return the first ChildComment filtered by the content column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByIsDeleted(boolean $is_deleted) Return the first ChildComment filtered by the is_deleted column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildComment requireOneByIsVerified(boolean $is_verified) Return the first ChildComment filtered by the is_verified column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildComment requireOneByUpdatingReason(string $updating_reason) Return the first ChildComment filtered by the updating_reason column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildComment requireOneByDeletingReason(string $deleting_reason) Return the first ChildComment filtered by the deleting_reason column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByCreatedAt(string $created_at) Return the first ChildComment filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByCreatedBy(int $created_by) Return the first ChildComment filtered by the created_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByUpdatedAt(string $updated_at) Return the first ChildComment filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByUpdatedBy(int $updated_by) Return the first ChildComment filtered by the updated_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByDeletedAt(string $deleted_at) Return the first ChildComment filtered by the deleted_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByDeletedBy(int $deleted_by) Return the first ChildComment filtered by the deleted_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildComment requireOneByVerifiedAt(string $verified_at) Return the first ChildComment filtered by the verified_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildComment requireOneByVerifiedBy(int $verified_by) Return the first ChildComment filtered by the verified_by column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildComment[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildComment objects based on current ModelCriteria
  * @method     ChildComment[]|ObjectCollection findById(int $id) Return ChildComment objects filtered by the id column
  * @method     ChildComment[]|ObjectCollection findByParentId(int $parent_id) Return ChildComment objects filtered by the parent_id column
  * @method     ChildComment[]|ObjectCollection findByPublicationId(int $publication_id) Return ChildComment objects filtered by the publication_id column
+ * @method     ChildComment[]|ObjectCollection findByPicture(string $picture) Return ChildComment objects filtered by the picture column
  * @method     ChildComment[]|ObjectCollection findByContent(string $content) Return ChildComment objects filtered by the content column
  * @method     ChildComment[]|ObjectCollection findByIsDeleted(boolean $is_deleted) Return ChildComment objects filtered by the is_deleted column
+ * @method     ChildComment[]|ObjectCollection findByIsVerified(boolean $is_verified) Return ChildComment objects filtered by the is_verified column
+ * @method     ChildComment[]|ObjectCollection findByUpdatingReason(string $updating_reason) Return ChildComment objects filtered by the updating_reason column
+ * @method     ChildComment[]|ObjectCollection findByDeletingReason(string $deleting_reason) Return ChildComment objects filtered by the deleting_reason column
  * @method     ChildComment[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildComment objects filtered by the created_at column
  * @method     ChildComment[]|ObjectCollection findByCreatedBy(int $created_by) Return ChildComment objects filtered by the created_by column
  * @method     ChildComment[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildComment objects filtered by the updated_at column
  * @method     ChildComment[]|ObjectCollection findByUpdatedBy(int $updated_by) Return ChildComment objects filtered by the updated_by column
  * @method     ChildComment[]|ObjectCollection findByDeletedAt(string $deleted_at) Return ChildComment objects filtered by the deleted_at column
  * @method     ChildComment[]|ObjectCollection findByDeletedBy(int $deleted_by) Return ChildComment objects filtered by the deleted_by column
+ * @method     ChildComment[]|ObjectCollection findByVerifiedAt(string $verified_at) Return ChildComment objects filtered by the verified_at column
+ * @method     ChildComment[]|ObjectCollection findByVerifiedBy(int $verified_by) Return ChildComment objects filtered by the verified_by column
  * @method     ChildComment[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -254,7 +294,7 @@ abstract class CommentQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, parent_id, publication_id, content, is_deleted, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by FROM fenric_comment WHERE id = :p0';
+        $sql = 'SELECT id, parent_id, publication_id, picture, content, is_deleted, is_verified, updating_reason, deleting_reason, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by, verified_at, verified_by FROM fenric_comment WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -395,7 +435,7 @@ abstract class CommentQuery extends ModelCriteria
      * $query->filterByParentId(array('min' => 12)); // WHERE parent_id > 12
      * </code>
      *
-     * @see       filterByCommentRelatedByParentId()
+     * @see       filterByParent()
      *
      * @param     mixed $parentId The value to use as filter.
      *              Use scalar values for equality.
@@ -472,6 +512,31 @@ abstract class CommentQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the picture column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPicture('fooValue');   // WHERE picture = 'fooValue'
+     * $query->filterByPicture('%fooValue%', Criteria::LIKE); // WHERE picture LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $picture The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByPicture($picture = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($picture)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CommentTableMap::COL_PICTURE, $picture, $comparison);
+    }
+
+    /**
      * Filter the query on the content column
      *
      * Example usage:
@@ -521,6 +586,83 @@ abstract class CommentQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CommentTableMap::COL_IS_DELETED, $isDeleted, $comparison);
+    }
+
+    /**
+     * Filter the query on the is_verified column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsVerified(true); // WHERE is_verified = true
+     * $query->filterByIsVerified('yes'); // WHERE is_verified = true
+     * </code>
+     *
+     * @param     boolean|string $isVerified The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByIsVerified($isVerified = null, $comparison = null)
+    {
+        if (is_string($isVerified)) {
+            $isVerified = in_array(strtolower($isVerified), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CommentTableMap::COL_IS_VERIFIED, $isVerified, $comparison);
+    }
+
+    /**
+     * Filter the query on the updating_reason column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUpdatingReason('fooValue');   // WHERE updating_reason = 'fooValue'
+     * $query->filterByUpdatingReason('%fooValue%', Criteria::LIKE); // WHERE updating_reason LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $updatingReason The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByUpdatingReason($updatingReason = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($updatingReason)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CommentTableMap::COL_UPDATING_REASON, $updatingReason, $comparison);
+    }
+
+    /**
+     * Filter the query on the deleting_reason column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDeletingReason('fooValue');   // WHERE deleting_reason = 'fooValue'
+     * $query->filterByDeletingReason('%fooValue%', Criteria::LIKE); // WHERE deleting_reason LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $deletingReason The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByDeletingReason($deletingReason = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($deletingReason)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CommentTableMap::COL_DELETING_REASON, $deletingReason, $comparison);
     }
 
     /**
@@ -782,6 +924,92 @@ abstract class CommentQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the verified_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVerifiedAt('2011-03-14'); // WHERE verified_at = '2011-03-14'
+     * $query->filterByVerifiedAt('now'); // WHERE verified_at = '2011-03-14'
+     * $query->filterByVerifiedAt(array('max' => 'yesterday')); // WHERE verified_at > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $verifiedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByVerifiedAt($verifiedAt = null, $comparison = null)
+    {
+        if (is_array($verifiedAt)) {
+            $useMinMax = false;
+            if (isset($verifiedAt['min'])) {
+                $this->addUsingAlias(CommentTableMap::COL_VERIFIED_AT, $verifiedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($verifiedAt['max'])) {
+                $this->addUsingAlias(CommentTableMap::COL_VERIFIED_AT, $verifiedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CommentTableMap::COL_VERIFIED_AT, $verifiedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the verified_by column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVerifiedBy(1234); // WHERE verified_by = 1234
+     * $query->filterByVerifiedBy(array(12, 34)); // WHERE verified_by IN (12, 34)
+     * $query->filterByVerifiedBy(array('min' => 12)); // WHERE verified_by > 12
+     * </code>
+     *
+     * @see       filterByUserRelatedByVerifiedBy()
+     *
+     * @param     mixed $verifiedBy The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByVerifiedBy($verifiedBy = null, $comparison = null)
+    {
+        if (is_array($verifiedBy)) {
+            $useMinMax = false;
+            if (isset($verifiedBy['min'])) {
+                $this->addUsingAlias(CommentTableMap::COL_VERIFIED_BY, $verifiedBy['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($verifiedBy['max'])) {
+                $this->addUsingAlias(CommentTableMap::COL_VERIFIED_BY, $verifiedBy['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CommentTableMap::COL_VERIFIED_BY, $verifiedBy, $comparison);
+    }
+
+    /**
      * Filter the query by a related \Propel\Models\Comment object
      *
      * @param \Propel\Models\Comment|ObjectCollection $comment The related object(s) to use as filter
@@ -791,7 +1019,7 @@ abstract class CommentQuery extends ModelCriteria
      *
      * @return ChildCommentQuery The current query, for fluid interface
      */
-    public function filterByCommentRelatedByParentId($comment, $comparison = null)
+    public function filterByParent($comment, $comparison = null)
     {
         if ($comment instanceof \Propel\Models\Comment) {
             return $this
@@ -804,22 +1032,22 @@ abstract class CommentQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(CommentTableMap::COL_PARENT_ID, $comment->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByCommentRelatedByParentId() only accepts arguments of type \Propel\Models\Comment or Collection');
+            throw new PropelException('filterByParent() only accepts arguments of type \Propel\Models\Comment or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the CommentRelatedByParentId relation
+     * Adds a JOIN clause to the query using the Parent relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildCommentQuery The current query, for fluid interface
      */
-    public function joinCommentRelatedByParentId($relationAlias = null, $joinType = 'INNER JOIN')
+    public function joinParent($relationAlias = null, $joinType = 'INNER JOIN')
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CommentRelatedByParentId');
+        $relationMap = $tableMap->getRelation('Parent');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -834,14 +1062,14 @@ abstract class CommentQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'CommentRelatedByParentId');
+            $this->addJoinObject($join, 'Parent');
         }
 
         return $this;
     }
 
     /**
-     * Use the CommentRelatedByParentId relation Comment object
+     * Use the Parent relation Comment object
      *
      * @see useQuery()
      *
@@ -851,11 +1079,11 @@ abstract class CommentQuery extends ModelCriteria
      *
      * @return \Propel\Models\CommentQuery A secondary query class using the current class as primary query
      */
-    public function useCommentRelatedByParentIdQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    public function useParentQuery($relationAlias = null, $joinType = 'INNER JOIN')
     {
         return $this
-            ->joinCommentRelatedByParentId($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CommentRelatedByParentId', '\Propel\Models\CommentQuery');
+            ->joinParent($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Parent', '\Propel\Models\CommentQuery');
     }
 
     /**
@@ -1164,6 +1392,83 @@ abstract class CommentQuery extends ModelCriteria
         return $this
             ->joinUserRelatedByDeletedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByDeletedBy', '\Propel\Models\UserQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\User object
+     *
+     * @param \Propel\Models\User|ObjectCollection $user The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByUserRelatedByVerifiedBy($user, $comparison = null)
+    {
+        if ($user instanceof \Propel\Models\User) {
+            return $this
+                ->addUsingAlias(CommentTableMap::COL_VERIFIED_BY, $user->getId(), $comparison);
+        } elseif ($user instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CommentTableMap::COL_VERIFIED_BY, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByUserRelatedByVerifiedBy() only accepts arguments of type \Propel\Models\User or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the UserRelatedByVerifiedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function joinUserRelatedByVerifiedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('UserRelatedByVerifiedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'UserRelatedByVerifiedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the UserRelatedByVerifiedBy relation User object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\UserQuery A secondary query class using the current class as primary query
+     */
+    public function useUserRelatedByVerifiedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinUserRelatedByVerifiedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByVerifiedBy', '\Propel\Models\UserQuery');
     }
 
     /**

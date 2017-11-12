@@ -182,6 +182,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithCommentRelatedByDeletedBy() Adds a RIGHT JOIN clause and with to the query using the CommentRelatedByDeletedBy relation
  * @method     ChildUserQuery innerJoinWithCommentRelatedByDeletedBy() Adds a INNER JOIN clause and with to the query using the CommentRelatedByDeletedBy relation
  *
+ * @method     ChildUserQuery leftJoinCommentRelatedByVerifiedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the CommentRelatedByVerifiedBy relation
+ * @method     ChildUserQuery rightJoinCommentRelatedByVerifiedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CommentRelatedByVerifiedBy relation
+ * @method     ChildUserQuery innerJoinCommentRelatedByVerifiedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the CommentRelatedByVerifiedBy relation
+ *
+ * @method     ChildUserQuery joinWithCommentRelatedByVerifiedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CommentRelatedByVerifiedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithCommentRelatedByVerifiedBy() Adds a LEFT JOIN clause and with to the query using the CommentRelatedByVerifiedBy relation
+ * @method     ChildUserQuery rightJoinWithCommentRelatedByVerifiedBy() Adds a RIGHT JOIN clause and with to the query using the CommentRelatedByVerifiedBy relation
+ * @method     ChildUserQuery innerJoinWithCommentRelatedByVerifiedBy() Adds a INNER JOIN clause and with to the query using the CommentRelatedByVerifiedBy relation
+ *
  * @method     ChildUserQuery leftJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the FieldRelatedByCreatedBy relation
  * @method     ChildUserQuery rightJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FieldRelatedByCreatedBy relation
  * @method     ChildUserQuery innerJoinFieldRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the FieldRelatedByCreatedBy relation
@@ -2272,6 +2282,79 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinCommentRelatedByDeletedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CommentRelatedByDeletedBy', '\Propel\Models\CommentQuery');
+    }
+
+    /**
+     * Filter the query by a related \Propel\Models\Comment object
+     *
+     * @param \Propel\Models\Comment|ObjectCollection $comment the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByCommentRelatedByVerifiedBy($comment, $comparison = null)
+    {
+        if ($comment instanceof \Propel\Models\Comment) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $comment->getVerifiedBy(), $comparison);
+        } elseif ($comment instanceof ObjectCollection) {
+            return $this
+                ->useCommentRelatedByVerifiedByQuery()
+                ->filterByPrimaryKeys($comment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCommentRelatedByVerifiedBy() only accepts arguments of type \Propel\Models\Comment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CommentRelatedByVerifiedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinCommentRelatedByVerifiedBy($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CommentRelatedByVerifiedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CommentRelatedByVerifiedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CommentRelatedByVerifiedBy relation Comment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Propel\Models\CommentQuery A secondary query class using the current class as primary query
+     */
+    public function useCommentRelatedByVerifiedByQuery($relationAlias = null, $joinType = 'INNER JOIN')
+    {
+        return $this
+            ->joinCommentRelatedByVerifiedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CommentRelatedByVerifiedBy', '\Propel\Models\CommentQuery');
     }
 
     /**

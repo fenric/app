@@ -59,7 +59,7 @@ class CommentTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 11;
+    const NUM_COLUMNS = 17;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class CommentTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 11;
+    const NUM_HYDRATE_COLUMNS = 17;
 
     /**
      * the column name for the id field
@@ -87,6 +87,11 @@ class CommentTableMap extends TableMap
     const COL_PUBLICATION_ID = 'fenric_comment.publication_id';
 
     /**
+     * the column name for the picture field
+     */
+    const COL_PICTURE = 'fenric_comment.picture';
+
+    /**
      * the column name for the content field
      */
     const COL_CONTENT = 'fenric_comment.content';
@@ -95,6 +100,21 @@ class CommentTableMap extends TableMap
      * the column name for the is_deleted field
      */
     const COL_IS_DELETED = 'fenric_comment.is_deleted';
+
+    /**
+     * the column name for the is_verified field
+     */
+    const COL_IS_VERIFIED = 'fenric_comment.is_verified';
+
+    /**
+     * the column name for the updating_reason field
+     */
+    const COL_UPDATING_REASON = 'fenric_comment.updating_reason';
+
+    /**
+     * the column name for the deleting_reason field
+     */
+    const COL_DELETING_REASON = 'fenric_comment.deleting_reason';
 
     /**
      * the column name for the created_at field
@@ -127,6 +147,16 @@ class CommentTableMap extends TableMap
     const COL_DELETED_BY = 'fenric_comment.deleted_by';
 
     /**
+     * the column name for the verified_at field
+     */
+    const COL_VERIFIED_AT = 'fenric_comment.verified_at';
+
+    /**
+     * the column name for the verified_by field
+     */
+    const COL_VERIFIED_BY = 'fenric_comment.verified_by';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -138,11 +168,11 @@ class CommentTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'ParentId', 'PublicationId', 'Content', 'IsDeleted', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', 'DeletedAt', 'DeletedBy', ),
-        self::TYPE_CAMELNAME     => array('id', 'parentId', 'publicationId', 'content', 'isDeleted', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'deletedAt', 'deletedBy', ),
-        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID, CommentTableMap::COL_PARENT_ID, CommentTableMap::COL_PUBLICATION_ID, CommentTableMap::COL_CONTENT, CommentTableMap::COL_IS_DELETED, CommentTableMap::COL_CREATED_AT, CommentTableMap::COL_CREATED_BY, CommentTableMap::COL_UPDATED_AT, CommentTableMap::COL_UPDATED_BY, CommentTableMap::COL_DELETED_AT, CommentTableMap::COL_DELETED_BY, ),
-        self::TYPE_FIELDNAME     => array('id', 'parent_id', 'publication_id', 'content', 'is_deleted', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        self::TYPE_PHPNAME       => array('Id', 'ParentId', 'PublicationId', 'Picture', 'Content', 'IsDeleted', 'IsVerified', 'UpdatingReason', 'DeletingReason', 'CreatedAt', 'CreatedBy', 'UpdatedAt', 'UpdatedBy', 'DeletedAt', 'DeletedBy', 'VerifiedAt', 'VerifiedBy', ),
+        self::TYPE_CAMELNAME     => array('id', 'parentId', 'publicationId', 'picture', 'content', 'isDeleted', 'isVerified', 'updatingReason', 'deletingReason', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'deletedAt', 'deletedBy', 'verifiedAt', 'verifiedBy', ),
+        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID, CommentTableMap::COL_PARENT_ID, CommentTableMap::COL_PUBLICATION_ID, CommentTableMap::COL_PICTURE, CommentTableMap::COL_CONTENT, CommentTableMap::COL_IS_DELETED, CommentTableMap::COL_IS_VERIFIED, CommentTableMap::COL_UPDATING_REASON, CommentTableMap::COL_DELETING_REASON, CommentTableMap::COL_CREATED_AT, CommentTableMap::COL_CREATED_BY, CommentTableMap::COL_UPDATED_AT, CommentTableMap::COL_UPDATED_BY, CommentTableMap::COL_DELETED_AT, CommentTableMap::COL_DELETED_BY, CommentTableMap::COL_VERIFIED_AT, CommentTableMap::COL_VERIFIED_BY, ),
+        self::TYPE_FIELDNAME     => array('id', 'parent_id', 'publication_id', 'picture', 'content', 'is_deleted', 'is_verified', 'updating_reason', 'deleting_reason', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by', 'verified_at', 'verified_by', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
 
     /**
@@ -152,11 +182,11 @@ class CommentTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'ParentId' => 1, 'PublicationId' => 2, 'Content' => 3, 'IsDeleted' => 4, 'CreatedAt' => 5, 'CreatedBy' => 6, 'UpdatedAt' => 7, 'UpdatedBy' => 8, 'DeletedAt' => 9, 'DeletedBy' => 10, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'parentId' => 1, 'publicationId' => 2, 'content' => 3, 'isDeleted' => 4, 'createdAt' => 5, 'createdBy' => 6, 'updatedAt' => 7, 'updatedBy' => 8, 'deletedAt' => 9, 'deletedBy' => 10, ),
-        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID => 0, CommentTableMap::COL_PARENT_ID => 1, CommentTableMap::COL_PUBLICATION_ID => 2, CommentTableMap::COL_CONTENT => 3, CommentTableMap::COL_IS_DELETED => 4, CommentTableMap::COL_CREATED_AT => 5, CommentTableMap::COL_CREATED_BY => 6, CommentTableMap::COL_UPDATED_AT => 7, CommentTableMap::COL_UPDATED_BY => 8, CommentTableMap::COL_DELETED_AT => 9, CommentTableMap::COL_DELETED_BY => 10, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'parent_id' => 1, 'publication_id' => 2, 'content' => 3, 'is_deleted' => 4, 'created_at' => 5, 'created_by' => 6, 'updated_at' => 7, 'updated_by' => 8, 'deleted_at' => 9, 'deleted_by' => 10, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'ParentId' => 1, 'PublicationId' => 2, 'Picture' => 3, 'Content' => 4, 'IsDeleted' => 5, 'IsVerified' => 6, 'UpdatingReason' => 7, 'DeletingReason' => 8, 'CreatedAt' => 9, 'CreatedBy' => 10, 'UpdatedAt' => 11, 'UpdatedBy' => 12, 'DeletedAt' => 13, 'DeletedBy' => 14, 'VerifiedAt' => 15, 'VerifiedBy' => 16, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'parentId' => 1, 'publicationId' => 2, 'picture' => 3, 'content' => 4, 'isDeleted' => 5, 'isVerified' => 6, 'updatingReason' => 7, 'deletingReason' => 8, 'createdAt' => 9, 'createdBy' => 10, 'updatedAt' => 11, 'updatedBy' => 12, 'deletedAt' => 13, 'deletedBy' => 14, 'verifiedAt' => 15, 'verifiedBy' => 16, ),
+        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID => 0, CommentTableMap::COL_PARENT_ID => 1, CommentTableMap::COL_PUBLICATION_ID => 2, CommentTableMap::COL_PICTURE => 3, CommentTableMap::COL_CONTENT => 4, CommentTableMap::COL_IS_DELETED => 5, CommentTableMap::COL_IS_VERIFIED => 6, CommentTableMap::COL_UPDATING_REASON => 7, CommentTableMap::COL_DELETING_REASON => 8, CommentTableMap::COL_CREATED_AT => 9, CommentTableMap::COL_CREATED_BY => 10, CommentTableMap::COL_UPDATED_AT => 11, CommentTableMap::COL_UPDATED_BY => 12, CommentTableMap::COL_DELETED_AT => 13, CommentTableMap::COL_DELETED_BY => 14, CommentTableMap::COL_VERIFIED_AT => 15, CommentTableMap::COL_VERIFIED_BY => 16, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'parent_id' => 1, 'publication_id' => 2, 'picture' => 3, 'content' => 4, 'is_deleted' => 5, 'is_verified' => 6, 'updating_reason' => 7, 'deleting_reason' => 8, 'created_at' => 9, 'created_by' => 10, 'updated_at' => 11, 'updated_by' => 12, 'deleted_at' => 13, 'deleted_by' => 14, 'verified_at' => 15, 'verified_by' => 16, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
 
     /**
@@ -179,14 +209,20 @@ class CommentTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('parent_id', 'ParentId', 'INTEGER', 'fenric_comment', 'id', false, null, null);
         $this->addForeignKey('publication_id', 'PublicationId', 'INTEGER', 'fenric_publication', 'id', false, null, null);
+        $this->addColumn('picture', 'Picture', 'VARCHAR', false, 255, null);
         $this->addColumn('content', 'Content', 'LONGVARCHAR', false, null, null);
         $this->addColumn('is_deleted', 'IsDeleted', 'BOOLEAN', true, 1, false);
+        $this->addColumn('is_verified', 'IsVerified', 'BOOLEAN', true, 1, false);
+        $this->addColumn('updating_reason', 'UpdatingReason', 'VARCHAR', false, 255, null);
+        $this->addColumn('deleting_reason', 'DeletingReason', 'VARCHAR', false, 255, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
         $this->addColumn('deleted_at', 'DeletedAt', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('deleted_by', 'DeletedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
+        $this->addColumn('verified_at', 'VerifiedAt', 'TIMESTAMP', false, null, null);
+        $this->addForeignKey('verified_by', 'VerifiedBy', 'INTEGER', 'fenric_user', 'id', false, null, null);
     } // initialize()
 
     /**
@@ -194,7 +230,7 @@ class CommentTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CommentRelatedByParentId', '\\Propel\\Models\\Comment', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Parent', '\\Propel\\Models\\Comment', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':parent_id',
@@ -229,6 +265,13 @@ class CommentTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', null, false);
+        $this->addRelation('UserRelatedByVerifiedBy', '\\Propel\\Models\\User', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':verified_by',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', null, false);
         $this->addRelation('CommentRelatedById', '\\Propel\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
@@ -249,6 +292,7 @@ class CommentTableMap extends TableMap
         return array(
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
+            'validate' => array('0451f320-527a-4d09-bdbb-d28a5485ab11' => array ('column' => 'content','validator' => 'NotNull',), '05397fd6-d575-4545-89af-2a2e471513b4' => array ('column' => 'content','validator' => 'NotBlank',), ),
         );
     } // getBehaviors()
     /**
@@ -405,26 +449,38 @@ class CommentTableMap extends TableMap
             $criteria->addSelectColumn(CommentTableMap::COL_ID);
             $criteria->addSelectColumn(CommentTableMap::COL_PARENT_ID);
             $criteria->addSelectColumn(CommentTableMap::COL_PUBLICATION_ID);
+            $criteria->addSelectColumn(CommentTableMap::COL_PICTURE);
             $criteria->addSelectColumn(CommentTableMap::COL_CONTENT);
             $criteria->addSelectColumn(CommentTableMap::COL_IS_DELETED);
+            $criteria->addSelectColumn(CommentTableMap::COL_IS_VERIFIED);
+            $criteria->addSelectColumn(CommentTableMap::COL_UPDATING_REASON);
+            $criteria->addSelectColumn(CommentTableMap::COL_DELETING_REASON);
             $criteria->addSelectColumn(CommentTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(CommentTableMap::COL_CREATED_BY);
             $criteria->addSelectColumn(CommentTableMap::COL_UPDATED_AT);
             $criteria->addSelectColumn(CommentTableMap::COL_UPDATED_BY);
             $criteria->addSelectColumn(CommentTableMap::COL_DELETED_AT);
             $criteria->addSelectColumn(CommentTableMap::COL_DELETED_BY);
+            $criteria->addSelectColumn(CommentTableMap::COL_VERIFIED_AT);
+            $criteria->addSelectColumn(CommentTableMap::COL_VERIFIED_BY);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.parent_id');
             $criteria->addSelectColumn($alias . '.publication_id');
+            $criteria->addSelectColumn($alias . '.picture');
             $criteria->addSelectColumn($alias . '.content');
             $criteria->addSelectColumn($alias . '.is_deleted');
+            $criteria->addSelectColumn($alias . '.is_verified');
+            $criteria->addSelectColumn($alias . '.updating_reason');
+            $criteria->addSelectColumn($alias . '.deleting_reason');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.created_by');
             $criteria->addSelectColumn($alias . '.updated_at');
             $criteria->addSelectColumn($alias . '.updated_by');
             $criteria->addSelectColumn($alias . '.deleted_at');
             $criteria->addSelectColumn($alias . '.deleted_by');
+            $criteria->addSelectColumn($alias . '.verified_at');
+            $criteria->addSelectColumn($alias . '.verified_by');
         }
     }
 

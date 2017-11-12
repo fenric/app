@@ -25,6 +25,17 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
+use Symfony\Component\Translation\IdentityTranslator;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Context\ExecutionContextFactory;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\Factory\LazyLoadingMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use Symfony\Component\Validator\Validator\RecursiveValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Base class that represents a row from the 'fenric_comment' table.
@@ -89,6 +100,13 @@ abstract class Comment implements ActiveRecordInterface
     protected $publication_id;
 
     /**
+     * The value for the picture field.
+     *
+     * @var        string
+     */
+    protected $picture;
+
+    /**
      * The value for the content field.
      *
      * @var        string
@@ -102,6 +120,28 @@ abstract class Comment implements ActiveRecordInterface
      * @var        boolean
      */
     protected $is_deleted;
+
+    /**
+     * The value for the is_verified field.
+     *
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $is_verified;
+
+    /**
+     * The value for the updating_reason field.
+     *
+     * @var        string
+     */
+    protected $updating_reason;
+
+    /**
+     * The value for the deleting_reason field.
+     *
+     * @var        string
+     */
+    protected $deleting_reason;
 
     /**
      * The value for the created_at field.
@@ -146,9 +186,23 @@ abstract class Comment implements ActiveRecordInterface
     protected $deleted_by;
 
     /**
+     * The value for the verified_at field.
+     *
+     * @var        DateTime
+     */
+    protected $verified_at;
+
+    /**
+     * The value for the verified_by field.
+     *
+     * @var        int
+     */
+    protected $verified_by;
+
+    /**
      * @var        ChildComment
      */
-    protected $aCommentRelatedByParentId;
+    protected $aParent;
 
     /**
      * @var        ChildPublication
@@ -171,6 +225,11 @@ abstract class Comment implements ActiveRecordInterface
     protected $aUserRelatedByDeletedBy;
 
     /**
+     * @var        ChildUser
+     */
+    protected $aUserRelatedByVerifiedBy;
+
+    /**
      * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
      */
     protected $collCommentsRelatedById;
@@ -183,6 +242,23 @@ abstract class Comment implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    // validate behavior
+
+    /**
+     * Flag to prevent endless validation loop, if this object is referenced
+     * by another object which falls in this transaction.
+     * @var        boolean
+     */
+    protected $alreadyInValidation = false;
+
+    /**
+     * ConstraintViolationList object
+     *
+     * @see     http://api.symfony.com/2.0/Symfony/Component/Validator/ConstraintViolationList.html
+     * @var     ConstraintViolationList
+     */
+    protected $validationFailures;
 
     /**
      * An array of objects scheduled for deletion.
@@ -199,6 +275,7 @@ abstract class Comment implements ActiveRecordInterface
     public function applyDefaultValues()
     {
         $this->is_deleted = false;
+        $this->is_verified = false;
     }
 
     /**
@@ -459,6 +536,16 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
+     * Get the [picture] column value.
+     *
+     * @return string
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
      * Get the [content] column value.
      *
      * @return string
@@ -476,6 +563,46 @@ abstract class Comment implements ActiveRecordInterface
     public function getIsDeleted()
     {
         return $this->is_deleted;
+    }
+
+    /**
+     * Get the [is_verified] column value.
+     *
+     * @return boolean
+     */
+    public function getIsVerified()
+    {
+        return $this->is_verified;
+    }
+
+    /**
+     * Get the [is_verified] column value.
+     *
+     * @return boolean
+     */
+    public function isVerified()
+    {
+        return $this->getIsVerified();
+    }
+
+    /**
+     * Get the [updating_reason] column value.
+     *
+     * @return string
+     */
+    public function getUpdatingReason()
+    {
+        return $this->updating_reason;
+    }
+
+    /**
+     * Get the [deleting_reason] column value.
+     *
+     * @return string
+     */
+    public function getDeletingReason()
+    {
+        return $this->deleting_reason;
     }
 
     /**
@@ -569,6 +696,36 @@ abstract class Comment implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [verified_at] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getVerifiedAt($format = NULL)
+    {
+        if ($format === null) {
+            return $this->verified_at;
+        } else {
+            return $this->verified_at instanceof \DateTimeInterface ? $this->verified_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [verified_by] column value.
+     *
+     * @return int
+     */
+    public function getVerifiedBy()
+    {
+        return $this->verified_by;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -605,8 +762,8 @@ abstract class Comment implements ActiveRecordInterface
             $this->modifiedColumns[CommentTableMap::COL_PARENT_ID] = true;
         }
 
-        if ($this->aCommentRelatedByParentId !== null && $this->aCommentRelatedByParentId->getId() !== $v) {
-            $this->aCommentRelatedByParentId = null;
+        if ($this->aParent !== null && $this->aParent->getId() !== $v) {
+            $this->aParent = null;
         }
 
         return $this;
@@ -635,6 +792,26 @@ abstract class Comment implements ActiveRecordInterface
 
         return $this;
     } // setPublicationId()
+
+    /**
+     * Set the value of [picture] column.
+     *
+     * @param string $v new value
+     * @return $this|\Propel\Models\Comment The current object (for fluent API support)
+     */
+    public function setPicture($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->picture !== $v) {
+            $this->picture = $v;
+            $this->modifiedColumns[CommentTableMap::COL_PICTURE] = true;
+        }
+
+        return $this;
+    } // setPicture()
 
     /**
      * Set the value of [content] column.
@@ -683,6 +860,74 @@ abstract class Comment implements ActiveRecordInterface
 
         return $this;
     } // setIsDeleted()
+
+    /**
+     * Sets the value of the [is_verified] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\Propel\Models\Comment The current object (for fluent API support)
+     */
+    public function setIsVerified($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_verified !== $v) {
+            $this->is_verified = $v;
+            $this->modifiedColumns[CommentTableMap::COL_IS_VERIFIED] = true;
+        }
+
+        return $this;
+    } // setIsVerified()
+
+    /**
+     * Set the value of [updating_reason] column.
+     *
+     * @param string $v new value
+     * @return $this|\Propel\Models\Comment The current object (for fluent API support)
+     */
+    public function setUpdatingReason($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->updating_reason !== $v) {
+            $this->updating_reason = $v;
+            $this->modifiedColumns[CommentTableMap::COL_UPDATING_REASON] = true;
+        }
+
+        return $this;
+    } // setUpdatingReason()
+
+    /**
+     * Set the value of [deleting_reason] column.
+     *
+     * @param string $v new value
+     * @return $this|\Propel\Models\Comment The current object (for fluent API support)
+     */
+    public function setDeletingReason($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->deleting_reason !== $v) {
+            $this->deleting_reason = $v;
+            $this->modifiedColumns[CommentTableMap::COL_DELETING_REASON] = true;
+        }
+
+        return $this;
+    } // setDeletingReason()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
@@ -817,6 +1062,50 @@ abstract class Comment implements ActiveRecordInterface
     } // setDeletedBy()
 
     /**
+     * Sets the value of [verified_at] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\Propel\Models\Comment The current object (for fluent API support)
+     */
+    public function setVerifiedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->verified_at !== null || $dt !== null) {
+            if ($this->verified_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->verified_at->format("Y-m-d H:i:s.u")) {
+                $this->verified_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[CommentTableMap::COL_VERIFIED_AT] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setVerifiedAt()
+
+    /**
+     * Set the value of [verified_by] column.
+     *
+     * @param int $v new value
+     * @return $this|\Propel\Models\Comment The current object (for fluent API support)
+     */
+    public function setVerifiedBy($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->verified_by !== $v) {
+            $this->verified_by = $v;
+            $this->modifiedColumns[CommentTableMap::COL_VERIFIED_BY] = true;
+        }
+
+        if ($this->aUserRelatedByVerifiedBy !== null && $this->aUserRelatedByVerifiedBy->getId() !== $v) {
+            $this->aUserRelatedByVerifiedBy = null;
+        }
+
+        return $this;
+    } // setVerifiedBy()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -827,6 +1116,10 @@ abstract class Comment implements ActiveRecordInterface
     public function hasOnlyDefaultValues()
     {
             if ($this->is_deleted !== false) {
+                return false;
+            }
+
+            if ($this->is_verified !== false) {
                 return false;
             }
 
@@ -865,38 +1158,59 @@ abstract class Comment implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CommentTableMap::translateFieldName('PublicationId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->publication_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CommentTableMap::translateFieldName('Content', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CommentTableMap::translateFieldName('Picture', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->picture = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CommentTableMap::translateFieldName('Content', TableMap::TYPE_PHPNAME, $indexType)];
             $this->content = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CommentTableMap::translateFieldName('IsDeleted', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CommentTableMap::translateFieldName('IsDeleted', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_deleted = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CommentTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CommentTableMap::translateFieldName('IsVerified', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_verified = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CommentTableMap::translateFieldName('UpdatingReason', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->updating_reason = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CommentTableMap::translateFieldName('DeletingReason', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->deleting_reason = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : CommentTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CommentTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : CommentTableMap::translateFieldName('CreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->created_by = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CommentTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : CommentTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : CommentTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : CommentTableMap::translateFieldName('UpdatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->updated_by = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : CommentTableMap::translateFieldName('DeletedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : CommentTableMap::translateFieldName('DeletedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->deleted_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : CommentTableMap::translateFieldName('DeletedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : CommentTableMap::translateFieldName('DeletedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->deleted_by = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : CommentTableMap::translateFieldName('VerifiedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->verified_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : CommentTableMap::translateFieldName('VerifiedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->verified_by = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -905,7 +1219,7 @@ abstract class Comment implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 11; // 11 = CommentTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 17; // 17 = CommentTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Propel\\Models\\Comment'), 0, $e);
@@ -927,8 +1241,8 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aCommentRelatedByParentId !== null && $this->parent_id !== $this->aCommentRelatedByParentId->getId()) {
-            $this->aCommentRelatedByParentId = null;
+        if ($this->aParent !== null && $this->parent_id !== $this->aParent->getId()) {
+            $this->aParent = null;
         }
         if ($this->aPublication !== null && $this->publication_id !== $this->aPublication->getId()) {
             $this->aPublication = null;
@@ -941,6 +1255,9 @@ abstract class Comment implements ActiveRecordInterface
         }
         if ($this->aUserRelatedByDeletedBy !== null && $this->deleted_by !== $this->aUserRelatedByDeletedBy->getId()) {
             $this->aUserRelatedByDeletedBy = null;
+        }
+        if ($this->aUserRelatedByVerifiedBy !== null && $this->verified_by !== $this->aUserRelatedByVerifiedBy->getId()) {
+            $this->aUserRelatedByVerifiedBy = null;
         }
     } // ensureConsistency
 
@@ -981,11 +1298,12 @@ abstract class Comment implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aCommentRelatedByParentId = null;
+            $this->aParent = null;
             $this->aPublication = null;
             $this->aUserRelatedByCreatedBy = null;
             $this->aUserRelatedByUpdatedBy = null;
             $this->aUserRelatedByDeletedBy = null;
+            $this->aUserRelatedByVerifiedBy = null;
             $this->collCommentsRelatedById = null;
 
         } // if (deep)
@@ -1128,11 +1446,11 @@ abstract class Comment implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCommentRelatedByParentId !== null) {
-                if ($this->aCommentRelatedByParentId->isModified() || $this->aCommentRelatedByParentId->isNew()) {
-                    $affectedRows += $this->aCommentRelatedByParentId->save($con);
+            if ($this->aParent !== null) {
+                if ($this->aParent->isModified() || $this->aParent->isNew()) {
+                    $affectedRows += $this->aParent->save($con);
                 }
-                $this->setCommentRelatedByParentId($this->aCommentRelatedByParentId);
+                $this->setParent($this->aParent);
             }
 
             if ($this->aPublication !== null) {
@@ -1161,6 +1479,13 @@ abstract class Comment implements ActiveRecordInterface
                     $affectedRows += $this->aUserRelatedByDeletedBy->save($con);
                 }
                 $this->setUserRelatedByDeletedBy($this->aUserRelatedByDeletedBy);
+            }
+
+            if ($this->aUserRelatedByVerifiedBy !== null) {
+                if ($this->aUserRelatedByVerifiedBy->isModified() || $this->aUserRelatedByVerifiedBy->isNew()) {
+                    $affectedRows += $this->aUserRelatedByVerifiedBy->save($con);
+                }
+                $this->setUserRelatedByVerifiedBy($this->aUserRelatedByVerifiedBy);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -1226,11 +1551,23 @@ abstract class Comment implements ActiveRecordInterface
         if ($this->isColumnModified(CommentTableMap::COL_PUBLICATION_ID)) {
             $modifiedColumns[':p' . $index++]  = 'publication_id';
         }
+        if ($this->isColumnModified(CommentTableMap::COL_PICTURE)) {
+            $modifiedColumns[':p' . $index++]  = 'picture';
+        }
         if ($this->isColumnModified(CommentTableMap::COL_CONTENT)) {
             $modifiedColumns[':p' . $index++]  = 'content';
         }
         if ($this->isColumnModified(CommentTableMap::COL_IS_DELETED)) {
             $modifiedColumns[':p' . $index++]  = 'is_deleted';
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_IS_VERIFIED)) {
+            $modifiedColumns[':p' . $index++]  = 'is_verified';
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_UPDATING_REASON)) {
+            $modifiedColumns[':p' . $index++]  = 'updating_reason';
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_DELETING_REASON)) {
+            $modifiedColumns[':p' . $index++]  = 'deleting_reason';
         }
         if ($this->isColumnModified(CommentTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
@@ -1249,6 +1586,12 @@ abstract class Comment implements ActiveRecordInterface
         }
         if ($this->isColumnModified(CommentTableMap::COL_DELETED_BY)) {
             $modifiedColumns[':p' . $index++]  = 'deleted_by';
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_VERIFIED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'verified_at';
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_VERIFIED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'verified_by';
         }
 
         $sql = sprintf(
@@ -1270,11 +1613,23 @@ abstract class Comment implements ActiveRecordInterface
                     case 'publication_id':
                         $stmt->bindValue($identifier, $this->publication_id, PDO::PARAM_INT);
                         break;
+                    case 'picture':
+                        $stmt->bindValue($identifier, $this->picture, PDO::PARAM_STR);
+                        break;
                     case 'content':
                         $stmt->bindValue($identifier, $this->content, PDO::PARAM_STR);
                         break;
                     case 'is_deleted':
                         $stmt->bindValue($identifier, (int) $this->is_deleted, PDO::PARAM_INT);
+                        break;
+                    case 'is_verified':
+                        $stmt->bindValue($identifier, (int) $this->is_verified, PDO::PARAM_INT);
+                        break;
+                    case 'updating_reason':
+                        $stmt->bindValue($identifier, $this->updating_reason, PDO::PARAM_STR);
+                        break;
+                    case 'deleting_reason':
+                        $stmt->bindValue($identifier, $this->deleting_reason, PDO::PARAM_STR);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -1293,6 +1648,12 @@ abstract class Comment implements ActiveRecordInterface
                         break;
                     case 'deleted_by':
                         $stmt->bindValue($identifier, $this->deleted_by, PDO::PARAM_INT);
+                        break;
+                    case 'verified_at':
+                        $stmt->bindValue($identifier, $this->verified_at ? $this->verified_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'verified_by':
+                        $stmt->bindValue($identifier, $this->verified_by, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1366,28 +1727,46 @@ abstract class Comment implements ActiveRecordInterface
                 return $this->getPublicationId();
                 break;
             case 3:
-                return $this->getContent();
+                return $this->getPicture();
                 break;
             case 4:
-                return $this->getIsDeleted();
+                return $this->getContent();
                 break;
             case 5:
-                return $this->getCreatedAt();
+                return $this->getIsDeleted();
                 break;
             case 6:
-                return $this->getCreatedBy();
+                return $this->getIsVerified();
                 break;
             case 7:
-                return $this->getUpdatedAt();
+                return $this->getUpdatingReason();
                 break;
             case 8:
-                return $this->getUpdatedBy();
+                return $this->getDeletingReason();
                 break;
             case 9:
-                return $this->getDeletedAt();
+                return $this->getCreatedAt();
                 break;
             case 10:
+                return $this->getCreatedBy();
+                break;
+            case 11:
+                return $this->getUpdatedAt();
+                break;
+            case 12:
+                return $this->getUpdatedBy();
+                break;
+            case 13:
+                return $this->getDeletedAt();
+                break;
+            case 14:
                 return $this->getDeletedBy();
+                break;
+            case 15:
+                return $this->getVerifiedAt();
+                break;
+            case 16:
+                return $this->getVerifiedBy();
                 break;
             default:
                 return null;
@@ -1422,25 +1801,35 @@ abstract class Comment implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getParentId(),
             $keys[2] => $this->getPublicationId(),
-            $keys[3] => $this->getContent(),
-            $keys[4] => $this->getIsDeleted(),
-            $keys[5] => $this->getCreatedAt(),
-            $keys[6] => $this->getCreatedBy(),
-            $keys[7] => $this->getUpdatedAt(),
-            $keys[8] => $this->getUpdatedBy(),
-            $keys[9] => $this->getDeletedAt(),
-            $keys[10] => $this->getDeletedBy(),
+            $keys[3] => $this->getPicture(),
+            $keys[4] => $this->getContent(),
+            $keys[5] => $this->getIsDeleted(),
+            $keys[6] => $this->getIsVerified(),
+            $keys[7] => $this->getUpdatingReason(),
+            $keys[8] => $this->getDeletingReason(),
+            $keys[9] => $this->getCreatedAt(),
+            $keys[10] => $this->getCreatedBy(),
+            $keys[11] => $this->getUpdatedAt(),
+            $keys[12] => $this->getUpdatedBy(),
+            $keys[13] => $this->getDeletedAt(),
+            $keys[14] => $this->getDeletedBy(),
+            $keys[15] => $this->getVerifiedAt(),
+            $keys[16] => $this->getVerifiedBy(),
         );
-        if ($result[$keys[5]] instanceof \DateTimeInterface) {
-            $result[$keys[5]] = $result[$keys[5]]->format('c');
-        }
-
-        if ($result[$keys[7]] instanceof \DateTimeInterface) {
-            $result[$keys[7]] = $result[$keys[7]]->format('c');
-        }
-
         if ($result[$keys[9]] instanceof \DateTimeInterface) {
             $result[$keys[9]] = $result[$keys[9]]->format('c');
+        }
+
+        if ($result[$keys[11]] instanceof \DateTimeInterface) {
+            $result[$keys[11]] = $result[$keys[11]]->format('c');
+        }
+
+        if ($result[$keys[13]] instanceof \DateTimeInterface) {
+            $result[$keys[13]] = $result[$keys[13]]->format('c');
+        }
+
+        if ($result[$keys[15]] instanceof \DateTimeInterface) {
+            $result[$keys[15]] = $result[$keys[15]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1449,7 +1838,7 @@ abstract class Comment implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aCommentRelatedByParentId) {
+            if (null !== $this->aParent) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1459,10 +1848,10 @@ abstract class Comment implements ActiveRecordInterface
                         $key = 'fenric_comment';
                         break;
                     default:
-                        $key = 'Comment';
+                        $key = 'Parent';
                 }
 
-                $result[$key] = $this->aCommentRelatedByParentId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aParent->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aPublication) {
 
@@ -1524,6 +1913,21 @@ abstract class Comment implements ActiveRecordInterface
 
                 $result[$key] = $this->aUserRelatedByDeletedBy->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
+            if (null !== $this->aUserRelatedByVerifiedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'user';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'fenric_user';
+                        break;
+                    default:
+                        $key = 'User';
+                }
+
+                $result[$key] = $this->aUserRelatedByVerifiedBy->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->collCommentsRelatedById) {
 
                 switch ($keyType) {
@@ -1583,28 +1987,46 @@ abstract class Comment implements ActiveRecordInterface
                 $this->setPublicationId($value);
                 break;
             case 3:
-                $this->setContent($value);
+                $this->setPicture($value);
                 break;
             case 4:
-                $this->setIsDeleted($value);
+                $this->setContent($value);
                 break;
             case 5:
-                $this->setCreatedAt($value);
+                $this->setIsDeleted($value);
                 break;
             case 6:
-                $this->setCreatedBy($value);
+                $this->setIsVerified($value);
                 break;
             case 7:
-                $this->setUpdatedAt($value);
+                $this->setUpdatingReason($value);
                 break;
             case 8:
-                $this->setUpdatedBy($value);
+                $this->setDeletingReason($value);
                 break;
             case 9:
-                $this->setDeletedAt($value);
+                $this->setCreatedAt($value);
                 break;
             case 10:
+                $this->setCreatedBy($value);
+                break;
+            case 11:
+                $this->setUpdatedAt($value);
+                break;
+            case 12:
+                $this->setUpdatedBy($value);
+                break;
+            case 13:
+                $this->setDeletedAt($value);
+                break;
+            case 14:
                 $this->setDeletedBy($value);
+                break;
+            case 15:
+                $this->setVerifiedAt($value);
+                break;
+            case 16:
+                $this->setVerifiedBy($value);
                 break;
         } // switch()
 
@@ -1642,28 +2064,46 @@ abstract class Comment implements ActiveRecordInterface
             $this->setPublicationId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setContent($arr[$keys[3]]);
+            $this->setPicture($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setIsDeleted($arr[$keys[4]]);
+            $this->setContent($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setCreatedAt($arr[$keys[5]]);
+            $this->setIsDeleted($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setCreatedBy($arr[$keys[6]]);
+            $this->setIsVerified($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setUpdatedAt($arr[$keys[7]]);
+            $this->setUpdatingReason($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setUpdatedBy($arr[$keys[8]]);
+            $this->setDeletingReason($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setDeletedAt($arr[$keys[9]]);
+            $this->setCreatedAt($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setDeletedBy($arr[$keys[10]]);
+            $this->setCreatedBy($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setUpdatedAt($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setUpdatedBy($arr[$keys[12]]);
+        }
+        if (array_key_exists($keys[13], $arr)) {
+            $this->setDeletedAt($arr[$keys[13]]);
+        }
+        if (array_key_exists($keys[14], $arr)) {
+            $this->setDeletedBy($arr[$keys[14]]);
+        }
+        if (array_key_exists($keys[15], $arr)) {
+            $this->setVerifiedAt($arr[$keys[15]]);
+        }
+        if (array_key_exists($keys[16], $arr)) {
+            $this->setVerifiedBy($arr[$keys[16]]);
         }
     }
 
@@ -1715,11 +2155,23 @@ abstract class Comment implements ActiveRecordInterface
         if ($this->isColumnModified(CommentTableMap::COL_PUBLICATION_ID)) {
             $criteria->add(CommentTableMap::COL_PUBLICATION_ID, $this->publication_id);
         }
+        if ($this->isColumnModified(CommentTableMap::COL_PICTURE)) {
+            $criteria->add(CommentTableMap::COL_PICTURE, $this->picture);
+        }
         if ($this->isColumnModified(CommentTableMap::COL_CONTENT)) {
             $criteria->add(CommentTableMap::COL_CONTENT, $this->content);
         }
         if ($this->isColumnModified(CommentTableMap::COL_IS_DELETED)) {
             $criteria->add(CommentTableMap::COL_IS_DELETED, $this->is_deleted);
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_IS_VERIFIED)) {
+            $criteria->add(CommentTableMap::COL_IS_VERIFIED, $this->is_verified);
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_UPDATING_REASON)) {
+            $criteria->add(CommentTableMap::COL_UPDATING_REASON, $this->updating_reason);
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_DELETING_REASON)) {
+            $criteria->add(CommentTableMap::COL_DELETING_REASON, $this->deleting_reason);
         }
         if ($this->isColumnModified(CommentTableMap::COL_CREATED_AT)) {
             $criteria->add(CommentTableMap::COL_CREATED_AT, $this->created_at);
@@ -1738,6 +2190,12 @@ abstract class Comment implements ActiveRecordInterface
         }
         if ($this->isColumnModified(CommentTableMap::COL_DELETED_BY)) {
             $criteria->add(CommentTableMap::COL_DELETED_BY, $this->deleted_by);
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_VERIFIED_AT)) {
+            $criteria->add(CommentTableMap::COL_VERIFIED_AT, $this->verified_at);
+        }
+        if ($this->isColumnModified(CommentTableMap::COL_VERIFIED_BY)) {
+            $criteria->add(CommentTableMap::COL_VERIFIED_BY, $this->verified_by);
         }
 
         return $criteria;
@@ -1827,14 +2285,20 @@ abstract class Comment implements ActiveRecordInterface
     {
         $copyObj->setParentId($this->getParentId());
         $copyObj->setPublicationId($this->getPublicationId());
+        $copyObj->setPicture($this->getPicture());
         $copyObj->setContent($this->getContent());
         $copyObj->setIsDeleted($this->getIsDeleted());
+        $copyObj->setIsVerified($this->getIsVerified());
+        $copyObj->setUpdatingReason($this->getUpdatingReason());
+        $copyObj->setDeletingReason($this->getDeletingReason());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setCreatedBy($this->getCreatedBy());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         $copyObj->setUpdatedBy($this->getUpdatedBy());
         $copyObj->setDeletedAt($this->getDeletedAt());
         $copyObj->setDeletedBy($this->getDeletedBy());
+        $copyObj->setVerifiedAt($this->getVerifiedAt());
+        $copyObj->setVerifiedBy($this->getVerifiedBy());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1884,7 +2348,7 @@ abstract class Comment implements ActiveRecordInterface
      * @return $this|\Propel\Models\Comment The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCommentRelatedByParentId(ChildComment $v = null)
+    public function setParent(ChildComment $v = null)
     {
         if ($v === null) {
             $this->setParentId(NULL);
@@ -1892,7 +2356,7 @@ abstract class Comment implements ActiveRecordInterface
             $this->setParentId($v->getId());
         }
 
-        $this->aCommentRelatedByParentId = $v;
+        $this->aParent = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildComment object, it will not be re-added.
@@ -1912,20 +2376,20 @@ abstract class Comment implements ActiveRecordInterface
      * @return ChildComment The associated ChildComment object.
      * @throws PropelException
      */
-    public function getCommentRelatedByParentId(ConnectionInterface $con = null)
+    public function getParent(ConnectionInterface $con = null)
     {
-        if ($this->aCommentRelatedByParentId === null && ($this->parent_id != 0)) {
-            $this->aCommentRelatedByParentId = ChildCommentQuery::create()->findPk($this->parent_id, $con);
+        if ($this->aParent === null && ($this->parent_id != 0)) {
+            $this->aParent = ChildCommentQuery::create()->findPk($this->parent_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCommentRelatedByParentId->addCommentsRelatedById($this);
+                $this->aParent->addCommentsRelatedById($this);
              */
         }
 
-        return $this->aCommentRelatedByParentId;
+        return $this->aParent;
     }
 
     /**
@@ -2132,6 +2596,57 @@ abstract class Comment implements ActiveRecordInterface
         return $this->aUserRelatedByDeletedBy;
     }
 
+    /**
+     * Declares an association between this object and a ChildUser object.
+     *
+     * @param  ChildUser $v
+     * @return $this|\Propel\Models\Comment The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setUserRelatedByVerifiedBy(ChildUser $v = null)
+    {
+        if ($v === null) {
+            $this->setVerifiedBy(NULL);
+        } else {
+            $this->setVerifiedBy($v->getId());
+        }
+
+        $this->aUserRelatedByVerifiedBy = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildUser object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCommentRelatedByVerifiedBy($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildUser object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildUser The associated ChildUser object.
+     * @throws PropelException
+     */
+    public function getUserRelatedByVerifiedBy(ConnectionInterface $con = null)
+    {
+        if ($this->aUserRelatedByVerifiedBy === null && ($this->verified_by != 0)) {
+            $this->aUserRelatedByVerifiedBy = ChildUserQuery::create()->findPk($this->verified_by, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUserRelatedByVerifiedBy->addCommentsRelatedByVerifiedBy($this);
+             */
+        }
+
+        return $this->aUserRelatedByVerifiedBy;
+    }
+
 
     /**
      * Initializes a collection based on the name of a relation.
@@ -2218,7 +2733,7 @@ abstract class Comment implements ActiveRecordInterface
                 $this->initCommentsRelatedById();
             } else {
                 $collCommentsRelatedById = ChildCommentQuery::create(null, $criteria)
-                    ->filterByCommentRelatedByParentId($this)
+                    ->filterByParent($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -2272,7 +2787,7 @@ abstract class Comment implements ActiveRecordInterface
         $this->commentsRelatedByIdScheduledForDeletion = $commentsRelatedByIdToDelete;
 
         foreach ($commentsRelatedByIdToDelete as $commentRelatedByIdRemoved) {
-            $commentRelatedByIdRemoved->setCommentRelatedByParentId(null);
+            $commentRelatedByIdRemoved->setParent(null);
         }
 
         $this->collCommentsRelatedById = null;
@@ -2313,7 +2828,7 @@ abstract class Comment implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByCommentRelatedByParentId($this)
+                ->filterByParent($this)
                 ->count($con);
         }
 
@@ -2351,7 +2866,7 @@ abstract class Comment implements ActiveRecordInterface
     protected function doAddCommentRelatedById(ChildComment $commentRelatedById)
     {
         $this->collCommentsRelatedById[]= $commentRelatedById;
-        $commentRelatedById->setCommentRelatedByParentId($this);
+        $commentRelatedById->setParent($this);
     }
 
     /**
@@ -2368,7 +2883,7 @@ abstract class Comment implements ActiveRecordInterface
                 $this->commentsRelatedByIdScheduledForDeletion->clear();
             }
             $this->commentsRelatedByIdScheduledForDeletion[]= $commentRelatedById;
-            $commentRelatedById->setCommentRelatedByParentId(null);
+            $commentRelatedById->setParent(null);
         }
 
         return $this;
@@ -2474,6 +2989,31 @@ abstract class Comment implements ActiveRecordInterface
         return $this->getCommentsRelatedById($query, $con);
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Comment is new, it will return
+     * an empty collection; or if this Comment has previously
+     * been saved, it will retrieve related CommentsRelatedById from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Comment.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     */
+    public function getCommentsRelatedByIdJoinUserRelatedByVerifiedBy(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCommentQuery::create(null, $criteria);
+        $query->joinWith('UserRelatedByVerifiedBy', $joinBehavior);
+
+        return $this->getCommentsRelatedById($query, $con);
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -2481,8 +3021,8 @@ abstract class Comment implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aCommentRelatedByParentId) {
-            $this->aCommentRelatedByParentId->removeCommentRelatedById($this);
+        if (null !== $this->aParent) {
+            $this->aParent->removeCommentRelatedById($this);
         }
         if (null !== $this->aPublication) {
             $this->aPublication->removeComment($this);
@@ -2496,17 +3036,26 @@ abstract class Comment implements ActiveRecordInterface
         if (null !== $this->aUserRelatedByDeletedBy) {
             $this->aUserRelatedByDeletedBy->removeCommentRelatedByDeletedBy($this);
         }
+        if (null !== $this->aUserRelatedByVerifiedBy) {
+            $this->aUserRelatedByVerifiedBy->removeCommentRelatedByVerifiedBy($this);
+        }
         $this->id = null;
         $this->parent_id = null;
         $this->publication_id = null;
+        $this->picture = null;
         $this->content = null;
         $this->is_deleted = null;
+        $this->is_verified = null;
+        $this->updating_reason = null;
+        $this->deleting_reason = null;
         $this->created_at = null;
         $this->created_by = null;
         $this->updated_at = null;
         $this->updated_by = null;
         $this->deleted_at = null;
         $this->deleted_by = null;
+        $this->verified_at = null;
+        $this->verified_by = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -2534,11 +3083,12 @@ abstract class Comment implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collCommentsRelatedById = null;
-        $this->aCommentRelatedByParentId = null;
+        $this->aParent = null;
         $this->aPublication = null;
         $this->aUserRelatedByCreatedBy = null;
         $this->aUserRelatedByUpdatedBy = null;
         $this->aUserRelatedByDeletedBy = null;
+        $this->aUserRelatedByVerifiedBy = null;
     }
 
     /**
@@ -2559,6 +3109,121 @@ abstract class Comment implements ActiveRecordInterface
     {
         return $this->getUpdatedAt()->getTimestamp() > $timestamp;
     }
+    // validate behavior
+
+    /**
+     * Configure validators constraints. The Validator object uses this method
+     * to perform object validation.
+     *
+     * @param ClassMetadata $metadata
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('content', new NotNull());
+        $metadata->addPropertyConstraint('content', new NotBlank());
+    }
+
+    /**
+     * Validates the object and all objects related to this table.
+     *
+     * @see        getValidationFailures()
+     * @param      ValidatorInterface|null $validator A Validator class instance
+     * @return     boolean Whether all objects pass validation.
+     */
+    public function validate(ValidatorInterface $validator = null)
+    {
+        if (null === $validator) {
+            $validator = new RecursiveValidator(
+                new ExecutionContextFactory(new IdentityTranslator()),
+                new LazyLoadingMetadataFactory(new StaticMethodLoader()),
+                new ConstraintValidatorFactory()
+            );
+        }
+
+        $failureMap = new ConstraintViolationList();
+
+        if (!$this->alreadyInValidation) {
+            $this->alreadyInValidation = true;
+            $retval = null;
+
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aParent, 'validate')) {
+                if (!$this->aParent->validate($validator)) {
+                    $failureMap->addAll($this->aParent->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aPublication, 'validate')) {
+                if (!$this->aPublication->validate($validator)) {
+                    $failureMap->addAll($this->aPublication->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aUserRelatedByCreatedBy, 'validate')) {
+                if (!$this->aUserRelatedByCreatedBy->validate($validator)) {
+                    $failureMap->addAll($this->aUserRelatedByCreatedBy->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aUserRelatedByUpdatedBy, 'validate')) {
+                if (!$this->aUserRelatedByUpdatedBy->validate($validator)) {
+                    $failureMap->addAll($this->aUserRelatedByUpdatedBy->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aUserRelatedByDeletedBy, 'validate')) {
+                if (!$this->aUserRelatedByDeletedBy->validate($validator)) {
+                    $failureMap->addAll($this->aUserRelatedByDeletedBy->getValidationFailures());
+                }
+            }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aUserRelatedByVerifiedBy, 'validate')) {
+                if (!$this->aUserRelatedByVerifiedBy->validate($validator)) {
+                    $failureMap->addAll($this->aUserRelatedByVerifiedBy->getValidationFailures());
+                }
+            }
+
+            $retval = $validator->validate($this);
+            if (count($retval) > 0) {
+                $failureMap->addAll($retval);
+            }
+
+            if (null !== $this->collCommentsRelatedById) {
+                foreach ($this->collCommentsRelatedById as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+
+            $this->alreadyInValidation = false;
+        }
+
+        $this->validationFailures = $failureMap;
+
+        return (Boolean) (!(count($this->validationFailures) > 0));
+
+    }
+
+    /**
+     * Gets any ConstraintViolation objects that resulted from last call to validate().
+     *
+     *
+     * @return     object ConstraintViolationList
+     * @see        validate()
+     */
+    public function getValidationFailures()
+    {
+        return $this->validationFailures;
+    }
+
     /**
      * Code to be run before persisting the object
      * @param  ConnectionInterface $con

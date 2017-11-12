@@ -3264,10 +3264,10 @@ abstract class Publication implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildComment[] List of ChildComment objects
      */
-    public function getCommentsJoinCommentRelatedByParentId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCommentsJoinParent(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildCommentQuery::create(null, $criteria);
-        $query->joinWith('CommentRelatedByParentId', $joinBehavior);
+        $query->joinWith('Parent', $joinBehavior);
 
         return $this->getComments($query, $con);
     }
@@ -3343,6 +3343,31 @@ abstract class Publication implements ActiveRecordInterface
     {
         $query = ChildCommentQuery::create(null, $criteria);
         $query->joinWith('UserRelatedByDeletedBy', $joinBehavior);
+
+        return $this->getComments($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Publication is new, it will return
+     * an empty collection; or if this Publication has previously
+     * been saved, it will retrieve related Comments from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Publication.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     */
+    public function getCommentsJoinUserRelatedByVerifiedBy(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildCommentQuery::create(null, $criteria);
+        $query->joinWith('UserRelatedByVerifiedBy', $joinBehavior);
 
         return $this->getComments($query, $con);
     }

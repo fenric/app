@@ -378,6 +378,13 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', 'CommentsRelatedByDeletedBy', false);
+        $this->addRelation('CommentRelatedByVerifiedBy', '\\Propel\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':verified_by',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'CommentsRelatedByVerifiedBy', false);
         $this->addRelation('FieldRelatedByCreatedBy', '\\Propel\\Models\\Field', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

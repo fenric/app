@@ -6,6 +6,7 @@ use DateTime;
 
 use Propel\Models\Base\Publication as BasePublication;
 
+use Propel\Models\Map\CommentTableMap;
 use Propel\Models\Map\FieldTableMap;
 use Propel\Models\Map\SectionTableMap;
 use Propel\Models\Map\SectionFieldTableMap;
@@ -146,6 +147,18 @@ class Publication extends BasePublication
 			->where(PublicationPhotoTableMap::COL_PUBLICATION_ID, '=', $this->getId())
 			->where(PublicationPhotoTableMap::COL_DISPLAY, '=', true)
 			->order(PublicationPhotoTableMap::COL_SEQUENCE)->asc()
+		->readOne();
+	}
+
+	/**
+	 * Получение количества комментариев у публикации
+	 */
+	public function getCountComments() : int
+	{
+		return fenric('query')
+			->count(CommentTableMap::COL_ID)
+			->from(CommentTableMap::TABLE_NAME)
+			->where(CommentTableMap::COL_PUBLICATION_ID, '=', $this->getId())
 		->readOne();
 	}
 
