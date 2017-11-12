@@ -7,8 +7,21 @@ namespace Fenric\Controllers;
  */
 use Propel\Models\Poll;
 use Propel\Models\PollQuery;
+use Propel\Models\Map\PollTableMap;
+
 use Propel\Models\PollVote;
+use Propel\Models\PollVoteQuery;
+use Propel\Models\Map\PollVoteTableMap;
+
+use Propel\Models\PollVariant;
+use Propel\Models\PollVariantQuery;
 use Propel\Models\Map\PollVariantTableMap;
+
+use Propel\Models\User;
+use Propel\Models\UserQuery;
+use Propel\Models\Map\UserTableMap;
+
+use Propel\Runtime\Collection\ObjectCollection;
 use Fenric\Controllers\Abstractable\Actionable;
 
 /**
@@ -22,7 +35,8 @@ class Api extends Actionable
 	 */
 	protected function actionVoteViaPOST() : void
 	{
-		$json = ['success' => false, 'message' => null];
+		$json['success'] = false;
+		$json['message'] = null;
 
 		if ($this->request->parameters->exists('id'))
 		{
