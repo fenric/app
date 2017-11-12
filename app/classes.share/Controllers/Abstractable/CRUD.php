@@ -61,6 +61,16 @@ abstract class CRUD extends Actionable
 	protected const EVENT_AFTER_SAVE = 'http.controller.crud.event.after.save';
 
 	/**
+	 * Событие вызываемое перед удалением элемента
+	 */
+	protected const EVENT_BEFORE_DELETE = 'http.controller.crud.event.before.delete';
+
+	/**
+	 * Событие вызываемое после удаления элемента
+	 */
+	protected const EVENT_AFTER_DELETE = 'http.controller.crud.event.after.delete';
+
+	/**
 	 * Событие для обработки элемента
 	 */
 	protected const EVENT_PREPARE_ITEM = 'http.controller.crud.event.prepare.item';
@@ -206,6 +216,10 @@ abstract class CRUD extends Actionable
 			return;
 		}
 
+		fenric()->callSharedService('event', [
+			self::EVENT_BEFORE_DELETE
+		])->run([$model]);
+
 		$model->delete();
 
 		if (! $model->isDeleted()) {
@@ -214,6 +228,10 @@ abstract class CRUD extends Actionable
 		}
 
 		$this->response->setStatus(200);
+
+		fenric()->callSharedService('event', [
+			self::EVENT_AFTER_DELETE
+		])->run([$model]);
 	}
 
 	/**
