@@ -1,0 +1,85 @@
+div.fenric-notify-container {
+	position: fixed;
+	width: 300px;
+}
+
+div.fenric-notify-container.fenric-notify-container-top-right {
+	top: 10px;
+	right: 10px;
+}
+div.fenric-notify-container.fenric-notify-container-right-bottom {
+	right: 10px;
+	bottom: 10px;
+}
+div.fenric-notify-container.fenric-notify-container-bottom-left {
+	bottom: 10px;
+	left: 10px;
+}
+div.fenric-notify-container.fenric-notify-container-left-top {
+	left: 10px;
+	top: 10px;
+}
+
+div.fenric-notify-container.fenric-notify-container-top-right div.fenric-notify,
+div.fenric-notify-container.fenric-notify-container-left-top div.fenric-notify {
+	margin-bottom: 10px;
+}
+div.fenric-notify-container.fenric-notify-container-right-bottom div.fenric-notify,
+div.fenric-notify-container.fenric-notify-container-bottom-left div.fenric-notify {
+	margin-top: 10px;
+}
+
+div.fenric-notify-container.fenric-notify-container-top-right div.fenric-notify:last-of-type,
+div.fenric-notify-container.fenric-notify-container-left-top div.fenric-notify:last-of-type {
+	margin-bottom: 0;
+}
+div.fenric-notify-container.fenric-notify-container-right-bottom div.fenric-notify:first-of-type,
+div.fenric-notify-container.fenric-notify-container-bottom-left div.fenric-notify:first-of-type {
+	margin-top: 0;
+}
+
+div.fenric-notify-container div.fenric-notify {
+	z-index: 1000;
+	position: relative;
+	padding: 10px;
+	border-width: 1px;
+	border-left-width: 10px;
+	border-style: solid;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 0.9em;
+}
+div.fenric-notify-container div.fenric-notify.fenric-notify-info {
+	color: #31708f;
+	border-color: #bce8f1;
+	background-color: #d9edf7;
+}
+div.fenric-notify-container div.fenric-notify.fenric-notify-warning {
+	color: #8a6d3b;
+	border-color: #faebcc;
+	background-color: #fcf8e3;
+}
+div.fenric-notify-container div.fenric-notify.fenric-notify-success {
+	color: #3c763d;
+	border-color: #d6e9c6;
+	background-color: #dff0d8;
+}
+div.fenric-notify-container div.fenric-notify.fenric-notify-error {
+	color: #a94442;
+	border-color: #ebccd1;
+	background-color: #f2dede;
+}
+
+div.fenric-notify-container div.fenric-notify a.fenric-notify-close {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	color: #ccc;
+	line-height: 1;
+	text-decoration: none;
+	text-shadow: 1px 1px 0px #fff;
+}
+div.fenric-notify-container div.fenric-notify a.fenric-notify-close:hover {
+	color: #a94442;
+}
