@@ -1,0 +1,199 @@
+'use strict';
+
+var $fenric = {};
+
+(function()
+{
+	var $user = function()
+	{};
+
+	$user.prototype.isLogged = function()
+	{
+		return <?= fenric('user')->isLogged() ? 'true' : 'false' ?>;
+	};
+
+	$user.prototype.getId = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return <?= fenric('user')->getId() ?>;
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.getUri = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return '<?= fenric('user')->getUri() ?>';
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.getRole = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return '<?= fenric('user')->getRole() ?>';
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.getUsername = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return '<?= fenric('user')->getUsername() ?>';
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.getPhoto = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return '<?= fenric('user')->getPhoto() ?>';
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.getFirstname = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return '<?= fenric('user')->getFirstname() ?>';
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.getLastname = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return '<?= fenric('user')->getLastname() ?>';
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.getFullname = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return '<?= fenric('user')->getName() ?>';
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.getGender = function()
+	{
+	<?php if (fenric('user')->isLogged()) : ?>
+	return '<?= fenric('user')->getGender() ?>';
+	<?php else : ?>
+	return null;
+	<?php endif; ?>
+};
+
+	$user.prototype.isAdministrator = function()
+	{
+	<?php if (fenric('user')->isLogged() && fenric('user')->isAdministrator()) : ?>
+	return true;
+	<?php else : ?>
+	return false;
+	<?php endif; ?>
+};
+
+	$user.prototype.isRedactor = function()
+	{
+	<?php if (fenric('user')->isLogged() && fenric('user')->isRedactor()) : ?>
+	return true;
+	<?php else : ?>
+	return false;
+	<?php endif; ?>
+};
+
+	$user.prototype.isModerator = function()
+	{
+	<?php if (fenric('user')->isLogged() && fenric('user')->isModerator()) : ?>
+	return true;
+	<?php else : ?>
+	return false;
+	<?php endif; ?>
+};
+
+	$user.prototype.isUser = function()
+	{
+	<?php if (fenric('user')->isLogged() && fenric('user')->isUser()) : ?>
+	return true;
+	<?php else : ?>
+	return false;
+	<?php endif; ?>
+};
+
+	$user.prototype.isMale = function()
+	{
+	<?php if (fenric('user')->isLogged() && fenric('user')->isMale()) : ?>
+	return true;
+	<?php else : ?>
+	return false;
+	<?php endif; ?>
+};
+
+	$user.prototype.isFemale = function()
+	{
+	<?php if (fenric('user')->isLogged() && fenric('user')->isFemale()) : ?>
+	return true;
+	<?php else : ?>
+	return false;
+	<?php endif; ?>
+};
+
+	$user.prototype.isAdult = function()
+	{
+	<?php if (fenric('user')->isLogged() && fenric('user')->isAdult()) : ?>
+	return true;
+	<?php else : ?>
+	return false;
+	<?php endif; ?>
+};
+
+	$fenric.user = new $user;
+})();
+
+(function()
+{
+	var $locale = function()
+	{
+		this.messages = <?= json_encode(fenric('locale::js')->all(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR) ?>;
+	};
+
+	$locale.prototype.translate = function(message, context)
+	{
+		if (this.messages[message] !== void(0))
+		{
+			message = this.interpolate(
+				this.messages[message], context
+			);
+		}
+
+		return message;
+	};
+
+	$locale.prototype.interpolate = function(message, context)
+	{
+		var key, regex;
+
+		if (context instanceof Object)
+		{
+			for (key in context)
+			{
+				regex = new RegExp('{' + key + '}', 'g');
+
+				message = message.replace(regex, context[key]);
+			}
+		}
+
+		return message;
+	};
+
+	$fenric.locale = new $locale;
+})();
