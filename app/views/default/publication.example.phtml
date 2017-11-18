@@ -77,6 +77,12 @@
 			</a>
 		</div>
 		<div class="float-left mr-3">
+			<i class="fa fa-comments-o" aria-hidden="true"></i>
+			<a class="text-reset" href="<?= $publication->getUri() ?>#comments_tree">
+				<span><?= $publication->getCountComments() ?></span>
+			</a>
+		</div>
+		<div class="float-left mr-3">
 			<i class="fa fa-eye" aria-hidden="true"></i>
 			<span><?= $publication->getHits() ?></span>
 		</div>
@@ -207,10 +213,10 @@
 <?php endif; ?>
 
 <div class="container mt-5">
-	<div class="mb-3 display-4">Комментарии <small class="text-muted">(<?= $publication->getCountComments() ?>)</small></div>
+	<div class="mb-3 display-4">Комментарии <small class="badge badge-primary"><?= $publication->getCountComments() ?></small></div>
 	<div class="comments">
-		<div class="comments-tree-container"></div>
-		<div class="comments-form-container"></div>
+		<div class="comments-tree-container" id="comments_tree"></div>
+		<div class="comments-form-container" id="comments_form"></div>
 	</div>
 </div>
 
