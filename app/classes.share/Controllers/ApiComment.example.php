@@ -100,6 +100,7 @@ class ApiComment extends CRUD
 
 			if ($comment->getIsDeleted())
 			{
+				$json['picture'] = null;
 				$json['content'] = null;
 			}
 
@@ -113,11 +114,11 @@ class ApiComment extends CRUD
 				{
 					$json['created_at'] = sprintf('сегодня в %s', $comment->getCreatedAt()->format('H:i'));
 				}
-				if ($comment->getCreatedAt()->format('Ymd') === (new \DateTime('1 day ago'))->format('Ymd'))
+				else if ($comment->getCreatedAt()->format('Ymd') === (new \DateTime('1 day ago'))->format('Ymd'))
 				{
 					$json['created_at'] = sprintf('вчера в %s', $comment->getCreatedAt()->format('H:i'));
 				}
-				if ($comment->getCreatedAt()->format('Ymd') === (new \DateTime('2 days ago'))->format('Ymd'))
+				else if ($comment->getCreatedAt()->format('Ymd') === (new \DateTime('2 days ago'))->format('Ymd'))
 				{
 					$json['created_at'] = sprintf('позавчера в %s', $comment->getCreatedAt()->format('H:i'));
 				}
@@ -133,11 +134,11 @@ class ApiComment extends CRUD
 				{
 					$json['updated_at'] = sprintf('сегодня в %s', $comment->getUpdatedAt()->format('H:i'));
 				}
-				if ($comment->getUpdatedAt()->format('Ymd') === (new \DateTime('1 day ago'))->format('Ymd'))
+				else if ($comment->getUpdatedAt()->format('Ymd') === (new \DateTime('1 day ago'))->format('Ymd'))
 				{
 					$json['updated_at'] = sprintf('вчера в %s', $comment->getUpdatedAt()->format('H:i'));
 				}
-				if ($comment->getUpdatedAt()->format('Ymd') === (new \DateTime('2 days ago'))->format('Ymd'))
+				else if ($comment->getUpdatedAt()->format('Ymd') === (new \DateTime('2 days ago'))->format('Ymd'))
 				{
 					$json['updated_at'] = sprintf('позавчера в %s', $comment->getUpdatedAt()->format('H:i'));
 				}
@@ -153,11 +154,11 @@ class ApiComment extends CRUD
 				{
 					$json['deleted_at'] = sprintf('сегодня в %s', $comment->getDeletedAt()->format('H:i'));
 				}
-				if ($comment->getDeletedAt()->format('Ymd') === (new \DateTime('1 day ago'))->format('Ymd'))
+				else if ($comment->getDeletedAt()->format('Ymd') === (new \DateTime('1 day ago'))->format('Ymd'))
 				{
 					$json['deleted_at'] = sprintf('вчера в %s', $comment->getDeletedAt()->format('H:i'));
 				}
-				if ($comment->getDeletedAt()->format('Ymd') === (new \DateTime('2 days ago'))->format('Ymd'))
+				else if ($comment->getDeletedAt()->format('Ymd') === (new \DateTime('2 days ago'))->format('Ymd'))
 				{
 					$json['deleted_at'] = sprintf('позавчера в %s', $comment->getDeletedAt()->format('H:i'));
 				}
@@ -167,7 +168,7 @@ class ApiComment extends CRUD
 			{
 				$json['creator'] = [];
 				$json['creator']['id'] = $comment->getUserRelatedByCreatedBy()->getId();
-				$json['creator']['photo'] = $comment->getUserRelatedByCreatedBy()->getPhoto();
+				// $json['creator']['photo'] = $comment->getUserRelatedByCreatedBy()->getPhoto();
 				$json['creator']['username'] = $comment->getUserRelatedByCreatedBy()->getUsername();
 				$json['creator']['name'] = $comment->getUserRelatedByCreatedBy()->getName();
 			}
@@ -176,7 +177,7 @@ class ApiComment extends CRUD
 			{
 				$json['updater'] = [];
 				$json['updater']['id'] = $comment->getUserRelatedByUpdatedBy()->getId();
-				$json['updater']['photo'] = $comment->getUserRelatedByUpdatedBy()->getPhoto();
+				// $json['updater']['photo'] = $comment->getUserRelatedByUpdatedBy()->getPhoto();
 				$json['updater']['username'] = $comment->getUserRelatedByUpdatedBy()->getUsername();
 				$json['updater']['name'] = $comment->getUserRelatedByUpdatedBy()->getName();
 			}
@@ -185,7 +186,7 @@ class ApiComment extends CRUD
 			{
 				$json['deleter'] = [];
 				$json['deleter']['id'] = $comment->getUserRelatedByDeletedBy()->getId();
-				$json['deleter']['photo'] = $comment->getUserRelatedByDeletedBy()->getPhoto();
+				// $json['deleter']['photo'] = $comment->getUserRelatedByDeletedBy()->getPhoto();
 				$json['deleter']['username'] = $comment->getUserRelatedByDeletedBy()->getUsername();
 				$json['deleter']['name'] = $comment->getUserRelatedByDeletedBy()->getName();
 			}
