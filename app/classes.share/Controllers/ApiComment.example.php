@@ -168,7 +168,7 @@ class ApiComment extends CRUD
 			{
 				$json['creator'] = [];
 				$json['creator']['id'] = $comment->getUserRelatedByCreatedBy()->getId();
-				// $json['creator']['photo'] = $comment->getUserRelatedByCreatedBy()->getPhoto();
+				$json['creator']['photo'] = $comment->getUserRelatedByCreatedBy()->getPhoto();
 				$json['creator']['username'] = $comment->getUserRelatedByCreatedBy()->getUsername();
 				$json['creator']['name'] = $comment->getUserRelatedByCreatedBy()->getName();
 			}
@@ -177,7 +177,6 @@ class ApiComment extends CRUD
 			{
 				$json['updater'] = [];
 				$json['updater']['id'] = $comment->getUserRelatedByUpdatedBy()->getId();
-				// $json['updater']['photo'] = $comment->getUserRelatedByUpdatedBy()->getPhoto();
 				$json['updater']['username'] = $comment->getUserRelatedByUpdatedBy()->getUsername();
 				$json['updater']['name'] = $comment->getUserRelatedByUpdatedBy()->getName();
 			}
@@ -186,7 +185,6 @@ class ApiComment extends CRUD
 			{
 				$json['deleter'] = [];
 				$json['deleter']['id'] = $comment->getUserRelatedByDeletedBy()->getId();
-				// $json['deleter']['photo'] = $comment->getUserRelatedByDeletedBy()->getPhoto();
 				$json['deleter']['username'] = $comment->getUserRelatedByDeletedBy()->getUsername();
 				$json['deleter']['name'] = $comment->getUserRelatedByDeletedBy()->getName();
 			}
