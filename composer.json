@@ -4,13 +4,16 @@
 		"propel/propel": "dev-master",
 		"phpmailer/phpmailer": "^5.2"
 	},
+	"require-dev": {
+		"phpunit/phpunit": "^6.4"
+	},
 	"autoload": {
 		"files": [
 			"bootstrap.php",
 			"propel/config.php.dist"
 		],
-		"psr-4" : {
-			"Propel\\Models\\" : "app/classes.share/Propel/Models"
+		"psr-4": {
+			"Propel\\Models\\": "app/classes.share/Propel/Models"
 		}
 	}
 }
