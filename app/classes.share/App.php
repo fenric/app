@@ -25,24 +25,6 @@ final class App
 {
 
 	/**
-	 * Получение информации о релизе
-	 */
-	public function getReleaseInfo()
-	{
-		if (is_file(fenric()->path('.', 'release.json')))
-		{
-			if (is_readable(fenric()->path('.', 'release.json')))
-			{
-				$content = file_get_contents(
-					fenric()->path('.', 'release.json')
-				);
-
-				return json_decode($content);
-			}
-		}
-	}
-
-	/**
 	 * Запуск приложения
 	 */
 	public function run(Closure $middleware)

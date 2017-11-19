@@ -65,6 +65,14 @@ fenric()->registerUncaughtExceptionHandler(function($exception) : void
 });
 
 /**
+ * Регистрация в контейнере фреймворка одиночной службы для получение информации о текущем релизе приложения
+ */
+fenric()->registerDisposableSharedService('release', function()
+{
+	return new \Fenric\Release();
+});
+
+/**
  * Регистрация в контейнере фреймворка приложения
  */
 fenric()->registerDisposableSharedService('app', function()
