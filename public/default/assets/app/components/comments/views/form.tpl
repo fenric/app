@@ -6,10 +6,12 @@
 			<input class="form-control mt-2" type="text" name="updating_reason" required="true" placeholder="Причина редактирования..." />
 		{{endwhen editable}}
 	</div>
+
 	<div class="comments-form-rules">
 		<small class="text-muted">Публикуя комментарий, вы соглашаетесь с <a href="/rules/" target="_blank">правилами</a> настоящего ресурса.</small>
 	</div>
 	<hr>
+
 	<div class="clearfix">
 		<div class="pull-left">
 			<div class="btn-group">
@@ -20,21 +22,31 @@
 			</div>
 		</div>
 		<div class="pull-right">
-			{{when replyable is true}}
-				<button class="btn btn-outline-danger" type="reset">
-					<span>Отмена</span>
-				</button>
-			{{endwhen replyable}}
-
 			{{when editable is true}}
 				<button class="btn btn-outline-danger" type="reset">
 					<span>Отмена</span>
 				</button>
+				<button class="btn btn-outline-warning" type="submit">
+					<span>Изменить</span>
+				</button>
 			{{endwhen editable}}
 
-			<button class="btn btn-outline-success" type="submit">
-				<span>Отправить</span>
-			</button>
+			{{when replyable is true}}
+				<button class="btn btn-outline-danger" type="reset">
+					<span>Отмена</span>
+				</button>
+				<button class="btn btn-outline-primary" type="submit">
+					<span>Ответить</span>
+				</button>
+			{{endwhen replyable}}
+
+			{{when editable is not true}}
+				{{when replyable is not true}}
+					<button class="btn btn-outline-success" type="submit">
+						<span>Отправить</span>
+					</button>
+				{{endwhen replyable}}
+			{{endwhen editable}}
 		</div>
 	</div>
 

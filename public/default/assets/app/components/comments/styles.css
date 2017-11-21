@@ -27,6 +27,10 @@
 	opacity: 0.25;
 }
 
+.comments > div > .comments-form {
+	border: 1px solid #eaeaea;
+}
+
 .comments-form {
 	position: relative;
 	padding: 10px;
