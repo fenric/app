@@ -8,7 +8,9 @@ Thumbs.db
 /app/log/*/*
 
 /propel/*/config/config.php
+
 /public/*/upload/*/**
+/public/*/vendor/**
 
 /vendor/*/**
 /vendor/autoload.php
