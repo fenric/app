@@ -104,4 +104,19 @@ class Api extends Actionable
 		fenric('user')->setParams($params);
 		fenric('user')->save();
 	}
+
+	/**
+	 * Сохранение размера шрифта для содержимого модальных окон рабочего стола
+	 */
+	protected function actionSaveDesktopModalContentFontSizeViaPATCH() : void
+	{
+		parse_str($this->request->getBody(), $data);
+
+		$params = fenric('user')->getParams();
+
+		$params['desktop']['modalContentFontSize'] = $data['value'];
+
+		fenric('user')->setParams($params);
+		fenric('user')->save();
+	}
 }

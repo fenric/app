@@ -16,6 +16,7 @@
 		this.routes = {};
 		this.routes.saveDesktopPalette = '{root}/api/save-desktop-palette/';
 		this.routes.saveDesktopWallpaper = '{root}/api/save-desktop-wallpaper/';
+		this.routes.saveDesktopModalContentFontSize = '{root}/api/save-desktop-modal-content-font-size/';
 	};
 
 	/**
@@ -35,13 +36,13 @@
 				});
 			}});
 
-			modal.title(self.title).open(346, 420).block();
+			modal.title(self.title).open(346, 540).block();
 
 			$bugaboo.load(self.template, function(tpl)
 			{
-				modal.content(
-					tpl.format()
-				).unblock();
+				modal.content(tpl.format({
+					modalContentFontSize: self.modalContentFontSize,
+				})).unblock();
 
 				modal.click('.sort-desktop-icons', function(event)
 				{
@@ -87,6 +88,18 @@
 						$desktop.show();
 					});
 				});
+
+				modal.change('.desktop-modal-font-size', function(event, element)
+				{
+					$desktop.modalContentFontSizeControl(element.value, function(value)
+					{
+						self.modalContentFontSize = value;
+
+						self.xhr.patch(self.routes.saveDesktopModalContentFontSize, {
+							'value': value,
+						}, {repeat: true});
+					});
+				});
 			});
 		});
 	};
@@ -98,6 +111,8 @@
 	{
 		this.with(function(self)
 		{
+			this.modalContentFontSize = $desktop.component('admin').account.desktop.modalContentFontSize;
+
 			$desktop.module('icon').add({id: self.id, image: self.appIcon, label: self.title, click: function(event)
 			{
 				self.open();

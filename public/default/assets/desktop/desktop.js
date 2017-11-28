@@ -192,7 +192,42 @@ $desktop.prototype.decorate = function(palette, complete)
 
 	this.app.classList.add(palette);
 
-	complete.call(this, palette);
+	if (complete instanceof Function) {
+		complete.call(this, palette);
+	}
+
+	return this;
+};
+
+/**
+ * Управление размером шрифта в модальных окнах
+ *
+ * @access  public
+ * @return  void
+ */
+$desktop.prototype.modalContentFontSizeControl = function(value, complete)
+{
+	this.app.classList.remove('modal-content-font-size-control-x05');
+	this.app.classList.remove('modal-content-font-size-control-x06');
+	this.app.classList.remove('modal-content-font-size-control-x07');
+	this.app.classList.remove('modal-content-font-size-control-x08');
+	this.app.classList.remove('modal-content-font-size-control-x09');
+	this.app.classList.remove('modal-content-font-size-control-x11');
+	this.app.classList.remove('modal-content-font-size-control-x12');
+	this.app.classList.remove('modal-content-font-size-control-x13');
+	this.app.classList.remove('modal-content-font-size-control-x14');
+	this.app.classList.remove('modal-content-font-size-control-x15');
+	this.app.classList.remove('modal-content-font-size-control-x16');
+	this.app.classList.remove('modal-content-font-size-control-x17');
+	this.app.classList.remove('modal-content-font-size-control-x18');
+	this.app.classList.remove('modal-content-font-size-control-x19');
+	this.app.classList.remove('modal-content-font-size-control-x20');
+
+	this.app.classList.add('modal-content-font-size-control-' + value);
+
+	if (complete instanceof Function) {
+		complete.call(this, value);
+	}
 
 	return this;
 };
