@@ -5,7 +5,6 @@ $options = [];
 $options['modules'] = [
 	'icon',
 	'modal',
-	'notify',
 	'params',
 	'request',
 ];
