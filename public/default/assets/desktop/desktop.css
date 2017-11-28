@@ -305,13 +305,16 @@ p:last-child {
 	background-image: url("./i/loading-background.gif");
 }
 #desktop div.desktop-modal.state-draggable div.desktop-modal-wrap {
-	/* opacity: 0.9; */
+	opacity: 0.9;
 }
 #desktop div.desktop-modal.state-resizable div.desktop-modal-wrap {
-	/* opacity: 0.9; */
+	opacity: 0.9;
 }
 #desktop div.desktop-modal.state-foreground div.desktop-modal-wrap {
 
+}
+#desktop div.desktop-modal.state-minimize {
+	display: none;
 }
 #desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head {
 	cursor: move;
@@ -355,6 +358,10 @@ p:last-child {
 	right: 43px;
 	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADhJREFUeNpi/P///x0GBoYzDOQBIwagASuAmIFMvIKJgUIwasCoAaMGQAAjMEfdBdLnydSvDxBgAOeQOuz1EFKPAAAAAElFTkSuQmCC");
 }
+#desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-head button.desktop-modal-on-minimize {
+	right: 86px;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAkklEQVQ4jdXPuwrCUBCE4dN4IQiBQB4hKdLYWGmTSt8zjRaCIKitb/bZHCWImhgrF6aZmX/ZDeH/B8UPbBnQYD0A3qAJGGOH+gu4xhajuzHFHsse8Cp2J89BggMWH+BF7CTvCjMcMX+RzWM26zoxxQlVy6uil3Z8+AAyXFBEnZH1gltLclyj8q/g1pIS5SD4f+YGo+GepDDAY8oAAAAASUVORK5CYII=');
+}
 #desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
 	overflow: auto;
 	position: relative;
@@ -363,6 +370,7 @@ p:last-child {
 	padding: 10px;
 	background-color: #ffffff;
 }
+
 #desktop div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body:after {
 	content: "";
 	display: table;
@@ -396,43 +404,50 @@ p:last-child {
 	height: 10px;
 }
 
-/**
- * Notify
- */
-#desktop div.desktop-notify {
-	z-index: 2000000;
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	width: 300px;
-	border: 1px solid #ffffff;
-	color: #ffffff;
+#desktop.modal-content-font-size-control-x05 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 0.5em;
 }
-#desktop div.desktop-notify.desktop-notify-info {
-	background-color: #3f51b5;
+#desktop.modal-content-font-size-control-x06 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 0.6em;
 }
-#desktop div.desktop-notify.desktop-notify-success {
-	background-color: #4caf50;
+#desktop.modal-content-font-size-control-x07 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 0.7em;
 }
-#desktop div.desktop-notify.desktop-notify-warning {
-	background-color: #ff9800;
+#desktop.modal-content-font-size-control-x08 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 0.8em;
 }
-#desktop div.desktop-notify.desktop-notify-error {
-	background-color: #d32f2f;
+#desktop.modal-content-font-size-control-x09 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 0.9em;
 }
-#desktop div.desktop-notify.desktop-notify-plain {
-	background-color: #4c4a48;
+#desktop.modal-content-font-size-control-x11 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.1em;
 }
-#desktop div.desktop-notify div.desktop-notify-head,
-#desktop div.desktop-notify div.desktop-notify-body {
-	padding: 5px;
-	word-wrap: break-word;
+#desktop.modal-content-font-size-control-x12 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.2em;
 }
-#desktop div.desktop-notify div.desktop-notify-head {
-	font-weight: bold;
+#desktop.modal-content-font-size-control-x13 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.3em;
 }
-#desktop div.desktop-notify div.desktop-notify-body {
-	white-space: pre-wrap;
+#desktop.modal-content-font-size-control-x14 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.4em;
+}
+#desktop.modal-content-font-size-control-x15 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.5em;
+}
+#desktop.modal-content-font-size-control-x16 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.6em;
+}
+#desktop.modal-content-font-size-control-x17 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.7em;
+}
+#desktop.modal-content-font-size-control-x18 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.8em;
+}
+#desktop.modal-content-font-size-control-x19 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 1.9em;
+}
+#desktop.modal-content-font-size-control-x20 div.desktop-modal div.desktop-modal-wrap div.desktop-modal-body {
+	font-size: 2.0em;
 }
 
 /**
@@ -495,9 +510,7 @@ div.desktop-palettes div.desktop-palette.black {
  * Login form
  */
 #desktop div.desktop-admin-login-overlay {
-	/* должно быть меньше чем у уведомлений */
-	z-index: 1000000;
-
+	z-index: 100;
 	position: absolute;
 	top: 0;
 	left: 0;

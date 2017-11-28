@@ -2,279 +2,292 @@
 
 (function()
 {
+	var $events;
 	var $modal;
 	var $module;
 
-	/**
-	 * Модальное окно
-	 *
-	 * @param   int      id
-	 * @param   object   element
-	 * @param   object   params
-	 *
-	 * @access  public
-	 * @return  void
-	 */
-	$modal = function(id, element, params)
+	$events = function()
 	{
-		this.id = id;
-
-		this.params = params;
-		this.element = element;
 		this.eventListeners = {};
-
-		this.iconNode = element.querySelector('div.desktop-modal-head > i.fa');
-		this.headNode = element.querySelector('div.desktop-modal-head > span');
-		this.bodyNode = element.querySelector('div.desktop-modal-body');
-
-		this.defaultPercentageWidth = 80;
-		this.defaultPercentageHeight = 80;
-
-		(function(self)
-		{
-			self.on('modal.content.find', function()
-			{
-				self.find('input.modal-live-search', function(element)
-				{
-					element.focus();
-				});
-			});
-
-		})(this);
 	};
 
-	/**
-	 * Добавление слушателя события
-	 *
-	 * @param   string     eventName
-	 * @param   Function   eventListener
-	 *
-	 * @access  public
-	 * @return  void
-	 */
-	$modal.prototype.on = function(eventName, eventListener)
+	$events.prototype.addEventListener = function(eventName, eventListener)
 	{
-		if (this.eventListeners[eventName] === undefined) {
+		if (this.eventListeners[eventName] === undefined)
+		{
 			this.eventListeners[eventName] = new Array();
 		}
 
 		this.eventListeners[eventName].push(eventListener);
 	};
 
-	/**
-	 * Вызов слушателей событий
-	 *
-	 * @param   string   eventName
-	 * @param   Array    eventParams
-	 *
-	 * @access  public
-	 * @return  void
-	 */
-	$modal.prototype.triggerEventListeners = function(eventName, eventParams)
+	$events.prototype.triggerEventListeners = function(eventName, eventParams, eventScope)
 	{
-		eventParams = eventParams || [];
-
-		if (this.eventListeners[eventName] instanceof Array) {
-			this.eventListeners[eventName].forEach(function(eventListener) {
-				eventListener.apply(this, eventParams);
+		if (this.eventListeners[eventName] instanceof Array)
+		{
+			this.eventListeners[eventName].forEach(function(eventListener)
+			{
+				eventListener.apply(eventScope || null, eventParams || []);
 			});
 		}
 	};
 
-	/**
-	 * Удаление слушателей событий
-	 *
-	 * @param   string   eventName
-	 *
-	 * @access  public
-	 * @return  void
-	 */
-	$modal.prototype.deleteEventListeners = function(eventName)
+	$events.prototype.deleteEventListeners = function(eventName)
 	{
-		if (this.eventListeners[eventName] instanceof Array) {
+		if (this.eventListeners[eventName] instanceof Array)
+		{
 			delete this.eventListeners[eventName];
 		}
+	};
+
+	$events.prototype.on = function(eventName, eventListener)
+	{
+		this.addEventListener(eventName, eventListener);
+	};
+
+	$events.prototype.trigger = function(eventName, eventParams, eventScope)
+	{
+		this.triggerEventListeners(eventName, eventParams, eventScope);
+	};
+
+	$events.prototype.off = function(eventName)
+	{
+		this.deleteEventListeners(eventName);
+	};
+
+	/**
+	 * Модальное окно
+	 *
+	 * @constructor
+	 *
+	 * @param   {number}   id
+	 * @param   {node}     element
+	 * @param   {object}   params
+	 *
+	 * @return  {void}
+	 */
+	$modal = function(id, element, params)
+	{
+		$events.apply(this, arguments);
+
+		this.id = id;
+
+		this.params = params;
+		this.element = element;
+
+		this.iconNode = element.querySelector('div.desktop-modal-head > i');
+		this.headNode = element.querySelector('div.desktop-modal-head > span');
+		this.bodyNode = element.querySelector('div.desktop-modal-body');
+
+		this.defaultPercentageWidth = 80;
+		this.defaultPercentageHeight = 80;
+
+		this.on('modal.content.find', function()
+		{
+			this.find('input.modal-live-search', function(element)
+			{
+				element.focus();
+			});
+		});
+	};
+
+	/**
+	 * Наследование логики событий
+	 */
+	$modal.prototype = Object.create($events.prototype);
+
+	/**
+	 * Регистрация слушателя события который будет вызван при изменении иконки модального окна
+	 *
+	 * @param   {callback}   listener
+	 *
+	 * @return  {void}
+	 */
+	$modal.prototype.onchangeicon = function(listener)
+	{
+		this.on('change.icon', listener);
 	};
 
 	/**
 	 * Регистрация слушателя события который будет вызван при изменении заголовка модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onchangetitle = function(callback) {
-		this.params.onchangetitle = callback;
+	$modal.prototype.onchangetitle = function(listener)
+	{
+		this.on('change.title', listener);
 	};
 
 	/**
 	 * Регистрация слушателя события который будет вызван при изменении содержимого модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onchangecontent = function(callback) {
-		this.params.onchangecontent = callback;
+	$modal.prototype.onchangecontent = function(listener)
+	{
+		this.on('change.content', listener);
 	};
 
 	/**
 	 * Регистрация слушателя события который будет вызван перед открытием модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onopening = function(callback) {
-		this.params.onopening = callback;
+	$modal.prototype.onopening = function(listener)
+	{
+		this.on('before.open', listener);
 	};
 
 	/**
 	 * Регистрация слушателя события который будет вызван после открытия модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onopen = function(callback) {
-		this.params.onopen = callback;
+	$modal.prototype.onopen = function(listener)
+	{
+		this.on('after.open', listener);
 	};
 
 	/**
 	 * Регистрация слушателя события который будет вызван перед закрытием модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onclosing = function(callback) {
-		this.params.onclosing = callback;
+	$modal.prototype.onclosing = function(listener)
+	{
+		this.on('before.close', listener);
 	};
 
 	/**
 	 * Регистрация слушателя события который будет вызван после закрытия модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onclose = function(callback) {
-		this.params.onclose = callback;
+	$modal.prototype.onclose = function(listener)
+	{
+		this.on('after.close', listener);
 	};
 
 	/**
-	 * Регистрация слушателя события который будет вызван перед блокировкой окна
+	 * Регистрация слушателя события который будет вызван перед блокировкой модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onblocking = function(callback) {
-		this.params.onblocking = callback;
+	$modal.prototype.onblocking = function(listener)
+	{
+		this.on('before.block', listener);
 	};
 
 	/**
-	 * Регистрация слушателя события который будет вызван после блокировки окна
+	 * Регистрация слушателя события который будет вызван после блокировки модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onblock = function(callback) {
-		this.params.onblock = callback;
+	$modal.prototype.onblock = function(listener)
+	{
+		this.on('after.block', listener);
 	};
 
 	/**
 	 * Регистрация слушателя события который будет вызван перед разблокировкой модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onunblocking = function(callback) {
-		this.params.onunblocking = callback;
+	$modal.prototype.onunblocking = function(listener)
+	{
+		this.on('before.unblock', listener);
 	};
 
 	/**
 	 * Регистрация слушателя события который будет вызван после разблокировки модального окна
 	 *
-	 * @param   Function   callback
+	 * @param   {callback}   listener
 	 *
-	 * @access  public
-	 * @return  void
+	 * @return  {void}
 	 */
-	$modal.prototype.onunblock = function(callback) {
-		this.params.onunblock = callback;
+	$modal.prototype.onunblock = function(listener)
+	{
+		this.on('after.unblock', listener);
 	};
 
 	/**
 	 * Получение модального окна в виде узла
 	 *
-	 * @access  public
-	 * @return  Node
+	 * @return  {node}
 	 */
-	$modal.prototype.getNode = function() {
+	$modal.prototype.getNode = function()
+	{
 		return this.element;
 	};
 
 	/**
 	 * Получение иконки модального окна в виде узла
 	 *
-	 * @access  public
-	 * @return  Node
+	 * @return  {node}
 	 */
-	$modal.prototype.getIconNode = function() {
+	$modal.prototype.getIconNode = function()
+	{
 		return this.iconNode;
 	};
 
 	/**
 	 * Получение заголовка модального окна в виде узла
 	 *
-	 * @access  public
-	 * @return  Node
+	 * @return  {node}
 	 */
-	$modal.prototype.getHeadNode = function() {
+	$modal.prototype.getHeadNode = function()
+	{
 		return this.headNode;
 	};
 
 	/**
 	 * Получение содержимого модального окна в виде узла
 	 *
-	 * @access  public
-	 * @return  Node
+	 * @return  {node}
 	 */
-	$modal.prototype.getBodyNode = function() {
+	$modal.prototype.getBodyNode = function()
+	{
 		return this.bodyNode;
 	};
 
 	/**
 	 * Поиск узла внутри содержимого модального окна
 	 *
-	 * @param   string     selector
-	 * @param   Function   reader
-	 * @param   object     context
+	 * @param   {string}     selector
+	 * @param   {callback}   callback
+	 * @param   {object}     context
 	 *
-	 * @access  public
-	 * @return  Node
+	 * @return  {node}
 	 */
-	$modal.prototype.find = function(selector, reader, context)
+	$modal.prototype.find = function(selector, callback, context)
 	{
 		var element = this.bodyNode.querySelector(
 			$desktop.interpolate(selector, context)
 		);
 
-		if (element instanceof Node) {
-			if (reader instanceof Function) {
-				reader.call(element, element);
+		if (element instanceof Node)
+		{
+			if (callback instanceof Function)
+			{
+				callback.call(element, element);
 			}
 		}
 
@@ -284,14 +297,13 @@
 	/**
 	 * Поиск узлов внутри содержимого модального окна
 	 *
-	 * @param   string     selector
-	 * @param   Function   reader
-	 * @param   object     context
+	 * @param   {string}     selector
+	 * @param   {callback}   callback
+	 * @param   {object}     context
 	 *
-	 * @access  public
-	 * @return  array
+	 * @return  {array}
 	 */
-	$modal.prototype.search = function(selector, reader, context)
+	$modal.prototype.search = function(selector, callback, context)
 	{
 		var elements = Array.prototype.slice.call(
 			this.bodyNode.querySelectorAll(
@@ -299,12 +311,12 @@
 			)
 		);
 
-		if (elements.length > 0) {
-			if (reader instanceof Function) {
-				elements.forEach(function(element) {
-					reader.call(element, element);
-				});
-			}
+		if (callback instanceof Function)
+		{
+			elements.forEach(function(element)
+			{
+				callback.call(element, element);
+			});
 		}
 
 		return elements;
@@ -313,351 +325,26 @@
 	/**
 	 * Проверка существования узла внутри содержимого модального окна
 	 *
-	 * @param   string   selector
-	 * @param   object   context
+	 * @param   String   selector
+	 * @param   Object   context
 	 *
-	 * @access  public
-	 * @return  bool
+	 * @return  Boolean
 	 */
 	$modal.prototype.exists = function(selector, context)
 	{
-		if (this.find(selector, null, context) instanceof Node) {
-			return true;
-		}
+		var element = this.bodyNode.querySelector(
+			$desktop.interpolate(selector, context)
+		);
 
-		return false;
+		return !! (element instanceof Node);
 	};
 
 	/**
-	 * Прослушивание события узла внутри содержимого модального окна
+	 * Удаление узла внутри содержимого модального окна
 	 *
-	 * @param   string     selector
-	 * @param   string     eventname
-	 * @param   Function   listener
-	 * @param   object     context
+	 * @param   String   selector
+	 * @param   Object   context
 	 *
-	 * @access  public
-	 * @return  void
-	 */
-	$modal.prototype.listen = function(selector, eventname, listener, context)
-	{
-		this.search(selector, function(element)
-		{
-			element.addEventListener(eventname, function(event)
-			{
-				listener.call(this, event, this);
-			});
-
-		}, context);
-	};
-
-	$modal.prototype.click = function(selector, listener, context)
-	{
-		this.listen(selector, 'click', listener, context);
-	};
-	$modal.prototype.change = function(selector, listener, context)
-	{
-		this.listen(selector, 'change', listener, context);
-	};
-	$modal.prototype.keydown = function(selector, listener, context)
-	{
-		this.listen(selector, 'keydown', listener, context);
-	};
-	$modal.prototype.keypress = function(selector, listener, context)
-	{
-		this.listen(selector, 'keypress', listener, context);
-	};
-	$modal.prototype.keyup = function(selector, listener, context)
-	{
-		this.listen(selector, 'keyup', listener, context);
-	};
-	$modal.prototype.focus = function(selector, listener, context)
-	{
-		this.listen(selector, 'focus', listener, context);
-	};
-	$modal.prototype.blur = function(selector, listener, context)
-	{
-		this.listen(selector, 'blur', listener, context);
-	};
-
-	/**
-	 * Смена иконки модального окна
-	 *
-	 * @param   string   value
-	 *
-	 * @access  public
-	 * @return  object
-	 *
-	 * @see     http://fontawesome.io/icons/
-	 */
-	$modal.prototype.icon = function(value)
-	{
-		value = 'fa-' + value.replace(/^fa-/, '');
-
-		this.iconNode.className = '';
-		this.iconNode.classList.add('fa');
-		this.iconNode.classList.add(value);
-
-		return this;
-	};
-
-	/**
-	 * Смена заголовка модального окна
-	 *
-	 * @param   mixed    value
-	 * @param   object   context
-	 *
-	 * @access  public
-	 * @return  object
-	 */
-	$modal.prototype.title = function(value, context)
-	{
-		while (this.headNode.firstChild) {
-			this.headNode.removeChild(this.headNode.firstChild);
-		}
-
-		if (typeof value === 'string') {
-			value = document.createTextNode(
-				$desktop.interpolate(value, context)
-			);
-		}
-
-		this.headNode.appendChild(value);
-
-		if (this.params.onchangetitle instanceof Function) {
-			this.params.onchangetitle.apply(this, arguments);
-		}
-
-		return this;
-	};
-
-	/**
-	 * Смена содержимого модального окна
-	 *
-	 * @param   mixed    value
-	 * @param   object   context
-	 *
-	 * @access  public
-	 * @return  object
-	 */
-	$modal.prototype.content = function(value, context)
-	{
-		while (this.bodyNode.firstChild) {
-			this.bodyNode.removeChild(this.bodyNode.firstChild);
-		}
-
-		if (typeof value === 'string') {
-			value = document.createTextNode(
-				$desktop.interpolate(value, context)
-			);
-		}
-
-		this.bodyNode.appendChild(value);
-		this.bodyNode.scrollTop = 0;
-
-		if (this.params.onchangecontent instanceof Function) {
-			this.params.onchangecontent.apply(this, arguments);
-		}
-
-		(function(self)
-		{
-			self.find('input.modal-live-search', function(element)
-			{
-				var finder;
-
-				element.addEventListener('keyup', function(event)
-				{
-					clearTimeout(finder);
-
-					finder = setTimeout(function()
-					{
-						self.triggerEventListeners('modal.live.search', [event, element]);
-
-					}, 1000);
-				});
-
-				element.addEventListener('blur', function(event)
-				{
-					clearTimeout(finder);
-				});
-			});
-
-		})(this);
-
-		return this;
-	};
-
-	/**
-	 * Открытие модального окна
-	 *
-	 * @param   int    width
-	 * @param   int    height
-	 * @param   bool   percentage
-	 *
-	 * @access  public
-	 * @return  object
-	 */
-	$modal.prototype.open = function(width, height, percentage)
-	{
-		if (this.running()) {
-			this.foreground();
-
-			return this;
-		}
-
-		$desktop.module('modal').modals[this.id] = this;
-
-		this.position(width, height, percentage);
-		this.foreground();
-
-		if (this.params.onopening instanceof Function) {
-			this.params.onopening.apply(this, arguments);
-		}
-
-		$desktop.add(this.element);
-
-		if (this.params.onopen instanceof Function) {
-			this.params.onopen.apply(this, arguments);
-		}
-
-		return this;
-	};
-
-	/**
-	 * Закрытие модального окна
-	 *
-	 * @access  public
-	 * @return  object
-	 */
-	$modal.prototype.close = function()
-	{
-		delete $desktop.module('modal').modals[this.id];
-
-		if (this.params.onclosing instanceof Function) {
-			this.params.onclosing.apply(this, arguments);
-		}
-
-		$desktop.remove(this.element);
-
-		this.element.classList.remove('state-background');
-		this.element.classList.remove('state-foreground');
-
-		if (this.params.onclose instanceof Function) {
-			this.params.onclose.apply(this, arguments);
-		}
-
-		var $foregroundModal = $desktop.module('modal').byPosition(-1);
-
-		if ($foregroundModal instanceof Object) {
-			$foregroundModal.foreground();
-		}
-
-		return this;
-	};
-
-	/**
-	 * Блокировка модального окна
-	 *
-	 * @access  public
-	 * @return  object
-	 */
-	$modal.prototype.block = function()
-	{
-		if (this.params.onblocking instanceof Function) {
-			this.params.onblocking.apply(this, arguments);
-		}
-
-		this.element.classList.add('blocked');
-
-		if (this.params.onblock instanceof Function) {
-			this.params.onblock.apply(this, arguments);
-		}
-
-		return this;
-	};
-
-	/**
-	 * Разблокировка модального окна
-	 *
-	 * @access  public
-	 * @return  object
-	 */
-	$modal.prototype.unblock = function()
-	{
-		if (this.params.onunblocking instanceof Function) {
-			this.params.onunblocking.apply(this, arguments);
-		}
-
-		this.element.classList.remove('blocked');
-
-		if (this.params.onunblock instanceof Function) {
-			this.params.onunblock.apply(this, arguments);
-		}
-
-		return this;
-	};
-
-	/**
-	 * Открыто ли модальное окно
-	 *
-	 * @access  public
-	 * @return  bool
-	 */
-	$modal.prototype.running = function()
-	{
-		if (document.body.contains(this.element)) {
-			return true;
-		}
-
-		return false;
-	};
-
-	/**
-	 * Событие при отправки формы внутри модального окна
-	 *
-	 * @param   Function   onsubmit
-	 *
-	 * @access  public
-	 * @return  void
-	 */
-	$modal.prototype.submit = function(onsubmit)
-	{
-		var i, forms;
-
-		forms = this.bodyNode.querySelectorAll('form');
-
-		if (forms instanceof NodeList)
-		{
-			if (forms.length > 0)
-			{
-				for (i = 0; i < forms.length; i++)
-				{
-					if (forms[i] instanceof HTMLFormElement)
-					{
-						if (onsubmit instanceof Function)
-						{
-							forms[i].addEventListener('submit', function(event)
-							{
-								event.preventDefault();
-
-								onsubmit.call(this, event, this, $desktop.module('params').create(this));
-							});
-
-							continue;
-						}
-					}
-				}
-			}
-		}
-	};
-
-	/**
-	 * Удаление узла внутри модального окна
-	 *
-	 * @param   string   selector
-	 * @param   object   context
-	 *
-	 * @access  public
 	 * @return  void
 	 */
 	$modal.prototype.remove = function(selector, context)
@@ -672,13 +359,12 @@
 	};
 
 	/**
-	 * Замена узла внутри модального окна новым содержимым
+	 * Замена узла внутри содержимого модального окна новым содержимым
 	 *
-	 * @param   string   selector
+	 * @param   String   selector
 	 * @param   Node     content
-	 * @param   object   context
+	 * @param   Object   context
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	$modal.prototype.substitute = function(selector, contents, context)
@@ -697,60 +383,451 @@
 	};
 
 	/**
-	 * Замена содержимого узла внутри модального окна
+	 * Замена содержимого узла внутри содержимого модального окна
 	 *
-	 * @param   string   selector
+	 * @param   String   selector
 	 * @param   Node     content
-	 * @param   object   context
+	 * @param   Object   context
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	$modal.prototype.replace = function(selector, contents, context)
 	{
-		var container = this.bodyNode.querySelector(
+		var element = this.bodyNode.querySelector(
 			$desktop.interpolate(selector, context)
 		);
 
-		while (container.firstChild) {
-			container.removeChild(container.firstChild);
+		while (element.firstChild) {
+			element.removeChild(element.firstChild);
 		}
 
 		if (typeof contents === 'string') {
 			contents = document.createTextNode(contents);
 		}
 
-		container.appendChild(contents);
+		element.appendChild(contents);
 	};
 
 	/**
-	 * Очистка содержимого узла внутри модального окна
+	 * Очистка содержимого узла внутри содержимого модального окна
 	 *
-	 * @param   string   selector
-	 * @param   object   context
+	 * @param   String   selector
+	 * @param   Object   context
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	$modal.prototype.clear = function(selector, context)
 	{
-		var container = this.bodyNode.querySelector(
+		var element = this.bodyNode.querySelector(
 			$desktop.interpolate(selector, context)
 		);
 
-		while (container.firstChild) {
-			container.removeChild(container.firstChild);
+		while (element.firstChild) {
+			element.removeChild(element.firstChild);
 		}
+	};
+
+	/**
+	 * Прослушивание события узла внутри содержимого модального окна
+	 *
+	 * @param   String     selector
+	 * @param   String     eventName
+	 * @param   Function   eventListener
+	 * @param   Object     context
+	 *
+	 * @return  void
+	 */
+	$modal.prototype.listen = function(selector, eventName, eventListener, context)
+	{
+		this.search(selector, function(element)
+		{
+			element.addEventListener(eventName, function(event)
+			{
+				eventListener.call(this, event, this);
+			});
+
+		}, context);
+	};
+
+	/**
+	 * Прослушивание события при отправки формы внутри содержимого модального окна
+	 *
+	 * @param   Function   callback
+	 *
+	 * @return  void
+	 *
+	 * @see     https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onsubmit
+	 */
+	$modal.prototype.submit = function(callback)
+	{
+		if (callback instanceof Function)
+		{
+			this.listen('form', 'submit', function(event, form)
+			{
+				event.preventDefault();
+
+				callback.call(form, event, form,
+					$desktop.module('params').create(form)
+				);
+			});
+		}
+	};
+
+	$modal.prototype.onsubmit = function(callback)
+	{
+		this.submit(callback);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/oncontextmenu
+	 */
+	$modal.prototype.contextmenu = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'contextmenu', eventListener, context);
+	};
+	$modal.prototype.oncontextmenu = function(selector, eventListener, context)
+	{
+		this.contextmenu(selector, eventListener, context);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onclick
+	 */
+	$modal.prototype.click = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'click', eventListener, context);
+	};
+	$modal.prototype.onclick = function(selector, eventListener, context)
+	{
+		this.click(selector, eventListener, context);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/ondblclick
+	 */
+	$modal.prototype.dblclick = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'dblclick', eventListener, context);
+	};
+	$modal.prototype.ondblclick = function(selector, eventListener, context)
+	{
+		this.dblclick(selector, eventListener, context);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onchange
+	 */
+	$modal.prototype.change = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'change', eventListener, context);
+	};
+	$modal.prototype.onchange = function(selector, eventListener, context)
+	{
+		this.change(selector, eventListener, context);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onkeydown
+	 */
+	$modal.prototype.keydown = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'keydown', eventListener, context);
+	};
+	$modal.prototype.onkeydown = function(selector, eventListener, context)
+	{
+		this.keydown(selector, eventListener, context);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onkeypress
+	 */
+	$modal.prototype.keypress = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'keypress', eventListener, context);
+	};
+	$modal.prototype.onkeypress = function(selector, eventListener, context)
+	{
+		this.keypress(selector, eventListener, context);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onkeyup
+	 */
+	$modal.prototype.keyup = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'keyup', eventListener, context);
+	};
+	$modal.prototype.onkeyup = function(selector, eventListener, context)
+	{
+		this.keyup(selector, eventListener, context);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onfocus
+	 */
+	$modal.prototype.focus = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'focus', eventListener, context);
+	};
+	$modal.prototype.onfocus = function(selector, eventListener, context)
+	{
+		this.focus(selector, eventListener, context);
+	};
+
+	/**
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onblur
+	 */
+	$modal.prototype.blur = function(selector, eventListener, context)
+	{
+		this.listen(selector, 'blur', eventListener, context);
+	};
+	$modal.prototype.onblur = function(selector, eventListener, context)
+	{
+		this.blur(selector, eventListener, context);
+	};
+
+	/**
+	 * Смена иконки модального окна
+	 *
+	 * @param   String   value
+	 *
+	 * @return  this
+	 *
+	 * @see     http://fontawesome.io/icons/
+	 */
+	$modal.prototype.icon = function(value)
+	{
+		value = 'fa-' + value.replace(/^fa-/, '');
+
+		this.iconNode.className = '';
+		this.iconNode.classList.add('fa');
+		this.iconNode.classList.add(value);
+
+		this.trigger('change.icon', [this, this.iconNode]);
+
+		$desktop.module('modal').trigger('change.icon', [this, this.iconNode]);
+
+		return this;
+	};
+
+	/**
+	 * Смена заголовка модального окна
+	 *
+	 * @param   String   value
+	 * @param   Object   context
+	 *
+	 * @return  this
+	 */
+	$modal.prototype.title = function(value, context)
+	{
+		while (this.headNode.firstChild) {
+			this.headNode.removeChild(this.headNode.firstChild);
+		}
+
+		if (typeof value === 'string') {
+			value = document.createTextNode(
+				$desktop.interpolate(value, context)
+			);
+		}
+
+		this.headNode.appendChild(value);
+
+		this.trigger('change.title', [this, this.headNode]);
+
+		$desktop.module('modal').trigger('change.title', [this, this.headNode]);
+
+		return this;
+	};
+
+	/**
+	 * Смена содержимого модального окна
+	 *
+	 * @param   Node     value
+	 * @param   Object   context
+	 *
+	 * @return  this
+	 */
+	$modal.prototype.content = function(value, context)
+	{
+		while (this.bodyNode.firstChild) {
+			this.bodyNode.removeChild(this.bodyNode.firstChild);
+		}
+
+		if (typeof value === 'string') {
+			value = document.createTextNode(
+				$desktop.interpolate(value, context)
+			);
+		}
+
+		this.bodyNode.appendChild(value);
+		this.bodyNode.scrollTop = 0;
+
+		this.trigger('change.content', [this, this.bodyNode]);
+
+		$desktop.module('modal').trigger('change.content', [this, this.bodyNode]);
+
+		(function(self)
+		{
+			self.find('input.modal-live-search', function(element)
+			{
+				var finder;
+
+				element.addEventListener('keyup', function(event)
+				{
+					clearTimeout(finder);
+
+					finder = setTimeout(function()
+					{
+						self.trigger('modal.live.search', [event, element]);
+
+					}, 1000);
+				});
+
+				element.addEventListener('blur', function(event)
+				{
+					clearTimeout(finder);
+				});
+			});
+
+		})(this);
+
+		return this;
+	};
+
+	/**
+	 * Открытие модального окна
+	 *
+	 * @param   Number    width
+	 * @param   Number    height
+	 * @param   Boolean   percentage
+	 *
+	 * @return  this
+	 */
+	$modal.prototype.open = function(width, height, percentage)
+	{
+		if (this.running())
+		{
+			if (this.element.classList.contains('state-minimize'))
+			{
+				// @continue
+
+				this.element.classList.remove('state-minimize');
+			}
+
+			this.foreground();
+
+			return this;
+		}
+
+		$desktop.module('modal').modals[this.id] = this;
+
+		this.position(width, height, percentage);
+		this.foreground();
+
+		this.trigger('before.open', [this]);
+
+		$desktop.module('modal').trigger('before.open', [this]);
+
+		$desktop.add(this.element);
+
+		$desktop.module('modal').trigger('after.open', [this]);
+
+		this.trigger('after.open', [this]);
+
+		return this;
+	};
+
+	/**
+	 * Закрытие модального окна
+	 *
+	 * @return  this
+	 */
+	$modal.prototype.close = function()
+	{
+		delete $desktop.module('modal').modals[this.id];
+
+		this.element.classList.remove('state-minimize');
+		this.element.classList.remove('state-maximize');
+
+		this.element.classList.remove('state-background');
+		this.element.classList.remove('state-foreground');
+
+		this.trigger('before.close', [this]);
+
+		$desktop.module('modal').trigger('before.close', [this]);
+
+		$desktop.remove(this.element);
+
+		$desktop.module('modal').trigger('after.close', [this]);
+
+		this.trigger('after.close', [this]);
+
+		var $foregroundModal = $desktop.module('modal').byPosition(-1);
+
+		if ($foregroundModal instanceof Object) {
+			$foregroundModal.foreground();
+		}
+
+		return this;
+	};
+
+	/**
+	 * Блокировка модального окна
+	 *
+	 * @return  this
+	 */
+	$modal.prototype.block = function()
+	{
+		this.trigger('before.block', [this]);
+
+		$desktop.module('modal').trigger('before.block', [this]);
+
+		this.element.classList.add('blocked');
+
+		$desktop.module('modal').trigger('after.block', [this]);
+
+		this.trigger('after.block', [this]);
+
+		return this;
+	};
+
+	/**
+	 * Разблокировка модального окна
+	 *
+	 * @return  this
+	 */
+	$modal.prototype.unblock = function()
+	{
+		this.trigger('before.unblock', [this]);
+
+		$desktop.module('modal').trigger('before.unblock', [this]);
+
+		this.element.classList.remove('blocked');
+
+		$desktop.module('modal').trigger('after.unblock', [this]);
+
+		this.trigger('after.unblock', [this]);
+
+		return this;
+	};
+
+	/**
+	 * Открыто ли модальное окно
+	 *
+	 * @return  Boolean
+	 */
+	$modal.prototype.running = function()
+	{
+		return !! document.body.contains(this.element);
 	};
 
 	/**
 	 * Позиционирование модального окна
 	 *
-	 * @param   numeric   width
-	 * @param   numeric   height
-	 * @param   boolean   percentage
+	 * @param   Number    width
+	 * @param   Number    height
+	 * @param   Boolean   percentage
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	$modal.prototype.position = function(width, height, percentage)
@@ -789,7 +866,6 @@
 	/**
 	 * Вывод модального окна на передний план
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	$modal.prototype.foreground = function()
@@ -811,23 +887,34 @@
 
 				elements[index].classList.add('state-background');
 				elements[index].classList.remove('state-foreground');
+
+				elements[index].$modal.trigger('backgrounded', [
+					elements[index].$modal,
+				], elements[index].$modal);
+
+				$desktop.module('modal').trigger('backgrounded', [
+					elements[index].$modal,
+				], elements[index].$modal);
 			}
 
 			this.element.classList.add('state-foreground');
 			this.element.classList.remove('state-background');
 			this.element.style.zIndex = Math.max.apply(Math, zIndex) + 1;
+
+			this.trigger('foregrounded', [this], this);
+
+			$desktop.module('modal').trigger('foregrounded', [this], this);
 		}
 	};
 
 	/**
 	 * Модуль рабочего стола
 	 *
-	 * @access  public
 	 * @return  void
 	 */
 	$module = function()
 	{
-		var self = this;
+		$events.apply(this, arguments);
 
 		this.id = 0;
 		this.modals = {};
@@ -836,134 +923,168 @@
 		this.ctrlPress = false;
 		this.shiftPress = false;
 
-		window.addEventListener('keydown', function(event)
+		(function(self)
 		{
-			switch (event.which)
+			window.addEventListener('keydown', function(event)
 			{
-				case 16 :
-					self.shiftPress = true;
-					break;
-
-				case 17 :
-					self.ctrlPress = true;
-					break;
-
-				case 18 :
-					self.altPress = true;
-					break;
-			}
-		});
-
-		window.addEventListener('keyup', function(event)
-		{
-			switch (event.which)
-			{
-				case 16 :
-					self.shiftPress = false;
-					break;
-
-				case 17 :
-					self.ctrlPress = false;
-					break;
-
-				case 18 :
-					self.altPress = false;
-					break;
-			}
-		});
-
-		window.addEventListener('keydown', function(event)
-		{
-			var $foregroundModal;
-
-			// Is pressed the alt and shift keys?
-			if (self.altPress && self.shiftPress)
-			{
-				$foregroundModal = $desktop.module('modal').byPosition(-1);
-
-				if ($foregroundModal instanceof Object)
+				switch (event.which)
 				{
-					switch (event.which)
+					case 16 :
+						self.shiftPress = true;
+						break;
+
+					case 17 :
+						self.ctrlPress = true;
+						break;
+
+					case 18 :
+						self.altPress = true;
+						break;
+				}
+			});
+
+			window.addEventListener('keyup', function(event)
+			{
+				switch (event.which)
+				{
+					case 16 :
+						self.shiftPress = false;
+						break;
+
+					case 17 :
+						self.ctrlPress = false;
+						break;
+
+					case 18 :
+						self.altPress = false;
+						break;
+				}
+			});
+
+			window.addEventListener('keydown', function(event)
+			{
+				var $foregroundModal;
+
+				// Is pressed the alt and shift keys?
+				if (self.altPress && self.shiftPress)
+				{
+					$foregroundModal = $desktop.module('modal').byPosition(-1);
+
+					if ($foregroundModal instanceof Object)
 					{
-						// [ALT][SHIFT] + [E]
-						case 69 :
-							event.preventDefault();
-							$foregroundModal.triggerEventListeners('modalContentEdit');
-							$foregroundModal.triggerEventListeners('modal.content.edit');
-							break;
+						switch (event.which)
+						{
+							// [ALT][SHIFT][E]
+							case 69 :
+								event.preventDefault();
 
-						// [ALT][SHIFT] + [F]
-						case 70 :
-							event.preventDefault();
-							$foregroundModal.triggerEventListeners('modalContentFind');
-							$foregroundModal.triggerEventListeners('modal.content.find');
-							break;
+								$foregroundModal.trigger('modalContentEdit', [$foregroundModal], $foregroundModal);
+								$foregroundModal.trigger('modal.content.edit', [$foregroundModal], $foregroundModal);
 
-						// [ALT][SHIFT] + [N]
-						case 78 :
-							event.preventDefault();
-							$foregroundModal.triggerEventListeners('modalContentNew');
-							$foregroundModal.triggerEventListeners('modal.content.new');
-							break;
+								$desktop.module('modal').trigger('modalContentEdit', [$foregroundModal], $foregroundModal);
+								$desktop.module('modal').trigger('modal.content.edit', [$foregroundModal], $foregroundModal);
+								break;
 
-						// [ALT][SHIFT] + [P]
-						case 80 :
-							event.preventDefault();
-							$foregroundModal.triggerEventListeners('modalContentPrint');
-							$foregroundModal.triggerEventListeners('modal.content.print');
-							break;
+							// [ALT][SHIFT][F]
+							case 70 :
+								event.preventDefault();
 
-						// [ALT][SHIFT] + [R]
-						case 82 :
-							event.preventDefault();
-							$foregroundModal.triggerEventListeners('modalContentReload');
-							$foregroundModal.triggerEventListeners('modal.content.reload');
-							break;
+								$foregroundModal.trigger('modalContentFind', [$foregroundModal], $foregroundModal);
+								$foregroundModal.trigger('modal.content.find', [$foregroundModal], $foregroundModal);
 
-						// [ALT][SHIFT] + [S]
-						case 83 :
-							event.preventDefault();
-							$foregroundModal.triggerEventListeners('modalContentSave');
-							$foregroundModal.triggerEventListeners('modal.content.save');
-							break;
+								$desktop.module('modal').trigger('modalContentFind', [$foregroundModal], $foregroundModal);
+								$desktop.module('modal').trigger('modal.content.find', [$foregroundModal], $foregroundModal);
+								break;
 
-						// [ALT][SHIFT] + [W]
-						case 87 :
-							event.preventDefault();
-							$foregroundModal.close();
-							break;
+							// [ALT][SHIFT][N]
+							case 78 :
+								event.preventDefault();
 
-						// [ALT][SHIFT] + [Z]
-						case 90 :
-							event.preventDefault();
-							$foregroundModal.unblock();
-							break;
+								$foregroundModal.trigger('modalContentNew', [$foregroundModal], $foregroundModal);
+								$foregroundModal.trigger('modal.content.new', [$foregroundModal], $foregroundModal);
+
+								$desktop.module('modal').trigger('modalContentNew', [$foregroundModal], $foregroundModal);
+								$desktop.module('modal').trigger('modal.content.new', [$foregroundModal], $foregroundModal);
+								break;
+
+							// [ALT][SHIFT][P]
+							case 80 :
+								event.preventDefault();
+
+								$foregroundModal.trigger('modalContentPrint', [$foregroundModal], $foregroundModal);
+								$foregroundModal.trigger('modal.content.print', [$foregroundModal], $foregroundModal);
+
+								$desktop.module('modal').trigger('modalContentPrint', [$foregroundModal], $foregroundModal);
+								$desktop.module('modal').trigger('modal.content.print', [$foregroundModal], $foregroundModal);
+								break;
+
+							// [ALT][SHIFT][R]
+							case 82 :
+								event.preventDefault();
+
+								$foregroundModal.trigger('modalContentReload', [$foregroundModal], $foregroundModal);
+								$foregroundModal.trigger('modal.content.reload', [$foregroundModal], $foregroundModal);
+
+								$desktop.module('modal').trigger('modalContentReload', [$foregroundModal], $foregroundModal);
+								$desktop.module('modal').trigger('modal.content.reload', [$foregroundModal], $foregroundModal);
+								break;
+
+							// [ALT][SHIFT][S]
+							case 83 :
+								event.preventDefault();
+
+								$foregroundModal.trigger('modalContentSave', [$foregroundModal], $foregroundModal);
+								$foregroundModal.trigger('modal.content.save', [$foregroundModal], $foregroundModal);
+
+								$desktop.module('modal').trigger('modalContentSave', [$foregroundModal], $foregroundModal);
+								$desktop.module('modal').trigger('modal.content.save', [$foregroundModal], $foregroundModal);
+								break;
+
+							// [ALT][SHIFT][W]
+							case 87 :
+								event.preventDefault();
+								$foregroundModal.close();
+								break;
+
+							// [ALT][SHIFT][Z]
+							case 90 :
+								event.preventDefault();
+								$foregroundModal.unblock();
+								break;
+						}
 					}
 				}
-			}
-		});
+			});
+		})(this);
 	};
+
+	/**
+	 * Наследование логики событий
+	 */
+	$module.prototype = Object.create($events.prototype);
 
 	/**
 	 * Открытие модального окна (alias)
 	 *
-	 * @param   object   params
+	 * @param   Object   params
 	 *
-	 * @access  public
-	 * @return  object
+	 * @return  Object
 	 */
 	$module.prototype.open = function(params)
 	{
-		return this.create(params).open();
+		var modal = this.create(params);
+
+		modal.open();
+
+		return modal;
 	};
 
 	/**
 	 * Создание модального окна
 	 *
-	 * @param   object   params
+	 * @param   Object   params
 	 *
-	 * @access  public
-	 * @return  object
+	 * @return  Object
 	 */
 	$module.prototype.create = function(params)
 	{
@@ -990,6 +1111,7 @@
 		var headtitle = document.createElement('span');
 		var headbtnclose = document.createElement('button');
 		var headbtnmaximize = document.createElement('button');
+		var headbtnminimize = document.createElement('button');
 
 		if (params.title instanceof Node) {
 			headtitle.appendChild(params.title);
@@ -1009,11 +1131,13 @@
 
 		headbtnclose.classList.add('desktop-modal-on-close');
 		headbtnmaximize.classList.add('desktop-modal-on-maximize');
+		headbtnminimize.classList.add('desktop-modal-on-minimize');
 
 		headframe.appendChild(headicon);
 		headframe.appendChild(headtitle);
 		headframe.appendChild(headbtnclose);
 		headframe.appendChild(headbtnmaximize);
+		headframe.appendChild(headbtnminimize);
 
 		wrapframe.appendChild(headframe);
 		wrapframe.appendChild(bodyframe);
@@ -1166,6 +1290,18 @@
 			container.classList.add('state-maximize');
 		});
 
+		/**
+		 * Сворачивание модального окна
+		 */
+		headbtnminimize.addEventListener('click', function(event)
+		{
+			event.preventDefault();
+
+			// @continue
+
+			container.classList.add('state-minimize');
+		});
+
 		container.$modal = new $modal(
 			++this.id, container, params
 		);
@@ -1176,10 +1312,9 @@
 	/**
 	 * Получение экземпляра модального окна по его позиции
 	 *
-	 * @param   number   position
+	 * @param   Number   position
 	 *
-	 * @access  public
-	 * @return  mixed
+	 * @return  Object
 	 */
 	$module.prototype.byPosition = function(position)
 	{

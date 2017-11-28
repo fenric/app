@@ -13,6 +13,8 @@
 		{
 			$desktop.render({modules: modules, components: components, onload: function()
 			{
+				jQuery.datetimepicker.setLocale('ru');
+
 				$bugaboo.elementary['desktop'] = this;
 
 				$bugaboo.formatters['datetime'] = function(value, format)
@@ -25,8 +27,6 @@
 						value = new Date();
 					}
 
-					jQuery.datetimepicker.setLocale('ru');
-
 					return new DateFormatter().formatDate(new Date(value), format);
 				};
 
@@ -34,64 +34,190 @@
 				{
 					var message = '';
 
-					if (response instanceof Object) {
-						if (response.message !== undefined) {
+					if (response instanceof Object)
+					{
+						if (response.message !== undefined)
+						{
 							message = response.message;
+						}
+
+						if (response.file !== undefined)
+						{
+							if (response.line !== undefined)
+							{
+								message += '<hr>' + response.file + ':' + response.line;
+							}
 						}
 					}
 
-					if (this.status === 401) {
-						$desktop.component('admin').login(function() {
-							$desktop.module('request').runRepeatRequest();
-						});
-					}
-					else if (this.status === 400) {
-						$desktop.module('notify').warning('HTTP ошибка 400',
-							message || 'Плохой или неверный запрос.');
-					}
-					else if (this.status === 403) {
-						$desktop.module('notify').warning('HTTP ошибка 403',
-							message || 'Недостаточно прав для выполнения запроса.');
-					}
-					else if (this.status === 404) {
-						$desktop.module('notify').warning('HTTP ошибка 404',
-							message || 'Не удалось найти ресурс, возможно он был удалён ранее.');
-					}
-					else if (this.status === 405) {
-						$desktop.module('notify').warning('HTTP ошибка 405',
-							message || 'Метод не поддерживается контроллером или сервером.');
-					}
-					else if (this.status === 413) {
-						$desktop.module('notify').warning('HTTP ошибка 413',
-							message || 'Сервер отвергнул запрос т.к. запрос оказался слишком большой.');
-					}
-					else if (this.status === 414) {
-						$desktop.module('notify').warning('HTTP ошибка 414',
-							message || 'Сервер отвергнул запрос т.к. URI слишком длинный.');
-					}
-					else if (this.status === 415) {
-						$desktop.module('notify').warning('HTTP ошибка 415',
-							message || 'Тип загружаемого файла не поддерживается.');
-					}
-					else if (this.status === 423) {
-						$desktop.module('notify').warning('HTTP ошибка 423',
-							message || 'Ресурс временно заблокирован.');
-					}
-					else if (this.status === 500) {
-						$desktop.module('notify').error('HTTP ошибка 500',
-							message || 'На сервере произошёл технический сбой.');
-					}
-					else if (this.status === 503) {
-						$desktop.module('notify').error('HTTP ошибка 503',
-							message || 'Не удалось выполнить операцию по техническим причинам.');
-					}
-					else if (this.status === 504) {
-						$desktop.module('notify').error('HTTP ошибка 504',
-							message || 'Сервер не успел обработать запрос за отведённое ему время, попробуйте выполнить действие ещё раз.');
-					}
-					else if (this.status < 200 || this.status > 202) {
-						$desktop.module('notify').error('HTTP ошибка ' + this.status,
-							message || 'Uncaught HTTP code...');
+					switch (this.status)
+					{
+						case 200 :
+						case 201 :
+							break;
+
+						case 401 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_INFO);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('Для того, чтобы продолжить, необходимо ввести пароль');
+								notify.setMessage(message || 'Все незавершенные процессы автоматически возобновятся, после того как вы введете пароль.', true);
+								notify.display();
+
+								$desktop.component('admin').login(function()
+								{
+									notify.close();
+
+									$desktop.module('request').runRepeatRequest();
+								});
+							});
+							break;
+
+						case 400 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_WARNING);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 400');
+								notify.setMessage(message || 'Плохой или неверный запрос.', true);
+								notify.display();
+							});
+							break;
+
+						case 403 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_WARNING);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 403');
+								notify.setMessage(message || 'Недостаточно прав для выполнения запроса.', true);
+								notify.display();
+							});
+							break;
+
+						case 404 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_WARNING);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 404');
+								notify.setMessage(message || 'Не удалось найти ресурс, возможно он был удалён ранее.', true);
+								notify.display();
+							});
+							break;
+
+						case 405 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_WARNING);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 405');
+								notify.setMessage(message || 'Метод не поддерживается контроллером или сервером.', true);
+								notify.display();
+							});
+							break;
+
+						case 413 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_WARNING);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 413');
+								notify.setMessage(message || 'Сервер отвергнул запрос т.к. запрос оказался слишком большой.', true);
+								notify.display();
+							});
+							break;
+
+						case 414 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_WARNING);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 414');
+								notify.setMessage(message || 'Сервер отвергнул запрос т.к. URI слишком длинный.', true);
+								notify.display();
+							});
+							break;
+
+						case 415 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_WARNING);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 415');
+								notify.setMessage(message || 'Тип загружаемого файла не поддерживается.', true);
+								notify.display();
+							});
+							break;
+
+						case 423 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_WARNING);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 423');
+								notify.setMessage(message || 'Ресурс временно заблокирован.', true);
+								notify.display();
+							});
+							break;
+
+						case 500 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_ERROR);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 500');
+								notify.setMessage(message || 'На сервере произошёл технический сбой.', true);
+								notify.display();
+							});
+							break;
+
+						case 503 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_ERROR);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 503');
+								notify.setMessage(message || 'Не удалось выполнить операцию по техническим причинам.', true);
+								notify.display();
+							});
+							break;
+
+						case 504 :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_ERROR);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка 504');
+								notify.setMessage(message || 'Сервер не успел обработать запрос за отведённое ему время, попробуйте выполнить действие ещё раз.', true);
+								notify.display();
+							});
+							break;
+
+						default :
+							new $notify(function(notify)
+							{
+								notify.setType(notify.TYPE_ERROR);
+								notify.setPosition(notify.POSITION_TOP_RIGHT);
+								notify.setLifetime(-1);
+								notify.setTitle('HTTP ошибка ' + this.status);
+								notify.setMessage(message || 'Uncaught HTTP code...', true);
+								notify.display();
+							});
+							break;
 					}
 				});
 
@@ -99,9 +225,18 @@
 				{
 					$desktop.module('icon').sort(this.account.desktop.icons || null);
 
+					if (this.account.desktop.modalContentFontSize)
+					{
+						$desktop.modalContentFontSizeControl(
+							this.account.desktop.modalContentFontSize
+						);
+					}
+
 					if (this.account.desktop.palette)
 					{
-						$desktop.app.classList.add(this.account.desktop.palette);
+						$desktop.app.classList.add(
+							this.account.desktop.palette
+						);
 					}
 
 					if (this.account.desktop.wallpaper)
