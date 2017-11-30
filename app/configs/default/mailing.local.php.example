@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @see https://github.com/PHPMailer/PHPMailer
- * @see https://github.com/PHPMailer/PHPMailer/tree/master/examples
+ * @link https://github.com/PHPMailer/PHPMailer
+ * @link https://github.com/PHPMailer/PHPMailer/tree/master/examples
  */
 
 $senders = [];
