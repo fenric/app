@@ -6,9 +6,14 @@
 fenric('router')->get('/', \Fenric\Controllers\Home::class);
 
 /**
+ * Область видимости панели управления сайтом
+ */
+$admin = '/' . fenric('config::app')->get('admin', 'admin');
+
+/**
  * Панель управления сайтом
  */
-fenric('router')->scope(fenric('config::app')->get('admin', 'admin'), function($router)
+fenric('router')->scope($admin, function($router)
 {
 	/**
 	 * Главная страница панели управления сайтом
