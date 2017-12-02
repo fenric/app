@@ -73,14 +73,6 @@ fenric()->registerDisposableSharedService('app', function()
 });
 
 /**
- * Регистрация в контейнере фреймворка одиночной службы для получение информации о текущем релизе приложения
- */
-fenric()->registerDisposableSharedService('release', function()
-{
-	return new \Fenric\Release();
-});
-
-/**
  * Регистрация в контейнере фреймворка одиночной службы для работы с учетной записью пользователя
  */
 fenric()->registerDisposableSharedService('user', function()

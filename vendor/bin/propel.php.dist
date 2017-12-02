@@ -10,23 +10,35 @@ return
 	[
 		'paths' =>
 		[
-			// The directory where Propel should output generated object model classes.
-			'phpDir' => realpath(sprintf('%s/../../app/classes.share', __DIR__)),
+			/**
+			 * The directory where Propel should output generated object model classes.
+			 */
+			'phpDir' => realpath(__DIR__ . '/../../app/classes'),
 
-			// The directory where Propel should output the compiled runtime configuration.
-			'phpConfDir' => realpath(sprintf('%s/../../propel/%s/config', __DIR__, fenric()->getApplicationId())),
+			/**
+			 * The directory where Propel should output the compiled runtime configuration.
+			 */
+			'phpConfDir' => realpath(__DIR__ . '/../../propel/config'),
 
-			// The directory where Propel should output the generated migrations.
-			'migrationDir' => realpath(sprintf('%s/../../propel/%s/migrations', __DIR__, fenric()->getApplicationId())),
+			/**
+			 * The directory where Propel should output the generated migrations.
+			 */
+			'migrationDir' => realpath(__DIR__ . '/../../propel/migrations'),
 
-			// The directory where Propel expects to find your `*.schema.xml` file.
-			'schemaDir' => realpath(sprintf('%s/../../propel/%s/scheme', __DIR__, fenric()->getApplicationId())),
+			/**
+			 * The directory where Propel expects to find your `*.schema.xml` file.
+			 */
+			'schemaDir' => realpath(__DIR__ . '/../../propel/scheme'),
 
-			// The directory where Propel should output the generated DDL (or data insert statements, etc.)
-			'sqlDir' => realpath(sprintf('%s/../../propel/%s/sql', __DIR__, fenric()->getApplicationId())),
+			/**
+			 * The directory where Propel should output the generated DDL (or data insert statements, etc.)
+			 */
+			'sqlDir' => realpath(__DIR__ . '/../../propel/sql'),
 
-			// Directory in which your composer.json resides
-			'composerDir' => realpath(sprintf('%s/../..', __DIR__)),
+			/**
+			 * Directory in which your composer.json resides
+			 */
+			'composerDir' => realpath(__DIR__ . '/../..'),
 		],
 
 		'database' =>

@@ -1,6 +1,0 @@
-#!/usr/bin/env php
-<?php
-
-chdir('../../../vendor/bin');
-
-require '../propel/propel/bin/propel.php';

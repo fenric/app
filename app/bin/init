@@ -1,0 +1,124 @@
+#!/usr/bin/env php
+<?php
+
+chdir(__DIR__);
+set_time_limit(0);
+
+require_once '../../vendor/autoload.php';
+
+fenric('app')->setTimezone();
+
+$admin = new \Propel\Models\User();
+$admin->setRole('administrator');
+
+$attempts = 0;
+while(true) {
+	fenric('console')->write(
+		fenric('console')->yellow('Enter email address:')
+	);
+
+	if ($value = fenric('console')->read()) {
+		fenric('console')->set('email', $value);
+		$admin->setEmail($value);
+		break;
+	}
+
+	if (++$attempts >= 3) {
+		fenric('console')->write(
+			fenric('console')->red('Canceled, bye.')
+		);
+		exit(1);
+	}
+
+	fenric('console')->write(
+		fenric('console')->red('Empty value, try again.')
+	);
+}
+
+$attempts = 0;
+while(true) {
+	fenric('console')->write(
+		fenric('console')->yellow('Enter username:')
+	);
+
+	if ($value = fenric('console')->read()) {
+		fenric('console')->set('username', $value);
+		$admin->setUsername($value);
+		break;
+	}
+
+	if (++$attempts >= 3) {
+		fenric('console')->write(
+			fenric('console')->red('Canceled, bye.')
+		);
+		exit(1);
+	}
+
+	fenric('console')->write(
+		fenric('console')->red('Empty value, try again.')
+	);
+}
+
+$attempts = 0;
+while(true) {
+	fenric('console')->write(
+		fenric('console')->yellow('Enter password:')
+	);
+
+	if ($value = fenric('console')->read()) {
+		fenric('console')->set('password', $value);
+		$admin->setPassword($value);
+		break;
+	}
+
+	if (++$attempts >= 3) {
+		fenric('console')->write(
+			fenric('console')->red('Canceled, bye.')
+		);
+		exit(1);
+	}
+
+	fenric('console')->write(
+		fenric('console')->red('Empty value, try again.')
+	);
+}
+
+$admin->setRegistrationConfirmed(true);
+$admin->setRegistrationConfirmedAt(new DateTime('now'));
+$admin->setRegistrationConfirmedIp('127.0.0.1');
+
+if ($admin->validate()) {
+	try {
+		if ($admin->save()) {
+			fenric('console')->write(
+				fenric('console')->green('Successful!')
+			);
+		} else {
+			fenric('console')->write(
+				fenric('console')->red('Error on save.')
+			);
+		}
+	} catch (Exception $e) {
+		fenric('console')->write(
+			fenric('console')->red(
+				$e->getMessage()
+			)
+		);
+
+		while ($e = $e->getPrevious()) {
+			fenric('console')->write(
+				fenric('console')->red(
+					$e->getMessage()
+				)
+			);
+		}
+	}
+} else {
+	foreach ($admin->getValidationFailures() as $e) {
+		fenric('console')->write(
+			fenric('console')->red(
+				sprintf('[%s] %s', $e->getPropertyPath(), $e->getMessage())
+			)
+		);
+	}
+}

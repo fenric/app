@@ -4,15 +4,15 @@ Thumbs.db
 *.local.php
 *.local.phtml
 
-/app/cache/*/*
-/app/log/*/*
+/app/cache/*
+/app/log/*
 
-/propel/*/config/config.php
+/propel/config/config.php
 
-/public/*/upload/*/**
-/public/*/vendor/**
+/public/upload/*/*
+/public/vendor/*
 
-/vendor/*/**
+/vendor/*/*
 /vendor/autoload.php
 
 /composer

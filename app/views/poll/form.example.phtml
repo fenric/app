@@ -1,0 +1,20 @@
+<div class="poll poll-form poll-<?= $poll->getCode() ?>" data-id="<?= $poll->getId() ?>">
+	<h5 class="mb-2"><?= $poll->getTitle() ?></h5>
+	<form onsubmit="return $poll.submit(this);" data-id="<?= $poll->getId() ?>">
+		<div class="mb-2">
+			<?php foreach ($variants as $variant) : ?>
+				<label class="d-block mb-1">
+					<?php if ($poll->isMultiple()) : ?>
+						<input type="checkbox" name="variant[]" value="<?= $variant->getId() ?>" />
+					<?php else : ?>
+						<input type="radio" name="variant" value="<?= $variant->getId() ?>" />
+					<?php endif; ?>
+					<small><?= $variant->getTitle() ?></small>
+				</label>
+			<?php endforeach; ?>
+		</div>
+		<button class="btn btn-primary btn-block" type="submit">
+			<span>Голосовать</span>
+		</button>
+	</form>
+</div>

@@ -13,7 +13,7 @@
 			"propel/config.php.dist"
 		],
 		"psr-4": {
-			"Propel\\Models\\": "app/classes.share/Propel/Models"
+			"Propel\\Models\\": "app/classes/Propel/Models"
 		}
 	}
 }
