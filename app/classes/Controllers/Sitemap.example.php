@@ -1,6 +1,6 @@
 <?php
 
-namespace Fenric\Controllers\Services;
+namespace Fenric\Controllers;
 
 /**
  * Import classes
@@ -12,9 +12,9 @@ use Propel\Models\Map\PublicationTableMap;
 use Fenric\Controllers\Abstractable\Abstractable;
 
 /**
- * SitemapXml
+ * Sitemap
  */
-class SitemapXml extends Abstractable
+class Sitemap extends Abstractable
 {
 
 	/**
