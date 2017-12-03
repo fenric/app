@@ -88,24 +88,32 @@ final class App
 	 */
 	public function routing() : void
 	{
-		if (file_exists(fenric()->path('configs', 'routes.local.php')))
+		fenric('event::router.running')->subscribe(function($router, $request, $response)
 		{
-			require_once fenric()->path('configs', 'routes.local.php');
-		}
-		else if (file_exists(fenric()->path('configs', getenv('ENVIRONMENT'), 'routes.php')))
+			if (file_exists(fenric()->path('configs', 'routes.php')))
+			{
+				require_once fenric()->path('configs', 'routes.php');
+			}
+		});
+
+		fenric('event::router.eavesdropping')->subscribe(function($router, $request, $response, $controller, $match)
 		{
-			require_once fenric()->path('configs', getenv('ENVIRONMENT'), 'routes.php');
-		}
-		else if (file_exists(fenric()->path('configs', 'routes.php')))
-		{
-			require_once fenric()->path('configs', 'routes.php');
-		}
+			$rule = $match['route'][1];
+
+			if (strcmp(substr($rule, -3), '(/)') === 0)
+			{
+				if ($controller instanceof \Fenric\Controllers\Abstractable\Abstractable)
+				{
+					$controller->trailingSlashes();
+				}
+			}
+		});
 
 		fenric('router')->run(fenric('request'), fenric('response'), function($router, $request, $response)
 		{
-			$view = fenric(sprintf('view::errors/http/%d', $response->getStatus()));
+			$view = sprintf('view::errors/http/%d', $response->getStatus());
 
-			$request->isAjax() or $response->setContent($view->render());
+			$request->isAjax() or $response->setContent(fenric($view)->render());
 		});
 	}
 }
