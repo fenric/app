@@ -10,7 +10,7 @@
 	"autoload": {
 		"files": [
 			"bootstrap.php",
-			"propel/config.php.dist"
+			"propel/config/config.php.dist"
 		],
 		"psr-4": {
 			"Propel\\Models\\": "app/classes/Propel/Models"
