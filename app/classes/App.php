@@ -103,9 +103,9 @@ final class App
 
 		fenric('router')->run(fenric('request'), fenric('response'), function($router, $request, $response)
 		{
-			$view = sprintf('view::errors/http/%d', $response->getStatus());
+			$view = fenric(sprintf('view::errors/http/%d', $response->getStatus()));
 
-			$request->isAjax() or $response->setContent(fenric($view)->render());
+			$request->isAjax() or $response->setContent($view->render());
 		});
 	}
 }

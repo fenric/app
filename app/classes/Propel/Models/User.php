@@ -292,7 +292,7 @@ class User extends BaseUser
 	/**
 	 * Получение возраста пользователя
 	 */
-	public function getAge() : ?DateInterval
+	public function getAge() :? DateInterval
 	{
 		$now = new DateTime('now');
 

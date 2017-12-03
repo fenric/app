@@ -9,7 +9,6 @@ require_once '../../vendor/autoload.php';
 fenric('app')->setTimezone();
 
 $admin = new \Propel\Models\User();
-$admin->setRole('administrator');
 
 $attempts = 0;
 while(true) {
@@ -83,6 +82,7 @@ while(true) {
 	);
 }
 
+$admin->setRole('administrator');
 $admin->setRegistrationConfirmed(true);
 $admin->setRegistrationConfirmedAt(new DateTime('now'));
 $admin->setRegistrationConfirmedIp('127.0.0.1');
@@ -91,7 +91,7 @@ if ($admin->validate()) {
 	try {
 		if ($admin->save()) {
 			fenric('console')->write(
-				fenric('console')->green('Successful!')
+				fenric('console')->green('Successful.')
 			);
 		} else {
 			fenric('console')->write(

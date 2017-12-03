@@ -67,7 +67,7 @@ class Upload
 	/**
 	 * Получение расширения загружаемого файла
 	 */
-	public function getExtension() : ?string
+	public function getExtension() : string
 	{
 		switch ($this->getType())
 		{
@@ -96,7 +96,7 @@ class Upload
 				break;
 		}
 
-		return null;
+		return '';
 	}
 
 	/**
@@ -146,7 +146,7 @@ class Upload
 	 */
 	public function asImage() : array
 	{
-		$file['filename'] = md5(uniqid($this->getBlob(), true));
+		$file['filename'] = $this->generateFilename();
 
 		$file['basename'] = $file['filename'] . $this->getExtension();
 
@@ -202,7 +202,7 @@ class Upload
 	 */
 	public function asAudio() : array
 	{
-		$file['filename'] = md5(uniqid($this->getBlob(), true));
+		$file['filename'] = $this->generateFilename();
 
 		$file['basename'] = $file['filename'] . $this->getExtension();
 
@@ -217,7 +217,7 @@ class Upload
 			return $file;
 		}
 
-		throw new \RuntimeException('Загружаемый файл не поддерживается.', 400);
+		throw new \RuntimeException(sprintf('Загружаемый файл не поддерживается (%s).', $this->getType()), 400);
 	}
 
 	/**
@@ -227,7 +227,7 @@ class Upload
 	 */
 	public function asVideo() : array
 	{
-		$file['filename'] = md5(uniqid($this->getBlob(), true));
+		$file['filename'] = $this->generateFilename();
 
 		$file['basename'] = $file['filename'] . $this->getExtension();
 
@@ -242,17 +242,17 @@ class Upload
 			return $file;
 		}
 
-		throw new \RuntimeException('Загружаемый файл не поддерживается.', 400);
+		throw new \RuntimeException(sprintf('Загружаемый файл не поддерживается (%s).', $this->getType()), 400);
 	}
 
 	/**
 	 * Сохранение файла как PDF документа
 	 *
-	 * @throws  RuntimeException
+	 * @throws  \RuntimeException
 	 */
 	public function asPdf() : array
 	{
-		$file['filename'] = md5(uniqid($this->getBlob(), true));
+		$file['filename'] = $this->generateFilename();
 
 		$file['basename'] = $file['filename'] . $this->getExtension();
 
@@ -267,7 +267,7 @@ class Upload
 			return $file;
 		}
 
-		throw new \RuntimeException('Загружаемый файл не поддерживается.', 400);
+		throw new \RuntimeException(sprintf('Загружаемый файл не поддерживается (%s).', $this->getType()), 400);
 	}
 
 	/**
@@ -360,6 +360,14 @@ class Upload
 		}
 
 		throw new \RuntimeException('Не удалось сохранить файл на диске.', 503);
+	}
+
+	/**
+	 * Генерация имени для загружаемого файла
+	 */
+	public function generateFilename() : string
+	{
+		return md5(uniqid($this->getBlob(), true));
 	}
 
 	/**

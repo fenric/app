@@ -113,22 +113,19 @@ fenric('router')->scope('/user', function($router)
 });
 
 /**
- * Общее API сайта
+ * API сайта
  */
-fenric('router')->any('/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Api::class);
-fenric('router')->any('/api/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Api::class);
+fenric('router')->scope('/api', function($router)
+{
+	$router->any('/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\Api::class);
+	$router->any('/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\Api::class);
 
-/**
- * Управление комментариями
- */
-fenric('router')->any('/api/comment/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\ApiComment::class);
-fenric('router')->any('/api/comment/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\ApiComment::class);
+	$router->any('/comment/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\ApiComment::class);
+	$router->any('/comment/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\ApiComment::class);
 
-/**
- * Управление опросами
- */
-fenric('router')->any('/api/poll/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\ApiPoll::class);
-fenric('router')->any('/api/poll/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\ApiPoll::class);
+	$router->any('/poll/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', \Fenric\Controllers\ApiPoll::class);
+	$router->any('/poll/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', \Fenric\Controllers\ApiPoll::class);
+});
 
 /**
  * Регистрация клика по баннеру
