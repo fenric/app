@@ -4,10 +4,10 @@
 		<meta charset="utf-8" />
 		<?= $this->section('metadata') ?>
 		<?= $this->section('stylesheets') ?>
-		<link href="<?= asset('/assets/vendor/bootstrap-4.0.0/css/bootstrap.min.css') ?>" rel="stylesheet" />
-		<link href="<?= asset('/assets/vendor/fancybox-3.1.24/jquery.fancybox.min.css') ?>" rel="stylesheet" />
-		<link href="<?= asset('/assets/vendor/font-awesome-4.7.0/css/font-awesome.min.css') ?>" rel="stylesheet" />
-		<link href="<?= asset('/assets/app/components/notify/styles.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/vendor/bootstrap-4/dist/css/bootstrap.min.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/vendor/jquery-fancybox/dist/jquery.fancybox.min.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/vendor/font-awesome/css/font-awesome.min.css') ?>" rel="stylesheet" />
+		<link href="<?= asset('/vendor/fenric-js-notify/src/notify.css') ?>" rel="stylesheet" />
 		<link href="<?= asset('/assets/styles.css') ?>" rel="stylesheet" />
 	</head>
 	<body>
@@ -27,13 +27,16 @@
 			<?= $this->section('content') ?>
 		</div>
 		<script src="/assets/fenric.js?<?= time() ?>"></script>
-		<script src="<?= asset('/assets/vendor/fenric/request/src/request.js') ?>"></script>
-		<script src="<?= asset('/assets/vendor/fenric/bugaboo/src/bugaboo.js') ?>"></script>
-		<script src="<?= asset('/assets/vendor/jquery-3.2.1.min.js') ?>"></script>
-		<script src="<?= asset('/assets/vendor/bootstrap-4.0.0-beta.2/js/bootstrap.bundle.min.js') ?>"></script>
-		<script src="<?= asset('/assets/vendor/fancybox-3.1.24/jquery.fancybox.min.js') ?>"></script>
-		<script src="<?= asset('/assets/app/components/timer/bootstrap.js') ?>"></script>
-		<script src="<?= asset('/assets/app/components/notify/bootstrap.js') ?>"></script>
+
+		<script src="<?= asset('/vendor/fenric-js-http-request/src/request.js') ?>"></script>
+		<script src="<?= asset('/vendor/fenric-js-templating/src/bugaboo.js') ?>"></script>
+		<script src="<?= asset('/vendor/fenric-js-timer/src/timer.js') ?>"></script>
+		<script src="<?= asset('/vendor/fenric-js-notify/src/notify.js') ?>"></script>
+
+		<script src="<?= asset('/vendor/jquery/dist/jquery.min.js') ?>"></script>
+		<script src="<?= asset('/vendor/jquery-fancybox/dist/jquery.fancybox.min.js') ?>"></script>
+		<script src="<?= asset('/vendor/bootstrap-4/dist/js/bootstrap.min.js') ?>"></script>
+
 		<script src="<?= asset('/assets/app/components/poll/bootstrap.js') ?>"></script>
 		<?= $this->section('javascripts') ?>
 		<?= fenric('snippet::analytics') ?>
