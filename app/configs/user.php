@@ -15,7 +15,7 @@ $options['roles']['administrator']['accesses']['upload.videos'] = true;
 $options['roles']['administrator']['accesses']['upload.pdf'] = true;
 
 $options['roles']['redactor']['name'] = fenric()->t('user', 'role.redactor.name');
-$options['roles']['redactor']['accesses']['desktop'] = false;
+$options['roles']['redactor']['accesses']['desktop'] = true;
 $options['roles']['redactor']['accesses']['upload.images'] = true;
 $options['roles']['redactor']['accesses']['upload.audios'] = true;
 $options['roles']['redactor']['accesses']['upload.videos'] = true;
