@@ -1,17 +1,12 @@
 <?php
 
-chdir(__DIR__);
+putenv('ENVIRONMENT=test');
 
 spl_autoload_register(function(string $class) : bool
 {
-	if (file_exists($file = sprintf('./%s.local.php', $class)))
-	{
-		require_once $file;
+	$file = __DIR__ . DIRECTORY_SEPARATOR . $class . '.php';
 
-		return true;
-	}
-
-	if (file_exists($file = sprintf('./%s.php', $class)))
+	if (file_exists($file))
 	{
 		require_once $file;
 
