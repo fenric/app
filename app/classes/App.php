@@ -88,7 +88,7 @@ final class App
 	 */
 	public function routing() : void
 	{
-		fenric('event::router.running')->subscribe(function($router, $request, $response)
+		fenric('event::router.runned')->subscribe(function($router, $request, $response)
 		{
 			if (file_exists(fenric()->path('configs', 'routes.php')))
 			{
@@ -111,9 +111,9 @@ final class App
 
 		fenric('router')->run(fenric('request'), fenric('response'), function($router, $request, $response)
 		{
-			$view = sprintf('view::errors/http/%d', $response->getStatus());
-
-			$request->isAjax() or $response->setContent(fenric($view)->render());
+			$request->isAjax() or $response->setContent(fenric(
+				sprintf('view::errors/http/%d', $response->getStatus())
+			)->render());
 		});
 	}
 }
