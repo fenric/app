@@ -190,7 +190,7 @@ fenric('event::user.created')->subscribe(function(\Propel\Models\User $model)
 
 	$mail->addAddress($model->getEmail());
 
-	$mail->Subject = fenric()->t('user', 'email.registration.subject', [
+	$mail->Subject = __('user', 'email.registration.subject', [
 		'host' => fenric('request')->environment->get('HTTP_HOST') ?: 'localhost',
 	]);
 
@@ -216,7 +216,7 @@ fenric('event::user.authentication.token.created')->subscribe(function(\Propel\M
 
 	$mail->addAddress($model->getEmail());
 
-	$mail->Subject = fenric()->t('user', 'email.authentication.token.subject', [
+	$mail->Subject = __('user', 'email.authentication.token.subject', [
 		'host' => fenric('request')->environment->get('HTTP_HOST') ?: 'localhost',
 	]);
 
