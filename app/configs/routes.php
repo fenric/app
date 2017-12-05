@@ -134,16 +134,6 @@ fenric('router')->get('/<section:[a-z0-9-]{1,255}>/<publication:[a-z0-9-]{1,255}
 fenric('router')->get('/sitemap.xml', \Fenric\Controllers\Sitemap::class);
 
 /**
- * favicon.ico
- */
-fenric('router')->get('/favicon.ico', \Fenric\Controllers\Blank::class, function($router, $request, $response, $controller)
-{
-	$response->setStatus(404);
-	$response->setHeader('Content-type: image/x-icon');
-	$response->setContent('');
-});
-
-/**
  * humans.txt
  */
 fenric('router')->get('/humans.txt', \Fenric\Controllers\Blank::class, function($router, $request, $response, $controller)
