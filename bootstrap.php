@@ -54,7 +54,8 @@ fenric()->registerUncaughtExceptionHandler(function($exception) : void
 			);
 		}
 
-		while (ob_get_level() > 0) {
+		while (ob_get_level() > 0)
+		{
 			ob_end_clean();
 		}
 
@@ -245,9 +246,7 @@ function __(string $section, string $message, array $context = []) : string
  */
 function ip() : string
 {
-	$env = fenric('request')->environment;
-
-	return $env->get('REMOTE_ADDR', '127.0.0.1');
+	return fenric('request')->get('REMOTE_ADDR', '127.0.0.1');
 }
 
 /**
@@ -319,13 +318,11 @@ function here(string $location) : bool
  */
 function asset(string $location) : string
 {
-	$absolute = fenric()->path('public', $location);
+	$filepath = fenric()->path('public', $location);
 
-	if ($filename = realpath($absolute))
+	if ($filepath = realpath($filepath))
 	{
-		$lastModified = filemtime($filename);
-
-		return sprintf('%s?%s', $location, $lastModified);
+		return $location . '?' . filemtime($filepath);
 	}
 
 	return $location;
@@ -370,26 +367,22 @@ function searchable(string $value, int $maxLength = 64, string $wordSeparator = 
  */
 function snippetable(string $value = null) : string
 {
-	$expression = '/{#(?<type>[a-z]+):(?<code>[a-zA-Z0-9-\.]{1,255})(?:\050(?<json>{[^\050\051]+})\051)?#}/su';
+	$expression = '/{#(?<type>[a-z]+):(?<code>[a-zA-Z0-9-\.]{1,255})#}/su';
 
 	return preg_replace_callback($expression, function($matches)
 	{
-		$options = json_decode($matches['json'] ?? '{}', true);
-
-		$parameters = [$matches['code'], $options['default'] ?? null];
-
 		switch ($matches['type'])
 		{
 			case 'poll' :
-				return fenric()->callSharedService('poll', $parameters);
+				return fenric()->callSharedService('poll', [$matches['code']]);
 				break;
 
 			case 'banner' :
-				return fenric()->callSharedService('banner', $parameters);
+				return fenric()->callSharedService('banner', [$matches['code']]);
 				break;
 
 			case 'snippet' :
-				return fenric()->callSharedService('snippet', $parameters);
+				return fenric()->callSharedService('snippet', [$matches['code']]);
 				break;
 		}
 
