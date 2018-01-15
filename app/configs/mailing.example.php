@@ -9,8 +9,8 @@ $senders = [];
 
 $senders['default'] = function() : void
 {
-	$this->setFrom('root@localhost', fenric('request')->getHost());
-	$this->addReplyTo('root@localhost', fenric('request')->getHost());
+	$this->setFrom('root@localhost', fenric('request')->host());
+	$this->addReplyTo('root@localhost', fenric('request')->host());
 
 	$this->isHTML(true);
 };

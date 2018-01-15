@@ -35,7 +35,7 @@ class Section extends Abstractable
 	{
 		if (! SectionQuery::existsByCode($this->request->parameters->get('section')))
 		{
-			$this->response->setStatus(404);
+			$this->response->status(\Fenric\Response::STATUS_404);
 
 			return false;
 		}
@@ -44,7 +44,7 @@ class Section extends Abstractable
 		{
 			if (! TagQuery::existsByCode($this->request->parameters->get('tag')))
 			{
-				$this->response->setStatus(404);
+				$this->response->status(\Fenric\Response::STATUS_404);
 
 				return false;
 			}
@@ -54,7 +54,7 @@ class Section extends Abstractable
 		{
 			if (! is_array($this->request->query->get('tags')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -64,7 +64,7 @@ class Section extends Abstractable
 		{
 			if (! is_string($this->request->query->get('q')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -74,7 +74,7 @@ class Section extends Abstractable
 		{
 			if (! ctype_digit($this->request->query->get('page')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -84,7 +84,7 @@ class Section extends Abstractable
 		{
 			if (! ctype_digit($this->request->query->get('limit')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -617,7 +617,7 @@ class Section extends Abstractable
 			$view = fenric(sprintf('view::sections/%s/section', $section->getCode()));
 		}
 
-		$this->response->setContent($view->render([
+		$this->response->content($view->render([
 			'tag' => $tag,
 			'section' => $section,
 			'publications' => $publications->paginate($page, $limit),

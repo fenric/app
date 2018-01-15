@@ -33,7 +33,7 @@ class ProfileSettingsSave extends Abstractable
 			}
 		}
 
-		$this->response->setStatus(400);
+		$this->response->status(\Fenric\Response::STATUS_400);
 		return false;
 	}
 
@@ -51,7 +51,7 @@ class ProfileSettingsSave extends Abstractable
 			fenric('user')->setEmail(
 				$this->request->post->get('email')
 			);
-			fenric('session')->set('user.settings.email',
+			$this->request->session->set('user.settings.email',
 				$this->request->post->get('email')
 			);
 		}
@@ -68,35 +68,35 @@ class ProfileSettingsSave extends Abstractable
 		fenric('user')->setFirstname(
 			$this->request->post->get('firstname')
 		);
-		fenric('session')->set('user.settings.firstname',
+		$this->request->session->set('user.settings.firstname',
 			$this->request->post->get('firstname')
 		);
 
 		fenric('user')->setLastname(
 			$this->request->post->get('lastname')
 		);
-		fenric('session')->set('user.settings.lastname',
+		$this->request->session->set('user.settings.lastname',
 			$this->request->post->get('lastname')
 		);
 
 		fenric('user')->setGender(
 			$this->request->post->get('gender')
 		);
-		fenric('session')->set('user.settings.gender',
+		$this->request->session->set('user.settings.gender',
 			$this->request->post->get('gender')
 		);
 
 		fenric('user')->setBirthday(
 			$this->request->post->get('birthday')
 		);
-		fenric('session')->set('user.settings.birthday',
+		$this->request->session->set('user.settings.birthday',
 			$this->request->post->get('birthday')
 		);
 
 		fenric('user')->setAbout(
 			$this->request->post->get('about')
 		);
-		fenric('session')->set('user.settings.about',
+		$this->request->session->set('user.settings.about',
 			$this->request->post->get('about')
 		);
 
@@ -111,7 +111,7 @@ class ProfileSettingsSave extends Abstractable
 			$errors[$failure->getPropertyPath()][] = $failure->getMessage();
 		}
 
-		fenric('session')->set('user.settings.errors', $errors);
+		$this->request->session->set('user.settings.errors', $errors);
 
 		$this->backward();
 	}

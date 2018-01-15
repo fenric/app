@@ -18,9 +18,9 @@ abstract class Abstractable extends Controller
 	 */
 	final protected function redirect(string $location, int $statusCode = 302, \Closure $beforeRedirect = null) : void
 	{
-		$rawHeader = sprintf('Location: %s', $location);
+		$status = constant(sprintf('\\Fenric\\Response::STATUS_%d', $statusCode));
 
-		$this->response->setStatus($statusCode)->setHeader($rawHeader)->setContent('');
+		$this->response->status($status)->header('Location', $location)->content(null);
 
 		($beforeRedirect instanceof \Closure) and $beforeRedirect();
 
@@ -34,7 +34,7 @@ abstract class Abstractable extends Controller
 	 */
 	final protected function homeward(int $statusCode = 302, \Closure $beforeRedirect = null) : void
 	{
-		$location = $this->request->getRoot() ?: '/';
+		$location = $this->request->root() ?: '/';
 
 		$this->redirect($location, $statusCode, $beforeRedirect);
 	}
@@ -44,7 +44,7 @@ abstract class Abstractable extends Controller
 	 */
 	final protected function backward(int $statusCode = 302, \Closure $beforeRedirect = null) : void
 	{
-		$location = $this->request->environment->get('HTTP_REFERER') ?: $this->request->getRoot() ?: '/';
+		$location = $this->request->environment->get('HTTP_REFERER') ?: $this->request->root() ?: '/';
 
 		$this->redirect($location, $statusCode, $beforeRedirect);
 	}
@@ -54,13 +54,13 @@ abstract class Abstractable extends Controller
 	 */
 	final public function trailingSlashes(\Closure $beforeRedirect = null) : void
 	{
-		if (preg_match('#^(?:.*[^/])$#', $this->request->getPath()))
+		if (preg_match('#^(?:.*[^/])$#', $this->request->path()))
 		{
-			$redirectLocation = $this->request->getPath() . '/';
+			$redirectLocation = $this->request->path() . '/';
 
-			if (strlen($this->request->getQuery()) > 0)
+			if (strlen($this->request->query()) > 0)
 			{
-				$redirectLocation .= '?' . $this->request->getQuery();
+				$redirectLocation .= '?' . $this->request->query();
 			}
 
 			$this->redirect($redirectLocation, 301, $beforeRedirect);

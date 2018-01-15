@@ -16,7 +16,7 @@ abstract class Actionable extends Abstractable
 		if ($this->request->parameters->exists('action'))
 		{
 			$requestAction = $this->request->parameters->get('action');
-			$requestMethod = $this->request->getMethod();
+			$requestMethod = $this->request->method();
 
 			$controllerMethod = str_replace('-', ' ', $requestAction);
 			$controllerMethod = ucwords($controllerMethod);
@@ -28,8 +28,8 @@ abstract class Actionable extends Abstractable
 			{
 				call_user_func([$this, $controllerMethod]);
 			}
-			else $this->response->setStatus(404);
+			else $this->response->status(\Fenric\Response::STATUS_404);
 		}
-		else $this->response->setStatus(400);
+		else $this->response->status(\Fenric\Response::STATUS_400);
 	}
 }

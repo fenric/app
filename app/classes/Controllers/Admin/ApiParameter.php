@@ -43,7 +43,7 @@ class ApiParameter extends CRUD
 			$parameter->save();
 		}
 
-		$this->response->setJsonContent([
+		$this->response->json([
 			'success' => true,
 			'message' => null,
 		]);

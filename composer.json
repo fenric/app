@@ -9,7 +9,6 @@
 	},
 	"autoload": {
 		"files": [
-			"bootstrap.php",
 			"propel/config/config.php.dist"
 		],
 		"psr-4": {

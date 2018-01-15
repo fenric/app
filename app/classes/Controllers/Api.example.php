@@ -22,12 +22,12 @@ use Propel\Models\UserQuery;
 use Propel\Models\Map\UserTableMap;
 
 use Propel\Runtime\Collection\ObjectCollection;
-use Fenric\Controllers\Abstractable\Actionable;
+use Fenric\Controllers\Abstractable\Actionable as Controller;
 
 /**
  * Api
  */
-class Api extends Actionable
+class Api extends Controller
 {
 
 	/**
@@ -82,7 +82,7 @@ class Api extends Actionable
 											$vote->setPollVariantId($variant);
 											$vote->setRespondentUserAgent($this->request->environment->get('HTTP_USER_AGENT'));
 											$vote->setRespondentRemoteAddress($this->request->environment->get('REMOTE_ADDR'));
-											$vote->setRespondentSessionId(fenric('session')->getId());
+											$vote->setRespondentSessionId(fenric('request')->session->getId());
 											$vote->setRespondentVoteId($poll->getRespondentVoteId());
 											$vote->setRespondentId($poll->getRespondentId());
 											$vote->setVoteAt(new \DateTime('now'));
@@ -109,6 +109,6 @@ class Api extends Actionable
 		}
 		else $json['message'] = 'Не получен идентификатор опроса.';
 
-		$this->response->setJsonContent($json);
+		$this->response->json($json);
 	}
 }

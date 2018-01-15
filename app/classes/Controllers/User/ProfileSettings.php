@@ -30,15 +30,15 @@ class ProfileSettings extends Abstractable
 	 */
 	public function render() : void
 	{
-		$this->response->setContent(
+		$this->response->content(
 			fenric('view::user/profile.settings', [
-				'email' => fenric('session')->remove('user.settings.email'),
-				'firstname' => fenric('session')->remove('user.settings.firstname'),
-				'lastname' => fenric('session')->remove('user.settings.lastname'),
-				'gender' => fenric('session')->remove('user.settings.gender'),
-				'birthday' => fenric('session')->remove('user.settings.birthday'),
-				'about' => fenric('session')->remove('user.settings.about'),
-				'errors' => fenric('session')->remove('user.settings.errors'),
+				'email' => $this->request->session->remove('user.settings.email'),
+				'firstname' => $this->request->session->remove('user.settings.firstname'),
+				'lastname' => $this->request->session->remove('user.settings.lastname'),
+				'gender' => $this->request->session->remove('user.settings.gender'),
+				'birthday' => $this->request->session->remove('user.settings.birthday'),
+				'about' => $this->request->session->remove('user.settings.about'),
+				'errors' => $this->request->session->remove('user.settings.errors'),
 			])->render()
 		);
 	}

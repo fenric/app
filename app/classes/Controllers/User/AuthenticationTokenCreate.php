@@ -30,17 +30,13 @@ class AuthenticationTokenCreate extends Abstractable
 	 */
 	public function render() : void
 	{
-		if (fenric('session')->remove('user.authentication.token.create.complete')) {
-			$this->response->setContent(
-				fenric('view::user/authentication.token.create.complete')->render()
-			);
+		if ($this->request->session->remove('user.authentication.token.create.complete')) {
+			$this->response->view('user/authentication.token.create.complete');
 			return;
 		}
 
-		$this->response->setContent(
-			fenric('view::user/authentication.token.create', [
-				'error' => fenric('session')->remove('user.authentication.token.create.error'),
-			])->render()
-		);
+		$this->response->view('user/authentication.token.create', [
+			'error' => $this->request->session->remove('user.authentication.token.create.error'),
+		]);
 	}
 }

@@ -23,7 +23,7 @@ class Tags extends Abstractable
 		$tags = TagQuery::create();
 		$tags->orderByHeader(Criteria::ASC);
 
-		$this->response->setContent(fenric('view::tags', [
+		$this->response->content(fenric('view::tags', [
 			'tags' => $tags->find(),
 		])->render());
 	}

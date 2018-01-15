@@ -23,7 +23,7 @@ class Tag extends Abstractable
 	{
 		if (! TagQuery::existsByCode($this->request->parameters->get('code')))
 		{
-			$this->response->setStatus(404);
+			$this->response->status(\Fenric\Response::STATUS_404);
 
 			return false;
 		}
@@ -32,7 +32,7 @@ class Tag extends Abstractable
 		{
 			if (! ctype_digit($this->request->query->get('page')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -42,7 +42,7 @@ class Tag extends Abstractable
 		{
 			if (! ctype_digit($this->request->query->get('limit')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -108,7 +108,7 @@ class Tag extends Abstractable
 			$view = fenric(sprintf('view::tags/%s', $tag->getCode()));
 		}
 
-		$this->response->setContent($view->render([
+		$this->response->content($view->render([
 			'tag' => $tag,
 			'publications' => $publications->paginate(
 				$page ?? 1, $limit ?? 25

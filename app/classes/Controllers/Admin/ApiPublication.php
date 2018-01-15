@@ -395,7 +395,7 @@ class ApiPublication extends CRUD
 			}
 		}
 
-		$this->response->setJsonContent($found);
+		$this->response->json($found);
 	}
 
 	/**

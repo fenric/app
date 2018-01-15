@@ -28,9 +28,9 @@ class User
 	 */
 	public function __construct()
 	{
-		if (fenric('session')->isStarted())
+		if (fenric('request')->session->isStarted())
 		{
-			if ($uid = fenric('session')->get('user.id'))
+			if ($uid = fenric('request')->session->get('user.id'))
 			{
 				if ($model = Query::create()->findPk($uid))
 				{
@@ -51,7 +51,7 @@ class User
 					}
 				}
 
-				fenric('session')->remove('user.id');
+				fenric('request')->session->remove('user.id');
 			}
 		}
 	}
@@ -66,7 +66,7 @@ class User
 		$username = trim($username);
 		$password = trim($password);
 
-		if (fenric('session')->isStarted())
+		if (fenric('request')->session->isStarted())
 		{
 			if (strlen($username) >= 2 && strlen($username) <= 48 && ctype_alnum($username))
 			{
@@ -91,11 +91,11 @@ class User
 											return true;
 										}
 										else throw new RuntimeException(
-											fenric()->t('user', 'authentication.error.save')
+											__('user', 'authentication.error.save')
 										);
 									}
 									else throw new RuntimeException(
-										fenric()->t('user', 'authentication.error.account.blocked', [
+										__('user', 'authentication.error.account.blocked', [
 											'from' => $model->getBanFrom()->format('d.m.Y H:i:s P'),
 											'until' => $model->getBanUntil()->format('d.m.Y H:i:s P'),
 											'reason' => $model->getBanReason(),
@@ -103,39 +103,39 @@ class User
 									);
 								}
 								else throw new RuntimeException(
-									fenric()->t('user', 'authentication.error.account.unverified')
+									__('user', 'authentication.error.account.unverified')
 								);
 							}
 							else throw new RuntimeException(
-								fenric()->t('user', 'authentication.error.password.unverified')
+								__('user', 'authentication.error.password.unverified')
 							);
 						}
 						else throw new RuntimeException(
-							fenric()->t('user', 'authentication.error.unsuccessful.attempts', [
+							__('user', 'authentication.error.unsuccessful.attempts', [
 								'maxAttempts' => 10,
 							])
 						);
 					}
 					else throw new RuntimeException(
-						fenric()->t('user', 'authentication.error.username.undefined')
+						__('user', 'authentication.error.username.undefined')
 					);
 				}
 				else throw new RuntimeException(
-					fenric()->t('user', 'authentication.error.password.incorrect', [
+					__('user', 'authentication.error.password.incorrect', [
 						'minLength' => 6,
 						'maxLength' => 256,
 					])
 				);
 			}
 			else throw new RuntimeException(
-				fenric()->t('user', 'authentication.error.username.incorrect', [
+				__('user', 'authentication.error.username.incorrect', [
 					'minLength' => 2,
 					'maxLength' => 48,
 				])
 			);
 		}
 		else throw new RuntimeException(
-			fenric()->t('user', 'authentication.error.session.unstarted')
+			__('user', 'authentication.error.session.unstarted')
 		);
 
 		return false;
@@ -150,13 +150,13 @@ class User
 
 		$model->setAuthenticationIp(ip());
 
-		$model->setAuthenticationKey(fenric('session')->getId());
+		$model->setAuthenticationKey(fenric('request')->session->getId());
 
 		$model->setAuthenticationAttemptCount(0);
 
 		if ($model->save() > 0)
 		{
-			fenric('session')->set('user.id', $model->getId());
+			fenric('request')->session->set('user.id', $model->getId());
 
 			$this->model = $model;
 
@@ -185,8 +185,8 @@ class User
 			$this->model->save();
 			$this->model = null;
 
-			fenric('session')->remove('user.id');
-			fenric('session')->restart();
+			fenric('request')->session->remove('user.id');
+			fenric('request')->session->restart();
 		}
 	}
 
@@ -197,7 +197,7 @@ class User
 	{
 		if ($this->model instanceof Model)
 		{
-			if (strcmp($this->model->getAuthenticationKey(), fenric('session')->getId()) === 0)
+			if (strcmp($this->model->getAuthenticationKey(), fenric('request')->session->getId()) === 0)
 			{
 				return true;
 			}

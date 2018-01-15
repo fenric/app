@@ -80,7 +80,7 @@ abstract class CRUD extends Actionable
 	 */
 	public function init() : void
 	{
-		parse_str($this->request->getBody(), $this->data);
+		parse_str($this->request->body(), $this->data);
 
 		array_walk_recursive($this->data, function($value, $param) : void
 		{
@@ -138,7 +138,7 @@ abstract class CRUD extends Actionable
 			}
 		}
 
-		$this->response->setJsonContent($output);
+		$this->response->json($output);
 	}
 
 	/**
@@ -147,12 +147,12 @@ abstract class CRUD extends Actionable
 	final protected function update(ModelCriteria $query, array $data) : void
 	{
 		if (! $this->request->parameters->exists(static::ID_PARAMETER_NAME)) {
-			$this->response->setStatus(400);
+			$this->response->status(\Fenric\Response::STATUS_400);
 			return;
 		}
 
 		if (! ($model = $query->findPk($this->request->parameters->get(static::ID_PARAMETER_NAME)))) {
-			$this->response->setStatus(404);
+			$this->response->status(\Fenric\Response::STATUS_404);
 			return;
 		}
 
@@ -198,7 +198,7 @@ abstract class CRUD extends Actionable
 			}
 		}
 
-		$this->response->setJsonContent($output);
+		$this->response->json($output);
 	}
 
 	/**
@@ -207,12 +207,12 @@ abstract class CRUD extends Actionable
 	final protected function delete(ModelCriteria $query) : void
 	{
 		if (! $this->request->parameters->exists(static::ID_PARAMETER_NAME)) {
-			$this->response->setStatus(400);
+			$this->response->status(\Fenric\Response::STATUS_400);
 			return;
 		}
 
 		if (! ($model = $query->findPk($this->request->parameters->get(static::ID_PARAMETER_NAME)))) {
-			$this->response->setStatus(404);
+			$this->response->status(\Fenric\Response::STATUS_404);
 			return;
 		}
 
@@ -223,11 +223,11 @@ abstract class CRUD extends Actionable
 		$model->delete();
 
 		if (! $model->isDeleted()) {
-			$this->response->setStatus(503);
+			$this->response->status(\Fenric\Response::STATUS_503);
 			return;
 		}
 
-		$this->response->setStatus(200);
+		$this->response->status(\Fenric\Response::STATUS_200);
 
 		fenric()->callSharedService('event', [
 			self::EVENT_AFTER_DELETE
@@ -240,12 +240,12 @@ abstract class CRUD extends Actionable
 	final protected function read(ModelCriteria $query, array $cols) : void
 	{
 		if (! $this->request->parameters->exists(static::ID_PARAMETER_NAME)) {
-			$this->response->setStatus(400);
+			$this->response->status(\Fenric\Response::STATUS_400);
 			return;
 		}
 
 		if (! ($model = $query->findPk($this->request->parameters->get(static::ID_PARAMETER_NAME)))) {
-			$this->response->setStatus(404);
+			$this->response->status(\Fenric\Response::STATUS_404);
 			return;
 		}
 
@@ -272,7 +272,7 @@ abstract class CRUD extends Actionable
 			}
 		});
 
-		$this->response->setJsonContent($output);
+		$this->response->json($output);
 	}
 
 	/**
@@ -345,6 +345,6 @@ abstract class CRUD extends Actionable
 			});
 		}
 
-		$this->response->setJsonContent($output);
+		$this->response->json($output);
 	}
 }

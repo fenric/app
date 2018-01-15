@@ -112,7 +112,7 @@ class ApiRadio extends CRUD
 	 */
 	protected function actionUnloadViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('query')
 				->select(RadioTableMap::COL_ID)
 				->select(RadioTableMap::COL_TITLE)
@@ -232,6 +232,6 @@ class ApiRadio extends CRUD
 			}
 		}
 
-		$this->response->setJsonContent($result);
+		$this->response->json($result);
 	}
 }

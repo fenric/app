@@ -193,7 +193,7 @@ class ApiUser extends CRUD
 	 */
 	protected function actionUnloadViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('query')
 				->select(UserTableMap::COL_ID)
 				->select(UserTableMap::COL_USERNAME)

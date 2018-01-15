@@ -28,29 +28,29 @@ class Update extends Abstractable
 		$content = '';
 
 		if (is_executable(fenric('config::environments')->get('composer'))) {
-			$content .= $this->execute(fenric()->path('.'), fenric('config::environments')->get('composer') . ' update');
+			$content .= $this->execute(fenric('/'), fenric('config::environments')->get('composer') . ' update');
 			$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 		}
 
 		if (is_executable(fenric('config::environments')->get('git'))) {
-			$content .= $this->execute(fenric()->path('.'), fenric('config::environments')->get('git') . ' pull ' . fenric('config::app')->get('repository') . ' master');
+			$content .= $this->execute(fenric('/'), fenric('config::environments')->get('git') . ' pull ' . fenric('config::app')->get('repository') . ' master');
 			$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 		}
 
 		if (is_executable(fenric('config::environments')->get('php'))) {
-			$content .= $this->execute(fenric()->path('vendor', 'bin'), fenric('config::environments')->get('php') . ' propel migrate');
+			$content .= $this->execute(fenric('/vendor/bin'), fenric('config::environments')->get('php') . ' propel migrate');
 			$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 		}
 
 		if (is_executable(fenric('config::environments')->get('bower'))) {
-			$content .= $this->execute(fenric()->path('public'), fenric('config::environments')->get('bower') . ' update');
+			$content .= $this->execute(fenric('/public'), fenric('config::environments')->get('bower') . ' update');
 			$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 		}
 
 		$content .= 'Done.';
 
-		$this->response->setHeader('Content-Type: text/plain; charset=UTF-8');
-		$this->response->setContent($content);
+		$this->response->header('Content-Type', 'text/plain; charset=UTF-8');
+		$this->response->content($content);
 	}
 
 	/**

@@ -5,12 +5,12 @@ namespace Fenric\Controllers\Admin;
 /**
  * Import classes
  */
-use Fenric\Controllers\Abstractable\Actionable;
+use Fenric\Controllers\Abstractable\Actionable as Controller;
 
 /**
  * Api
  */
-class Api extends Actionable
+class Api extends Controller
 {
 
 	/**
@@ -23,7 +23,7 @@ class Api extends Actionable
 	 */
 	protected function actionDesktopModulesViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('config::desktop')->get('modules', [])
 		);
 	}
@@ -33,7 +33,7 @@ class Api extends Actionable
 	 */
 	protected function actionDesktopComponentsViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('config::desktop')->get('components', [])
 		);
 	}
@@ -45,7 +45,7 @@ class Api extends Actionable
 	{
 		$params = fenric('user')->getParams();
 
-		$this->response->setJsonContent(
+		$this->response->json(
 		[
 			'id' => fenric('user')->getId(),
 			'role' => fenric('user')->getRole(),
@@ -64,7 +64,7 @@ class Api extends Actionable
 	 */
 	protected function actionSaveDesktopIconViaPATCH() : void
 	{
-		parse_str($this->request->getBody(), $data);
+		parse_str($this->request->body(), $data);
 
 		$params = fenric('user')->getParams();
 
@@ -80,7 +80,7 @@ class Api extends Actionable
 	 */
 	protected function actionSaveDesktopPaletteViaPATCH() : void
 	{
-		parse_str($this->request->getBody(), $data);
+		parse_str($this->request->body(), $data);
 
 		$params = fenric('user')->getParams();
 
@@ -95,7 +95,7 @@ class Api extends Actionable
 	 */
 	protected function actionSaveDesktopWallpaperViaPATCH() : void
 	{
-		parse_str($this->request->getBody(), $data);
+		parse_str($this->request->body(), $data);
 
 		$params = fenric('user')->getParams();
 
@@ -110,7 +110,7 @@ class Api extends Actionable
 	 */
 	protected function actionSaveDesktopModalContentFontSizeViaPATCH() : void
 	{
-		parse_str($this->request->getBody(), $data);
+		parse_str($this->request->body(), $data);
 
 		$params = fenric('user')->getParams();
 

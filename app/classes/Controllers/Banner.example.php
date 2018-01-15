@@ -28,15 +28,13 @@ class Banner extends Abstractable
 
 		if ($row = $query->readRow())
 		{
-			$clicks = fenric('session')
-				->get('clicks');
+			$clicks = $this->request->session->get('clicks');
 
 			if (empty($clicks[$row->id]))
 			{
 				$clicks[$row->id] = time();
 
-				fenric('session')
-					->set('clicks', $clicks);
+				$this->request->session->set('clicks', $clicks);
 
 				fenric('query')
 					->update(Table::TABLE_NAME, [
@@ -52,7 +50,7 @@ class Banner extends Abstractable
 			return true;
 		}
 
-		$this->response->setStatus(404);
+		$this->response->status(\Fenric\Response::STATUS_404);
 
 		return false;
 	}

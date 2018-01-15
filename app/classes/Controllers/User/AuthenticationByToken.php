@@ -26,7 +26,7 @@ class AuthenticationByToken extends Abstractable
 			return parent::preInit();
 		}
 
-		$this->response->setStatus(404);
+		$this->response->status(\Fenric\Response::STATUS_404);
 		return false;
 	}
 
@@ -60,28 +60,28 @@ class AuthenticationByToken extends Abstractable
 							{
 								$this->redirect('/user/');
 							}
-							else fenric('session')->set('user.authentication.token.create.error',
-								fenric()->t('user', 'authentication.by.token.error.save')
+							else $this->request->session->set('user.authentication.token.create.error',
+								__('user', 'authentication.by.token.error.save')
 							);
 						}
-						else fenric('session')->set('user.authentication.token.create.error',
-							fenric()->t('user', 'authentication.by.token.error.ip.token')
+						else $this->request->session->set('user.authentication.token.create.error',
+							__('user', 'authentication.by.token.error.ip.token')
 						);
 					}
-					else fenric('session')->set('user.authentication.token.create.error',
-						fenric()->t('user', 'authentication.by.token.error.date.token')
+					else $this->request->session->set('user.authentication.token.create.error',
+						__('user', 'authentication.by.token.error.date.token')
 					);
 				}
-				else fenric('session')->set('user.authentication.token.create.error',
-					fenric()->t('user', 'authentication.by.token.error.account.blocked')
+				else $this->request->session->set('user.authentication.token.create.error',
+					__('user', 'authentication.by.token.error.account.blocked')
 				);
 			}
-			else fenric('session')->set('user.authentication.token.create.error',
-				fenric()->t('user', 'authentication.by.token.error.account.unverified')
+			else $this->request->session->set('user.authentication.token.create.error',
+				__('user', 'authentication.by.token.error.account.unverified')
 			);
 		}
-		else fenric('session')->set('user.authentication.token.create.error',
-			fenric()->t('user', 'authentication.by.token.error.unknown.token')
+		else $this->request->session->set('user.authentication.token.create.error',
+			__('user', 'authentication.by.token.error.unknown.token')
 		);
 
 		$this->redirect('/user/login/token/create/');

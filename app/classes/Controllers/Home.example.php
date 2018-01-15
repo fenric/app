@@ -18,8 +18,6 @@ class Home extends Abstractable
 	 */
 	public function render() : void
 	{
-		$this->response->setContent(
-			fenric('view::home')->render()
-		);
+		$this->response->view('home');
 	}
 }

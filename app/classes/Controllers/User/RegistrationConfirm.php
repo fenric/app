@@ -27,7 +27,7 @@ class RegistrationConfirm extends Abstractable
 			return parent::preInit();
 		}
 
-		$this->response->setStatus(404);
+		$this->response->status(\Fenric\Response::STATUS_404);
 		return false;
 	}
 
@@ -54,15 +54,15 @@ class RegistrationConfirm extends Abstractable
 
 			if ($foundUser->save())
 			{
-				fenric('session')->set('user.registration.confirm', true);
+				$this->request->session->set('user.registration.confirm', true);
 
 				$this->redirect('/user/');
 			}
-			else $error = fenric()->t('user', 'registration.confirm.error.save');
+			else $error = __('user', 'registration.confirm.error.save');
 		}
-		else $error = fenric()->t('user', 'registration.confirm.error.unknown.code');
+		else $error = __('user', 'registration.confirm.error.unknown.code');
 
-		$this->response->setContent(
+		$this->response->content(
 			fenric('view::user/registration.confirm', [
 				'error' => $error ?? null
 			])->render()

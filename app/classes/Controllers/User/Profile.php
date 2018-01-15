@@ -31,10 +31,8 @@ class Profile extends Abstractable
 	 */
 	public function render() : void
 	{
-		$this->response->setContent(
-			fenric('view::user/profile', [
-				'user' => fenric('user'),
-			])->render()
-		);
+		$this->response->view('user/profile', [
+			'user' => fenric('user'),
+		]);
 	}
 }

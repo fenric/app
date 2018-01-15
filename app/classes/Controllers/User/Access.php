@@ -18,7 +18,7 @@ trait Access
 			return parent::preInit();
 		}
 
-		$this->response->setStatus(401);
+		$this->response->status(\Fenric\Response::STATUS_401);
 
 		return false;
 	}

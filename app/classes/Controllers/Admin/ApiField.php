@@ -148,7 +148,7 @@ class ApiField extends CRUD
 	 */
 	protected function actionUnloadViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('query')
 				->select(FieldTableMap::COL_ID)
 				->select(FieldTableMap::COL_TYPE)

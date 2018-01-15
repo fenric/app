@@ -24,7 +24,7 @@ class Search extends Abstractable
 		{
 			if (! is_string($this->request->query->get('q')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -34,7 +34,7 @@ class Search extends Abstractable
 		{
 			if (! ctype_digit($this->request->query->get('page')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -44,7 +44,7 @@ class Search extends Abstractable
 		{
 			if (! ctype_digit($this->request->query->get('limit')))
 			{
-				$this->response->setStatus(400);
+				$this->response->status(\Fenric\Response::STATUS_400);
 
 				return false;
 			}
@@ -96,10 +96,8 @@ class Search extends Abstractable
 			}
 		}
 
-		$this->response->setContent(
-			fenric('view::search')->render([
-				'publications' => $publications ?? null,
-			])
-		);
+		$this->response->view('search', [
+			'publications' => $publications ?? null,
+		]);
 	}
 }

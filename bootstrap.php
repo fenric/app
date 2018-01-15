@@ -1,12 +1,22 @@
 <?php
 
 /**
- * Установка локали
+ * Загрузка зависимостей
+ */
+require_once __DIR__ . '/vendor/autoload.php';
+
+/**
+ * Установка режима протоколирования ошибок
+ */
+error_reporting(E_ALL);
+
+/**
+ * Установка локали по умолчанию
  */
 setlocale(LC_ALL, 'ru_RU.UTF-8');
 
 /**
- * Установка часового пояса
+ * Установка часового пояса по умолчанию
  */
 date_default_timezone_set('UTC');
 
@@ -30,28 +40,28 @@ fenric()->registerUncaughtExceptionHandler(function($exception) : void
 {
 	if (! fenric()->is('cli'))
 	{
-		fenric('response')->setStatus(503);
+		fenric('response')->status(
+			\Fenric\Response::STATUS_503
+		);
 
 		if (! fenric()->is('production'))
 		{
 			fenric('request')->isAjax()
 
-			? fenric('response')->setJsonContent([
+			? fenric('response')->json([
 
 				// Inner rules API.
 				'success' => false,
 				'message' => $exception->getMessage(),
 
 				// Debug information, only for developers.
-				'file'    => $exception->getFile(),
-				'line'    => $exception->getLine(),
+				'filename' => $exception->getFile(),
+				'fileline' => $exception->getLine(),
 			])
 
-			: fenric('response')->setContent(
-				fenric('view::errors/fatal')->render([
-					'exception' => $exception,
-				])
-			);
+			: fenric('response')->view('errors/fatal', [
+				'exception' => $exception,
+			]);
 		}
 
 		while (ob_get_level() > 0)
@@ -191,15 +201,15 @@ fenric('event::user.created')->subscribe(function(\Propel\Models\User $model)
 	$mail->addAddress($model->getEmail());
 
 	$mail->Subject = __('user', 'email.registration.subject', [
-		'host' => fenric('request')->environment->get('HTTP_HOST') ?: 'localhost',
+		'host' => fenric('request')->host(),
 	]);
 
 	$mail->Body = fenric('view::mails/user.registration.confirmation', [
 		'user' => $model,
 		'url' => sprintf('%s://%s%s/user/registration/%s/',
-			fenric('request')->getScheme(),
-			fenric('request')->environment->get('HTTP_HOST') ?: 'localhost',
-			fenric('request')->getRoot(),
+			fenric('request')->scheme(),
+			fenric('request')->host(),
+			fenric('request')->root(),
 			$model->getRegistrationConfirmationCode()
 		),
 	])->render();
@@ -217,15 +227,15 @@ fenric('event::user.authentication.token.created')->subscribe(function(\Propel\M
 	$mail->addAddress($model->getEmail());
 
 	$mail->Subject = __('user', 'email.authentication.token.subject', [
-		'host' => fenric('request')->environment->get('HTTP_HOST') ?: 'localhost',
+		'host' => fenric('request')->host(),
 	]);
 
 	$mail->Body = fenric('view::mails/user.authentication.token', [
 		'user' => $model,
 		'url' => sprintf('%s://%s%s/user/login/%s/',
-			fenric('request')->getScheme(),
-			fenric('request')->environment->get('HTTP_HOST') ?: 'localhost',
-			fenric('request')->getRoot(),
+			fenric('request')->scheme(),
+			fenric('request')->host(),
+			fenric('request')->root(),
 			$model->getAuthenticationToken()
 		),
 	])->render();
@@ -238,11 +248,11 @@ fenric('event::user.authentication.token.created')->subscribe(function(\Propel\M
  */
 function __(string $section, string $message, array $context = []) : string
 {
-	return fenric()->t($section, $message, $context);
+	return fenric()->translate($section, $message, $context);
 }
 
 /**
- * IP адрес клиента
+ * Получение IP адрес клиента
  */
 function ip() : string
 {
@@ -250,55 +260,11 @@ function ip() : string
 }
 
 /**
- * Сборка URL c возможностью переназначения параметров запроса
+ * Получение запрошенного URL c возможностью переназначения параметров запроса
  */
-function url(array $queries = []) : string
+function url(array $params = []) : string
 {
-	$url = '';
-
-	if (fenric('request')->getHost())
-	{
-		if (fenric('request')->getScheme())
-		{
-			$url .= fenric('request')->getScheme() . '://';
-		}
-
-		$url .= fenric('request')->getHost();
-
-		if (fenric('request')->getPort())
-		{
-			$url .= ':' . fenric('request')->getPort();
-		}
-	}
-
-	if (fenric('request')->getPath())
-	{
-		$url .= fenric('request')->getPath();
-	}
-
-	$query = fenric('request')->query->all();
-
-	if (count($queries) > 0)
-	{
-		foreach ($queries as $key => $value)
-		{
-			if (empty($value))
-			{
-				unset($query[$key]);
-
-				continue;
-			}
-
-			$query[$key] = $value;
-		}
-	}
-
-	if (count($query) > 0)
-	{
-		$url .= '?' . http_build_query($query);
-	}
-
-	return $url;
+	return fenric('request')->url($params);
 }
 
 /**
@@ -306,11 +272,7 @@ function url(array $queries = []) : string
  */
 function here(string $location) : bool
 {
-	$sanitized = addcslashes($location, '\.+?[^]${}=!|:-#');
-
-	$expression = str_replace(['(', '*', '%', ')'], ['(?:', '[^/]*', '.*?', ')?'], $sanitized);
-
-	return !! preg_match("#^{$expression}$#u", fenric('request')->getPath());
+	return fenric('request')->isPath($location);
 }
 
 /**
@@ -318,11 +280,11 @@ function here(string $location) : bool
  */
 function asset(string $location) : string
 {
-	$filepath = fenric()->path('public', $location);
+	$filename = fenric()->path('public', $location);
 
-	if ($filepath = realpath($filepath))
+	if (file_exists($filename))
 	{
-		return $location . '?' . filemtime($filepath);
+		$location .= '?' . filemtime($filename);
 	}
 
 	return $location;

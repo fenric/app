@@ -19,15 +19,19 @@
 
 				$bugaboo.formatters['datetime'] = function(value, format)
 				{
-					if (value.length === 0) {
-						return '';
-					}
+					var df;
 
-					if (value === 'now') {
-						value = new Date();
-					}
+					if (value.length > 0)
+					{
+						df = new DateFormatter();
 
-					return new DateFormatter().formatDate(new Date(value), format);
+						if (value === 'now')
+						{
+							return df.formatDate(new Date(), format);
+						}
+
+						return df.formatDate(new Date(value), format);
+					}
 				};
 
 				this.module('request').onload(function(response, event)
@@ -39,13 +43,15 @@
 						if (response.message !== undefined)
 						{
 							message = response.message;
-						}
 
-						if (response.file !== undefined)
-						{
-							if (response.line !== undefined)
+							if (response.filename !== undefined)
 							{
-								message += '<hr>' + response.file + ':' + response.line;
+								message += '<hr>in file: ' + response.filename;
+
+								if (response.fileline !== undefined)
+								{
+									message += '<br>on line: ' + response.fileline;
+								}
 							}
 						}
 					}
@@ -81,7 +87,7 @@
 								notify.setType(notify.TYPE_WARNING);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 400');
+								notify.setTitle('HTTP 400');
 								notify.setMessage(message || 'Плохой или неверный запрос.', true);
 								notify.display();
 							});
@@ -93,7 +99,7 @@
 								notify.setType(notify.TYPE_WARNING);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 403');
+								notify.setTitle('HTTP 403');
 								notify.setMessage(message || 'Недостаточно прав для выполнения запроса.', true);
 								notify.display();
 							});
@@ -105,7 +111,7 @@
 								notify.setType(notify.TYPE_WARNING);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 404');
+								notify.setTitle('HTTP 404');
 								notify.setMessage(message || 'Не удалось найти ресурс, возможно он был удалён ранее.', true);
 								notify.display();
 							});
@@ -117,7 +123,7 @@
 								notify.setType(notify.TYPE_WARNING);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 405');
+								notify.setTitle('HTTP 405');
 								notify.setMessage(message || 'Метод не поддерживается контроллером или сервером.', true);
 								notify.display();
 							});
@@ -129,7 +135,7 @@
 								notify.setType(notify.TYPE_WARNING);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 413');
+								notify.setTitle('HTTP 413');
 								notify.setMessage(message || 'Сервер отвергнул запрос т.к. запрос оказался слишком большой.', true);
 								notify.display();
 							});
@@ -141,7 +147,7 @@
 								notify.setType(notify.TYPE_WARNING);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 414');
+								notify.setTitle('HTTP 414');
 								notify.setMessage(message || 'Сервер отвергнул запрос т.к. URI слишком длинный.', true);
 								notify.display();
 							});
@@ -153,7 +159,7 @@
 								notify.setType(notify.TYPE_WARNING);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 415');
+								notify.setTitle('HTTP 415');
 								notify.setMessage(message || 'Тип загружаемого файла не поддерживается.', true);
 								notify.display();
 							});
@@ -165,7 +171,7 @@
 								notify.setType(notify.TYPE_WARNING);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 423');
+								notify.setTitle('HTTP 423');
 								notify.setMessage(message || 'Ресурс временно заблокирован.', true);
 								notify.display();
 							});
@@ -177,7 +183,7 @@
 								notify.setType(notify.TYPE_ERROR);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 500');
+								notify.setTitle('HTTP 500');
 								notify.setMessage(message || 'На сервере произошёл технический сбой.', true);
 								notify.display();
 							});
@@ -189,7 +195,7 @@
 								notify.setType(notify.TYPE_ERROR);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 503');
+								notify.setTitle('HTTP 503');
 								notify.setMessage(message || 'Не удалось выполнить операцию по техническим причинам.', true);
 								notify.display();
 							});
@@ -201,7 +207,7 @@
 								notify.setType(notify.TYPE_ERROR);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка 504');
+								notify.setTitle('HTTP 504');
 								notify.setMessage(message || 'Сервер не успел обработать запрос за отведённое ему время, попробуйте выполнить действие ещё раз.', true);
 								notify.display();
 							});
@@ -213,7 +219,7 @@
 								notify.setType(notify.TYPE_ERROR);
 								notify.setPosition(notify.POSITION_TOP_RIGHT);
 								notify.setLifetime(-1);
-								notify.setTitle('HTTP ошибка ' + this.status);
+								notify.setTitle('HTTP ' + this.status);
 								notify.setMessage(message || 'Uncaught HTTP code...', true);
 								notify.display();
 							});

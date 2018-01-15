@@ -442,14 +442,14 @@ class User extends BaseUser
 
 			if ($context->getRoot()->isMe()) {
 				if ($context->getRoot()->isColumnModified(UserTableMap::COL_ROLE)) {
-					$context->addViolation(fenric()->t('user', 'validation.error.role.permission'));
+					$context->addViolation(__('user', 'validation.error.role.permission'));
 					return false;
 				}
 			}
 
 			if ($context->getRoot()->getRole()) {
 				if (! in_array($context->getRoot()->getRole(), $roles, true)) {
-					$context->addViolation(fenric()->t('user', 'validation.error.role.unknown'));
+					$context->addViolation(__('user', 'validation.error.role.unknown'));
 					return false;
 				}
 			}
@@ -459,16 +459,16 @@ class User extends BaseUser
 		{
 			if ($context->getRoot()->isColumnModified(UserTableMap::COL_PASSWORD)) {
 				if (stripos($context->getRoot()->getPassword(), strstr($context->getRoot()->getEmail(), '@', true)) !== false) {
-					$context->addViolation(fenric()->t('user', 'validation.error.password.have.in.email'));
+					$context->addViolation(__('user', 'validation.error.password.have.in.email'));
 					return false;
 				}
 				if (stripos($context->getRoot()->getPassword(), $context->getRoot()->getUsername()) !== false) {
-					$context->addViolation(fenric()->t('user', 'validation.error.password.have.in.username'));
+					$context->addViolation(__('user', 'validation.error.password.have.in.username'));
 					return false;
 				}
 				if ($context->getRoot()->hasVirtualColumn('password_confirmation')) {
 					if (strcmp($context->getRoot()->getPassword(), $context->getRoot()->getVirtualColumn('password_confirmation')) !== 0) {
-						$context->addViolation(fenric()->t('user', 'validation.error.password.comparison'));
+						$context->addViolation(__('user', 'validation.error.password.comparison'));
 						return false;
 					}
 				}
@@ -479,7 +479,7 @@ class User extends BaseUser
 		{
 			if ($context->getRoot()->getGender()) {
 				if (! preg_match('/^(?:male|female)$/', $context->getRoot()->getGender())) {
-					$context->addViolation(fenric()->t('user', 'validation.error.gender.invalid'));
+					$context->addViolation(__('user', 'validation.error.gender.invalid'));
 					return false;
 				}
 			}
@@ -489,11 +489,11 @@ class User extends BaseUser
 		{
 			if ($context->getRoot()->getFirstname()) {
 				if (mb_strlen($context->getRoot()->getFirstname(), 'utf-8') > 64) {
-					$context->addViolation(fenric()->t('user', 'validation.error.firstname.length'));
+					$context->addViolation(__('user', 'validation.error.firstname.length'));
 					return false;
 				}
 				if (! preg_match('/^[\p{L}]+$/u', $context->getRoot()->getFirstname())) {
-					$context->addViolation(fenric()->t('user', 'validation.error.firstname.characters'));
+					$context->addViolation(__('user', 'validation.error.firstname.characters'));
 					return false;
 				}
 			}
@@ -503,11 +503,11 @@ class User extends BaseUser
 		{
 			if ($context->getRoot()->getLastname()) {
 				if (mb_strlen($context->getRoot()->getLastname(), 'utf-8') > 64) {
-					$context->addViolation(fenric()->t('user', 'validation.error.lastname.length'));
+					$context->addViolation(__('user', 'validation.error.lastname.length'));
 					return false;
 				}
 				if (! preg_match('/^[\p{L}]+$/u', $context->getRoot()->getLastname())) {
-					$context->addViolation(fenric()->t('user', 'validation.error.lastname.characters'));
+					$context->addViolation(__('user', 'validation.error.lastname.characters'));
 					return false;
 				}
 			}
@@ -516,7 +516,7 @@ class User extends BaseUser
 		$metadata->addPropertyConstraint('ban_from', new Callback(function($value, ExecutionContextInterface $context, $payload)
 		{
 			if (! empty($value) && $context->getRoot()->isMe() && $context->getRoot()->isColumnModified(UserTableMap::COL_BAN_FROM)) {
-				$context->addViolation(fenric()->t('user', 'validation.error.ban.permission'));
+				$context->addViolation(__('user', 'validation.error.ban.permission'));
 				return false;
 			}
 		}));
@@ -524,7 +524,7 @@ class User extends BaseUser
 		$metadata->addPropertyConstraint('ban_until', new Callback(function($value, ExecutionContextInterface $context, $payload)
 		{
 			if (! empty($value) && $context->getRoot()->isMe() && $context->getRoot()->isColumnModified(UserTableMap::COL_BAN_UNTIL)) {
-				$context->addViolation(fenric()->t('user', 'validation.error.ban.permission'));
+				$context->addViolation(__('user', 'validation.error.ban.permission'));
 				return false;
 			}
 		}));
@@ -532,7 +532,7 @@ class User extends BaseUser
 		$metadata->addPropertyConstraint('ban_reason', new Callback(function($value, ExecutionContextInterface $context, $payload)
 		{
 			if (! empty($value) && $context->getRoot()->isMe() && $context->getRoot()->isColumnModified(UserTableMap::COL_BAN_REASON)) {
-				$context->addViolation(fenric()->t('user', 'validation.error.ban.permission'));
+				$context->addViolation(__('user', 'validation.error.ban.permission'));
 				return false;
 			}
 		}));

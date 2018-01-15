@@ -189,7 +189,7 @@ class ApiSection extends CRUD
 	 */
 	protected function actionUnloadViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('query')
 				->select(SectionTableMap::COL_ID)
 				->select(SectionTableMap::COL_HEADER)
@@ -205,7 +205,7 @@ class ApiSection extends CRUD
 	{
 		parent::create(new SectionField(), [
 			SectionFieldTableMap::COL_SECTION_ID => $this->request->parameters->get('id'),
-			SectionFieldTableMap::COL_FIELD_ID => $this->request->getBody(),
+			SectionFieldTableMap::COL_FIELD_ID => $this->request->body(),
 		]);
 	}
 

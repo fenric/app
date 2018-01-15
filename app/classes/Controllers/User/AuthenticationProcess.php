@@ -28,7 +28,7 @@ class AuthenticationProcess extends Abstractable
 			}
 		}
 
-		$this->response->setStatus(400);
+		$this->response->status(\Fenric\Response::STATUS_400);
 		return false;
 	}
 
@@ -50,7 +50,7 @@ class AuthenticationProcess extends Abstractable
 			]);
 
 			if ($this->request->isAjax()) {
-				$this->response->setJsonContent([
+				$this->response->json([
 					'success' => true,
 				]);
 				return;
@@ -72,18 +72,18 @@ class AuthenticationProcess extends Abstractable
 			}
 
 			if ($this->request->isAjax()) {
-				$this->response->setJsonContent([
+				$this->response->json([
 					'success' => false,
 					'message' => $error->getMessage(),
 				]);
 				return;
 			}
 
-			fenric('session')->set('user.authentication.error',
+			$this->request->session->set('user.authentication.error',
 				$error->getMessage()
 			);
 
-			fenric('session')->set('user.authentication.username',
+			$this->request->session->set('user.authentication.username',
 				$this->request->post->get('username')
 			);
 

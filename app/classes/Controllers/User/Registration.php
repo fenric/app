@@ -31,24 +31,24 @@ class Registration extends Abstractable
 	public function render() : void
 	{
 		if (! fenric('config::user')->get('registration.enabled', false)) {
-			$this->response->setContent(
+			$this->response->content(
 				fenric('view::user/registration.disabled')->render()
 			);
 			return;
 		}
 
-		if (fenric('session')->remove('user.registration.complete')) {
-			$this->response->setContent(
+		if ($this->request->session->remove('user.registration.complete')) {
+			$this->response->content(
 				fenric('view::user/registration.complete')->render()
 			);
 			return;
 		}
 
-		$this->response->setContent(
+		$this->response->content(
 			fenric('view::user/registration', [
-				'registrationEmail' => fenric('session')->remove('user.registration.email'),
-				'registrationUsername' => fenric('session')->remove('user.registration.username'),
-				'registrationErrors' => fenric('session')->remove('user.registration.errors'),
+				'registrationEmail' => $this->request->session->remove('user.registration.email'),
+				'registrationUsername' => $this->request->session->remove('user.registration.username'),
+				'registrationErrors' => $this->request->session->remove('user.registration.errors'),
 			])->render()
 		);
 	}

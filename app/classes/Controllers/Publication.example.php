@@ -25,7 +25,7 @@ class Publication extends Abstractable
 
 		if (! PublicationQuery::checkNestingByCode($publication, $section))
 		{
-			$this->response->setStatus(404);
+			$this->response->status(\Fenric\Response::STATUS_404);
 
 			return false;
 		}
@@ -36,7 +36,7 @@ class Publication extends Abstractable
 			{
 				if (! PublicationQuery::checkModifiedByCode($publication, $timestamp))
 				{
-					$this->response->setStatus(304);
+					$this->response->status(\Fenric\Response::STATUS_304);
 
 					return false;
 				}
@@ -62,9 +62,9 @@ class Publication extends Abstractable
 			$view = fenric(sprintf('view::sections/%s/publication', $publication->getSection()->getCode()));
 		}
 
-		$this->response->setHeader(sprintf('Last-Modified: %s', $publication->getUpdatedAt()->format('D, d M Y H:i:s T')));
+		$this->response->header('Last-Modified', $publication->getUpdatedAt()->format('D, d M Y H:i:s T'));
 
-		$this->response->setContent($view->render([
+		$this->response->content($view->render([
 			'publication' => $publication,
 		]));
 
@@ -76,13 +76,13 @@ class Publication extends Abstractable
 	 */
 	protected function hit($publication) : void
 	{
-		$hits = fenric('session')->get('publication.hits');
+		$hits = $this->request->session->get('publication.hits');
 
 		if (empty($hits[$publication->getId()]))
 		{
 			$hits[$publication->getId()] = time();
 
-			fenric('session')->set('publication.hits', $hits);
+			$this->request->session->set('publication.hits', $hits);
 
 			$update[PublicationTableMap::COL_HITS] = $publication->getHits() + 1;
 

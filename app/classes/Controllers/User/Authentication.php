@@ -31,18 +31,14 @@ class Authentication extends Abstractable
 	public function render() : void
 	{
 		if (! fenric('config::user')->get('authentication.enabled', false)) {
-			$this->response->setContent(
-				fenric('view::user/authentication.disabled')->render()
-			);
+			$this->response->view('user/authentication.disabled');
 			return;
 		}
 
-		$this->response->setContent(
-			fenric('view::user/authentication', [
-				'authenticationError' => fenric('session')->remove('user.authentication.error'),
-				'authenticationUsername' => fenric('session')->remove('user.authentication.username'),
-				'registrationConfirm' => fenric('session')->remove('user.registration.confirm'),
-			])->render()
-		);
+		$this->response->view('user/authentication', [
+			'authenticationError' => $this->request->session->remove('user.authentication.error'),
+			'authenticationUsername' => $this->request->session->remove('user.authentication.username'),
+			'registrationConfirm' => $this->request->session->remove('user.registration.confirm'),
+		]);
 	}
 }

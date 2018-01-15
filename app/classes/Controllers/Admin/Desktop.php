@@ -8,9 +8,9 @@ namespace Fenric\Controllers\Admin;
 use Fenric\Controllers\Abstractable\Abstractable;
 
 /**
- * Index
+ * Desktop
  */
-class Index extends Abstractable
+class Desktop extends Abstractable
 {
 
 	/**
@@ -23,8 +23,6 @@ class Index extends Abstractable
 	 */
 	public function render() : void
 	{
-		$this->response->setContent(
-			fenric('view::admin/desktop')->render()
-		);
+		$this->response->view('admin/desktop');
 	}
 }

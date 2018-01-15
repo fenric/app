@@ -152,7 +152,7 @@ class ApiTag extends CRUD
 	 */
 	protected function actionUnloadViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('query')
 				->select(TagTableMap::COL_ID)
 				->select(TagTableMap::COL_HEADER)

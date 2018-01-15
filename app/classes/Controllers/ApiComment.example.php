@@ -43,7 +43,7 @@ class ApiComment extends CRUD
 	{
 		if (! fenric('user')->isLogged())
 		{
-			$this->response->setStatus(401);
+			$this->response->status(\Fenric\Response::STATUS_401);
 
 			return;
 		}
@@ -62,7 +62,7 @@ class ApiComment extends CRUD
 	{
 		if (! fenric('user')->isLogged())
 		{
-			$this->response->setStatus(401);
+			$this->response->status(\Fenric\Response::STATUS_401);
 
 			return;
 		}

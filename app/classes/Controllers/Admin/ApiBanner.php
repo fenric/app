@@ -127,7 +127,7 @@ class ApiBanner extends CRUD
 	 */
 	protected function actionUnloadClientsViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('query')
 				->select(BannerClientTableMap::COL_ID)
 				->select(BannerClientTableMap::COL_CONTACT_NAME)
@@ -236,7 +236,7 @@ class ApiBanner extends CRUD
 	 */
 	protected function actionUnloadGroupsViaGET() : void
 	{
-		$this->response->setJsonContent(
+		$this->response->json(
 			fenric('query')
 				->select(BannerGroupTableMap::COL_ID)
 				->select(BannerGroupTableMap::COL_TITLE)

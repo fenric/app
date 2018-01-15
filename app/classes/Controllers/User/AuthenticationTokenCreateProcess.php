@@ -26,7 +26,7 @@ class AuthenticationTokenCreateProcess extends Abstractable
 			}
 		}
 
-		$this->response->setStatus(400);
+		$this->response->status(\Fenric\Response::STATUS_400);
 		return false;
 	}
 
@@ -59,23 +59,23 @@ class AuthenticationTokenCreateProcess extends Abstractable
 
 					if ($foundUser->save())
 					{
-						fenric('session')->set('user.authentication.token.create.complete', true);
+						$this->request->session->set('user.authentication.token.create.complete', true);
 						fenric('event::user.authentication.token.created')->run([$foundUser]);
 					}
-					else fenric('session')->set('user.authentication.token.create.error',
-						fenric()->t('user', 'authentication.token.create.error.save')
+					else $this->request->session->set('user.authentication.token.create.error',
+						__('user', 'authentication.token.create.error.save')
 					);
 				}
-				else fenric('session')->set('user.authentication.token.create.error',
-					fenric()->t('user', 'authentication.token.create.error.account.blocked')
+				else $this->request->session->set('user.authentication.token.create.error',
+					__('user', 'authentication.token.create.error.account.blocked')
 				);
 			}
-			else fenric('session')->set('user.authentication.token.create.error',
-				fenric()->t('user', 'authentication.token.create.error.account.unverified')
+			else $this->request->session->set('user.authentication.token.create.error',
+				__('user', 'authentication.token.create.error.account.unverified')
 			);
 		}
-		else fenric('session')->set('user.authentication.token.create.error',
-			fenric()->t('user', 'authentication.token.create.error.email.undefined')
+		else $this->request->session->set('user.authentication.token.create.error',
+			__('user', 'authentication.token.create.error.email.undefined')
 		);
 
 		$this->backward();

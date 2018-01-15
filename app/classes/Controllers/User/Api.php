@@ -6,12 +6,12 @@ namespace Fenric\Controllers\User;
  * Import classes
  */
 use Fenric\Upload;
-use Fenric\Controllers\Abstractable\Actionable;
+use Fenric\Controllers\Abstractable\Abstractable as Controller;
 
 /**
  * Api
  */
-class Api extends Actionable
+class Api extends Controller
 {
 
 	/**
@@ -35,13 +35,13 @@ class Api extends Actionable
 	{
 		if (! fenric('user')->haveAccessToUploadImages())
 		{
-			$this->response->setStatus(403)->setJsonContent([
+			$this->response->status(\Fenric\Response::STATUS_403)->json([
 				'success' => false,
 				'message' => 'Недостаточно прав.',
 			]);
 		}
 
-		$upload = new Upload($this->request->getBody());
+		$upload = new Upload($this->request->body());
 
 		try
 		{
@@ -54,14 +54,16 @@ class Api extends Actionable
 				$json['source'] = basename($file['source']);
 			}
 
-			$this->response->setJsonContent($json);
+			$this->response->json($json);
 		}
 
 		catch (\RuntimeException $e)
 		{
-			$this->response->setStatus($e->getCode());
+			$this->response->status(constant(
+				sprintf('\\Fenric\\Response::STATUS_%d', $e->getCode())
+			));
 
-			$this->response->setJsonContent([
+			$this->response->json([
 				'success' => false,
 				'message' => $e->getMessage(),
 			]);
@@ -75,19 +77,19 @@ class Api extends Actionable
 	{
 		if (! fenric('user')->haveAccessToUploadAudios())
 		{
-			$this->response->setStatus(403)->setJsonContent([
+			$this->response->status(\Fenric\Response::STATUS_403)->json([
 				'success' => false,
 				'message' => 'Недостаточно прав.',
 			]);
 		}
 
-		$upload = new Upload($this->request->getBody());
+		$upload = new Upload($this->request->body());
 
 		try
 		{
 			$file = $upload->asAudio();
 
-			$this->response->setJsonContent([
+			$this->response->json([
 				'file' => basename($file['location']),
 				'cover' => basename($file['cover']),
 			]);
@@ -95,9 +97,11 @@ class Api extends Actionable
 
 		catch (\RuntimeException $e)
 		{
-			$this->response->setStatus($e->getCode());
+			$this->response->status(constant(
+				sprintf('\\Fenric\\Response::STATUS_%d', $e->getCode())
+			));
 
-			$this->response->setJsonContent([
+			$this->response->json([
 				'success' => false,
 				'message' => $e->getMessage(),
 			]);
@@ -111,19 +115,19 @@ class Api extends Actionable
 	{
 		if (! fenric('user')->haveAccessToUploadVideos())
 		{
-			$this->response->setStatus(403)->setJsonContent([
+			$this->response->status(\Fenric\Response::STATUS_403)->json([
 				'success' => false,
 				'message' => 'Недостаточно прав.',
 			]);
 		}
 
-		$upload = new Upload($this->request->getBody());
+		$upload = new Upload($this->request->body());
 
 		try
 		{
 			$file = $upload->asVideo();
 
-			$this->response->setJsonContent([
+			$this->response->json([
 				'file' => basename($file['location']),
 				'cover' => basename($file['cover']),
 			]);
@@ -131,9 +135,11 @@ class Api extends Actionable
 
 		catch (\RuntimeException $e)
 		{
-			$this->response->setStatus($e->getCode());
+			$this->response->status(constant(
+				sprintf('\\Fenric\\Response::STATUS_%d', $e->getCode())
+			));
 
-			$this->response->setJsonContent([
+			$this->response->json([
 				'success' => false,
 				'message' => $e->getMessage(),
 			]);
@@ -147,19 +153,19 @@ class Api extends Actionable
 	{
 		if (! fenric('user')->haveAccessToUploadPdf())
 		{
-			$this->response->setStatus(403)->setJsonContent([
+			$this->response->status(\Fenric\Response::STATUS_403)->json([
 				'success' => false,
 				'message' => 'Недостаточно прав.',
 			]);
 		}
 
-		$upload = new Upload($this->request->getBody());
+		$upload = new Upload($this->request->body());
 
 		try
 		{
 			$file = $upload->asPdf();
 
-			$this->response->setJsonContent([
+			$this->response->json([
 				'file' => basename($file['location']),
 				'cover' => basename($file['cover']),
 			]);
@@ -167,9 +173,11 @@ class Api extends Actionable
 
 		catch (\RuntimeException $e)
 		{
-			$this->response->setStatus($e->getCode());
+			$this->response->status(constant(
+				sprintf('\\Fenric\\Response::STATUS_%d', $e->getCode())
+			));
 
-			$this->response->setJsonContent([
+			$this->response->json([
 				'success' => false,
 				'message' => $e->getMessage(),
 			]);
@@ -183,7 +191,7 @@ class Api extends Actionable
 	{
 		$this->actionUploadImageViaPUT();
 
-		if ($this->response->getStatus() === 200)
+		if ($this->response->isOk())
 		{
 			$json = json_decode($this->response->getContent(), true);
 

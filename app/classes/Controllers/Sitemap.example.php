@@ -74,7 +74,7 @@ class Sitemap extends Abstractable
 			}
 		}
 
-		$this->response->setHeader('Content-type: text/xml');
-		$this->response->setContent($sitemap->asXML());
+		$this->response->header('Content-Type', 'text/xml; charset=UTF-8');
+		$this->response->content($sitemap->asXML());
 	}
 }

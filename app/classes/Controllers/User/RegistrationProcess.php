@@ -33,7 +33,7 @@ class RegistrationProcess extends Abstractable
 			}
 		}
 
-		$this->response->setStatus(400);
+		$this->response->status(\Fenric\Response::STATUS_400);
 		return false;
 	}
 
@@ -65,28 +65,28 @@ class RegistrationProcess extends Abstractable
 			{
 				if ($user->save())
 				{
-					fenric('session')->set('user.registration.complete', true);
+					$this->request->session->set('user.registration.complete', true);
 
 					$this->backward();
 				}
-				else $errors['*'][] = fenric()->t('user', 'registration.error.save');
+				else $errors['*'][] = __('user', 'registration.error.save');
 			}
-			else $errors['agreement'][] = fenric()->t('user', 'registration.error.rules');
+			else $errors['agreement'][] = __('user', 'registration.error.rules');
 		}
 		else foreach ($user->getValidationFailures() as $failure)
 		{
 			$errors[$failure->getPropertyPath()][] = $failure->getMessage();
 		}
 
-		fenric('session')->set('user.registration.email',
+		$this->request->session->set('user.registration.email',
 			$this->request->post->get('email')
 		);
 
-		fenric('session')->set('user.registration.username',
+		$this->request->session->set('user.registration.username',
 			$this->request->post->get('username')
 		);
 
-		fenric('session')->set('user.registration.errors', $errors);
+		$this->request->session->set('user.registration.errors', $errors);
 
 		$this->backward();
 	}
