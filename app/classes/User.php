@@ -40,8 +40,8 @@ class User
 
 						fenric('query')->update(TableMap::TABLE_NAME, [
 							TableMap::COL_TRACK_AT => new DateTime('now'),
-							TableMap::COL_TRACK_IP => mb_substr(ip(), 0, 255, 'UTF-8'),
-							TableMap::COL_TRACK_URL => mb_substr(url(), 0, 255, 'UTF-8'),
+							TableMap::COL_TRACK_IP => mb_substr(fenric('request')->ip(), 0, 255, 'UTF-8'),
+							TableMap::COL_TRACK_URL => mb_substr(fenric('request')->url(), 0, 255, 'UTF-8'),
 						])
 						->where(TableMap::COL_ID, '=', $this->model->getId())
 						->limit(1)
@@ -148,7 +148,7 @@ class User
 	{
 		$model->setAuthenticationAt(new DateTime('now'));
 
-		$model->setAuthenticationIp(ip());
+		$model->setAuthenticationIp(fenric('request')->ip());
 
 		$model->setAuthenticationKey(fenric('request')->session->getId());
 
