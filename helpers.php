@@ -9,6 +9,22 @@ function __(string $section, string $message, array $context = []) : string
 }
 
 /**
+ * Получение IP клиента
+ */
+function ip()
+{
+	return fenric('request')->ip();
+}
+
+/**
+ * Получение текущего URL
+ */
+function url(array $params = [])
+{
+	return fenric('request')->url($params);
+}
+
+/**
  * Формирование ревизионного адреса статичного файла
  */
 function asset(string $location) : string
