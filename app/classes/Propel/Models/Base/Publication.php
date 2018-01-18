@@ -1599,9 +1599,15 @@ abstract class Publication implements ActiveRecordInterface
             $deleteQuery = ChildPublicationQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.publication.pre.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.publication.post.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)]);
                 $this->setDeleted(true);
             }
         });
@@ -1637,6 +1643,10 @@ abstract class Publication implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.publication.pre.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -1659,6 +1669,10 @@ abstract class Publication implements ActiveRecordInterface
                     }	if (! $this->isColumnModified(PublicationTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.publication.pre.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -1673,15 +1687,25 @@ abstract class Publication implements ActiveRecordInterface
                     if (! $this->isColumnModified(PublicationTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.publication.pre.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
                 if ($isInsert) {
                     $this->postInsert($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.publication.post.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)]);
                 } else {
                     $this->postUpdate($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.publication.post.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)]);
                 }
                 $this->postSave($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.publication.post.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)]);
                 PublicationTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -4751,6 +4775,8 @@ abstract class Publication implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
+        fenric('event::model.publication.validate')->run([func_get_arg(0), \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationTableMap::DATABASE_NAME)]);
+
         $metadata->addPropertyConstraint('section_id', new NotBlank());
         $metadata->addPropertyConstraint('code', new NotBlank());
         $metadata->addPropertyConstraint('code', new Length(array ('max' => 255,)));

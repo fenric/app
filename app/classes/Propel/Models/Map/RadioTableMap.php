@@ -199,6 +199,7 @@ class RadioTableMap extends TableMap
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
             'validate' => array('7897be97-482b-4420-9b9a-d31172ec862b' => array ('column' => 'title','validator' => 'NotBlank',), '7573e120-a0f0-4364-81d7-856161d6d795' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 255,),), '3f6163c2-8202-4181-8e1a-f29ec6b838cc' => array ('column' => 'stream','validator' => 'NotBlank',), '3717161a-6b74-4e40-adec-11186e5dc387' => array ('column' => 'stream','validator' => 'Length','options' => array ('max' => 255,),), '39f9efb7-0c54-461f-878e-403b009a0549' => array ('column' => 'stream','validator' => 'Url',), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
 

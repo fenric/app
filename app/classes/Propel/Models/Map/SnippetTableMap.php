@@ -205,6 +205,7 @@ class SnippetTableMap extends TableMap
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
             'validate' => array('d2bad3f1-85ca-4433-838c-bcea033f8f0b' => array ('column' => 'code','validator' => 'NotBlank',), 'e78b233f-16e7-4129-98f9-c8e5bd520ae7' => array ('column' => 'code','validator' => 'Length','options' => array ('max' => 255,),), 'c3defbdb-8117-4eb5-9382-4a0a5bd139e1' => array ('column' => 'code','validator' => 'Regex','options' => array ('pattern' => '/^[a-zA-Z0-9-]+$/',),), '2f46574b-1252-4807-a2e0-dc0c2861be2b' => array ('column' => 'code','validator' => 'Unique',), '93fadc8e-05f4-4c89-ab4d-e6bd48cafa73' => array ('column' => 'title','validator' => 'NotBlank',), 'cc4c48ec-9470-4299-b26c-982d0c331670' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 255,),), '34e450fc-fb3b-4c4f-a082-dc6f6a892b38' => array ('column' => 'value','validator' => 'NotBlank',), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
 

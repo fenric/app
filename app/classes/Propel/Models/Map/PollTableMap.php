@@ -224,6 +224,7 @@ class PollTableMap extends TableMap
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
             'validate' => array('296e0b77-6202-40ee-90db-d4292fd859e2' => array ('column' => 'code','validator' => 'NotBlank',), '25ee34a4-9a6c-4157-972e-309a52f79604' => array ('column' => 'code','validator' => 'Length','options' => array ('max' => 255,),), '20820086-0d66-42b2-b893-7149271e1c79' => array ('column' => 'code','validator' => 'Regex','options' => array ('pattern' => '/^[a-z0-9-]+$/',),), '24389c91-ca39-4d76-8f98-352146fbaf3f' => array ('column' => 'code','validator' => 'Unique',), '86209d73-e13f-484a-9e9d-7ae4adf97158' => array ('column' => 'title','validator' => 'NotBlank',), '8d226aa2-fe9f-4c7c-a7e9-fe0b244be7ad' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 255,),), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
     /**

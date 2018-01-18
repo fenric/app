@@ -293,6 +293,7 @@ class CommentTableMap extends TableMap
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
             'validate' => array('0451f320-527a-4d09-bdbb-d28a5485ab11' => array ('column' => 'content','validator' => 'NotNull',), '05397fd6-d575-4545-89af-2a2e471513b4' => array ('column' => 'content','validator' => 'NotBlank',), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
     /**

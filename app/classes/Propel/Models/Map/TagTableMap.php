@@ -248,6 +248,7 @@ class TagTableMap extends TableMap
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
             'validate' => array('269881de-eb0a-4c8a-aae9-f842cbb64f27' => array ('column' => 'code','validator' => 'NotBlank',), 'bab9e053-b39e-40f1-9d3e-0f61c95f48b5' => array ('column' => 'code','validator' => 'Length','options' => array ('max' => 255,),), 'd24970a2-4e2e-4335-91f0-e84dbec8e782' => array ('column' => 'code','validator' => 'Regex','options' => array ('pattern' => '/^[a-z0-9-]+$/',),), '56334d18-e8be-4eb1-8a49-36e3471e5d2e' => array ('column' => 'code','validator' => 'Unique',), '5dd01197-843e-48c9-a637-67703bd4c230' => array ('column' => 'header','validator' => 'NotBlank',), 'a8224fe8-8e25-445d-8af4-0d00e361c89f' => array ('column' => 'header','validator' => 'Length','options' => array ('max' => 255,),), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
     /**

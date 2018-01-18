@@ -807,9 +807,15 @@ abstract class BannerGroup implements ActiveRecordInterface
             $deleteQuery = ChildBannerGroupQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.banner.group.pre.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.banner.group.post.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)]);
                 $this->setDeleted(true);
             }
         });
@@ -845,6 +851,10 @@ abstract class BannerGroup implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.banner.group.pre.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -867,6 +877,10 @@ abstract class BannerGroup implements ActiveRecordInterface
                     }	if (! $this->isColumnModified(BannerGroupTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.banner.group.pre.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -881,15 +895,25 @@ abstract class BannerGroup implements ActiveRecordInterface
                     if (! $this->isColumnModified(BannerGroupTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.banner.group.pre.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
                 if ($isInsert) {
                     $this->postInsert($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.banner.group.post.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)]);
                 } else {
                     $this->postUpdate($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.banner.group.post.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)]);
                 }
                 $this->postSave($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.banner.group.post.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)]);
                 BannerGroupTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -2017,6 +2041,8 @@ abstract class BannerGroup implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
+        fenric('event::model.banner.group.validate')->run([func_get_arg(0), \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerGroupTableMap::DATABASE_NAME)]);
+
         $metadata->addPropertyConstraint('code', new NotBlank());
         $metadata->addPropertyConstraint('code', new Length(array ('max' => 255,)));
         $metadata->addPropertyConstraint('code', new Regex(array ('pattern' => '/^[a-z0-9-]+$/',)));

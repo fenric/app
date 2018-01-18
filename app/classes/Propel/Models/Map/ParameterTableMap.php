@@ -158,6 +158,7 @@ class ParameterTableMap extends TableMap
     {
         return array(
             'validate' => array('4a2047ea-be11-4c03-84a9-07021b067553' => array ('column' => 'code','validator' => 'NotBlank',), 'de986117-f647-419e-ba21-c306b030b93d' => array ('column' => 'code','validator' => 'Length','options' => array ('max' => 255,),), '430c3797-5c66-4fd7-aa47-5e2d70fb4bbe' => array ('column' => 'code','validator' => 'Regex','options' => array ('pattern' => '/^[_a-zA-Z0-9-]+$/',),), '9b759ea4-4393-4de5-aa2d-09d70c5826fb' => array ('column' => 'code','validator' => 'Unique',), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
 

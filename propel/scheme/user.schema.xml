@@ -104,6 +104,8 @@
 			<parameter name="6340bbf4-4754-47b8-bb7d-14e569f6ef77" value="{column: password, validator: NotBlank, options: {message: 'Пароль не может быть пустым.'}}" />
 			<parameter name="bc8f3a10-55a1-4081-8112-300abdd78a1d" value="{column: password, validator: Length, options: {min: 6, max: 256, minMessage: 'Минимально возможная длина пароля 6 символов.', maxMessage: 'Максимально допустимая длина пароля 256 символов.'}}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="user_favorite">
@@ -135,5 +137,7 @@
 			<parameter name="Charset" value="utf8" />
 			<parameter name="Collate" value="utf8_unicode_ci" />
 		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 </database>

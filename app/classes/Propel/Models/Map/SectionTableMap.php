@@ -261,6 +261,7 @@ class SectionTableMap extends TableMap
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
             'validate' => array('676a1cf1-6709-4a19-b9f6-d01d0fd08754' => array ('column' => 'code','validator' => 'NotBlank',), '49017c8c-c622-487d-b07f-de57a123ee57' => array ('column' => 'code','validator' => 'Length','options' => array ('max' => 255,),), '66306ec4-3d80-418d-96a8-21a8b23a2ec6' => array ('column' => 'code','validator' => 'Regex','options' => array ('pattern' => '/^[a-z0-9-]+$/',),), 'f682b300-404a-4360-ab9b-f95319e88778' => array ('column' => 'code','validator' => 'Unique',), 'e181d836-1742-42ec-9017-ee98b44da1f4' => array ('column' => 'header','validator' => 'NotBlank',), 'f271845e-ee03-4fe4-9442-9b695c0470ac' => array ('column' => 'header','validator' => 'Length','options' => array ('max' => 255,),), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
     /**

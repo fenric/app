@@ -989,9 +989,15 @@ abstract class Poll implements ActiveRecordInterface
             $deleteQuery = ChildPollQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.poll.pre.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.poll.post.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)]);
                 $this->setDeleted(true);
             }
         });
@@ -1027,6 +1033,10 @@ abstract class Poll implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.poll.pre.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -1049,6 +1059,10 @@ abstract class Poll implements ActiveRecordInterface
                     }	if (! $this->isColumnModified(PollTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.poll.pre.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -1063,15 +1077,25 @@ abstract class Poll implements ActiveRecordInterface
                     if (! $this->isColumnModified(PollTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.poll.pre.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
                 if ($isInsert) {
                     $this->postInsert($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.poll.post.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)]);
                 } else {
                     $this->postUpdate($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.poll.post.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)]);
                 }
                 $this->postSave($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.poll.post.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)]);
                 PollTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -2246,6 +2270,8 @@ abstract class Poll implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
+        fenric('event::model.poll.validate')->run([func_get_arg(0), \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollTableMap::DATABASE_NAME)]);
+
         $metadata->addPropertyConstraint('code', new NotBlank());
         $metadata->addPropertyConstraint('code', new Length(array ('max' => 255,)));
         $metadata->addPropertyConstraint('code', new Regex(array ('pattern' => '/^[a-z0-9-]+$/',)));

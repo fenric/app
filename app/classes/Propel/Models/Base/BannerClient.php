@@ -847,9 +847,15 @@ abstract class BannerClient implements ActiveRecordInterface
             $deleteQuery = ChildBannerClientQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.banner.client.pre.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.banner.client.post.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)]);
                 $this->setDeleted(true);
             }
         });
@@ -885,6 +891,10 @@ abstract class BannerClient implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.banner.client.pre.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -907,6 +917,10 @@ abstract class BannerClient implements ActiveRecordInterface
                     }	if (! $this->isColumnModified(BannerClientTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.banner.client.pre.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -921,15 +935,25 @@ abstract class BannerClient implements ActiveRecordInterface
                     if (! $this->isColumnModified(BannerClientTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.banner.client.pre.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
                 if ($isInsert) {
                     $this->postInsert($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.banner.client.post.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)]);
                 } else {
                     $this->postUpdate($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.banner.client.post.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)]);
                 }
                 $this->postSave($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.banner.client.post.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)]);
                 BannerClientTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -2078,6 +2102,8 @@ abstract class BannerClient implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
+        fenric('event::model.banner.client.validate')->run([func_get_arg(0), \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(BannerClientTableMap::DATABASE_NAME)]);
+
         $metadata->addPropertyConstraint('contact_name', new NotBlank());
         $metadata->addPropertyConstraint('contact_name', new Length(array ('max' => 255,)));
         $metadata->addPropertyConstraint('contact_email', new NotBlank());

@@ -22,5 +22,7 @@
 			<parameter name="430c3797-5c66-4fd7-aa47-5e2d70fb4bbe" value="{column: code, validator: Regex, options: {pattern: '/^[_a-zA-Z0-9-]+$/'}}" />
 			<parameter name="9b759ea4-4393-4de5-aa2d-09d70c5826fb" value="{column: code, validator: Unique}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 </database>

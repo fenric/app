@@ -64,5 +64,7 @@
 			<parameter name="3717161a-6b74-4e40-adec-11186e5dc387" value="{column: stream, validator: Length, options: {max: 255}}" />
 			<parameter name="39f9efb7-0c54-461f-878e-403b009a0549" value="{column: stream, validator: Url}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 </database>

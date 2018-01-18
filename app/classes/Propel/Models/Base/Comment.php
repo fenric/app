@@ -1332,9 +1332,15 @@ abstract class Comment implements ActiveRecordInterface
             $deleteQuery = ChildCommentQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.comment.pre.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.comment.post.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)]);
                 $this->setDeleted(true);
             }
         });
@@ -1370,6 +1376,10 @@ abstract class Comment implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.comment.pre.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -1392,6 +1402,10 @@ abstract class Comment implements ActiveRecordInterface
                     }	if (! $this->isColumnModified(CommentTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.comment.pre.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // Fenric\Propel\Behaviors\Authorable behavior
@@ -1406,15 +1420,25 @@ abstract class Comment implements ActiveRecordInterface
                     if (! $this->isColumnModified(CommentTableMap::COL_UPDATED_AT)) {
                         $this->setUpdatedAt(new \DateTime('now'));
                     }
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.comment.pre.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
                 if ($isInsert) {
                     $this->postInsert($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.comment.post.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)]);
                 } else {
                     $this->postUpdate($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.comment.post.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)]);
                 }
                 $this->postSave($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.comment.post.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)]);
                 CommentTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -3119,6 +3143,8 @@ abstract class Comment implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
+        fenric('event::model.comment.validate')->run([func_get_arg(0), \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(CommentTableMap::DATABASE_NAME)]);
+
         $metadata->addPropertyConstraint('content', new NotNull());
         $metadata->addPropertyConstraint('content', new NotBlank());
     }

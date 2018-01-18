@@ -77,6 +77,8 @@
 			<parameter name="86209d73-e13f-484a-9e9d-7ae4adf97158" value="{column: title, validator: NotBlank}" />
 			<parameter name="8d226aa2-fe9f-4c7c-a7e9-fe0b244be7ad" value="{column: title, validator: Length, options: {max: 255}}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="poll_variant">
@@ -152,6 +154,8 @@
 			<parameter name="818abaed-2418-4b62-9357-d5fa025c02a1" value="{column: title, validator: NotBlank}" />
 			<parameter name="855d54e4-e8bc-427f-9de5-6873ef45db95" value="{column: title, validator: Length, options: {max: 255}}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="poll_vote">
@@ -191,5 +195,7 @@
 			<parameter name="Charset" value="utf8" />
 			<parameter name="Collate" value="utf8_unicode_ci" />
 		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 </database>

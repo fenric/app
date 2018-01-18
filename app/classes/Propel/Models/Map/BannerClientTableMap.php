@@ -212,6 +212,7 @@ class BannerClientTableMap extends TableMap
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
             'validate' => array('4c620812-c2e0-11e7-9e78-bbe4dc2aa351' => array ('column' => 'contact_name','validator' => 'NotBlank',), '4c62edea-c2e0-11e7-b240-73730e8304a9' => array ('column' => 'contact_name','validator' => 'Length','options' => array ('max' => 255,),), '4c636e3c-c2e0-11e7-a7d6-2f53cb3d1b38' => array ('column' => 'contact_email','validator' => 'NotBlank',), '4c63f5dc-c2e0-11e7-9c52-4b0773c3338e' => array ('column' => 'contact_email','validator' => 'Email',), '4c64e992-c2e0-11e7-861c-a3de0e5d9ed7' => array ('column' => 'contact_email','validator' => 'Length','options' => array ('max' => 255,),), '4b07a2bb-245c-4f2b-81cc-56e9725dcda7' => array ('column' => 'contact_email','validator' => 'Unique',), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
     /**

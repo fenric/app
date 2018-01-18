@@ -185,6 +185,7 @@ class SectionFieldTableMap extends TableMap
     {
         return array(
             'validate' => array('f671f3e6-f2db-4e01-85a3-59f171eb4b80' => array ('column' => 'section_id','validator' => 'NotBlank',), 'f7449a7e-c61d-4cb6-a27b-637a5e7552bd' => array ('column' => 'field_id','validator' => 'NotBlank',), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
     /**

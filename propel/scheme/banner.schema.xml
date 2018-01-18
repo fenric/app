@@ -122,6 +122,8 @@
 			<parameter name="1d415ca4-bf5c-11e7-afd6-f751a5797087" value="{column: shows_limit, validator: Range, options: {min: 1}}" />
 			<parameter name="1d42490c-bf5c-11e7-8e24-c7aeabc5ebe1" value="{column: clicks_limit, validator: Range, options: {min: 1}}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="banner_group">
@@ -192,6 +194,8 @@
 			<parameter name="1d4d0964-bf5c-11e7-bbde-7fae13bc21c4" value="{column: title, validator: NotBlank}" />
 			<parameter name="1d4c3c00-bf5c-11e7-bd97-9348d134984b" value="{column: title, validator: Length, options: {max: 255}}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="banner_client">
@@ -264,5 +268,7 @@
 			<parameter name="4c64e992-c2e0-11e7-861c-a3de0e5d9ed7" value="{column: contact_email, validator: Length, options: {max: 255}}" />
 			<parameter name="4b07a2bb-245c-4f2b-81cc-56e9725dcda7" value="{column: contact_email, validator: Unique}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 </database>

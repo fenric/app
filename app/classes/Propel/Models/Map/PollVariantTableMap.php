@@ -219,6 +219,7 @@ class PollVariantTableMap extends TableMap
             'Fenric\Propel\Behaviors\Authorable' => array('create_enable' => 'true', 'create_column' => 'created_by', 'update_enable' => 'true', 'update_column' => 'updated_by', ),
             'Fenric\Propel\Behaviors\Timestampable' => array('create_enable' => 'true', 'create_column' => 'created_at', 'update_enable' => 'true', 'update_column' => 'updated_at', ),
             'validate' => array('818abaed-2418-4b62-9357-d5fa025c02a1' => array ('column' => 'title','validator' => 'NotBlank',), '855d54e4-e8bc-427f-9de5-6873ef45db95' => array ('column' => 'title','validator' => 'Length','options' => array ('max' => 255,),), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
     /**

@@ -557,9 +557,15 @@ abstract class PublicationRelation implements ActiveRecordInterface
             $deleteQuery = ChildPublicationRelationQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.publication.relation.pre.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationRelationTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.publication.relation.post.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationRelationTableMap::DATABASE_NAME)]);
                 $this->setDeleted(true);
             }
         });
@@ -595,19 +601,37 @@ abstract class PublicationRelation implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.publication.relation.pre.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationRelationTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.publication.relation.pre.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationRelationTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.publication.relation.pre.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationRelationTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
                 if ($isInsert) {
                     $this->postInsert($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.publication.relation.post.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationRelationTableMap::DATABASE_NAME)]);
                 } else {
                     $this->postUpdate($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.publication.relation.post.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationRelationTableMap::DATABASE_NAME)]);
                 }
                 $this->postSave($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.publication.relation.post.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PublicationRelationTableMap::DATABASE_NAME)]);
                 PublicationRelationTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;

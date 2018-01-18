@@ -208,6 +208,7 @@ class PublicationFieldTableMap extends TableMap
     {
         return array(
             'validate' => array('1d842519-e5cd-4eb1-bba5-92dac0f8a837' => array ('column' => 'publication_id','validator' => 'NotBlank',), '2a94a5a9-a00f-4c44-8b21-75c0f7fd9aa5' => array ('column' => 'section_field_id','validator' => 'NotBlank',), ),
+            'Fenric\Propel\Behaviors\Eventable' => array(),
         );
     } // getBehaviors()
 

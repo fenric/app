@@ -72,5 +72,7 @@
 
 			<parameter name="34e450fc-fb3b-4c4f-a082-dc6f6a892b38" value="{column: value, validator: NotBlank}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 </database>

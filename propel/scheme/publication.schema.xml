@@ -78,6 +78,8 @@
 			<parameter name="e181d836-1742-42ec-9017-ee98b44da1f4" value="{column: header, validator: NotBlank}" />
 			<parameter name="f271845e-ee03-4fe4-9442-9b695c0470ac" value="{column: header, validator: Length, options: {max: 255}}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="section_field">
@@ -120,6 +122,8 @@
 			<parameter name="f671f3e6-f2db-4e01-85a3-59f171eb4b80" value="{column: section_id, validator: NotBlank}" />
 			<parameter name="f7449a7e-c61d-4cb6-a27b-637a5e7552bd" value="{column: field_id, validator: NotBlank}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="publication">
@@ -237,6 +241,8 @@
 
 			<parameter name="4c2760cf-8773-4747-a3e6-52f9fd5d9e60" value="{column: hide_at, validator: Date}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="publication_field">
@@ -300,6 +306,8 @@
 			<parameter name="1d842519-e5cd-4eb1-bba5-92dac0f8a837" value="{column: publication_id, validator: NotBlank}" />
 			<parameter name="2a94a5a9-a00f-4c44-8b21-75c0f7fd9aa5" value="{column: section_field_id, validator: NotBlank}" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="publication_photo">
@@ -368,6 +376,8 @@
 			<parameter name="create_column" value="created_at" />
 			<parameter name="update_column" value="updated_at" />
 		</behavior>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="publication_relation">
@@ -394,6 +404,8 @@
 			<parameter name="Charset" value="utf8" />
 			<parameter name="Collate" value="utf8_unicode_ci" />
 		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 
 	<table name="publication_tag">
@@ -425,5 +437,7 @@
 			<parameter name="Charset" value="utf8" />
 			<parameter name="Collate" value="utf8_unicode_ci" />
 		</vendor>
+
+		<behavior name="Fenric\Propel\Behaviors\Eventable"></behavior>
 	</table>
 </database>

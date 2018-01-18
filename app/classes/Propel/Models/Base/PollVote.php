@@ -772,9 +772,15 @@ abstract class PollVote implements ActiveRecordInterface
             $deleteQuery = ChildPollVoteQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.poll.vote.pre.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollVoteTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.poll.vote.post.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollVoteTableMap::DATABASE_NAME)]);
                 $this->setDeleted(true);
             }
         });
@@ -810,19 +816,37 @@ abstract class PollVote implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.poll.vote.pre.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollVoteTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.poll.vote.pre.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollVoteTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.poll.vote.pre.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollVoteTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
                 if ($isInsert) {
                     $this->postInsert($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.poll.vote.post.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollVoteTableMap::DATABASE_NAME)]);
                 } else {
                     $this->postUpdate($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.poll.vote.post.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollVoteTableMap::DATABASE_NAME)]);
                 }
                 $this->postSave($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.poll.vote.post.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(PollVoteTableMap::DATABASE_NAME)]);
                 PollVoteTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;

@@ -676,9 +676,15 @@ abstract class SectionField implements ActiveRecordInterface
             $deleteQuery = ChildSectionFieldQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.section.field.pre.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.section.field.post.delete')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)]);
                 $this->setDeleted(true);
             }
         });
@@ -714,19 +720,37 @@ abstract class SectionField implements ActiveRecordInterface
         return $con->transaction(function () use ($con) {
             $ret = $this->preSave($con);
             $isInsert = $this->isNew();
+            // Fenric\Propel\Behaviors\Eventable behavior
+            if (! fenric('event::model.section.field.pre.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)])) {
+                return 0;
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.section.field.pre.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                if (! fenric('event::model.section.field.pre.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)])) {
+                    return 0;
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
                 if ($isInsert) {
                     $this->postInsert($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.section.field.post.insert')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)]);
                 } else {
                     $this->postUpdate($con);
+                    // Fenric\Propel\Behaviors\Eventable behavior
+                    fenric('event::model.section.field.post.update')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)]);
                 }
                 $this->postSave($con);
+                // Fenric\Propel\Behaviors\Eventable behavior
+                fenric('event::model.section.field.post.save')->run([$this, \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)]);
                 SectionFieldTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -1726,6 +1750,8 @@ abstract class SectionField implements ActiveRecordInterface
      */
     static public function loadValidatorMetadata(ClassMetadata $metadata)
     {
+        fenric('event::model.section.field.validate')->run([func_get_arg(0), \Propel\Runtime\Propel::getServiceContainer()->getWriteConnection(SectionFieldTableMap::DATABASE_NAME)]);
+
         $metadata->addPropertyConstraint('section_id', new NotBlank());
         $metadata->addPropertyConstraint('field_id', new NotBlank());
     }
