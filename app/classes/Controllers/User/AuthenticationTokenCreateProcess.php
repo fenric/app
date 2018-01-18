@@ -20,13 +20,20 @@ class AuthenticationTokenCreateProcess extends Abstractable
 	 */
 	public function preInit() : bool
 	{
-		if (fenric('user')->isGuest()) {
-			if (is_string($this->request->post->get('email'))) {
+		$email = $this->request->post->get('email');
+
+		if (fenric('user')->isGuest())
+		{
+			if (is_string($email))
+			{
 				return true;
 			}
 		}
 
-		$this->response->status(\Fenric\Response::STATUS_400);
+		$this->response->status(
+			\Fenric\Response::STATUS_400
+		);
+
 		return false;
 	}
 
@@ -54,13 +61,14 @@ class AuthenticationTokenCreateProcess extends Abstractable
 						new \DateTime('now')
 					);
 					$foundUser->setAuthenticationTokenIp(
-						$this->request->environment->get('REMOTE_ADDR', '127.0.0.1')
+						$this->request->ip()
 					);
 
 					if ($foundUser->save())
 					{
 						$this->request->session->set('user.authentication.token.create.complete', true);
-						fenric('event::user.authentication.token.created')->run([$foundUser]);
+
+						fenric('event::model.user.token.create')->run([$foundUser]);
 					}
 					else $this->request->session->set('user.authentication.token.create.error',
 						__('user', 'authentication.token.create.error.save')
