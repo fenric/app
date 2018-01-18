@@ -2,7 +2,7 @@
 
 $options = [];
 
-// GIT репозиторий для получения обновлений
 $options['repository'] = 'https://github.com/fenric/cms.git';
+$options['branch'] = 'development';
 
 return $options;

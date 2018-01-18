@@ -33,7 +33,7 @@ class Update extends Abstractable
 		}
 
 		if (is_executable(fenric('config::environments')->get('git'))) {
-			$content .= $this->execute(fenric('/'), fenric('config::environments')->get('git') . ' pull ' . fenric('config::app')->get('repository') . ' master');
+			$content .= $this->execute(fenric('/'), fenric('config::environments')->get('git') . ' pull ' . fenric('config::app')->get('repository') . ' ' . fenric('config::app')->get('branch'));
 			$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 		}
 
