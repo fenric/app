@@ -6,12 +6,12 @@ namespace Fenric\Controllers\User;
  * Import classes
  */
 use Fenric\Upload;
-use Fenric\Controllers\Abstractable\Abstractable as Controller;
+use Fenric\Controllers\Abstractable\Actionable;
 
 /**
  * Api
  */
-class Api extends Controller
+class Api extends Actionable
 {
 
 	/**
