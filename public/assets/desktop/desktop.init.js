@@ -44,13 +44,13 @@
 						{
 							message = response.message;
 
-							if (response.filename !== undefined)
+							if (response.errfile !== undefined)
 							{
-								message += '<hr>in file: ' + response.filename;
+								message += '<hr>in file: ' + response.errfile;
 
-								if (response.fileline !== undefined)
+								if (response.errline !== undefined)
 								{
-									message += '<br>on line: ' + response.fileline;
+									message += '<br>on line: ' + response.errline;
 								}
 							}
 						}
