@@ -1,72 +1,122 @@
 <?php
 
+// Шаблоны параметров маршрутов
+$this->pattern('id', '[1-9][0-9]{0,10}');
+$this->pattern('action', '[a-z][a-z0-9-]*');
+
+// Главная страница сайта
 $this->home('Home');
 
-$this->get('/admin(/)', 'Admin\Desktop');
-$this->get('/admin/update(/)', 'Admin\Update');
+// Панель управления сайтом
+$this->group(function()
+{
+	$this->prefix('/admin');
+	$this->namespace('Admin\\');
 
-$this->any('/admin/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\Api');
+	// Рабочий стол
+	$this->get('(/)', 'Desktop');
 
-$this->crud('/admin/api/user/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiUser');
-$this->crud('/admin/api/user/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiUser');
+	// Обновление проекта (deploy)
+	$this->get('/update(/)', 'Update');
 
-$this->crud('/admin/api/section/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiSection');
-$this->crud('/admin/api/section/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiSection');
+	// API панели управления сайтом
+	$this->group(function()
+	{
+		$this->prefix('/api');
 
-$this->crud('/admin/api/publication/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiPublication');
-$this->crud('/admin/api/publication/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiPublication');
+		// Основное API панели управления сайтом
+		$this->any('/<action>/(<id>/)', 'Api');
 
-$this->crud('/admin/api/tag/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiTag');
-$this->crud('/admin/api/tag/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiTag');
+		// API для управления пользователями
+		$this->any('/user/<id>/<action>/', 'ApiUser');
+		$this->any('/user/<action>/(<id>/)', 'ApiUser');
 
-$this->crud('/admin/api/field/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiField');
-$this->crud('/admin/api/field/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiField');
+		// API для управления разделами
+		$this->any('/section/<id>/<action>/', 'ApiSection');
+		$this->any('/section/<action>/(<id>/)', 'ApiSection');
 
-$this->crud('/admin/api/snippet/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiSnippet');
-$this->crud('/admin/api/snippet/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiSnippet');
+		// API для управления публикациями
+		$this->any('/publication/<id>/<action>/', 'ApiPublication');
+		$this->any('/publication/<action>/(<id>/)', 'ApiPublication');
 
-$this->crud('/admin/api/poll/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiPoll');
-$this->crud('/admin/api/poll/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiPoll');
+		// API для управления тегами
+		$this->any('/tag/<id>/<action>/', 'ApiTag');
+		$this->any('/tag/<action>/(<id>/)', 'ApiTag');
 
-$this->crud('/admin/api/banner/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiBanner');
-$this->crud('/admin/api/banner/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiBanner');
+		// API для управления дополнительными полями
+		$this->any('/field/<id>/<action>/', 'ApiField');
+		$this->any('/field/<action>/(<id>/)', 'ApiField');
 
-$this->crud('/admin/api/radio/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiRadio');
-$this->crud('/admin/api/radio/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiRadio');
+		// API для управления сниппетами
+		$this->any('/snippet/<id>/<action>/', 'ApiSnippet');
+		$this->any('/snippet/<action>/(<id>/)', 'ApiSnippet');
 
-$this->crud('/admin/api/parameter/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Admin\ApiParameter');
-$this->crud('/admin/api/parameter/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Admin\ApiParameter');
+		// API для управления опросами
+		$this->any('/poll/<id>/<action>/', 'ApiPoll');
+		$this->any('/poll/<action>/(<id>/)', 'ApiPoll');
 
-$this->get('/user(/)', 'User\Profile');
+		// API для управления баннерами
+		$this->any('/banner/<id>/<action>/', 'ApiBanner');
+		$this->any('/banner/<action>/(<id>/)', 'ApiBanner');
 
-$this->get('/user/registration(/)', 'User\Registration');
-$this->post('/user/registration/process(/)', 'User\RegistrationProcess');
-$this->get('/user/registration/<code:[a-z0-9]{40}>(/)', 'User\RegistrationConfirm');
+		// API для управления радиостанциями
+		$this->any('/radio/<id>/<action>/', 'ApiRadio');
+		$this->any('/radio/<action>/(<id>/)', 'ApiRadio');
 
-$this->get('/user/login(/)', 'User\Authentication');
-$this->post('/user/login/process(/)', 'User\AuthenticationProcess');
+		// API для управления параметрами
+		$this->any('/parameter/<id>/<action>/', 'ApiParameter');
+		$this->any('/parameter/<action>/(<id>/)', 'ApiParameter');
+	});
+});
 
-$this->get('/user/login/<code:[a-z0-9]{40}>(/)', 'User\AuthenticationTokenCreate');
-$this->get('/user/login/token/create(/)', 'User\AuthenticationByToken');
-$this->post('/user/login/token/create/process(/)', 'User\AuthenticationTokenCreateProcess');
+// Пользовательская часть сайта
+$this->group(function()
+{
+	$this->prefix('/user');
+	$this->namespace('User\\');
 
-$this->get('/user/logout(/)', 'User\SignOut');
+	// Профайл
+	$this->get('(/)', 'Profile');
 
-$this->get('/user/settings(/)', 'User\ProfileSettings');
-$this->post('/user/settings/save(/)', 'User\ProfileSettingsSave');
+	// Регистрация пользователя
+	$this->get('/registration(/)', 'Registration');
+	$this->post('/registration/process(/)', 'RegistrationProcess');
+	$this->get('/registration/<code:[a-z0-9]{40}>(/)', 'RegistrationConfirm');
 
-$this->any('/user/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'User\Api');
+	// Авторизация пользователя
+	$this->get('/login(/)', 'Authentication');
+	$this->post('/login/process(/)', 'AuthenticationProcess');
 
-$this->any('/api/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'Api');
-$this->any('/api/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'Api');
+	// Авторизация пользователя по токену
+	$this->get('/login/token/create(/)', 'AuthenticationTokenCreate');
+	$this->post('/login/token/create/process(/)', 'AuthenticationTokenCreateProcess');
+	$this->get('/login/<code:[a-z0-9]{40}>(/)', 'AuthenticationByToken');
 
-$this->any('/api/comment/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'ApiComment');
-$this->any('/api/comment/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'ApiComment');
+	// Разавторизация пользователя
+	$this->get('/logout(/)', 'SignOut');
 
-$this->any('/api/poll/<id:[1-9][0-9]{0,10}>/<action:[a-z][a-z0-9-]*>/', 'ApiPoll');
-$this->any('/api/poll/<action:[a-z][a-z0-9-]*>/(<id:[1-9][0-9]{0,10}>/)', 'ApiPoll');
+	// Пользовательские настройки
+	$this->get('/settings(/)', 'ProfileSettings');
+	$this->post('/settings/save(/)', 'ProfileSettingsSave');
 
-$this->get('/ad/<id:[1-9][0-9]{0,10}>(/)', 'Banner');
+	// Пользовательское API
+	$this->any('/api/<action>/(<id>/)', 'Api');
+});
+
+//
+//
+//
+
+$this->any('/api/<action>/(<id>/)', 'Api');
+$this->any('/api/<id>/<action>/', 'Api');
+
+$this->any('/api/comment/<id>/<action>/', 'ApiComment');
+$this->any('/api/comment/<action>/(<id>/)', 'ApiComment');
+
+$this->any('/api/poll/<id>/<action>/', 'ApiPoll');
+$this->any('/api/poll/<action>/(<id>/)', 'ApiPoll');
+
+$this->get('/ad/<id>(/)', 'Banner');
 
 $this->get('/search(/)', 'Search');
 
@@ -74,7 +124,7 @@ $this->get('/tags(/)', 'Tags');
 $this->get('/tags/<code:[a-z0-9-]+>(/)', 'Tag');
 
 $this->get('/users(/)', 'Users');
-$this->get('/users/<id:[1-9][0-9]{0,10}>(/)', 'User');
+$this->get('/users/<id>(/)', 'User');
 
 $this->get('/<section:[a-z0-9-]{1,255}>(/<tag:[a-z0-9-]{1,255}>)(/)', 'Section');
 $this->get('/<section:[a-z0-9-]{1,255}>/<publication:[a-z0-9-]{1,255}>.html', 'Publication');
@@ -96,15 +146,14 @@ $this->get('/assets/fenric.js', function($req, $res) {
 	$res->header('Content-Type', 'application/javascript; charset=UTF-8');
 });
 
-$this->fallback(function($req, $res)
+// Контроллер по умолчанию
+$this->default(function($req, $res)
 {
-	if ($res->isOk())
-	{
-		$res->status($res::STATUS_404);
-	}
+	$res->isOk() and $res->status(
+		$res::STATUS_404
+	);
 
-	if (! ($req->isAjax() || $res->isInformational()))
-	{
+	if (! ($req->isAjax() || $res->isInformation())) {
 		$res->view(sprintf('errors/http/%d', $res->getStatusCode()));
 	}
 });
