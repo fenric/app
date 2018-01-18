@@ -1,11 +1,6 @@
 <?php
 
 /**
- * Загрузка зависимостей
- */
-require_once __DIR__ . '/vendor/autoload.php';
-
-/**
  * Установка режима протоколирования ошибок
  */
 error_reporting(E_ALL);
@@ -49,14 +44,10 @@ fenric()->registerUncaughtExceptionHandler(function($exception) : void
 			fenric('request')->isAjax()
 
 			? fenric('response')->json([
-
-				// Inner rules API.
 				'success' => false,
 				'message' => $exception->getMessage(),
-
-				// Debug information, only for developers.
-				'filename' => $exception->getFile(),
-				'fileline' => $exception->getLine(),
+				'errfile' => $exception->getFile(),
+				'errline' => $exception->getLine(),
 			])
 
 			: fenric('response')->view('errors/fatal', [
@@ -64,12 +55,7 @@ fenric()->registerUncaughtExceptionHandler(function($exception) : void
 			]);
 		}
 
-		while (ob_get_level() > 0)
-		{
-			ob_end_clean();
-		}
-
-		fenric('response')->send();
+		fenric('response')->purge()->send();
 
 		exit(1);
 	}
@@ -175,7 +161,7 @@ fenric()->registerResolvableSharedService('parameter', function(string $resolver
 /**
  * Регистрация в контейнере фреймворка именованной службы для работы с почтовым отправителем
  */
-fenric()->registerResolvableSharedService('mailer', function(string $resolver = 'default')
+fenric()->registerSharedService('mail', function(string $resolver = 'default')
 {
 	$mail = new PHPMailer();
 
@@ -186,177 +172,3 @@ fenric()->registerResolvableSharedService('mailer', function(string $resolver = 
 
 	return $mail;
 });
-
-/**
- * Событие наступающее при создании учетной записи
- */
-fenric('event::user.created')->subscribe(function(\Propel\Models\User $model)
-{
-	if ($model->isRegistrationConfirmed()) {
-		return;
-	}
-
-	$mail = fenric('mailer');
-
-	$mail->addAddress($model->getEmail());
-
-	$mail->Subject = __('user', 'email.registration.subject', [
-		'host' => fenric('request')->host(),
-	]);
-
-	$mail->Body = fenric('view::mails/user.registration.confirmation', [
-		'user' => $model,
-		'url' => sprintf('%s://%s%s/user/registration/%s/',
-			fenric('request')->scheme(),
-			fenric('request')->host(),
-			fenric('request')->root(),
-			$model->getRegistrationConfirmationCode()
-		),
-	])->render();
-
-	$mail->send();
-});
-
-/**
- * Событие наступающее при создании аутентификационного токена для учетной записи
- */
-fenric('event::user.authentication.token.created')->subscribe(function(\Propel\Models\User $model)
-{
-	$mail = fenric('mailer');
-
-	$mail->addAddress($model->getEmail());
-
-	$mail->Subject = __('user', 'email.authentication.token.subject', [
-		'host' => fenric('request')->host(),
-	]);
-
-	$mail->Body = fenric('view::mails/user.authentication.token', [
-		'user' => $model,
-		'url' => sprintf('%s://%s%s/user/login/%s/',
-			fenric('request')->scheme(),
-			fenric('request')->host(),
-			fenric('request')->root(),
-			$model->getAuthenticationToken()
-		),
-	])->render();
-
-	$mail->send();
-});
-
-/**
- * Короткий способ локализации сообщения
- */
-function __(string $section, string $message, array $context = []) : string
-{
-	return fenric()->translate($section, $message, $context);
-}
-
-/**
- * Получение IP адрес клиента
- */
-function ip() : string
-{
-	return fenric('request')->get('REMOTE_ADDR', '127.0.0.1');
-}
-
-/**
- * Получение запрошенного URL c возможностью переназначения параметров запроса
- */
-function url(array $params = []) : string
-{
-	return fenric('request')->url($params);
-}
-
-/**
- * Подтверждение местоположения
- */
-function here(string $location) : bool
-{
-	return fenric('request')->isPath($location);
-}
-
-/**
- * Формирование ревизионного адреса статичного файла
- */
-function asset(string $location) : string
-{
-	$filename = fenric()->path('public', $location);
-
-	if (file_exists($filename))
-	{
-		$location .= '?' . filemtime($filename);
-	}
-
-	return $location;
-}
-
-/**
- * Форматирование строки для использования ее в URL
- */
-function sluggable(string $value, string $separator = '-') : string
-{
-	$value = transliterator_transliterate('Any-Latin; Latin-ASCII; Lower()', $value);
-
-	$value = preg_replace(['/[^a-z0-9-]/', '/-+/'], $separator, $value);
-
-	$value = trim($value, $separator);
-
-	return $value;
-}
-
-/**
- * Форматирование строки для использования ее в поиске
- */
-function searchable(string $value, int $maxLength = 64, string $wordSeparator = ' ') : string
-{
-	$value = mb_strtolower($value, 'UTF-8');
-
-	$value = preg_replace(['/[^\040\p{L}\p{N}]/u', '/\040+/'], ' ', $value);
-
-	$value = trim($value);
-
-	$value = mb_substr($value, 0, $maxLength, 'UTF-8');
-
-	$value = rtrim($value);
-
-	$value = str_replace(' ', $wordSeparator, $value);
-
-	return $value;
-}
-
-/**
- * Форматирование сниппетов в строке
- */
-function snippetable(string $value = null) : string
-{
-	$expression = '/{#(?<type>[a-z]+):(?<code>[a-zA-Z0-9-\.]{1,255})#}/su';
-
-	return preg_replace_callback($expression, function($matches)
-	{
-		switch ($matches['type'])
-		{
-			case 'poll' :
-				return fenric()->callSharedService('poll', [$matches['code']]);
-				break;
-
-			case 'banner' :
-				return fenric()->callSharedService('banner', [$matches['code']]);
-				break;
-
-			case 'snippet' :
-				return fenric()->callSharedService('snippet', [$matches['code']]);
-				break;
-		}
-
-		return $matches[0];
-
-	}, $value);
-}
-
-/**
- * Экранирование строки
- */
-function e(string $value = null) : string
-{
-	return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-}
