@@ -371,16 +371,16 @@ class User extends BaseUser
 	 */
 	public function preInsert(ConnectionInterface $connection = null)
 	{
-		$this->setParams(
-			['desktop' => new \stdClass]
-		);
+		$this->setParams([
+			'desktop' => new \stdClass,
+		]);
 
 		$this->setRegistrationAt(
 			new DateTime('now')
 		);
 
 		$this->setRegistrationIp(
-			ip()
+			fenric('request')->ip()
 		);
 
 		$this->setRegistrationConfirmationCode(
@@ -388,19 +388,6 @@ class User extends BaseUser
 		);
 
 		return true;
-	}
-
-	/**
-	 * Code to be run after inserting to database
-	 *
-	 * @param   ConnectionInterface   $connection
-	 *
-	 * @access  public
-	 * @return  void
-	 */
-	public function postInsert(ConnectionInterface $connection = null)
-	{
-		fenric('event::user.created')->run([$this, $connection]);
 	}
 
 	/**
@@ -536,7 +523,5 @@ class User extends BaseUser
 				return false;
 			}
 		}));
-
-		fenric('event::user.validation')->run([$metadata]);
 	}
 }
