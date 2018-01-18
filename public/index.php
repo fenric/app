@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Загрузка приложения
+ * Сборка приложения
  */
-require_once '../bootstrap.php';
+require_once '../vendor/autoload.php';
 
 /**
  * Запуск приложения
@@ -13,7 +13,7 @@ fenric('app')->run();
 /**
  * Запуск сессии
  */
-fenric('request')->session->start(new SessionHandler());
+fenric('request')->session->start();
 
 /**
  * Запуск маршрутизатора
