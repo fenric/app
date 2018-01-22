@@ -2,7 +2,7 @@
 
 namespace Fenric\Events;
 
-class UserCreated
+class ModelUserPostInsert
 {
 	public function __invoke($model)
 	{
