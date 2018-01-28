@@ -375,6 +375,11 @@ class Upload
 	 */
 	public static function path(string $basename) : string
 	{
-		return fenric()->path('upload', substr($basename, 0, 2), substr($basename, 2, 2), substr($basename, 4, 2), $basename)->getPathname();
+		return fenric()->path('upload',
+			substr($basename, 0, 2),
+			substr($basename, 2, 2),
+			substr($basename, 4, 2),
+			$basename
+		)->getPathname();
 	}
 }
