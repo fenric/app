@@ -59,10 +59,6 @@ $this->group(function()
 		$this->any('/banner/<id>/<action>/', 'ApiBanner');
 		$this->any('/banner/<action>/(<id>/)', 'ApiBanner');
 
-		// API для управления радиостанциями
-		$this->any('/radio/<id>/<action>/', 'ApiRadio');
-		$this->any('/radio/<action>/(<id>/)', 'ApiRadio');
-
 		// API для управления параметрами
 		$this->any('/parameter/<id>/<action>/', 'ApiParameter');
 		$this->any('/parameter/<action>/(<id>/)', 'ApiParameter');
@@ -131,17 +127,20 @@ $this->get('/<section:[a-z0-9-]{1,255}>/<publication:[a-z0-9-]{1,255}>.html', 'P
 
 $this->get('/sitemap.xml', 'Sitemap');
 
-$this->get('/humans.txt', function($req, $res) {
+$this->get('/humans.txt', function($req, $res)
+{
 	$res->header('Content-type', 'text/plain; charset=UTF-8');
 	$res->content(fenric('parameter::humans.txt'));
 });
 
-$this->get('/robots.txt', function($req, $res) {
+$this->get('/robots.txt', function($req, $res)
+{
 	$res->header('Content-type', 'text/plain; charset=UTF-8');
 	$res->content(fenric('parameter::robots.txt'));
 });
 
-$this->get('/assets/fenric.js', function($req, $res) {
+$this->get('/assets/fenric.js', function($req, $res)
+{
 	$res->view('assets/fenric.js');
 	$res->header('Content-Type', 'application/javascript; charset=UTF-8');
 });
@@ -149,11 +148,11 @@ $this->get('/assets/fenric.js', function($req, $res) {
 // Контроллер по умолчанию
 $this->default(function($req, $res)
 {
-	$res->isOk() and $res->status(
-		$res::STATUS_404
-	);
+	if ($res->getStatusCode() === 200) {
+		$res->status($res::STATUS_404);
+	}
 
-	if (! ($req->isAjax() || $res->isInformation())) {
+	if (! $req->isAjax()) {
 		$res->view(sprintf('errors/http/%d', $res->getStatusCode()));
 	}
 });

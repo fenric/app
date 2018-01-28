@@ -26,7 +26,6 @@ $options['components'] = [
 	'formhandle',
 	'settings',
 	'update',
-	'radio',
 ];
 
 return $options;
