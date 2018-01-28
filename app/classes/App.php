@@ -26,8 +26,12 @@ final class App
 	 */
 	public function setTimezone() : void
 	{
-		date_default_timezone_set(fenric('parameter::timezone', 'Europe/Moscow'));
+		date_default_timezone_set(
+			fenric('parameter::timezone', 'Europe/Moscow')
+		);
 
-		fenric('query')->getPdo()->exec(sprintf('SET @@session.time_zone = "%s";', date('P')));
+		fenric('query')->getPdo()->exec(
+			sprintf('SET @@session.time_zone = "%s";', date('P'))
+		);
 	}
 }
