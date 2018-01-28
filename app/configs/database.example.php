@@ -4,7 +4,7 @@ $connections = [];
 
 $connections['default']['dsn'] = 'mysql:host=localhost;dbname=fenric;charset=utf8';
 $connections['default']['user'] = 'root';
-$connections['default']['password'] = null;
+$connections['default']['password'] = '';
 
 $connections['propel.connections']['default'] = $connections['default'];
 $connections['propel.connections']['default']['adapter'] = 'mysql';
