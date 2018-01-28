@@ -27,13 +27,20 @@ class Update extends Abstractable
 
 		$content = '';
 
-		if (is_executable(fenric('config::environments')->get('composer'))) {
-			$content .= $this->execute(fenric('/'), fenric('config::environments')->get('composer') . ' update');
+		if (is_executable(fenric('config::environments')->get('git'))) {
+			$content .= $this->execute(fenric('/'), fenric('config::environments')->get('git') . ' pull https://github.com/fenric/cms.git stable');
 			$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 		}
 
 		if (is_executable(fenric('config::environments')->get('git'))) {
-			$content .= $this->execute(fenric('/'), fenric('config::environments')->get('git') . ' pull ' . fenric('config::app')->get('repository') . ' ' . fenric('config::app')->get('branch', 'master'));
+			if (fenric('config::app')->exists('repository')) {
+				$content .= $this->execute(fenric('/'), fenric('config::environments')->get('git') . ' pull ' . fenric('config::app')->get('repository') . ' ' . fenric('config::app')->get('branch', 'master'));
+				$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
+			}
+		}
+
+		if (is_executable(fenric('config::environments')->get('composer'))) {
+			$content .= $this->execute(fenric('/'), fenric('config::environments')->get('composer') . ' update');
 			$content .= PHP_EOL . '--------------------' . PHP_EOL . PHP_EOL;
 		}
 
