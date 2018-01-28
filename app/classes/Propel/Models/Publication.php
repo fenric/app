@@ -591,19 +591,25 @@ class Publication extends BasePublication
 	 */
 	public function preDelete(ConnectionInterface $connection = null)
 	{
-		if (is_file(\Fenric\Upload::path($this->getPicture())))
+		if ($this->getPicture())
 		{
-			if (is_readable(\Fenric\Upload::path($this->getPicture())))
+			if (is_file(\Fenric\Upload::path($this->getPicture())))
 			{
-				unlink(\Fenric\Upload::path($this->getPicture()));
+				if (is_readable(\Fenric\Upload::path($this->getPicture())))
+				{
+					unlink(\Fenric\Upload::path($this->getPicture()));
+				}
 			}
 		}
 
-		if (is_file(\Fenric\Upload::path($this->getPictureSource())))
+		if ($this->getPictureSource())
 		{
-			if (is_readable(\Fenric\Upload::path($this->getPictureSource())))
+			if (is_file(\Fenric\Upload::path($this->getPictureSource())))
 			{
-				unlink(\Fenric\Upload::path($this->getPictureSource()));
+				if (is_readable(\Fenric\Upload::path($this->getPictureSource())))
+				{
+					unlink(\Fenric\Upload::path($this->getPictureSource()));
+				}
 			}
 		}
 

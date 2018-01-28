@@ -23,9 +23,14 @@ class PublicationPhoto extends BasePublicationPhoto
 	/**
 	 * Получение абсолютного пути фотографии
 	 */
-	public function getPath() : string
+	public function getPath() :? string
 	{
-		return \Fenric\Upload::path($this->getFile());
+		if ($this->getFile())
+		{
+			return \Fenric\Upload::path($this->getFile());
+		}
+
+		return null;
 	}
 
 	/**
@@ -33,7 +38,10 @@ class PublicationPhoto extends BasePublicationPhoto
 	 */
 	public function setFile($value)
 	{
-		$this->pfiles[] = $this->getFile();
+		if ($this->getFile())
+		{
+			$this->pfiles[] = $this->getFile();
+		}
 
 		return parent::setFile($value);
 	}
@@ -57,11 +65,14 @@ class PublicationPhoto extends BasePublicationPhoto
 	 */
 	public function preDelete(ConnectionInterface $connection = null)
 	{
-		if (is_file($this->getPath()))
+		if ($this->getPath())
 		{
-			if (is_readable($this->getPath()))
+			if (is_file($this->getPath()))
 			{
-				unlink($this->getPath());
+				if (is_readable($this->getPath()))
+				{
+					unlink($this->getPath());
+				}
 			}
 		}
 

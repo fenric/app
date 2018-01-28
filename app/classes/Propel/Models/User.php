@@ -400,11 +400,14 @@ class User extends BaseUser
 	 */
 	public function preDelete(ConnectionInterface $connection = null)
 	{
-		if (is_file(\Fenric\Upload::path($this->getPhoto())))
+		if ($this->getPhoto())
 		{
-			if (is_readable(\Fenric\Upload::path($this->getPhoto())))
+			if (is_file(\Fenric\Upload::path($this->getPhoto())))
 			{
-				unlink(\Fenric\Upload::path($this->getPhoto()));
+				if (is_readable(\Fenric\Upload::path($this->getPhoto())))
+				{
+					unlink(\Fenric\Upload::path($this->getPhoto()));
+				}
 			}
 		}
 
