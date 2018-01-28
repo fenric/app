@@ -12,16 +12,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fenric/framework.git",
-                "reference": "457a1393c2171b7436507de8a216e93510c71094"
+                "reference": "d3b01d4650a774061ef8dbe3f07667003034d959"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fenric/framework/zipball/457a1393c2171b7436507de8a216e93510c71094",
-                "reference": "457a1393c2171b7436507de8a216e93510c71094",
+                "url": "https://api.github.com/repos/fenric/framework/zipball/d3b01d4650a774061ef8dbe3f07667003034d959",
+                "reference": "d3b01d4650a774061ef8dbe3f07667003034d959",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.4"
             },
             "type": "library",
             "autoload": {
@@ -47,7 +50,7 @@
                 "mvc",
                 "php"
             ],
-            "time": "2018-01-18T21:05:05+00:00"
+            "time": "2018-01-28T04:16:02+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -132,12 +135,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/propelorm/Propel2.git",
-                "reference": "dbd225c5c610c7d460a63841d49eb34b5a028eb8"
+                "reference": "1f6557d1a6f436b6bb08099238878246362028ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/propelorm/Propel2/zipball/dbd225c5c610c7d460a63841d49eb34b5a028eb8",
-                "reference": "dbd225c5c610c7d460a63841d49eb34b5a028eb8",
+                "url": "https://api.github.com/repos/propelorm/Propel2/zipball/1f6557d1a6f436b6bb08099238878246362028ca",
+                "reference": "1f6557d1a6f436b6bb08099238878246362028ca",
                 "shasum": ""
             },
             "require": {
@@ -188,7 +191,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2018-01-16T16:15:21+00:00"
+            "time": "2018-01-27T02:17:16+00:00"
         },
         {
             "name": "psr/log",
@@ -991,16 +994,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.2.0",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "66465776cfc249844bde6d117abff1d22e06c2da"
+                "reference": "94fd0001232e47129dd3504189fa1c7225010d08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/66465776cfc249844bde6d117abff1d22e06c2da",
-                "reference": "66465776cfc249844bde6d117abff1d22e06c2da",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/94fd0001232e47129dd3504189fa1c7225010d08",
+                "reference": "94fd0001232e47129dd3504189fa1c7225010d08",
                 "shasum": ""
             },
             "require": {
@@ -1038,7 +1041,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-11-27T17:38:31+00:00"
+            "time": "2017-11-30T07:14:17+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
