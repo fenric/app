@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @link http://php.net/manual/session.configuration.php
+ */
+
 $options = [];
 
 $options['use_cookies'] = true;
