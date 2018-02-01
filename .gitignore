@@ -17,6 +17,7 @@ Thumbs.db
 
 /composer
 /composer.phar
+/composer.lock
 
 !.gitkeep
 !*.dist
